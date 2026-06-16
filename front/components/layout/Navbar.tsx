@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Navbar() {
   return (
@@ -10,13 +11,15 @@ export default function Navbar() {
       backgroundColor: 'var(--color-crimson)',
       color: 'var(--color-cream)',
     }}>
-      <Link href="/" style={{
-        fontFamily: 'var(--font-display)',
-        fontSize: '1.5rem',
-        color: 'var(--color-cream)',
-        textDecoration: 'none',
-      }}>
-        Vuelo Carmesí
+      <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+        <Image
+          src="/images/logo.png"
+          alt="Vuelo Carmesí"
+          width={160}
+          height={60}
+          style={{ objectFit: 'contain' }}
+          priority
+        />
       </Link>
       <ul style={{ display: 'flex', gap: '2rem', listStyle: 'none' }}>
         <li><Link href="/experiencias" style={{ color: 'var(--color-cream)', textDecoration: 'none' }}>Experiencias</Link></li>
