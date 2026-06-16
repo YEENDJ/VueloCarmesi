@@ -1,0 +1,12 @@
+{
+  "name": "vuelo-carmesi",
+  "private": true,
+  "workspaces": ["front", "back"],
+  "scripts": {
+    "dev:front": "npm run dev --workspace=front",
+    "dev:back": "npm run start:dev --workspace=back",
+    "build:front": "npm run build --workspace=front",
+    "build:back": "npm run build --workspace=back",
+    "dev": "npm run dev:front & npm run dev:back"
+  }
+}
