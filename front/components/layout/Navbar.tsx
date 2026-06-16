@@ -15,9 +15,9 @@ export default function Navbar() {
         <Image
           src="/images/logo.png"
           alt="Vuelo Carmesí"
-          width={160}
-          height={60}
-          style={{ objectFit: 'contain' }}
+          width={8000}
+          height={4501}
+          style={{ height: '58px', width: 'auto' }}
           priority
         />
       </Link>
