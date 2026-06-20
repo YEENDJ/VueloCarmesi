@@ -1,0 +1,71 @@
+// Prisma schema for Vuelo Carmesí
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Experiencia {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  nombre      String
+  descripcion String
+  duracion    String
+  precio      Float
+  capacidad   Int
+  imagen      String    @default("")
+  destacada   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  reservas    Reserva[]
+}
+
+model Reserva {
+  id               String      @id @default(cuid())
+  experienciaId    String
+  experiencia      Experiencia @relation(fields: [experienciaId], references: [id])
+  fecha            DateTime
+  cantidadPersonas Int
+  nombre           String
+  email            String
+  telefono         String
+  notas            String?
+  createdAt        DateTime    @default(now())
+}
+
+model Producto {
+  id          String       @id @default(cuid())
+  slug        String       @unique
+  nombre      String
+  descripcion String
+  precio      Float
+  stock       Int
+  imagen      String       @default("")
+  categoria   String
+  createdAt   DateTime     @default(now())
+  itemsPedido ItemPedido[]
+}
+
+model Pedido {
+  id        String       @id @default(cuid())
+  nombre    String
+  email     String
+  direccion String
+  total     Float
+  createdAt DateTime     @default(now())
+  items     ItemPedido[]
+}
+
+model ItemPedido {
+  id         String   @id @default(cuid())
+  pedidoId   String
+  pedido     Pedido   @relation(fields: [pedidoId], references: [id])
+  productoId String
+  producto   Producto @relation(fields: [productoId], references: [id])
+  cantidad   Int
+  precio     Float
+}
