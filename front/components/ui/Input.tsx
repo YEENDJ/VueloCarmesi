@@ -13,7 +13,7 @@ export default function Input({ label, name, type = 'text', required, placeholde
   const fieldStyle: React.CSSProperties = {
     width: '100%', padding: '0.75rem', borderRadius: '4px',
     border: '1px solid var(--color-brown)', fontFamily: 'var(--font-body)',
-    fontSize: '1rem', backgroundColor: '#fff',
+    fontSize: '1rem', backgroundColor: 'var(--color-cream)',
   }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>

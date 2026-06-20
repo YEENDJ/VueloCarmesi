@@ -7,7 +7,6 @@ interface ButtonProps {
   onClick?: () => void
   disabled?: boolean
   type?: 'button' | 'submit'
-  className?: string
 }
 
 const styles: Record<string, React.CSSProperties> = {
