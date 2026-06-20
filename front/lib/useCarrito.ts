@@ -16,12 +16,14 @@ export function useCarrito() {
   }
 
   const agregar = (producto: Producto) => {
-    const existente = items.find(i => i.producto.id === producto.id)
-    if (existente) {
-      guardar(items.map(i => i.producto.id === producto.id ? { ...i, cantidad: i.cantidad + 1 } : i))
-    } else {
-      guardar([...items, { producto, cantidad: 1 }])
-    }
+    setItems(prev => {
+      const existente = prev.find(i => i.producto.id === producto.id)
+      const nuevos = existente
+        ? prev.map(i => i.producto.id === producto.id ? { ...i, cantidad: i.cantidad + 1 } : i)
+        : [...prev, { producto, cantidad: 1 }]
+      localStorage.setItem('carrito', JSON.stringify(nuevos))
+      return nuevos
+    })
   }
 
   const quitar = (productoId: string) => guardar(items.filter(i => i.producto.id !== productoId))

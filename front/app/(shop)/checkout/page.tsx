@@ -19,16 +19,25 @@ export default function CheckoutPage() {
     e.preventDefault()
     setLoading(true)
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pedidos`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pedidos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, items, total }),
+        body: JSON.stringify({
+          ...form,
+          items: items.map(i => ({ productoId: i.producto.id, cantidad: i.cantidad })),
+          total,
+        }),
       })
-    } catch {
-      // continuar a confirmacion aunque el back falle (demo)
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data?.message ?? `Error ${res.status}`)
+      }
+      localStorage.removeItem('carrito')
+      router.push('/tienda')
+    } catch (err) {
+      alert(`No se pudo procesar el pedido: ${err instanceof Error ? err.message : 'Error desconocido'}`)
+      setLoading(false)
     }
-    localStorage.removeItem('carrito')
-    router.push('/tienda')
   }
 
   if (items.length === 0) return (

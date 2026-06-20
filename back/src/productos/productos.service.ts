@@ -27,15 +27,9 @@ export class ProductosService {
   }
 
   async update(id: string, dto: Partial<CreateProductoDto>) {
-    const existing = await this.findById(id)
+    await this.findById(id)
     if (dto.stock !== undefined && dto.stock < 0) {
-      throw new BadRequestException('El stock no puede quedar negativo')
-    }
-    if (dto.stock !== undefined) {
-      const newStock = existing.stock + dto.stock
-      if (newStock < 0) {
-        throw new BadRequestException('El stock no puede quedar negativo')
-      }
+      throw new BadRequestException('El stock no puede ser negativo')
     }
     return this.prisma.producto.update({ where: { id }, data: dto })
   }
