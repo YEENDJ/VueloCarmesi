@@ -17,7 +17,7 @@ export default function CarritoPage() {
       <h1 style={{ marginBottom: '2rem', color: 'var(--color-brown)' }}>Carrito</h1>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
         {items.map(({ producto, cantidad }) => (
-          <div key={producto.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
+          <div key={producto.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', backgroundColor: 'var(--color-cream)', borderRadius: '8px', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
             <div>
               <p style={{ fontWeight: 700 }}>{producto.nombre}</p>
               <p style={{ opacity: 0.7, fontSize: '0.9rem' }}>{cantidad} × ${producto.precio.toLocaleString('es-AR')}</p>

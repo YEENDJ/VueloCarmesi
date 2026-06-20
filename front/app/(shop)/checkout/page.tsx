@@ -41,7 +41,7 @@ export default function CheckoutPage() {
   return (
     <section style={{ maxWidth: '600px', margin: '0 auto', padding: '4rem 2rem' }}>
       <h1 style={{ marginBottom: '2rem', color: 'var(--color-brown)' }}>Checkout</h1>
-      <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
+      <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: 'var(--color-cream)', borderRadius: '8px', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
         <p style={{ fontWeight: 700, marginBottom: '0.5rem', color: 'var(--color-brown)' }}>Resumen del pedido</p>
         {items.map(({ producto, cantidad }) => (
           <div key={producto.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '0.25rem' }}>

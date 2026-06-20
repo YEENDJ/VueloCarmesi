@@ -21,7 +21,13 @@ export default function ProductoCard({ producto }: { producto: Producto }) {
           <span style={{ fontWeight: 700, color: 'var(--color-crimson)', fontSize: '1.2rem' }}>
             ${producto.precio.toLocaleString('es-AR')}
           </span>
-          <Button onClick={() => agregar(producto)} variant="secondary">Agregar</Button>
+          <Button
+            onClick={() => agregar(producto)}
+            variant="secondary"
+            disabled={producto.stock === 0}
+          >
+            {producto.stock === 0 ? 'Sin stock' : 'Agregar'}
+          </Button>
         </div>
       </div>
     </Card>
