@@ -23,6 +23,7 @@
   --color-brown:   #872b13;
   --color-amber:   #f59c00;
   --color-gold:    #fdc300;
+  --color-brown-overlay: rgba(135, 43, 19, 0.5);
 
   /* Tipografías */
   --font-display: 'Honey Lips', cursive;

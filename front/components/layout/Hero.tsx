@@ -13,7 +13,7 @@ export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: H
     <section style={{
       minHeight: '80vh',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      backgroundImage: imagen ? `linear-gradient(rgba(135,43,19,0.5), rgba(135,43,19,0.5)), url(${imagen})` : 'none',
+      backgroundImage: imagen ? `linear-gradient(var(--color-brown-overlay), var(--color-brown-overlay)), url(${imagen})` : 'none',
       backgroundColor: imagen ? undefined : 'var(--color-brown)',
       backgroundSize: 'cover', backgroundPosition: 'center',
       padding: '4rem 2rem', textAlign: 'center',
