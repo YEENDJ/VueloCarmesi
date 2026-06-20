@@ -11,6 +11,7 @@ describe('ReservasController', () => {
   let controller: ReservasController
 
   beforeEach(async () => {
+    jest.clearAllMocks()
     const module = await Test.createTestingModule({
       controllers: [ReservasController],
       providers: [{ provide: ReservasService, useValue: mockService }],
@@ -23,8 +24,9 @@ describe('ReservasController', () => {
   })
 
   it('create delegates to service', async () => {
-    const result = await controller.create({ experimentId: 'exp-1', date: '2026-06-20' })
-    expect(mockService.create).toHaveBeenCalled()
+    const dto = { experienciaId: 'exp-1', fecha: '2026-06-20', cantidadPersonas: 2, nombre: 'Test', email: 'test@test.com', telefono: '1234567890' }
+    const result = await controller.create(dto as any)
+    expect(mockService.create).toHaveBeenCalledWith(dto)
     expect(result).toEqual({ id: '1' })
   })
 })

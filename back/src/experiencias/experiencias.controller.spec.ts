@@ -12,6 +12,7 @@ describe('ExperienciasController', () => {
   let controller: ExperienciasController
 
   beforeEach(async () => {
+    jest.clearAllMocks()
     const module = await Test.createTestingModule({
       controllers: [ExperienciasController],
       providers: [{ provide: ExperienciasService, useValue: mockService }],
