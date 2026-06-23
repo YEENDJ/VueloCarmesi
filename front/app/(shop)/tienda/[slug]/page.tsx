@@ -1,56 +1,103 @@
-'use client'
-import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
-import { notFound } from 'next/navigation'
-import type { Producto } from '@/lib/types'
-import { getProductoBySlug } from '@/lib/api/productos'
+import { getProductoBySlug, getProductos } from '@/lib/api/productos'
 import Badge from '@/components/ui/Badge'
-import Button from '@/components/ui/Button'
-import { useCarrito } from '@/lib/useCarrito'
+import ImageGallery from '@/components/ui/ImageGallery'
+import ProductoCard from '@/components/shop/ProductoCard'
+import AddToCartSection from './AddToCartSection'
+import { notFound } from 'next/navigation'
 
-export default function ProductoDetallePage() {
-  const params = useParams()
-  const slug = typeof params.slug === 'string' ? params.slug : params.slug?.[0] ?? ''
-  const [producto, setProducto] = useState<Producto | null | undefined>(undefined)
-  const { agregar } = useCarrito()
+export async function generateStaticParams() {
+  const productos = await getProductos()
+  return productos.map(p => ({ slug: p.slug }))
+}
 
-  useEffect(() => {
-    getProductoBySlug(slug).then(p => setProducto(p))
-  }, [slug])
+export default async function ProductoDetallePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const [producto, todos] = await Promise.all([
+    getProductoBySlug(slug),
+    getProductos(),
+  ])
+  if (!producto) notFound()
 
-  if (producto === undefined) {
-    return (
-      <section style={{ maxWidth: '900px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
-        <p style={{ opacity: 0.7 }}>Cargando...</p>
-      </section>
-    )
-  }
+  const images = producto.images ?? []
 
-  if (producto === null) notFound()
+  const relacionados = todos
+    .filter(p => p.categoria === producto.categoria && p.slug !== slug)
+    .slice(0, 4)
 
   return (
-    <section style={{ maxWidth: '900px', margin: '0 auto', padding: '4rem 2rem' }}>
-      <div style={{ height: '400px', backgroundColor: 'var(--color-amber)', borderRadius: '8px', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: '6rem' }}>🍫</span>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 24px' }}>
+      {/* Main 2-column grid */}
+      <div className="detail-grid-prod">
+        {/* Gallery */}
+        <div>
+          <ImageGallery images={images} alt={producto.nombre} aspectRatio="1/1" />
+        </div>
+
+        {/* Info */}
+        <div>
+          <div style={{ marginBottom: '12px' }}>
+            <Badge color="amber">{producto.categoria}</Badge>
+          </div>
+
+          <h1
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(28px, 3.5vw, 40px)',
+              color: 'var(--color-brown)',
+              marginBottom: '12px',
+              lineHeight: 1.15,
+            }}
+          >
+            {producto.nombre}
+          </h1>
+
+          <p
+            style={{
+              fontSize: '2rem',
+              fontWeight: 700,
+              color: 'var(--color-amber)',
+              fontFamily: 'var(--font-body)',
+              marginBottom: '16px',
+            }}
+          >
+            ${producto.precio.toLocaleString('es-AR')}
+          </p>
+
+          <p
+            style={{
+              fontSize: '1rem',
+              lineHeight: 1.8,
+              color: 'var(--color-brown)',
+              marginBottom: '24px',
+            }}
+          >
+            {producto.descripcion}
+          </p>
+
+          <div style={{ borderTop: '2px solid var(--color-gold)', marginBottom: '24px' }} />
+
+          <AddToCartSection producto={producto} />
+        </div>
       </div>
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-        <Badge color="amber">{producto.categoria}</Badge>
-        {producto.stock > 0
-          ? <Badge color="orange">Stock: {producto.stock}</Badge>
-          : <Badge color="crimson">Sin stock</Badge>
-        }
-      </div>
-      <h1 style={{ marginBottom: '1rem', color: 'var(--color-brown)' }}>{producto.nombre}</h1>
-      <p style={{ fontSize: '1.1rem', lineHeight: 1.8, marginBottom: '2rem', opacity: 0.85 }}>{producto.descripcion}</p>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-        <span style={{ fontSize: '1.8rem', fontWeight: 700, color: 'var(--color-crimson)' }}>
-          ${producto.precio.toLocaleString('es-AR')}
-        </span>
-        <Button onClick={() => agregar(producto)} disabled={producto.stock === 0}>
-          Agregar al carrito
-        </Button>
-        <Button href="/carrito" variant="outline">Ver carrito</Button>
-      </div>
-    </section>
+
+      {/* Related products */}
+      {relacionados.length > 0 && (
+        <div style={{ marginTop: '64px' }}>
+          <div style={{ borderTop: '2px solid var(--color-gold)', marginBottom: '32px' }} />
+          <h2 style={{ color: 'var(--color-crimson)', marginBottom: '24px' }}>
+            También te puede gustar
+          </h2>
+          <div className="related-grid">
+            {relacionados.map(p => (
+              <ProductoCard key={p.id} producto={p} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
