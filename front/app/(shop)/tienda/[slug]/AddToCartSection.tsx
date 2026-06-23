@@ -40,7 +40,7 @@ export default function AddToCartSection({ producto }: { producto: Producto }) {
         {producto.stock} unidades disponibles
       </p>
       <Button
-        onClick={() => agregar(producto, cantidad)}
+        onClick={() => { agregar(producto, cantidad); setCantidad(1) }}
         style={{ display: 'block', textAlign: 'center', width: '100%' }}
       >
         Agregar al carrito

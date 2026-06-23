@@ -10,11 +10,6 @@ export function useCarrito() {
     if (stored) setItems(JSON.parse(stored))
   }, [])
 
-  const guardar = (nuevos: ItemCarrito[]) => {
-    setItems(nuevos)
-    localStorage.setItem('carrito', JSON.stringify(nuevos))
-  }
-
   const agregar = (producto: Producto, cantidad = 1) => {
     setItems(prev => {
       const existente = prev.find(i => i.producto.id === producto.id)
@@ -30,7 +25,12 @@ export function useCarrito() {
     })
   }
 
-  const quitar = (productoId: string) => guardar(items.filter(i => i.producto.id !== productoId))
+  const quitar = (productoId: string) =>
+    setItems(prev => {
+      const next = prev.filter(i => i.producto.id !== productoId)
+      localStorage.setItem('carrito', JSON.stringify(next))
+      return next
+    })
 
   const total = items.reduce((sum, i) => sum + i.producto.precio * i.cantidad, 0)
 
