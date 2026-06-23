@@ -67,7 +67,7 @@ export async function getProductoBySlug(slug: string): Promise<Producto | null> 
   try {
     const res = await fetch(`${BASE}/productos/slug/${slug}`, { next: { revalidate: 60 } })
     if (!res.ok) throw new Error()
-    return MOCK_PRODUCTOS.find(p => p.slug === slug) ?? null
+    return res.json()
   } catch {
     return MOCK_PRODUCTOS.find(p => p.slug === slug) ?? null
   }
