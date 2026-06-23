@@ -18,3 +18,52 @@ body {
 h1, h2, h3 {
   font-family: var(--font-display);
 }
+
+.footer-social a {
+  color: rgba(255, 234, 202, 0.75);
+  transition: color 150ms ease;
+  display: flex;
+}
+.footer-social a:hover {
+  color: var(--color-amber);
+}
+
+/* Detail page responsive layouts */
+.detail-grid-exp {
+  display: grid;
+  grid-template-columns: 65fr 35fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.detail-grid-prod {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 767px) {
+  .detail-grid-exp,
+  .detail-grid-prod {
+    grid-template-columns: 1fr;
+  }
+
+  .related-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gallery-thumbnails {
+    display: none !important;
+  }
+
+  .sidebar-sticky {
+    position: static !important;
+  }
+}
