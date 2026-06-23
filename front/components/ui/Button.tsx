@@ -7,6 +7,7 @@ interface ButtonProps {
   onClick?: () => void
   disabled?: boolean
   type?: 'button' | 'submit'
+  style?: React.CSSProperties
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -38,9 +39,9 @@ const styles: Record<string, React.CSSProperties> = {
 }
 
 export default function Button({
-  children, variant = 'primary', href, onClick, disabled, type = 'button',
+  children, variant = 'primary', href, onClick, disabled, type = 'button', style: styleProp,
 }: ButtonProps) {
-  const style = { ...styles.base, ...styles[variant], opacity: disabled ? 0.5 : 1 }
+  const style = { ...styles.base, ...styles[variant], opacity: disabled ? 0.5 : 1, ...styleProp }
   if (href) return <Link href={href} style={style}>{children}</Link>
   return <button type={type} onClick={onClick} disabled={disabled} style={style}>{children}</button>
 }

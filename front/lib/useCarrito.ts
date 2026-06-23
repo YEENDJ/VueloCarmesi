@@ -15,12 +15,16 @@ export function useCarrito() {
     localStorage.setItem('carrito', JSON.stringify(nuevos))
   }
 
-  const agregar = (producto: Producto) => {
+  const agregar = (producto: Producto, cantidad = 1) => {
     setItems(prev => {
       const existente = prev.find(i => i.producto.id === producto.id)
       const nuevos = existente
-        ? prev.map(i => i.producto.id === producto.id ? { ...i, cantidad: i.cantidad + 1 } : i)
-        : [...prev, { producto, cantidad: 1 }]
+        ? prev.map(i =>
+            i.producto.id === producto.id
+              ? { ...i, cantidad: i.cantidad + cantidad }
+              : i
+          )
+        : [...prev, { producto, cantidad }]
       localStorage.setItem('carrito', JSON.stringify(nuevos))
       return nuevos
     })

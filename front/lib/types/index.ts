@@ -3,11 +3,14 @@ export interface Experiencia {
   slug: string
   nombre: string
   descripcion: string
-  duracion: string       // ej: "4 horas"
+  duracion: string
   precio: number
   capacidad: number
-  imagen: string         // URL relativa o absoluta
+  imagen: string
   destacada: boolean
+  images?: string[]
+  incluye?: string[]
+  queTraer?: string[]
 }
 
 export interface Producto {
@@ -19,11 +22,12 @@ export interface Producto {
   stock: number
   imagen: string
   categoria: 'cacao' | 'chocolate' | 'otro'
+  images?: string[]
 }
 
 export interface Reserva {
   experienciaId: string
-  fecha: string          // ISO date string
+  fecha: string
   cantidadPersonas: number
   nombre: string
   email: string
