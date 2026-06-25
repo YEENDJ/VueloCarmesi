@@ -1,6 +1,7 @@
 import Hero from '@/components/layout/Hero'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
+import SobreNosotros from '@/components/secciones/SobreNosotros'
 
 const experienciasPreview = [
   { slug: 'cacao-intenso', nombre: 'Cacao Intenso', descripcion: 'Recorrido por plantaciones y degustación guiada.', duracion: '4 horas', precio: 8500 },
@@ -12,11 +13,10 @@ export default function HomePage() {
   return (
     <>
       <Hero
-        titulo="Vuelo Carmesí"
-        subtitulo="Experiencias agroecológicas con sabor a cacao"
-        ctaTexto="Explorar experiencias"
+        titulo="El sabor maduro de la tierra"
+        subtitulo="Cosechamos, fermentamos y catamos junto a vos. Conocé el cacao desde su raíz, en una finca que respira selva."
+        ctaTexto="Reservá tu experiencia"
         ctaHref="/experiencias"
-        imagen="/images/hero-bg.jpg"
       />
 
       {/* Sección: Experiencias preview */}
@@ -46,17 +46,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Sección: Sobre nosotros */}
-      <section style={{ backgroundColor: 'var(--color-brown)', color: 'var(--color-cream)', padding: '5rem 2rem' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', color: 'var(--color-gold)' }}>Sobre Vuelo Carmesí</h2>
-          <p style={{ fontSize: '1.1rem', lineHeight: 1.8, opacity: 0.9 }}>
-            Somos un proyecto agroecológico dedicado a rescatar y celebrar la cultura del cacao.
-            Ofrecemos experiencias inmersivas donde los visitantes conectan con la tierra,
-            los productores y el proceso artesanal detrás de cada pieza de chocolate.
-          </p>
-        </div>
-      </section>
+      <SobreNosotros />
 
       {/* CTA Final */}
       <section style={{ padding: '5rem 2rem', textAlign: 'center', backgroundColor: 'var(--color-cream)' }}>
