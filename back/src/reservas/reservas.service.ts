@@ -7,7 +7,10 @@ export class ReservasService {
   constructor(private prisma: PrismaService) {}
 
   findAll() {
-    return this.prisma.reserva.findMany({ orderBy: { createdAt: 'desc' } })
+    return this.prisma.reserva.findMany({
+      include: { experiencia: { select: { id: true, nombre: true } } },
+      orderBy: { createdAt: 'desc' },
+    })
   }
 
   async findById(id: string) {

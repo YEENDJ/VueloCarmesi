@@ -20,6 +20,7 @@ model Experiencia {
   capacidad   Int
   imagen      String    @default("")
   destacada   Boolean   @default(false)
+  archivada   Boolean   @default(false)
   createdAt   DateTime  @default(now())
   reservas    Reserva[]
 }
@@ -34,6 +35,7 @@ model Reserva {
   email            String
   telefono         String
   notas            String?
+  estado           String      @default("pendiente")
   createdAt        DateTime    @default(now())
 }
 
@@ -56,6 +58,7 @@ model Pedido {
   email     String
   direccion String
   total     Float
+  estado    String       @default("pendiente")
   createdAt DateTime     @default(now())
   items     ItemPedido[]
 }

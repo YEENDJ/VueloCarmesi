@@ -9,4 +9,5 @@ export class CreateExperienciaDto {
   @IsNumber() @Min(1) capacidad: number
   @IsOptional() @IsString() imagen?: string
   @IsOptional() @IsBoolean() destacada?: boolean
+  @IsOptional() @IsBoolean() archivada?: boolean
 }
