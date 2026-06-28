@@ -84,9 +84,8 @@
 .admin-table-wrap {
   background: #fff;
   border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(135,43,19,.06);
   overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(135,43,19,.06);
 }
 .admin-table {
   width: 100%;

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 export async function POST() {
-  const res = NextResponse.redirect(new URL('/admin/login', 'http://localhost:3000'))
+  const res = NextResponse.json({ ok: true })
   res.cookies.delete('admin_session')
   return res
 }

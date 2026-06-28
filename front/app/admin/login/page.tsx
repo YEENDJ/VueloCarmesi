@@ -18,6 +18,7 @@ export default function AdminLoginPage() {
       body: JSON.stringify({ password }),
     })
     if (res.ok) {
+      router.refresh()
       router.push('/admin')
     } else {
       setError('Contraseña incorrecta')
