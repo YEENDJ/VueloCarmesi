@@ -57,7 +57,7 @@ export default function ProductosPage() {
             )}
           </div>
         </div>
-        <button className="btn-primary" onClick={() => alert('Modal de nuevo producto — Task 8')}>
+        <button className="btn-primary" disabled onClick={() => {}} title="Próximamente">
           + Nuevo producto
         </button>
       </div>
@@ -128,7 +128,7 @@ export default function ProductosPage() {
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                        <button className="btn-secondary btn-sm" onClick={() => alert(`Editar ${p.nombre}`)}>Editar</button>
+                        <button className="btn-secondary btn-sm" onClick={() => {}} title="Próximamente">Editar</button>
                         <button className="btn-ghost btn-sm" onClick={() => eliminar(p.id)}>Eliminar</button>
                       </div>
                     </td>
