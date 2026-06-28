@@ -7,11 +7,6 @@ import StatusBadge from '@/components/admin/StatusBadge'
 import ReservasChart from '@/components/admin/ReservasChart'
 import Link from 'next/link'
 
-function semanaLabel(fecha: Date): string {
-  const sem = Math.ceil(fecha.getDate() / 7)
-  return `Sem ${sem}`
-}
-
 export default function AdminOverviewPage() {
   const [reservas, setReservas] = useState<AdminReserva[]>([])
   const [pedidos, setPedidos] = useState<AdminPedido[]>([])

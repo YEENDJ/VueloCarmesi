@@ -1,3 +1,5 @@
+'use client'
+
 type Barra = { semana: string; cantidad: number }
 
 export default function ReservasChart({ data }: { data: Barra[] }) {
