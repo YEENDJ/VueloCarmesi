@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import type { AdminExperiencia } from '@/lib/admin/types'
-import { getExperienciasAdmin, updateExperiencia, deleteExperiencia } from '@/lib/admin/api'
+import { getExperienciasAdmin, updateExperiencia } from '@/lib/admin/api'
 import Toggle from '@/components/admin/Toggle'
 import ExperienciaFormModal from '@/components/admin/ExperienciaFormModal'
 
@@ -25,6 +25,11 @@ export default function ExperienciasPage() {
   async function archivar(exp: AdminExperiencia) {
     if (!confirm(`¿Archivar "${exp.nombre}"? Dejará de aparecer en el sitio.`)) return
     const updated = await updateExperiencia(exp.id, { archivada: true })
+    setExperiencias(prev => prev.map(e => e.id === updated.id ? updated : e))
+  }
+
+  async function restaurar(exp: AdminExperiencia) {
+    const updated = await updateExperiencia(exp.id, { archivada: false })
     setExperiencias(prev => prev.map(e => e.id === updated.id ? updated : e))
   }
 
@@ -102,7 +107,7 @@ export default function ExperienciasPage() {
                   <td style={{ textAlign: 'center' }}>{exp.capacidad}</td>
                   <td />
                   <td style={{ textAlign: 'right' }}>
-                    <button className="btn-ghost btn-sm" onClick={() => updateExperiencia(exp.id, { archivada: false }).then(u => setExperiencias(prev => prev.map(e => e.id === u.id ? u : e)))}>
+                    <button className="btn-ghost btn-sm" onClick={() => restaurar(exp)}>
                       Restaurar
                     </button>
                   </td>
