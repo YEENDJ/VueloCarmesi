@@ -157,12 +157,12 @@ export class NotificacionesService {
     const contacto = contactoRow?.value ?? 'hola@vuelocarmesi.com'
 
     const html = this.email.templateReservaConfirmada({
-      nombre: reserva.nombre,
-      experiencia: expNombre,
-      fecha: fechaStr,
+      nombre: escapeHtml(reserva.nombre),
+      experiencia: escapeHtml(expNombre),
+      fecha: escapeHtml(fechaStr),
       cantidadPersonas: String(reserva.cantidadPersonas),
-      instrucciones,
-      contacto,
+      instrucciones: escapeHtml(instrucciones),
+      contacto: escapeHtml(contacto),
     })
     await this.email.send(reserva.email, 'Tu reserva está confirmada — Vuelo Carmesí', html)
   }
@@ -182,9 +182,9 @@ export class NotificacionesService {
       : ''
 
     const html = this.email.templateReservaCancelada({
-      nombre: reserva.nombre,
-      experiencia: expNombre,
-      fecha: fechaStr,
+      nombre: escapeHtml(reserva.nombre),
+      experiencia: escapeHtml(expNombre),
+      fecha: escapeHtml(fechaStr),
       motivoHtml,
       urlReserva: ADMIN_URL,
     })

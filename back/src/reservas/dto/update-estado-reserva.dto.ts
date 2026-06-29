@@ -1,4 +1,4 @@
-import { IsIn, IsOptional, IsString } from 'class-validator'
+import { IsIn, IsOptional, IsString, MaxLength } from 'class-validator'
 
 export class UpdateEstadoReservaDto {
   @IsIn(['pendiente', 'confirmada', 'cancelada'])
@@ -6,5 +6,6 @@ export class UpdateEstadoReservaDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(500)
   motivo?: string
 }
