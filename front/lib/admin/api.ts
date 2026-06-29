@@ -17,11 +17,11 @@ export function getReservas(): Promise<AdminReserva[]> {
 export function getReserva(id: string): Promise<AdminReserva> {
   return fetch(`${BASE}/reservas/${id}`).then(checked)
 }
-export function updateEstadoReserva(id: string, estado: EstadoReserva): Promise<AdminReserva> {
-  return fetch(`${BASE}/reservas/${id}`, {
+export function updateEstadoReserva(id: string, estado: EstadoReserva, motivo?: string): Promise<AdminReserva> {
+  return fetch(`${BASE}/reservas/${id}/estado`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ estado }),
+    body: JSON.stringify({ estado, ...(motivo ? { motivo } : {}) }),
   }).then(checked)
 }
 
@@ -88,7 +88,7 @@ export function updateEstadoPedido(id: string, estado: EstadoPedido): Promise<Ad
 export async function uploadImage(file: File): Promise<{ url: string; publicId: string }> {
   const form = new FormData()
   form.append('file', file)
-  const res = await fetch(`${BASE}/uploads/image`, { method: 'POST', body: form })
+  const res = await fetch(`${BASE}/uploads/image`, { method: 'POST', body: form, credentials: 'include' })
   if (!res.ok) throw new Error(`Upload error ${res.status}`)
   return res.json()
 }
@@ -102,5 +102,6 @@ export function patchSiteConfig(data: Record<string, string>): Promise<Record<st
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
+    credentials: 'include',
   }).then(checked)
 }
