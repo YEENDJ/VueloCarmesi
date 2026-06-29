@@ -37,9 +37,12 @@ export default function ExperienciasPage() {
 
   async function eliminar() {
     if (!experienciaAEliminar) return
-    await deleteExperiencia(experienciaAEliminar.id)
-    setExperiencias(prev => prev.filter(e => e.id !== experienciaAEliminar.id))
-    setExperienciaAEliminar(null)
+    try {
+      await deleteExperiencia(experienciaAEliminar.id)
+      setExperiencias(prev => prev.filter(e => e.id !== experienciaAEliminar.id))
+    } finally {
+      setExperienciaAEliminar(null)
+    }
   }
 
   function handleSaved(saved: AdminExperiencia) {
