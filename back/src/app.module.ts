@@ -4,9 +4,18 @@ import { ExperienciasModule } from './experiencias/experiencias.module'
 import { ReservasModule } from './reservas/reservas.module'
 import { ProductosModule } from './productos/productos.module'
 import { PedidosModule } from './pedidos/pedidos.module'
+import { ContactoModule } from './contacto/contacto.module'
+import { NotificacionesModule } from './notificaciones/notificaciones.module'
 
 @Module({
-  imports: [ExperienciasModule, ReservasModule, ProductosModule, PedidosModule],
+  imports: [
+    ExperienciasModule,
+    ReservasModule,
+    ProductosModule,
+    PedidosModule,
+    ContactoModule,
+    NotificacionesModule,
+  ],
   providers: [PrismaService],
 })
 export class AppModule {}
