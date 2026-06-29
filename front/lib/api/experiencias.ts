@@ -58,7 +58,7 @@ export const MOCK_EXPERIENCIAS: Experiencia[] = [
 
 export async function getExperiencias(): Promise<Experiencia[]> {
   try {
-    const res = await fetch(`${BASE}/experiencias`, { next: { revalidate: 60 } })
+    const res = await fetch(`${BASE}/experiencias`, { next: { revalidate: 60, tags: ['experiencias'] } })
     if (!res.ok) throw new Error()
     return res.json()
   } catch {
@@ -68,7 +68,7 @@ export async function getExperiencias(): Promise<Experiencia[]> {
 
 export async function getExperienciaBySlug(slug: string): Promise<Experiencia | null> {
   try {
-    const res = await fetch(`${BASE}/experiencias/slug/${slug}`, { next: { revalidate: 60 } })
+    const res = await fetch(`${BASE}/experiencias/slug/${slug}`, { next: { revalidate: 60, tags: ['experiencias'] } })
     if (!res.ok) throw new Error()
     return res.json()
   } catch {
@@ -78,7 +78,7 @@ export async function getExperienciaBySlug(slug: string): Promise<Experiencia | 
 
 export async function getExperienciasDestacadas(): Promise<Experiencia[]> {
   try {
-    const res = await fetch(`${BASE}/experiencias?destacadas=true`, { next: { revalidate: 60 } })
+    const res = await fetch(`${BASE}/experiencias?destacadas=true`, { next: { revalidate: 60, tags: ['experiencias'] } })
     if (!res.ok) throw new Error()
     return res.json()
   } catch {

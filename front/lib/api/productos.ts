@@ -40,7 +40,7 @@ export const MOCK_PRODUCTOS: Producto[] = [
 
 export async function getProductos(): Promise<Producto[]> {
   try {
-    const res = await fetch(`${BASE}/productos`, { next: { revalidate: 60 } })
+    const res = await fetch(`${BASE}/productos`, { next: { revalidate: 60, tags: ['productos'] } })
     if (!res.ok) throw new Error()
     return res.json()
   } catch {
@@ -50,7 +50,7 @@ export async function getProductos(): Promise<Producto[]> {
 
 export async function getProductoBySlug(slug: string): Promise<Producto | null> {
   try {
-    const res = await fetch(`${BASE}/productos/slug/${slug}`, { next: { revalidate: 60 } })
+    const res = await fetch(`${BASE}/productos/slug/${slug}`, { next: { revalidate: 60, tags: ['productos'] } })
     if (!res.ok) throw new Error()
     return res.json()
   } catch {
