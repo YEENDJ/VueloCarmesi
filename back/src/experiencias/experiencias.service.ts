@@ -6,8 +6,11 @@ import { CreateExperienciaDto } from './dto/create-experiencia.dto'
 export class ExperienciasService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.experiencia.findMany({ orderBy: { createdAt: 'desc' } })
+  findAll(soloDestacadas = false) {
+    return this.prisma.experiencia.findMany({
+      ...(soloDestacadas ? { where: { destacada: true } } : {}),
+      orderBy: [{ destacada: 'desc' }, { createdAt: 'desc' }],
+    })
   }
 
   async findBySlug(slug: string) {

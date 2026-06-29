@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common'
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query } from '@nestjs/common'
 import { ExperienciasService } from './experiencias.service'
 import { CreateExperienciaDto } from './dto/create-experiencia.dto'
 
@@ -6,7 +6,7 @@ import { CreateExperienciaDto } from './dto/create-experiencia.dto'
 export class ExperienciasController {
   constructor(private readonly service: ExperienciasService) {}
 
-  @Get()              findAll()                                                         { return this.service.findAll() }
+  @Get()              findAll(@Query('destacadas') destacadas?: string)                { return this.service.findAll(destacadas === 'true') }
   @Get('slug/:slug')  findBySlug(@Param('slug') slug: string)                          { return this.service.findBySlug(slug) }
   @Get(':id')         findOne(@Param('id') id: string)                                 { return this.service.findById(id) }
   @Post()             create(@Body() dto: CreateExperienciaDto)                        { return this.service.create(dto) }
