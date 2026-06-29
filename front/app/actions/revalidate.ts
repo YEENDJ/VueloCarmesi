@@ -2,13 +2,13 @@
 import { revalidateTag } from 'next/cache'
 
 export async function revalidateExperiencias() {
-  revalidateTag('experiencias', 'max')
+  revalidateTag('experiencias')
 }
 
 export async function revalidateProductos() {
-  revalidateTag('productos', 'max')
+  revalidateTag('productos')
 }
 
 export async function revalidateSiteConfig() {
-  revalidateTag('site-config', 'max')
+  revalidateTag('site-config')
 }
