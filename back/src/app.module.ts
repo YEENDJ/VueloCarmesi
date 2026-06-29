@@ -6,6 +6,7 @@ import { ProductosModule } from './productos/productos.module'
 import { PedidosModule } from './pedidos/pedidos.module'
 import { ContactoModule } from './contacto/contacto.module'
 import { NotificacionesModule } from './notificaciones/notificaciones.module'
+import { UploadsModule } from './uploads/uploads.module'
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { NotificacionesModule } from './notificaciones/notificaciones.module'
     PedidosModule,
     ContactoModule,
     NotificacionesModule,
+    UploadsModule,
   ],
   providers: [PrismaService],
 })
