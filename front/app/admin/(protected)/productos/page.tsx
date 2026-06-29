@@ -2,6 +2,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import type { AdminProducto } from '@/lib/admin/types'
 import { getProductosAdmin, updateProducto, deleteProducto } from '@/lib/admin/api'
+import ProductoFormModal from '@/components/admin/ProductoFormModal'
 
 const CATEGORIAS = ['Todos', 'Cacao', 'Chocolates', 'Kits']
 
@@ -129,7 +130,7 @@ export default function ProductosPage() {
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                        <button className="btn-secondary btn-sm" onClick={() => {}} title="Próximamente">Editar</button>
+                        <button className="btn-secondary btn-sm" onClick={() => setModal(p)}>Editar</button>
                         <button className="btn-ghost btn-sm" onClick={() => eliminar(p.id)}>Eliminar</button>
                       </div>
                     </td>
@@ -143,6 +144,19 @@ export default function ProductosPage() {
       <p style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginTop: 10 }}>
         El stock se guarda al salir del campo (Tab) o presionar Enter.
       </p>
+      {modal !== undefined && (
+        <ProductoFormModal
+          producto={modal === 'new' ? null : modal}
+          onClose={() => setModal(undefined)}
+          onSaved={saved => {
+            setProductos(prev => {
+              const idx = prev.findIndex(p => p.id === saved.id)
+              return idx >= 0 ? prev.map(p => p.id === saved.id ? saved : p) : [saved, ...prev]
+            })
+            setModal(undefined)
+          }}
+        />
+      )}
     </>
   )
 }

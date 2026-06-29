@@ -3,14 +3,16 @@ import { useState } from 'react'
 import type { AdminExperiencia } from '@/lib/admin/types'
 import { createExperiencia, updateExperiencia } from '@/lib/admin/api'
 import Toggle from './Toggle'
+import ImageUploader from './ImageUploader'
 
 type FormData = {
   nombre: string; descripcion: string; slug: string
   precio: string; duracion: string; capacidad: string
-  destacada: boolean
+  destacada: boolean; imagen: string
 }
 
-const EMPTY: FormData = { nombre: '', descripcion: '', slug: '', precio: '', duracion: '', capacidad: '', destacada: false }
+const EMPTY: FormData = { nombre: '', descripcion: '', slug: '', precio: '', duracion: '', capacidad: '', destacada: false, imagen: '' }
+
 
 function toSlug(nombre: string) {
   return nombre.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -32,7 +34,7 @@ export default function ExperienciaFormModal({
           nombre: experiencia.nombre, descripcion: experiencia.descripcion,
           slug: experiencia.slug, precio: String(experiencia.precio),
           duracion: experiencia.duracion, capacidad: String(experiencia.capacidad),
-          destacada: experiencia.destacada,
+          destacada: experiencia.destacada, imagen: experiencia.imagen ?? '',
         }
       : EMPTY
   )
@@ -60,6 +62,7 @@ export default function ExperienciaFormModal({
         nombre: form.nombre, descripcion: form.descripcion, slug: form.slug,
         precio: Number(form.precio), duracion: form.duracion,
         capacidad: Number(form.capacidad), destacada: form.destacada,
+        imagen: form.imagen,
       }
       const saved = isEdit
         ? await updateExperiencia(experiencia!.id, data)
@@ -100,6 +103,11 @@ export default function ExperienciaFormModal({
                 <input className="admin-input" type="number" min={1} value={form.capacidad} onChange={e => set('capacidad', e.target.value)} placeholder="12" />
               </FormRow>
             </div>
+            <ImageUploader
+              value={form.imagen}
+              onChange={url => set('imagen', url)}
+              label="Imagen de portada"
+            />
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <Toggle checked={form.destacada} onChange={v => set('destacada', v)} />
               <span style={{ fontSize: 14, fontWeight: 700 }}>Destacar en el sitio público</span>
