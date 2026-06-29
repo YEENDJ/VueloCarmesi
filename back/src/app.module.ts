@@ -7,6 +7,7 @@ import { PedidosModule } from './pedidos/pedidos.module'
 import { ContactoModule } from './contacto/contacto.module'
 import { NotificacionesModule } from './notificaciones/notificaciones.module'
 import { UploadsModule } from './uploads/uploads.module'
+import { SiteConfigModule } from './site-config/site-config.module'
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UploadsModule } from './uploads/uploads.module'
     ContactoModule,
     NotificacionesModule,
     UploadsModule,
+    SiteConfigModule,
   ],
   providers: [PrismaService],
 })

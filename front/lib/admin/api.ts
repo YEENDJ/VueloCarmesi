@@ -92,3 +92,15 @@ export async function uploadImage(file: File): Promise<{ url: string; publicId: 
   if (!res.ok) throw new Error(`Upload error ${res.status}`)
   return res.json()
 }
+
+// ── SiteConfig ─────────────────────────────────────────────
+export function getSiteConfigAdmin(): Promise<Record<string, string>> {
+  return fetch(`${BASE}/site-config`).then(checked)
+}
+export function patchSiteConfig(data: Record<string, string>): Promise<Record<string, string>> {
+  return fetch(`${BASE}/site-config`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }).then(checked)
+}
