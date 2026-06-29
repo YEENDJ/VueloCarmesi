@@ -5,6 +5,15 @@ import { PrismaService } from '../prisma.service'
 
 const ADMIN_URL = process.env.FRONTEND_URL ?? 'http://localhost:3000'
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 function filaHtml(label: string, value: string): string {
   return `<div style="padding:8px 0;border-bottom:1px solid #eee;font-size:14px">
     <span style="color:#888;width:140px;display:inline-block">${label}</span>
@@ -169,7 +178,7 @@ export class NotificacionesService {
     })
 
     const motivoHtml = motivo
-      ? `<div style="margin:16px 0;padding:16px 20px;background:#FFF8F0;border-left:3px solid #872B13;border-radius:4px"><div style="color:#872B13;font-weight:bold;font-size:13px;margin-bottom:4px">Motivo</div><div style="color:#5C3317;font-size:14px">${motivo}</div></div>`
+      ? `<div style="margin:16px 0;padding:16px 20px;background:#FFF8F0;border-left:3px solid #872B13;border-radius:4px"><div style="color:#872B13;font-weight:bold;font-size:13px;margin-bottom:4px">Motivo</div><div style="color:#5C3317;font-size:14px">${escapeHtml(motivo)}</div></div>`
       : ''
 
     const html = this.email.templateReservaCancelada({
