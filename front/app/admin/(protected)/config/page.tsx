@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { getSiteConfigAdmin, patchSiteConfig } from '@/lib/admin/api'
+import { revalidateSiteConfig } from '@/app/actions/revalidate'
 import ImageUploader from '@/components/admin/ImageUploader'
 
 export default function ConfigPage() {
@@ -23,6 +24,7 @@ export default function ConfigPage() {
     try {
       const data = Object.fromEntries(keys.map(k => [k, config[k] ?? '']))
       await patchSiteConfig(data)
+      await revalidateSiteConfig()
       setToast('Guardado correctamente')
       setTimeout(() => setToast(''), 3000)
     } catch {

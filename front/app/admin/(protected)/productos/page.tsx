@@ -2,6 +2,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import type { AdminProducto } from '@/lib/admin/types'
 import { getProductosAdmin, updateProducto, deleteProducto } from '@/lib/admin/api'
+import { revalidateProductos } from '@/app/actions/revalidate'
 import ProductoFormModal from '@/components/admin/ProductoFormModal'
 import ConfirmModal, { TrashIcon } from '@/components/admin/ConfirmModal'
 
@@ -35,6 +36,7 @@ export default function ProductosPage() {
     setProductos(prev => prev.map(p => p.id === updated.id ? updated : p))
     setStockEdit(prev => { const n = { ...prev }; delete n[id]; return n })
     setSavingStock(null)
+    await revalidateProductos()
   }
 
   async function confirmarEliminar() {
@@ -42,6 +44,7 @@ export default function ProductosPage() {
     try {
       await deleteProducto(productoAEliminar.id)
       setProductos(prev => prev.filter(p => p.id !== productoAEliminar.id))
+      await revalidateProductos()
     } finally {
       setProductoAEliminar(null)
     }
@@ -160,12 +163,13 @@ export default function ProductosPage() {
         <ProductoFormModal
           producto={modal === 'new' ? null : modal}
           onClose={() => setModal(undefined)}
-          onSaved={saved => {
+          onSaved={async saved => {
             setProductos(prev => {
               const idx = prev.findIndex(p => p.id === saved.id)
               return idx >= 0 ? prev.map(p => p.id === saved.id ? saved : p) : [saved, ...prev]
             })
             setModal(undefined)
+            await revalidateProductos()
           }}
         />
       )}

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import type { AdminExperiencia } from '@/lib/admin/types'
 import { getExperienciasAdmin, updateExperiencia, deleteExperiencia } from '@/lib/admin/api'
+import { revalidateExperiencias } from '@/app/actions/revalidate'
 import Toggle from '@/components/admin/Toggle'
 import ExperienciaFormModal from '@/components/admin/ExperienciaFormModal'
 import ConfirmModal, { TrashIcon } from '@/components/admin/ConfirmModal'
@@ -22,17 +23,20 @@ export default function ExperienciasPage() {
     const updated = await updateExperiencia(exp.id, { destacada: !exp.destacada })
     setExperiencias(prev => prev.map(e => e.id === updated.id ? updated : e))
     setTogglingId(null)
+    await revalidateExperiencias()
   }
 
   async function archivar(exp: AdminExperiencia) {
     if (!confirm(`¿Archivar "${exp.nombre}"? Dejará de aparecer en el sitio.`)) return
     const updated = await updateExperiencia(exp.id, { archivada: true })
     setExperiencias(prev => prev.map(e => e.id === updated.id ? updated : e))
+    await revalidateExperiencias()
   }
 
   async function restaurar(exp: AdminExperiencia) {
     const updated = await updateExperiencia(exp.id, { archivada: false })
     setExperiencias(prev => prev.map(e => e.id === updated.id ? updated : e))
+    await revalidateExperiencias()
   }
 
   async function eliminar() {
@@ -40,17 +44,19 @@ export default function ExperienciasPage() {
     try {
       await deleteExperiencia(experienciaAEliminar.id)
       setExperiencias(prev => prev.filter(e => e.id !== experienciaAEliminar.id))
+      await revalidateExperiencias()
     } finally {
       setExperienciaAEliminar(null)
     }
   }
 
-  function handleSaved(saved: AdminExperiencia) {
+  async function handleSaved(saved: AdminExperiencia) {
     setExperiencias(prev => {
       const idx = prev.findIndex(e => e.id === saved.id)
       return idx >= 0 ? prev.map(e => e.id === saved.id ? saved : e) : [saved, ...prev]
     })
     setModal(undefined)
+    await revalidateExperiencias()
   }
 
   const visibles = experiencias.filter(e => !e.archivada)
