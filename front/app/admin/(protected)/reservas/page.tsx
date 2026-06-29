@@ -37,9 +37,12 @@ export default function ReservasPage() {
 
   async function cambiarEstadoInline(id: string, estado: EstadoReserva, motivo?: string) {
     setChanging(id)
-    const updated = await updateEstadoReserva(id, estado, motivo)
-    handleUpdated(updated)
-    setChanging(null)
+    try {
+      const updated = await updateEstadoReserva(id, estado, motivo)
+      handleUpdated(updated)
+    } finally {
+      setChanging(null)
+    }
   }
 
   function handleSelectChange(reserva: AdminReserva, nuevoEstado: EstadoReserva) {
@@ -111,17 +114,19 @@ export default function ReservasPage() {
                   <td><StatusBadge estado={r.estado} /></td>
                   <td>
                     <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', alignItems: 'center' }}>
-                      <select
-                        className="admin-select"
-                        style={{ fontSize: 12, padding: '5px 8px', width: 'auto' }}
-                        value={r.estado}
-                        disabled={changing === r.id}
-                        onChange={e => handleSelectChange(r, e.target.value as EstadoReserva)}
-                      >
-                        <option value="pendiente">Pendiente</option>
-                        <option value="confirmada">Confirmada</option>
-                        <option value="cancelada">Cancelada</option>
-                      </select>
+                      {r.estado !== 'cancelada' && (
+                        <select
+                          className="admin-select"
+                          style={{ fontSize: 12, padding: '5px 8px', width: 'auto' }}
+                          value={r.estado}
+                          disabled={changing === r.id}
+                          onChange={e => handleSelectChange(r, e.target.value as EstadoReserva)}
+                        >
+                          <option value="pendiente">Pendiente</option>
+                          <option value="confirmada">Confirmada</option>
+                          <option value="cancelada">Cancelada</option>
+                        </select>
+                      )}
                       <button className="btn-secondary btn-sm" onClick={() => setSelected(r)}>Detalle</button>
                     </div>
                   </td>

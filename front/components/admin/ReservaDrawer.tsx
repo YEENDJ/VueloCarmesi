@@ -21,9 +21,12 @@ export default function ReservaDrawer({
 
   async function cambiarEstado(estado: EstadoReserva, motivoTexto?: string) {
     setSaving(true)
-    const updated = await updateEstadoReserva(reserva.id, estado, motivoTexto)
-    onUpdated(updated)
-    setSaving(false)
+    try {
+      const updated = await updateEstadoReserva(reserva.id, estado, motivoTexto)
+      onUpdated(updated)
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function confirmarCancelacion() {
@@ -66,17 +69,17 @@ export default function ReservaDrawer({
         </div>
 
         {/* Footer */}
-        <div className="admin-drawer-footer">
-          {reserva.estado !== 'confirmada' && (
-            <button
-              className="btn-primary"
-              disabled={saving}
-              onClick={() => cambiarEstado('confirmada')}
-            >
-              {saving ? '…' : 'Confirmar'}
-            </button>
-          )}
-          {reserva.estado !== 'cancelada' && (
+        {reserva.estado !== 'cancelada' && (
+          <div className="admin-drawer-footer">
+            {reserva.estado !== 'confirmada' && (
+              <button
+                className="btn-primary"
+                disabled={saving}
+                onClick={() => cambiarEstado('confirmada')}
+              >
+                {saving ? '…' : 'Confirmar'}
+              </button>
+            )}
             <button
               className="btn-ghost"
               disabled={saving}
@@ -84,8 +87,8 @@ export default function ReservaDrawer({
             >
               Cancelar reserva
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Modal de cancelación */}
