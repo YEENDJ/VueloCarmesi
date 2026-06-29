@@ -68,6 +68,7 @@ export default function ProductoFormModal({
       const saved = isEdit
         ? await updateProducto(producto!.id, data)
         : await createProducto(data)
+      setSaving(false)
       onSaved(saved)
     } catch {
       setError('Error al guardar. Revisá que el slug sea único.')
