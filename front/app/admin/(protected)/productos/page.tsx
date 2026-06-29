@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from 'react'
 import type { AdminProducto } from '@/lib/admin/types'
 import { getProductosAdmin, updateProducto, deleteProducto } from '@/lib/admin/api'
 import ProductoFormModal from '@/components/admin/ProductoFormModal'
+import ConfirmModal, { TrashIcon } from '@/components/admin/ConfirmModal'
 
 const CATEGORIAS = ['Todos', 'Cacao', 'Chocolates', 'Kits']
 
@@ -13,6 +14,7 @@ export default function ProductosPage() {
   const [stockEdit, setStockEdit] = useState<Record<string, number>>({})
   const [savingStock, setSavingStock] = useState<string | null>(null)
   const [modal, setModal] = useState<AdminProducto | null | 'new'>()
+  const [productoAEliminar, setProductoAEliminar] = useState<AdminProducto | null>(null)
 
   useEffect(() => {
     getProductosAdmin().then(data => { setProductos(data); setLoading(false) })
@@ -35,10 +37,11 @@ export default function ProductosPage() {
     setSavingStock(null)
   }
 
-  async function eliminar(id: string) {
-    if (!confirm('¿Eliminar este producto?')) return
-    await deleteProducto(id)
-    setProductos(prev => prev.filter(p => p.id !== id))
+  async function confirmarEliminar() {
+    if (!productoAEliminar) return
+    await deleteProducto(productoAEliminar.id)
+    setProductos(prev => prev.filter(p => p.id !== productoAEliminar.id))
+    setProductoAEliminar(null)
   }
 
   function stockStyle(stock: number): React.CSSProperties {
@@ -131,7 +134,13 @@ export default function ProductosPage() {
                     <td style={{ textAlign: 'right' }}>
                       <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
                         <button className="btn-secondary btn-sm" onClick={() => setModal(p)}>Editar</button>
-                        <button className="btn-ghost btn-sm" onClick={() => eliminar(p.id)}>Eliminar</button>
+                        <button
+                          className="btn-ghost btn-sm"
+                          style={{ display: 'flex', alignItems: 'center', gap: 5 }}
+                          onClick={() => setProductoAEliminar(p)}
+                        >
+                          <TrashIcon /> Eliminar
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -155,6 +164,14 @@ export default function ProductosPage() {
             })
             setModal(undefined)
           }}
+        />
+      )}
+      {productoAEliminar && (
+        <ConfirmModal
+          title={`¿Eliminar "${productoAEliminar.nombre}"?`}
+          message="Esta acción es permanente y no se puede deshacer."
+          onConfirm={confirmarEliminar}
+          onCancel={() => setProductoAEliminar(null)}
         />
       )}
     </>
