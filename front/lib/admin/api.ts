@@ -83,3 +83,12 @@ export function updateEstadoPedido(id: string, estado: EstadoPedido): Promise<Ad
     body: JSON.stringify({ estado }),
   }).then(checked)
 }
+
+// ── Uploads ────────────────────────────────────────────────
+export async function uploadImage(file: File): Promise<{ url: string; publicId: string }> {
+  const form = new FormData()
+  form.append('file', file)
+  const res = await fetch(`${BASE}/uploads/image`, { method: 'POST', body: form })
+  if (!res.ok) throw new Error(`Upload error ${res.status}`)
+  return res.json()
+}
