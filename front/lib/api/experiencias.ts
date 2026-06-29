@@ -75,3 +75,13 @@ export async function getExperienciaBySlug(slug: string): Promise<Experiencia | 
     return MOCK_EXPERIENCIAS.find(e => e.slug === slug) ?? null
   }
 }
+
+export async function getExperienciasDestacadas(): Promise<Experiencia[]> {
+  try {
+    const res = await fetch(`${BASE}/experiencias?destacadas=true`, { next: { revalidate: 60 } })
+    if (!res.ok) throw new Error()
+    return res.json()
+  } catch {
+    return MOCK_EXPERIENCIAS.filter(e => e.destacada)
+  }
+}
