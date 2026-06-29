@@ -1,10 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
+import { NotificacionesService } from '../notificaciones/notificaciones.service'
 import { CreateReservaDto } from './dto/create-reserva.dto'
 
 @Injectable()
 export class ReservasService {
-  constructor(private prisma: PrismaService) {}
+  private readonly logger = new Logger(ReservasService.name)
+
+  constructor(
+    private prisma: PrismaService,
+    private notificaciones: NotificacionesService,
+  ) {}
 
   findAll() {
     return this.prisma.reserva.findMany({
@@ -19,14 +25,18 @@ export class ReservasService {
     return reserva
   }
 
-  create(dto: CreateReservaDto) {
+  async create(dto: CreateReservaDto) {
     const { fecha, ...rest } = dto
-    return this.prisma.reserva.create({
-      data: {
-        ...rest,
-        fecha: new Date(fecha),
-      },
+    const reserva = await this.prisma.reserva.create({
+      data: { ...rest, fecha: new Date(fecha) },
+      include: { experiencia: { select: { id: true, nombre: true } } },
     })
+
+    this.notificaciones
+      .enviarConfirmacionReserva(reserva)
+      .catch(err => this.logger.error('Notificación de reserva fallida', err))
+
+    return reserva
   }
 
   async update(id: string, dto: Partial<CreateReservaDto>) {
@@ -34,10 +44,7 @@ export class ReservasService {
     const { fecha, ...rest } = dto
     return this.prisma.reserva.update({
       where: { id },
-      data: {
-        ...rest,
-        ...(fecha ? { fecha: new Date(fecha) } : {}),
-      },
+      data: { ...rest, ...(fecha ? { fecha: new Date(fecha) } : {}) },
     })
   }
 

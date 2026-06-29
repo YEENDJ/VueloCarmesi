@@ -1,11 +1,17 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common'
+import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
+import { NotificacionesService } from '../notificaciones/notificaciones.service'
 import { CreatePedidoDto } from './dto/create-pedido.dto'
 import { UpdatePedidoDto } from './dto/update-pedido.dto'
 
 @Injectable()
 export class PedidosService {
-  constructor(private prisma: PrismaService) {}
+  private readonly logger = new Logger(PedidosService.name)
+
+  constructor(
+    private prisma: PrismaService,
+    private notificaciones: NotificacionesService,
+  ) {}
 
   findAll() {
     return this.prisma.pedido.findMany({
@@ -27,7 +33,7 @@ export class PedidosService {
     const { nombre, email, direccion, items } = dto
 
     // Create pedido with items in a transaction (stock fetch + validation inside to avoid race condition)
-    return this.prisma.$transaction(async (tx) => {
+    const pedido = await this.prisma.$transaction(async (tx) => {
       // Fetch all products inside the transaction
       const productIds = items.map((i) => i.productoId)
       const productos = await tx.producto.findMany({
@@ -83,6 +89,12 @@ export class PedidosService {
 
       return pedido
     })
+
+    this.notificaciones
+      .enviarConfirmacionPedido(pedido)
+      .catch(err => this.logger.error('Notificación de pedido fallida', err))
+
+    return pedido
   }
 
   async update(id: string, dto: UpdatePedidoDto) {
