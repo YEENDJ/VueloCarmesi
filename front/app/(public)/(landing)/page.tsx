@@ -2,6 +2,7 @@ import Hero from '@/components/layout/Hero'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
 import SobreNosotros from '@/components/secciones/SobreNosotros'
+import { getSiteConfig } from '@/lib/api/site-config'
 
 const experienciasPreview = [
   { slug: 'cacao-intenso', nombre: 'Cacao Intenso', descripcion: 'Recorrido por plantaciones y degustación guiada.', duracion: '4 horas', precio: 8500 },
@@ -9,7 +10,8 @@ const experienciasPreview = [
   { slug: 'amanecer-agroecologico', nombre: 'Amanecer Agroecológico', descripcion: 'Tour al amanecer con desayuno orgánico incluido.', duracion: '5 horas', precio: 9500 },
 ]
 
-export default function HomePage() {
+export default async function HomePage() {
+  const config = await getSiteConfig()
   return (
     <>
       <Hero
@@ -17,6 +19,7 @@ export default function HomePage() {
         subtitulo="Cosechamos, fermentamos y catamos junto a vos. Conocé el cacao desde su raíz, en una finca que respira selva."
         ctaTexto="Reservá tu experiencia"
         ctaHref="/experiencias"
+        imagen={config.hero_image || undefined}
       />
 
       {/* Sección: Experiencias preview */}
