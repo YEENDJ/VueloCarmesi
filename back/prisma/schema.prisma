@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -71,4 +70,18 @@ model ItemPedido {
   producto   Producto @relation(fields: [productoId], references: [id])
   cantidad   Int
   precio     Float
+}
+
+model Contacto {
+  id        String   @id @default(cuid())
+  nombre    String
+  email     String
+  mensaje   String
+  createdAt DateTime @default(now())
+}
+
+model SiteConfig {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
 }
