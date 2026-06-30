@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Honey Lips';src:url('fonts/HoneyLips.ttf') format('truetype');font-weight:400;font-display:swap;}
+@font-face{font-family:'Bellota';src:url('fonts/Bellota-Bold.ttf') format('truetype');font-weight:700;font-display:swap;}
+@font-face{font-family:'Bellota';src:url('fonts/Bellota-Regular.ttf') format('truetype');font-weight:400;font-display:swap;}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{font-family:'Bellota',sans-serif;background:#FBF6EC;color:#872B13;-webkit-font-smoothing:antialiased;}
+::selection{background:#F59C00;color:#872B13;}
+.adm-scroll::-webkit-scrollbar{width:10px;height:10px;}
+.adm-scroll::-webkit-scrollbar-thumb{background:rgba(135,43,19,.2);border-radius:8px;}
+select.adm-sel{appearance:none;-webkit-appearance:none;}
+</style>
+</helmet>
+
+<div style="display:flex;min-height:100vh;background:#FBF6EC;">
+
+  <!-- SIDEBAR -->
+  <aside style="width:248px;flex:none;background:#872B13;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;">
+    <div style="padding:24px 22px 20px;border-bottom:1px solid rgba(253,195,0,.18);">
+      <div style="font-family:'Honey Lips',cursive;font-size:28px;color:#FDC300;line-height:1;">Vuelo Carmesí</div>
+      <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,234,202,.55);margin-top:6px;">Panel de administración</div>
+    </div>
+    <nav style="flex:1;padding:14px 12px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;" class="adm-scroll">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="6">
+      <button onClick="{{ n.go }}" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:{{ n.fg }};background:{{ n.bg }};border:none;border-radius:8px;padding:11px 14px;cursor:pointer;">
+        <span style="font-size:17px;width:20px;text-align:center;">{{ n.icon }}</span>
+        <span style="flex:1;">{{ n.label }}</span>
+        <sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}"><span style="font-weight:700;font-size:11px;background:#F59C00;color:#872B13;border-radius:100px;padding:1px 7px;">{{ n.badge }}</span></sc-if>
+      </button>
+      </sc-for>
+    </nav>
+    <div style="padding:16px;border-top:1px solid rgba(253,195,0,.18);">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:34px;height:34px;border-radius:50%;background:#F59C00;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#872B13;flex:none;">VC</div>
+        <div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:13px;color:#FFEACA;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Finca Vuelo Carmesí</div><div style="font-size:11px;color:rgba(255,234,202,.5);">Administrador</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;">
+    <!-- HEADER -->
+    <header style="height:64px;flex:none;background:#FFFFFF;border-bottom:1px solid rgba(135,43,19,.12);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:20;">
+      <div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;">
+        <span style="color:rgba(135,43,19,.5);">Admin</span>
+        <span style="color:rgba(135,43,19,.3);">/</span>
+        <span style="color:#872B13;">{{ crumb }}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:18px;">
+        <button style="position:relative;background:none;border:none;cursor:pointer;font-size:18px;color:#872B13;">🔔<span style="position:absolute;top:-2px;right:-4px;width:8px;height:8px;background:#D51312;border-radius:50%;border:1.5px solid #fff;"></span></button>
+        <div style="width:1px;height:26px;background:rgba(135,43,19,.12);"></div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:32px;height:32px;border-radius:50%;background:#872B13;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#FFEACA;">M</div>
+          <div style="line-height:1.1;"><div style="font-weight:700;font-size:13px;color:#872B13;">María Rosales</div><div style="font-size:11px;color:rgba(135,43,19,.55);">Dueña</div></div>
+        </div>
+        <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:13px;color:#872B13;background:transparent;border:1.5px solid rgba(135,43,19,.4);border-radius:8px;padding:7px 14px;cursor:pointer;">Salir</button>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main style="flex:1;padding:28px;overflow-x:hidden;" class="adm-scroll">
+      <!-- ============ OVERVIEW ============ -->
+<sc-if value="{{ is_overview }}" hint-placeholder-val="{{ true }}">
+<div>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+    <div>
+      <h1 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;margin:0;">Hola, María 👋</h1>
+      <p style="font-size:15px;color:rgba(135,43,19,.6);margin:4px 0 0;">Esto es lo que pasó en la finca este mes.</p>
+    </div>
+    <span style="font-weight:700;font-size:13px;color:#872B13;background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:8px;padding:9px 14px;">📅 Junio 2026</span>
+  </div>
+
+  <!-- métricas -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px;">
+    <div style="background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:14px;padding:22px;box-shadow:0 2px 8px rgba(135,43,19,.06);">
+      <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;color:rgba(135,43,19,.55);">Reservas del mes</span><span style="width:34px;height:34px;border-radius:9px;background:rgba(213,19,18,.1);display:flex;align-items:center;justify-content:center;font-size:16px;">📅</span></div>
+      <div style="font-weight:700;font-size:34px;color:#872B13;margin-top:10px;line-height:1;">38</div>
+      <div style="font-weight:700;font-size:13px;color:#1F8A5B;margin-top:8px;">▲ 12% vs. mayo</div>
+    </div>
+    <div style="background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:14px;padding:22px;box-shadow:0 2px 8px rgba(135,43,19,.06);">
+      <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;color:rgba(135,43,19,.55);">Pedidos del mes</span><span style="width:34px;height:34px;border-radius:9px;background:rgba(42,111,219,.1);display:flex;align-items:center;justify-content:center;font-size:16px;">📦</span></div>
+      <div style="font-weight:700;font-size:34px;color:#872B13;margin-top:10px;line-height:1;">52</div>
+      <div style="font-weight:700;font-size:13px;color:#1F8A5B;margin-top:8px;">▲ 8% vs. mayo</div>
+    </div>
+    <div style="background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:14px;padding:22px;box-shadow:0 2px 8px rgba(135,43,19,.06);">
+      <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;color:rgba(135,43,19,.55);">Ingresos estimados</span><span style="width:34px;height:34px;border-radius:9px;background:rgba(245,156,0,.15);display:flex;align-items:center;justify-content:center;font-size:16px;">💰</span></div>
+      <div style="font-weight:700;font-size:34px;color:#872B13;margin-top:10px;line-height:1;">$1.24M</div>
+      <div style="font-weight:700;font-size:13px;color:#1F8A5B;margin-top:8px;">▲ 15% vs. mayo</div>
+    </div>
+    <div style="background:#fff;border:1px solid rgba(245,156,0,.5);border-radius:14px;padding:22px;box-shadow:0 2px 8px rgba(135,43,19,.06);">
+      <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;color:rgba(135,43,19,.55);">Stock bajo</span><span style="width:34px;height:34px;border-radius:9px;background:rgba(245,156,0,.18);display:flex;align-items:center;justify-content:center;font-size:16px;">⚠️</span></div>
+      <div style="font-weight:700;font-size:34px;color:#B45309;margin-top:10px;line-height:1;">3</div>
+      <div style="font-weight:700;font-size:13px;color:#B45309;margin-top:8px;">productos por reponer</div>
+    </div>
+  </div>
+
+  <!-- gráfica -->
+  <div style="background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:14px;padding:24px;box-shadow:0 2px 8px rgba(135,43,19,.06);margin-bottom:24px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:20px;">
+      <div><div style="font-weight:700;font-size:17px;color:#872B13;">Reservas por semana</div><div style="font-size:13px;color:rgba(135,43,19,.55);">Últimas 8 semanas</div></div>
+      <span style="font-weight:700;font-size:13px;color:#872B13;background:#FBF6EC;border-radius:8px;padding:7px 12px;">Total: 165 reservas</span>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:clamp(8px,2cqw,20px);height:180px;padding-top:10px;">
+      <sc-for list="{{ chartBars }}" as="b" hint-placeholder-count="8">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end;">
+        <span style="font-weight:700;font-size:12px;color:#872B13;">{{ b.v }}</span>
+        <div style="width:100%;max-width:46px;height:{{ b.h }}%;background:linear-gradient(#D51312,#EA5B0C);border-radius:6px 6px 0 0;min-height:4px;"></div>
+        <span style="font-size:11px;color:rgba(135,43,19,.5);">{{ b.w }}</span>
+      </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- listas recientes -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:20px;">
+    <div style="background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:14px;box-shadow:0 2px 8px rgba(135,43,19,.06);overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid rgba(135,43,19,.1);">
+        <span style="font-weight:700;font-size:16px;color:#872B13;">Últimas reservas</span>
+        <button onClick="{{ navItems.1.go }}" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:13px;color:#EA5B0C;background:none;border:none;cursor:pointer;">Ver todas →</button>
+      </div>
+      <div>
+        <sc-for list="{{ recentReservas }}" as="r" hint-placeholder-count="5">
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 22px;border-bottom:1px solid rgba(135,43,19,.06);">
+          <div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:14px;color:#872B13;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ r.visitante }}</div><div style="font-size:12px;color:rgba(135,43,19,.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ r.exp }}</div></div>
+          <span style="font-size:12px;color:rgba(135,43,19,.5);white-space:nowrap;">{{ r.fecha }}</span>
+          <span style="font-weight:700;font-size:11px;text-transform:capitalize;background:{{ r.est.bg }};color:{{ r.est.fg }};border-radius:100px;padding:3px 9px;">{{ r.estado }}</span>
+        </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:14px;box-shadow:0 2px 8px rgba(135,43,19,.06);overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid rgba(135,43,19,.1);">
+        <span style="font-weight:700;font-size:16px;color:#872B13;">Últimos pedidos</span>
+        <button onClick="{{ navItems.4.go }}" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:13px;color:#EA5B0C;background:none;border:none;cursor:pointer;">Ver todos →</button>
+      </div>
+      <div>
+        <sc-for list="{{ recentPedidos }}" as="p" hint-placeholder-count="5">
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 22px;border-bottom:1px solid rgba(135,43,19,.06);">
+          <span style="font-weight:700;font-size:13px;color:#EA5B0C;width:46px;">{{ p.id }}</span>
+          <div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:14px;color:#872B13;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ p.cliente }}</div><div style="font-size:12px;color:rgba(135,43,19,.55);">{{ p.fecha }}</div></div>
+          <span style="font-weight:700;font-size:14px;color:#F59C00;white-space:nowrap;">{{ p.total }}</span>
+          <span style="font-weight:700;font-size:11px;text-transform:capitalize;background:{{ p.est.bg }};color:{{ p.est.fg }};border-radius:100px;padding:3px 9px;">{{ p.estado }}</span>
+        </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+<!-- ============ RESERVAS ============ -->
+<sc-if value="{{ is_reservas }}" hint-placeholder-val="{{ false }}">
+<div>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+    <div><h1 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;margin:0;">Reservas</h1><p style="font-size:15px;color:rgba(135,43,19,.6);margin:4px 0 0;">38 reservas este mes · 3 pendientes de confirmar</p></div>
+  </div>
+
+  <!-- filtros -->
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px;">
+    <select class="adm-sel" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:14px;color:#872B13;background:#fff url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path d=%22M2 4l4 4 4-4%22 stroke=%22%23872B13%22 stroke-width=%221.6%22 fill=%22none%22/></svg>') no-repeat right 12px center;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:10px 34px 10px 14px;cursor:pointer;outline:none;"><option>Todas las experiencias</option><option>Taller del árbol a la barra</option><option>Cosecha al amanecer</option><option>Cata sensorial</option></select>
+    <input type="date" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:14px;color:#872B13;background:#fff;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:9px 14px;outline:none;"/>
+    <span style="font-weight:700;font-size:13px;color:rgba(135,43,19,.45);">→</span>
+    <input type="date" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:14px;color:#872B13;background:#fff;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:9px 14px;outline:none;"/>
+    <span style="flex:1;"></span>
+    <div style="display:flex;gap:6px;">
+      <span style="font-weight:700;font-size:13px;background:#D51312;color:#FFEACA;border-radius:100px;padding:7px 14px;cursor:pointer;">Todas</span>
+      <span style="font-weight:700;font-size:13px;background:#fff;color:#872B13;border:1.5px solid rgba(135,43,19,.25);border-radius:100px;padding:7px 14px;cursor:pointer;">Pendientes</span>
+      <span style="font-weight:700;font-size:13px;background:#fff;color:#872B13;border:1.5px solid rgba(135,43,19,.25);border-radius:100px;padding:7px 14px;cursor:pointer;">Confirmadas</span>
+    </div>
+  </div>
+
+  <!-- tabla -->
+  <div style="background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:14px;box-shadow:0 2px 8px rgba(135,43,19,.06);overflow:hidden;">
+    <div style="overflow-x:auto;" class="adm-scroll">
+      <div style="min-width:760px;">
+        <div style="display:flex;align-items:center;background:#FBF6EC;font-weight:700;font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:rgba(135,43,19,.55);">
+          <div style="flex:0 0 120px;padding:14px 20px;">Fecha</div>
+          <div style="flex:1 1 auto;padding:14px 20px;">Experiencia</div>
+          <div style="flex:0 0 150px;padding:14px 20px;">Visitante</div>
+          <div style="flex:0 0 64px;padding:14px 8px;text-align:center;">Pers.</div>
+          <div style="flex:0 0 120px;padding:14px 20px;">Estado</div>
+          <div style="flex:0 0 240px;padding:14px 20px;text-align:right;">Acciones</div>
+        </div>
+        <sc-for list="{{ reservas }}" as="r" hint-placeholder-count="6">
+        <div style="display:flex;align-items:center;border-top:1px solid rgba(135,43,19,.08);">
+          <div style="flex:0 0 120px;padding:14px 20px;font-weight:700;font-size:14px;color:#872B13;white-space:nowrap;">{{ r.fecha }}</div>
+          <div style="flex:1 1 auto;min-width:140px;padding:14px 20px;font-size:14px;color:#872B13;">{{ r.exp }}</div>
+          <div style="flex:0 0 150px;padding:14px 20px;font-weight:700;font-size:14px;color:#872B13;">{{ r.visitante }}</div>
+          <div style="flex:0 0 64px;padding:14px 8px;text-align:center;font-weight:700;font-size:14px;color:#872B13;">{{ r.pers }}</div>
+          <div style="flex:0 0 120px;padding:14px 20px;"><span style="font-weight:700;font-size:11px;text-transform:capitalize;background:{{ r.est.bg }};color:{{ r.est.fg }};border-radius:100px;padding:4px 11px;">{{ r.estado }}</span></div>
+          <div style="flex:0 0 240px;padding:14px 20px;">
+            <div style="display:flex;gap:8px;justify-content:flex-end;">
+              <select class="adm-sel" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:12px;color:#872B13;background:#FBF6EC url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2210%22 viewBox=%220 0 12 12%22><path d=%22M2 4l4 4 4-4%22 stroke=%22%23872B13%22 stroke-width=%221.6%22 fill=%22none%22/></svg>') no-repeat right 9px center;border:1px solid rgba(135,43,19,.2);border-radius:6px;padding:6px 26px 6px 10px;cursor:pointer;outline:none;"><option>Cambiar estado</option><option>Confirmar</option><option>Cancelar</option></select>
+              <button onClick="{{ openDetalleReserva }}" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:12px;color:#EA5B0C;background:transparent;border:1.5px solid #EA5B0C;border-radius:6px;padding:6px 12px;cursor:pointer;white-space:nowrap;">Detalle</button>
+            </div>
+          </div>
+        </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- DRAWER DETALLE RESERVA -->
+  <sc-if value="{{ detalleReserva }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;background:rgba(92,29,13,.4);z-index:60;display:flex;justify-content:flex-end;" onClick="{{ closeDetalleReserva }}">
+    <div style="width:420px;max-width:92vw;background:#FFFFFF;height:100%;overflow-y:auto;box-shadow:-8px 0 40px rgba(0,0,0,.2);" class="adm-scroll">
+      <div style="background:#872B13;padding:24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#FDC300;">Detalle de reserva</span><span style="font-size:22px;color:rgba(255,234,202,.7);cursor:pointer;">✕</span></div>
+        <div style="font-weight:700;font-size:22px;color:#FFEACA;margin-top:10px;">Diego Paredes</div>
+        <span style="display:inline-block;font-weight:700;font-size:11px;text-transform:capitalize;background:#F59C00;color:#872B13;border-radius:100px;padding:4px 11px;margin-top:10px;">pendiente</span>
+      </div>
+      <div style="padding:24px;display:flex;flex-direction:column;gap:18px;">
+        <div><div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:rgba(135,43,19,.5);">Experiencia</div><div style="font-weight:700;font-size:16px;color:#872B13;margin-top:3px;">Cosecha de cacao al amanecer</div></div>
+        <div style="display:flex;gap:24px;"><div><div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:rgba(135,43,19,.5);">Fecha</div><div style="font-weight:700;font-size:16px;color:#872B13;margin-top:3px;">14 jul 2026</div></div><div><div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:rgba(135,43,19,.5);">Personas</div><div style="font-weight:700;font-size:16px;color:#872B13;margin-top:3px;">4</div></div></div>
+        <div style="height:1px;background:rgba(135,43,19,.12);"></div>
+        <div><div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:rgba(135,43,19,.5);">Contacto</div><div style="font-weight:700;font-size:15px;color:#872B13;margin-top:4px;">📞 +54 9 11 3311 5577</div><div style="font-weight:700;font-size:15px;color:#872B13;margin-top:4px;">✉️ dpared@mail.com</div></div>
+        <div><div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:rgba(135,43,19,.5);">Notas</div><div style="font-size:15px;line-height:1.5;color:#872B13;margin-top:4px;background:#FBF6EC;border-radius:8px;padding:12px 14px;">Grupo familiar, 2 niños.</div></div>
+        <div style="display:flex;gap:10px;margin-top:6px;">
+          <button style="flex:1;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#fff;background:#1F8A5B;border:none;border-radius:8px;padding:13px;cursor:pointer;">Confirmar</button>
+          <button style="flex:1;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#872B13;background:transparent;border:1.5px solid rgba(135,43,19,.4);border-radius:8px;padding:13px;cursor:pointer;">Cancelar reserva</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ============ EXPERIENCIAS ============ -->
+<sc-if value="{{ is_experiencias }}" hint-placeholder-val="{{ false }}">
+<div>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+    <div><h1 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;margin:0;">Experiencias</h1><p style="font-size:15px;color:rgba(135,43,19,.6);margin:4px 0 0;">6 experiencias · 3 destacadas en el sitio</p></div>
+    <button onClick="{{ openFormExp }}" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:12px 22px;cursor:pointer;">+ Nueva experiencia</button>
+  </div>
+
+  <div style="background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:14px;box-shadow:0 2px 8px rgba(135,43,19,.06);overflow:hidden;">
+    <div style="overflow-x:auto;" class="adm-scroll">
+      <div style="min-width:720px;">
+        <div style="display:flex;align-items:center;background:#FBF6EC;font-weight:700;font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:rgba(135,43,19,.55);">
+          <div style="flex:1 1 auto;padding:14px 20px;">Experiencia</div>
+          <div style="flex:0 0 100px;padding:14px 12px;">Precio</div>
+          <div style="flex:0 0 90px;padding:14px 12px;">Duración</div>
+          <div style="flex:0 0 100px;padding:14px 12px;text-align:center;">Capacidad</div>
+          <div style="flex:0 0 90px;padding:14px 12px;text-align:center;">Destacada</div>
+          <div style="flex:0 0 180px;padding:14px 20px;text-align:right;">Acciones</div>
+        </div>
+        <sc-for list="{{ experiencias }}" as="e" hint-placeholder-count="6">
+        <div style="display:flex;align-items:center;border-top:1px solid rgba(135,43,19,.08);">
+          <div style="flex:1 1 auto;min-width:0;padding:12px 20px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:46px;height:46px;border-radius:8px;flex:none;background:repeating-linear-gradient(135deg,#F0D6A8 0 8px,#E9CB97 8px 16px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:8px;color:rgba(135,43,19,.45);">{{ e.img }}</span></div>
+              <span style="font-weight:700;font-size:14px;color:#872B13;">{{ e.nombre }}</span>
+            </div>
+          </div>
+          <div style="flex:0 0 100px;padding:12px 12px;font-weight:700;font-size:14px;color:#F59C00;">{{ e.precio }}</div>
+          <div style="flex:0 0 90px;padding:12px 12px;font-size:14px;color:#872B13;">{{ e.dur }}</div>
+          <div style="flex:0 0 100px;padding:12px 12px;text-align:center;font-size:14px;color:#872B13;">{{ e.cap }}</div>
+          <div style="flex:0 0 90px;padding:12px 12px;text-align:center;">
+            <sc-if value="{{ e.feat }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;width:42px;height:24px;background:#1F8A5B;border-radius:100px;align-items:center;justify-content:flex-end;padding:0 3px;cursor:pointer;"><span style="width:18px;height:18px;background:#fff;border-radius:50%;"></span></span></sc-if>
+            <sc-if value="{{ e.featOff }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;width:42px;height:24px;background:rgba(135,43,19,.2);border-radius:100px;align-items:center;padding:0 3px;cursor:pointer;"><span style="width:18px;height:18px;background:#fff;border-radius:50%;"></span></span></sc-if>
+          </div>
+          <div style="flex:0 0 180px;padding:12px 20px;">
+            <div style="display:flex;gap:8px;justify-content:flex-end;">
+              <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:12px;color:#EA5B0C;background:transparent;border:1.5px solid #EA5B0C;border-radius:6px;padding:6px 12px;cursor:pointer;">Editar</button>
+              <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:12px;color:rgba(135,43,19,.55);background:transparent;border:1.5px solid rgba(135,43,19,.25);border-radius:6px;padding:6px 12px;cursor:pointer;">Archivar</button>
+            </div>
+          </div>
+        </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FORM CRUD -->
+  <sc-if value="{{ formExp }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;background:rgba(92,29,13,.4);z-index:60;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;" class="adm-scroll" onClick="{{ closeFormExp }}">
+    <div style="width:560px;max-width:100%;background:#fff;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid rgba(135,43,19,.1);">
+        <span style="font-weight:700;font-size:18px;color:#872B13;">Nueva experiencia</span>
+        <span style="font-size:20px;color:rgba(135,43,19,.5);cursor:pointer;" onClick="{{ closeFormExp }}">✕</span>
+      </div>
+      <div style="padding:24px;display:flex;flex-direction:column;gap:16px;">
+        <div><label style="display:block;font-weight:700;font-size:13px;color:#872B13;margin-bottom:6px;">Nombre</label><input type="text" placeholder="Ej. Taller del árbol a la barra" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#872B13;background:#FBF6EC;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:11px 14px;outline:none;"/></div>
+        <div><label style="display:block;font-weight:700;font-size:13px;color:#872B13;margin-bottom:6px;">Descripción</label><textarea placeholder="Descripción de la experiencia…" style="width:100%;min-height:90px;resize:vertical;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#872B13;background:#FBF6EC;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:11px 14px;outline:none;"></textarea></div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+          <div style="flex:1 1 120px;"><label style="display:block;font-weight:700;font-size:13px;color:#872B13;margin-bottom:6px;">Precio</label><input type="text" placeholder="$26.000" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#872B13;background:#FBF6EC;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:11px 14px;outline:none;"/></div>
+          <div style="flex:1 1 100px;"><label style="display:block;font-weight:700;font-size:13px;color:#872B13;margin-bottom:6px;">Duración</label><input type="text" placeholder="5 h" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#872B13;background:#FBF6EC;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:11px 14px;outline:none;"/></div>
+          <div style="flex:1 1 100px;"><label style="display:block;font-weight:700;font-size:13px;color:#872B13;margin-bottom:6px;">Capacidad</label><input type="number" placeholder="8" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#872B13;background:#FBF6EC;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:11px 14px;outline:none;"/></div>
+        </div>
+        <div><label style="display:block;font-weight:700;font-size:13px;color:#872B13;margin-bottom:6px;">Imagen</label><div style="border:1.5px dashed rgba(135,43,19,.3);border-radius:8px;padding:24px;text-align:center;background:#FBF6EC;"><div style="font-size:24px;">🖼️</div><div style="font-weight:700;font-size:13px;color:rgba(135,43,19,.6);margin-top:6px;">Arrastrá una imagen o hacé clic para subir</div></div></div>
+        <div style="display:flex;align-items:center;gap:10px;"><span style="display:inline-flex;width:42px;height:24px;background:rgba(135,43,19,.2);border-radius:100px;align-items:center;padding:0 3px;cursor:pointer;"><span style="width:18px;height:18px;background:#fff;border-radius:50%;"></span></span><span style="font-weight:700;font-size:14px;color:#872B13;">Destacar en el sitio</span></div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;padding:18px 24px;border-top:1px solid rgba(135,43,19,.1);background:#FBF6EC;">
+        <button onClick="{{ closeFormExp }}" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:14px;color:#872B13;background:transparent;border:1.5px solid rgba(135,43,19,.4);border-radius:8px;padding:11px 20px;cursor:pointer;">Cancelar</button>
+        <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:14px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:11px 22px;cursor:pointer;">Guardar experiencia</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+</div>
+</sc-if>
+<!-- ============ PRODUCTOS ============ -->
+<sc-if value="{{ is_productos }}" hint-placeholder-val="{{ false }}">
+<div>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+    <div><h1 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;margin:0;">Productos</h1><p style="font-size:15px;color:rgba(135,43,19,.6);margin:4px 0 0;">8 productos · <span style="color:#B45309;font-weight:700;">3 con stock bajo</span></p></div>
+    <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:12px 22px;cursor:pointer;">+ Nuevo producto</button>
+  </div>
+
+  <!-- filtros categoría -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;">
+    <span style="font-weight:700;font-size:13px;background:#D51312;color:#FFEACA;border-radius:100px;padding:7px 14px;cursor:pointer;">Todos</span>
+    <span style="font-weight:700;font-size:13px;background:#fff;color:#872B13;border:1.5px solid rgba(135,43,19,.25);border-radius:100px;padding:7px 14px;cursor:pointer;">Cacao</span>
+    <span style="font-weight:700;font-size:13px;background:#fff;color:#872B13;border:1.5px solid rgba(135,43,19,.25);border-radius:100px;padding:7px 14px;cursor:pointer;">Chocolates</span>
+    <span style="font-weight:700;font-size:13px;background:#fff;color:#872B13;border:1.5px solid rgba(135,43,19,.25);border-radius:100px;padding:7px 14px;cursor:pointer;">Kits</span>
+  </div>
+
+  <div style="background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:14px;box-shadow:0 2px 8px rgba(135,43,19,.06);overflow:hidden;">
+    <div style="overflow-x:auto;" class="adm-scroll">
+      <div style="min-width:680px;">
+        <div style="display:flex;align-items:center;background:#FBF6EC;font-weight:700;font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:rgba(135,43,19,.55);">
+          <div style="flex:1 1 auto;padding:14px 20px;">Producto</div>
+          <div style="flex:0 0 130px;padding:14px 12px;">Categoría</div>
+          <div style="flex:0 0 100px;padding:14px 12px;">Precio</div>
+          <div style="flex:0 0 150px;padding:14px 12px;text-align:center;">Stock</div>
+          <div style="flex:0 0 180px;padding:14px 20px;text-align:right;">Acciones</div>
+        </div>
+        <sc-for list="{{ productos }}" as="p" hint-placeholder-count="8">
+        <div style="display:flex;align-items:center;border-top:1px solid rgba(135,43,19,.08);">
+          <div style="flex:1 1 auto;min-width:0;padding:13px 20px;font-weight:700;font-size:14px;color:#872B13;">{{ p.nombre }}</div>
+          <div style="flex:0 0 130px;padding:13px 12px;"><span style="font-weight:700;font-size:12px;background:rgba(135,43,19,.08);color:rgba(135,43,19,.7);border-radius:100px;padding:3px 10px;">{{ p.cat }}</span></div>
+          <div style="flex:0 0 100px;padding:13px 12px;font-weight:700;font-size:14px;color:#F59C00;">{{ p.precio }}</div>
+          <div style="flex:0 0 150px;padding:13px 12px;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+              <input type="number" value="{{ p.stock }}" style="width:60px;font-family:'Bellota',sans-serif;font-weight:700;font-size:14px;text-align:center;color:{{ p.stockFg }};background:{{ p.stockBg }};border:1.5px solid rgba(135,43,19,.2);border-radius:6px;padding:6px 4px;outline:none;"/>
+              <sc-if value="{{ p.low }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;" title="Stock bajo">⚠️</span></sc-if>
+              <sc-if value="{{ p.out }}" hint-placeholder-val="{{ false }}"><span style="font-weight:700;font-size:11px;background:rgba(135,43,19,.15);color:rgba(135,43,19,.6);border-radius:100px;padding:3px 9px;">Agotado</span></sc-if>
+            </div>
+          </div>
+          <div style="flex:0 0 180px;padding:13px 20px;">
+            <div style="display:flex;gap:8px;justify-content:flex-end;">
+              <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:12px;color:#EA5B0C;background:transparent;border:1.5px solid #EA5B0C;border-radius:6px;padding:6px 12px;cursor:pointer;">Editar</button>
+              <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:12px;color:rgba(135,43,19,.55);background:transparent;border:1.5px solid rgba(135,43,19,.25);border-radius:6px;padding:6px 12px;cursor:pointer;">Eliminar</button>
+            </div>
+          </div>
+        </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:rgba(135,43,19,.5);margin:14px 2px 0;">💡 Editá la cantidad de stock directamente en la tabla. Los productos con menos de 5 unidades se marcan con ⚠️.</p>
+</div>
+</sc-if>
+
+<!-- ============ PEDIDOS ============ -->
+<sc-if value="{{ is_pedidos }}" hint-placeholder-val="{{ false }}">
+<div>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+    <div><h1 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;margin:0;">Pedidos</h1><p style="font-size:15px;color:rgba(135,43,19,.6);margin:4px 0 0;">52 pedidos este mes · 1 pendiente de despachar</p></div>
+  </div>
+
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;">
+    <span style="font-weight:700;font-size:13px;background:#D51312;color:#FFEACA;border-radius:100px;padding:7px 14px;cursor:pointer;">Todos</span>
+    <span style="font-weight:700;font-size:13px;background:#fff;color:#872B13;border:1.5px solid rgba(135,43,19,.25);border-radius:100px;padding:7px 14px;cursor:pointer;">Pendientes</span>
+    <span style="font-weight:700;font-size:13px;background:#fff;color:#872B13;border:1.5px solid rgba(135,43,19,.25);border-radius:100px;padding:7px 14px;cursor:pointer;">Enviados</span>
+    <span style="font-weight:700;font-size:13px;background:#fff;color:#872B13;border:1.5px solid rgba(135,43,19,.25);border-radius:100px;padding:7px 14px;cursor:pointer;">Entregados</span>
+  </div>
+
+  <div style="background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:14px;box-shadow:0 2px 8px rgba(135,43,19,.06);overflow:hidden;">
+    <div style="overflow-x:auto;" class="adm-scroll">
+      <div style="min-width:680px;">
+        <div style="display:flex;align-items:center;background:#FBF6EC;font-weight:700;font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:rgba(135,43,19,.55);">
+          <div style="flex:0 0 80px;padding:14px 20px;">Pedido</div>
+          <div style="flex:0 0 120px;padding:14px 12px;">Fecha</div>
+          <div style="flex:1 1 auto;padding:14px 12px;">Cliente</div>
+          <div style="flex:0 0 70px;padding:14px 8px;text-align:center;">Items</div>
+          <div style="flex:0 0 100px;padding:14px 12px;">Total</div>
+          <div style="flex:0 0 110px;padding:14px 12px;">Estado</div>
+          <div style="flex:0 0 130px;padding:14px 20px;text-align:right;">Acciones</div>
+        </div>
+        <sc-for list="{{ pedidos }}" as="p" hint-placeholder-count="5">
+        <div style="display:flex;align-items:center;border-top:1px solid rgba(135,43,19,.08);">
+          <div style="flex:0 0 80px;padding:14px 20px;font-weight:700;font-size:14px;color:#EA5B0C;">{{ p.id }}</div>
+          <div style="flex:0 0 120px;padding:14px 12px;font-size:14px;color:#872B13;white-space:nowrap;">{{ p.fecha }}</div>
+          <div style="flex:1 1 auto;min-width:0;padding:14px 12px;font-weight:700;font-size:14px;color:#872B13;">{{ p.cliente }}</div>
+          <div style="flex:0 0 70px;padding:14px 8px;text-align:center;font-size:14px;color:#872B13;">{{ p.nitems }}</div>
+          <div style="flex:0 0 100px;padding:14px 12px;font-weight:700;font-size:14px;color:#F59C00;">{{ p.total }}</div>
+          <div style="flex:0 0 110px;padding:14px 12px;"><span style="font-weight:700;font-size:11px;text-transform:capitalize;background:{{ p.est.bg }};color:{{ p.est.fg }};border-radius:100px;padding:4px 11px;">{{ p.estado }}</span></div>
+          <div style="flex:0 0 130px;padding:14px 20px;text-align:right;"><button onClick="{{ openDetallePedido }}" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:12px;color:#EA5B0C;background:transparent;border:1.5px solid #EA5B0C;border-radius:6px;padding:6px 12px;cursor:pointer;">Ver detalle</button></div>
+        </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- DRAWER DETALLE PEDIDO -->
+  <sc-if value="{{ detallePedido }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;background:rgba(92,29,13,.4);z-index:60;display:flex;justify-content:flex-end;" onClick="{{ closeDetallePedido }}">
+    <div style="width:440px;max-width:92vw;background:#fff;height:100%;overflow-y:auto;box-shadow:-8px 0 40px rgba(0,0,0,.2);" class="adm-scroll">
+      <div style="background:#872B13;padding:24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#FDC300;">Pedido #1042</span><span style="font-size:22px;color:rgba(255,234,202,.7);cursor:pointer;" onClick="{{ closeDetallePedido }}">✕</span></div>
+        <div style="font-weight:700;font-size:22px;color:#FFEACA;margin-top:10px;">Ana Torres</div>
+        <span style="display:inline-block;font-weight:700;font-size:11px;text-transform:capitalize;background:#F59C00;color:#872B13;border-radius:100px;padding:4px 11px;margin-top:10px;">pendiente</span>
+      </div>
+      <div style="padding:24px;display:flex;flex-direction:column;gap:18px;">
+        <div style="display:flex;gap:24px;"><div><div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:rgba(135,43,19,.5);">Fecha</div><div style="font-weight:700;font-size:15px;color:#872B13;margin-top:3px;">21 jun 2026</div></div><div style="flex:1;"><div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:rgba(135,43,19,.5);">Envío a</div><div style="font-weight:700;font-size:15px;color:#872B13;margin-top:3px;">Av. Libertador 2200, CABA</div></div></div>
+        <div style="height:1px;background:rgba(135,43,19,.12);"></div>
+        <div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:rgba(135,43,19,.5);margin-bottom:10px;">Items</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ pedidoSel.items }}" as="it" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:44px;height:44px;border-radius:8px;flex:none;background:repeating-linear-gradient(135deg,#F0D6A8 0 8px,#E9CB97 8px 16px);"></div>
+              <div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:14px;color:#872B13;">{{ it.n }}</div><div style="font-size:12px;color:rgba(135,43,19,.55);">Cantidad: {{ it.q }}</div></div>
+              <div style="font-weight:700;font-size:14px;color:#F59C00;">{{ it.p }}</div>
+            </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="height:1px;background:rgba(135,43,19,.12);"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-weight:700;font-size:18px;color:#872B13;">Total</span><span style="font-weight:700;font-size:22px;color:#F59C00;">$23.300</span></div>
+        <div style="display:flex;gap:10px;margin-top:4px;">
+          <select class="adm-sel" style="flex:1;font-family:'Bellota',sans-serif;font-weight:700;font-size:14px;color:#872B13;background:#FBF6EC url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path d=%22M2 4l4 4 4-4%22 stroke=%22%23872B13%22 stroke-width=%221.6%22 fill=%22none%22/></svg>') no-repeat right 12px center;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:12px 34px 12px 14px;cursor:pointer;outline:none;"><option>Marcar como enviado</option><option>Marcar como entregado</option><option>Cancelar pedido</option></select>
+          <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:14px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:12px 18px;cursor:pointer;">Aplicar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ============ CONFIGURACION ============ -->
+<sc-if value="{{ is_config }}" hint-placeholder-val="{{ false }}">
+<div>
+  <div style="margin-bottom:8px;"><h1 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;margin:0;">Configuración</h1><p style="font-size:15px;color:rgba(135,43,19,.6);margin:4px 0 0;">Información general del sitio</p></div>
+  <span style="display:inline-block;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;background:rgba(245,156,0,.18);color:#B45309;border-radius:100px;padding:4px 12px;margin-bottom:20px;">Próximamente · v2</span>
+
+  <div style="max-width:680px;display:flex;flex-direction:column;gap:20px;">
+    <div style="background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:14px;box-shadow:0 2px 8px rgba(135,43,19,.06);padding:24px;">
+      <div style="font-weight:700;font-size:17px;color:#872B13;margin-bottom:18px;">Datos del sitio</div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div><label style="display:block;font-weight:700;font-size:13px;color:#872B13;margin-bottom:6px;">Nombre del sitio</label><input type="text" value="Vuelo Carmesí" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#872B13;background:#FBF6EC;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:11px 14px;outline:none;"/></div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+          <div style="flex:1 1 200px;"><label style="display:block;font-weight:700;font-size:13px;color:#872B13;margin-bottom:6px;">Email de contacto</label><input type="email" value="hola@vuelocarmesi.com" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#872B13;background:#FBF6EC;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:11px 14px;outline:none;"/></div>
+          <div style="flex:1 1 160px;"><label style="display:block;font-weight:700;font-size:13px;color:#872B13;margin-bottom:6px;">Teléfono</label><input type="tel" value="+54 9 11 5555 5555" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#872B13;background:#FBF6EC;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:11px 14px;outline:none;"/></div>
+        </div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid rgba(135,43,19,.12);border-radius:14px;box-shadow:0 2px 8px rgba(135,43,19,.06);padding:24px;">
+      <div style="font-weight:700;font-size:17px;color:#872B13;margin-bottom:18px;">Redes sociales</div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div><label style="display:block;font-weight:700;font-size:13px;color:#872B13;margin-bottom:6px;">Instagram</label><input type="text" value="@vuelocarmesi" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#872B13;background:#FBF6EC;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:11px 14px;outline:none;"/></div>
+        <div><label style="display:block;font-weight:700;font-size:13px;color:#872B13;margin-bottom:6px;">WhatsApp</label><input type="text" value="+54 9 11 5555 5555" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#872B13;background:#FBF6EC;border:1.5px solid rgba(135,43,19,.25);border-radius:8px;padding:11px 14px;outline:none;"/></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:12px 24px;cursor:pointer;">Guardar cambios</button></div>
+  </div>
+</div>
+</sc-if>
+<!--SCREENS-->
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { screen: 'overview', detalleReserva: false, detallePedido: false, formExp: false };
+  go(v){ this.setState({ screen: v, detalleReserva:false, detallePedido:false, formExp:false }); try{ window.scrollTo(0,0); }catch(e){} }
+  renderVals(){
+    const s = this.state.screen;
+    const mods = [
+      { key:'overview', label:'Overview', icon:'◆', badge:'' },
+      { key:'reservas', label:'Reservas', icon:'📅', badge:'3' },
+      { key:'experiencias', label:'Experiencias', icon:'🌿', badge:'' },
+      { key:'productos', label:'Productos', icon:'🍫', badge:'2' },
+      { key:'pedidos', label:'Pedidos', icon:'📦', badge:'' },
+      { key:'config', label:'Configuración', icon:'⚙', badge:'' }
+    ];
+    const crumbs = { overview:'Overview', reservas:'Reservas', experiencias:'Experiencias', productos:'Productos', pedidos:'Pedidos', config:'Configuración' };
+    const navItems = mods.map(m => ({
+      label:m.label, icon:m.icon, badge:m.badge,
+      go:()=> this.go(m.key),
+      bg: s===m.key ? '#D51312' : 'transparent',
+      fg: s===m.key ? '#FFEACA' : 'rgba(255,234,202,.8)'
+    }));
+
+    const flags = {};
+    mods.forEach(m => flags['is_'+m.key] = (s===m.key));
+
+    const reservas = [
+      { fecha:'12 jul 2026', exp:'Taller del árbol a la barra', visitante:'Lucía Fernández', pers:2, estado:'confirmada', tel:'+54 9 11 4422 1100', mail:'lucia.f@mail.com', notas:'Aniversario, alergia a frutos secos.' },
+      { fecha:'14 jul 2026', exp:'Cosecha de cacao al amanecer', visitante:'Diego Paredes', pers:4, estado:'pendiente', tel:'+54 9 11 3311 5577', mail:'dpared@mail.com', notas:'Grupo familiar, 2 niños.' },
+      { fecha:'15 jul 2026', exp:'Cata sensorial de orígenes', visitante:'Sofía Ibarra', pers:1, estado:'pendiente', tel:'+54 9 11 6655 8822', mail:'sofi.ibarra@mail.com', notas:'—' },
+      { fecha:'18 jul 2026', exp:'Noche de fogón y cacao', visitante:'Martín Gómez', pers:3, estado:'confirmada', tel:'+54 9 11 7788 1234', mail:'mgomez@mail.com', notas:'Llega 18:30.' },
+      { fecha:'20 jul 2026', exp:'Sendero agroecológico guiado', visitante:'Carla Núñez', pers:2, estado:'cancelada', tel:'+54 9 11 9090 4545', mail:'carlan@mail.com', notas:'Reprogramar a agosto.' },
+      { fecha:'22 jul 2026', exp:'Taller del árbol a la barra', visitante:'Pablo Sosa', pers:2, estado:'pendiente', tel:'+54 9 11 1212 3434', mail:'psosa@mail.com', notas:'—' }
+    ];
+    const experiencias = [
+      { nombre:'Cosecha de cacao al amanecer', precio:'$18.000', dur:'3 h', cap:8, feat:true, img:'cosecha' },
+      { nombre:'Taller del árbol a la barra', precio:'$26.000', dur:'5 h', cap:8, feat:true, img:'taller' },
+      { nombre:'Sendero agroecológico guiado', precio:'$12.000', dur:'2 h', cap:12, feat:false, img:'sendero' },
+      { nombre:'Cata sensorial de orígenes', precio:'$15.000', dur:'90 min', cap:6, feat:false, img:'cata' },
+      { nombre:'Noche de fogón y cacao', precio:'$14.000', dur:'2.5 h', cap:10, feat:false, img:'fogón' },
+      { nombre:'Inmersión de fin de semana', precio:'$72.000', dur:'2 días', cap:6, feat:true, img:'finca' }
+    ];
+    const productos = [
+      { nombre:'Cacao en grano tostado', cat:'Cacao', precio:'$6.900', stock:42 },
+      { nombre:'Tableta 72% intenso', cat:'Chocolates', precio:'$4.500', stock:8 },
+      { nombre:'Nibs de cacao crocantes', cat:'Cacao', precio:'$3.800', stock:3 },
+      { nombre:'Pasta de cacao 100%', cat:'Cacao', precio:'$5.200', stock:16 },
+      { nombre:'Bombones de monte x6', cat:'Chocolates', precio:'$7.400', stock:24 },
+      { nombre:'Kit del árbol a la barra', cat:'Kits', precio:'$12.900', stock:11 },
+      { nombre:'Cacao en polvo puro', cat:'Cacao', precio:'$4.100', stock:2 },
+      { nombre:'Kit cata 6 orígenes', cat:'Kits', precio:'$9.800', stock:0 }
+    ];
+    const pedidos = [
+      { id:'#1042', fecha:'21 jun 2026', cliente:'Ana Torres', total:'$23.300', nitems:3, estado:'pendiente', items:[{n:'Tableta 72% intenso',q:2,p:'$9.000'},{n:'Cacao en grano tostado',q:1,p:'$6.900'},{n:'Bombones de monte x6',q:1,p:'$7.400'}], dir:'Av. Libertador 2200, CABA' },
+      { id:'#1041', fecha:'20 jun 2026', cliente:'Roberto Díaz', total:'$12.900', nitems:1, estado:'enviado', items:[{n:'Kit del árbol a la barra',q:1,p:'$12.900'}], dir:'San Martín 145, Posadas' },
+      { id:'#1040', fecha:'19 jun 2026', cliente:'Lucía Méndez', total:'$8.300', nitems:2, estado:'entregado', items:[{n:'Nibs de cacao crocantes',q:1,p:'$3.800'},{n:'Pasta de cacao 100%',q:1,p:'$5.200'}], dir:'Belgrano 980, Oberá' },
+      { id:'#1039', fecha:'18 jun 2026', cliente:'Esteban Ruiz', total:'$19.600', nitems:4, estado:'entregado', items:[{n:'Tableta 72% intenso',q:2,p:'$9.000'},{n:'Cacao en polvo puro',q:1,p:'$4.100'},{n:'Nibs',q:1,p:'$3.800'}], dir:'Mitre 33, Eldorado' },
+      { id:'#1038', fecha:'17 jun 2026', cliente:'Valentina Roca', total:'$9.800', nitems:1, estado:'cancelado', items:[{n:'Kit cata 6 orígenes',q:1,p:'$9.800'}], dir:'Rivadavia 1200, CABA' }
+    ];
+    const chart = [
+      { w:'Sem 1', v:12 },{ w:'Sem 2', v:19 },{ w:'Sem 3', v:14 },{ w:'Sem 4', v:23 },
+      { w:'Sem 5', v:18 },{ w:'Sem 6', v:27 },{ w:'Sem 7', v:21 },{ w:'Sem 8', v:31 }
+    ];
+    const maxV = Math.max(...chart.map(c=>c.v));
+    const chartBars = chart.map(c => ({ w:c.w, v:c.v, h: Math.round((c.v/maxV)*100) }));
+
+    const estiloEstado = (e) => {
+      const map = {
+        confirmada:{bg:'#1F8A5B',fg:'#fff'}, pendiente:{bg:'#F59C00',fg:'#872B13'}, cancelada:{bg:'rgba(135,43,19,.15)',fg:'rgba(135,43,19,.6)'},
+        enviado:{bg:'#2A6FDB',fg:'#fff'}, entregado:{bg:'#1F8A5B',fg:'#fff'}, cancelado:{bg:'rgba(135,43,19,.15)',fg:'rgba(135,43,19,.6)'}
+      };
+      return map[e] || {bg:'#F59C00',fg:'#872B13'};
+    };
+    const reservasView = reservas.map(r => ({ ...r, est: estiloEstado(r.estado) }));
+    const pedidosView = pedidos.map(p => ({ ...p, est: estiloEstado(p.estado) }));
+    const productosView = productos.map(p => ({
+      ...p,
+      low: p.stock>0 && p.stock<5,
+      out: p.stock===0,
+      stockBg: p.stock===0 ? 'rgba(135,43,19,.12)' : (p.stock<5 ? 'rgba(245,156,0,.18)' : 'transparent'),
+      stockFg: p.stock===0 ? 'rgba(135,43,19,.55)' : (p.stock<5 ? '#B45309' : '#872B13')
+    }));
+
+    return Object.assign(flags, {
+      screen:s, navItems, crumb: crumbs[s] || 'Overview',
+      reservas: reservasView, experiencias: experiencias.map(e=>({...e, featOff: !e.feat})), productos: productosView, pedidos: pedidosView,
+      chartBars,
+      recentReservas: reservasView.slice(0,5),
+      recentPedidos: pedidosView.slice(0,5),
+      reservaSel: reservasView[1],
+      pedidoSel: pedidosView[0],
+      detalleReserva: this.state.detalleReserva,
+      detallePedido: this.state.detallePedido,
+      formExp: this.state.formExp,
+      openDetalleReserva: ()=> this.setState({detalleReserva:true}),
+      closeDetalleReserva: ()=> this.setState({detalleReserva:false}),
+      openDetallePedido: ()=> this.setState({detallePedido:true}),
+      closeDetallePedido: ()=> this.setState({detallePedido:false}),
+      openFormExp: ()=> this.setState({formExp:true}),
+      closeFormExp: ()=> this.setState({formExp:false})
+    });
+  }
+}
+</script>
+</body>
+</html>
