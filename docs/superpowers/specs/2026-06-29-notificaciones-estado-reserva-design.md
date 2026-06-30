@@ -61,6 +61,7 @@ class UpdateEstadoReservaDto {
 `enviarReservaConfirmadaCliente(reserva)`:
 - Asunto: `"Tu reserva está confirmada — Vuelo Carmesí"`
 - Contenido: datos de la reserva (experiencia, fecha, personas) + instrucciones prácticas (qué llevar, dónde llegar, hora de encuentro) + número de contacto del negocio
+- Las instrucciones prácticas y el contacto de bene configurar en siconfig desde el panel de admin
 
 `enviarReservaCanceladaCliente(reserva, motivo?)`:
 - Asunto: `"Actualización sobre tu reserva — Vuelo Carmesí"`

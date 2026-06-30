@@ -1,3 +1,4 @@
+
 # Vuelo Carmesí
 
 Portal web completo para **Vuelo Carmesí** — experiencias agroecológicas con sabor a cacao.
