@@ -22,6 +22,7 @@ export default function Navbar() {
         />
       </Link>
       <ul style={{ display: 'flex', gap: '2rem', listStyle: 'none' }}>
+        <li><Link href="/" style={{ color: 'var(--color-cream)', textDecoration: 'none' }}>Inicio</Link></li>
         <li><Link href="/experiencias" style={{ color: 'var(--color-cream)', textDecoration: 'none' }}>Experiencias</Link></li>
         <li><Link href="/tienda" style={{ color: 'var(--color-cream)', textDecoration: 'none' }}>Tienda</Link></li>
         <li><Link href="/contacto" style={{ color: 'var(--color-cream)', textDecoration: 'none' }}>Contacto</Link></li>

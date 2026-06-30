@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { uploadImage } from '@/lib/admin/api'
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
 }
 
 export default function ImageUploader({ value, onChange, label = 'Imagen' }: Props) {
+  const inputId = useId()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -68,10 +69,10 @@ export default function ImageUploader({ value, onChange, label = 'Imagen' }: Pro
             accept="image/jpeg,image/png,image/webp"
             onChange={handleFile}
             style={{ display: 'none' }}
-            id="img-upload-input"
+            id={inputId}
           />
           <label
-            htmlFor="img-upload-input"
+            htmlFor={inputId}
             className="btn-secondary btn-sm"
             style={{ display: 'inline-block', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.6 : 1 }}
           >
