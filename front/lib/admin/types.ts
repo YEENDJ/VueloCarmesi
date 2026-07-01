@@ -38,6 +38,7 @@ export interface AdminProducto {
   stock: number
   imagen: string
   categoria: string
+  badge?: 'Nuevo' | 'Destacado' | null
   createdAt: string
 }
 

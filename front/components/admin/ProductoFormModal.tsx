@@ -8,12 +8,12 @@ const CATEGORIAS = ['chocolates', 'despensa', 'cafe', 'regalos', 'hogar']
 
 type FormData = {
   nombre: string; descripcion: string; slug: string
-  precio: string; stock: string; categoria: string; imagen: string
+  precio: string; stock: string; categoria: string; imagen: string; badge: string
 }
 
 const EMPTY: FormData = {
   nombre: '', descripcion: '', slug: '', precio: '',
-  stock: '0', categoria: 'chocolates', imagen: '',
+  stock: '0', categoria: 'chocolates', imagen: '', badge: '',
 }
 
 function toSlug(nombre: string) {
@@ -36,7 +36,7 @@ export default function ProductoFormModal({
           nombre: producto.nombre, descripcion: producto.descripcion,
           slug: producto.slug, precio: String(producto.precio),
           stock: String(producto.stock), categoria: producto.categoria,
-          imagen: producto.imagen ?? '',
+          imagen: producto.imagen ?? '', badge: producto.badge ?? '',
         }
       : EMPTY
   )
@@ -60,10 +60,11 @@ export default function ProductoFormModal({
     setSaving(true)
     setError('')
     try {
-      const data = {
+      const data: Partial<AdminProducto> = {
         nombre: form.nombre, descripcion: form.descripcion, slug: form.slug,
         precio: Number(form.precio), stock: Number(form.stock),
         categoria: form.categoria, imagen: form.imagen,
+        badge: form.badge === '' ? undefined : (form.badge as 'Nuevo' | 'Destacado'),
       }
       const saved = isEdit
         ? await updateProducto(producto!.id, data)
@@ -107,6 +108,13 @@ export default function ProductoFormModal({
                 </select>
               </FormRow>
             </div>
+            <FormRow label="Badge (opcional)">
+              <select className="admin-input" value={form.badge} onChange={e => set('badge', e.target.value)}>
+                <option value="">Ninguno</option>
+                <option value="Nuevo">Nuevo</option>
+                <option value="Destacado">Destacado</option>
+              </select>
+            </FormRow>
             <ImageUploader value={form.imagen} onChange={url => set('imagen', url)} label="Imagen del producto" />
             {error && <div style={{ color: 'var(--color-crimson)', fontSize: 13 }}>{error}</div>}
           </div>
