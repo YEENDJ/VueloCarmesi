@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLastOrder, setLastOrder } from '@/lib/cart/store'
 import { formatPrecio } from '@/lib/format'
@@ -8,12 +8,17 @@ import Button from '@/components/ui/Button'
 export default function ConfirmacionPage() {
   const router = useRouter()
   const lastOrder = useLastOrder()
+  const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    if (!lastOrder) router.replace('/tienda')
-  }, [lastOrder, router])
+    setHydrated(true)
+  }, [])
 
-  if (!lastOrder) return null
+  useEffect(() => {
+    if (hydrated && !lastOrder) router.replace('/tienda')
+  }, [hydrated, lastOrder, router])
+
+  if (!hydrated || !lastOrder) return null
 
   return (
     <section style={{ maxWidth: '600px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
