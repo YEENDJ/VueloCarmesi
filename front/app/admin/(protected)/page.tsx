@@ -24,7 +24,7 @@ export default function AdminOverviewPage() {
   const anioActual = now.getFullYear()
 
   const reservasMes = reservas.filter(r => {
-    const d = new Date(r.fecha)
+    const d = new Date(r.createdAt)
     return d.getMonth() === mesActual && d.getFullYear() === anioActual
   })
   const pedidosMes = pedidos.filter(p => {
@@ -36,7 +36,10 @@ export default function AdminOverviewPage() {
 
   const reservasPorSemana = [1, 2, 3, 4].map(sem => ({
     semana: `Sem ${sem}`,
-    cantidad: reservasMes.filter(r => Math.ceil(new Date(r.fecha).getDate() / 7) === sem).length,
+    cantidad: reservasMes.filter(r => {
+      const semana = Math.min(Math.ceil(new Date(r.createdAt).getDate() / 7), 4)
+      return semana === sem
+    }).length,
   }))
 
   const ultimasReservas = [...reservas].slice(0, 5)
