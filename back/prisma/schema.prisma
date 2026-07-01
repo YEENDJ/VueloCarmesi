@@ -47,19 +47,23 @@ model Producto {
   stock       Int
   imagen      String       @default("")
   categoria   String
+  badge       String?
   createdAt   DateTime     @default(now())
   itemsPedido ItemPedido[]
 }
 
 model Pedido {
-  id        String       @id @default(cuid())
-  nombre    String
-  email     String
-  direccion String
-  total     Float
-  estado    String       @default("pendiente")
-  createdAt DateTime     @default(now())
-  items     ItemPedido[]
+  id           String       @id @default(cuid())
+  nombre       String
+  email        String
+  telefono     String
+  direccion    String
+  ciudad       String
+  codigoPostal String
+  total        Float
+  estado       String       @default("pendiente")
+  createdAt    DateTime     @default(now())
+  items        ItemPedido[]
 }
 
 model ItemPedido {
