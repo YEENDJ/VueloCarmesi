@@ -1,7 +1,7 @@
 # Flujo de compra de la tienda (Tienda → Carrito → Checkout → Confirmación)
 
 **Fecha:** 2026-07-01
-**Estado:** Propuesto
+**Estado:** Aprobado
 
 ## Contexto
 
