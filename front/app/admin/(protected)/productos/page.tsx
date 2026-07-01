@@ -41,13 +41,10 @@ export default function ProductosPage() {
 
   async function confirmarEliminar() {
     if (!productoAEliminar) return
-    try {
-      await deleteProducto(productoAEliminar.id)
-      setProductos(prev => prev.filter(p => p.id !== productoAEliminar.id))
-      await revalidateProductos()
-    } finally {
-      setProductoAEliminar(null)
-    }
+    await deleteProducto(productoAEliminar.id)
+    setProductos(prev => prev.filter(p => p.id !== productoAEliminar.id))
+    setProductoAEliminar(null)
+    await revalidateProductos()
   }
 
   function stockStyle(stock: number): React.CSSProperties {

@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 
 export const TrashIcon = () => (
   <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -15,7 +16,7 @@ interface ConfirmModalProps {
   message: string
   confirmLabel?: string
   danger?: boolean
-  onConfirm: () => void
+  onConfirm: () => Promise<void>
   onCancel: () => void
 }
 
@@ -27,23 +28,45 @@ export default function ConfirmModal({
   onConfirm,
   onCancel,
 }: ConfirmModalProps) {
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+
+  async function handleConfirm() {
+    setBusy(true)
+    setError('')
+    try {
+      await onConfirm()
+    } catch {
+      setError('Ocurrió un error. Intentá de nuevo.')
+      setBusy(false)
+    }
+  }
+
   return (
-    <div className="admin-modal-overlay" onClick={onCancel}>
+    <div className="admin-modal-overlay" onClick={busy ? undefined : onCancel}>
       <div
         className="admin-modal"
         style={{ maxWidth: 400 }}
         onClick={e => e.stopPropagation()}
       >
-        <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 12 }}>{title}</div>
-        <p style={{ color: 'var(--admin-text-muted)', fontSize: 14, marginBottom: 24 }}>{message}</p>
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button className="btn-ghost" onClick={onCancel}>Cancelar</button>
+        <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 12, padding: '24px 24px 0' }}>{title}</div>
+        <p style={{ color: 'var(--admin-text-muted)', fontSize: 14, margin: '12px 24px 0' }}>{message}</p>
+
+        {error && (
+          <p style={{ color: 'var(--color-crimson)', fontSize: 13, margin: '10px 24px 0' }}>{error}</p>
+        )}
+
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', padding: '24px' }}>
+          <button className="btn-ghost" onClick={onCancel} disabled={busy}>
+            Cancelar
+          </button>
           <button
             className="btn-primary"
             style={danger ? { background: 'var(--color-crimson)' } : undefined}
-            onClick={onConfirm}
+            onClick={handleConfirm}
+            disabled={busy}
           >
-            {confirmLabel}
+            {busy ? 'Eliminando…' : confirmLabel}
           </button>
         </div>
       </div>
