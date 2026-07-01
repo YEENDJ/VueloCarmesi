@@ -30,7 +30,7 @@ export class PedidosService {
   }
 
   async create(dto: CreatePedidoDto) {
-    const { nombre, email, direccion, items } = dto
+    const { nombre, email, telefono, direccion, ciudad, codigoPostal, items } = dto
 
     // Create pedido with items in a transaction (stock fetch + validation inside to avoid race condition)
     const pedido = await this.prisma.$transaction(async (tx) => {
@@ -63,7 +63,10 @@ export class PedidosService {
         data: {
           nombre,
           email,
+          telefono,
           direccion,
+          ciudad,
+          codigoPostal,
           total,
           items: {
             create: items.map((item) => {

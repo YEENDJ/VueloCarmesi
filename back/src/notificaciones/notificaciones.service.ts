@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { EmailService } from './email.service'
 import { TelegramService } from './telegram.service'
 import { PrismaService } from '../prisma.service'
+import { formatDireccionPedido } from './format-direccion.util'
 
 const ADMIN_URL = process.env.FRONTEND_URL ?? 'http://localhost:3000'
 
@@ -76,14 +77,16 @@ export class NotificacionesService {
   }
 
   async enviarConfirmacionPedido(pedido: {
-    id: string; nombre: string; email: string; direccion: string; total: number
+    id: string; nombre: string; email: string
+    direccion: string; ciudad: string; codigoPostal: string; total: number
   }): Promise<void> {
     const totalStr = pedido.total.toLocaleString('es-CO')
+    const direccionCompleta = formatDireccionPedido(pedido)
 
     const htmlCliente = this.email.templateConfirmacionPedido({
       nombre: pedido.nombre,
       id: pedido.id,
-      direccion: pedido.direccion,
+      direccion: direccionCompleta,
       total: totalStr,
     })
     await this.email.send(pedido.email, `Recibimos tu pedido — Vuelo Carmesí`, htmlCliente)
@@ -94,7 +97,7 @@ export class NotificacionesService {
         filaHtml('N° pedido', pedido.id),
         filaHtml('Nombre', pedido.nombre),
         filaHtml('Email', pedido.email),
-        filaHtml('Dirección', pedido.direccion),
+        filaHtml('Dirección', direccionCompleta),
         filaHtml('Total', `$ ${totalStr} COP`),
       ].join('')
       const htmlAdmin = this.email.templateAlertaAdmin({
