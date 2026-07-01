@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common'
 import { ProductosService } from './productos.service'
 import { CreateProductoDto } from './dto/create-producto.dto'
+import { UpdateProductoDto } from './dto/update-producto.dto'
 
 @Controller('productos')
 export class ProductosController {
@@ -10,6 +11,6 @@ export class ProductosController {
   @Get('slug/:slug') findBySlug(@Param('slug') slug: string)                                    { return this.service.findBySlug(slug) }
   @Get(':id')        findOne(@Param('id') id: string)                                            { return this.service.findById(id) }
   @Post()            create(@Body() dto: CreateProductoDto)                                      { return this.service.create(dto) }
-  @Patch(':id')      update(@Param('id') id: string, @Body() dto: Partial<CreateProductoDto>)   { return this.service.update(id, dto) }
+  @Patch(':id')      update(@Param('id') id: string, @Body() dto: UpdateProductoDto)             { return this.service.update(id, dto) }
   @Delete(':id')     remove(@Param('id') id: string)                                             { return this.service.remove(id) }
 }

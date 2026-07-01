@@ -4,6 +4,7 @@ import ImageGallery from '@/components/ui/ImageGallery'
 import ProductoCard from '@/components/shop/ProductoCard'
 import AddToCartSection from './AddToCartSection'
 import { notFound } from 'next/navigation'
+import { formatPrecio } from '@/lib/format'
 
 export async function generateStaticParams() {
   const productos = await getProductos()
@@ -64,7 +65,7 @@ export default async function ProductoDetallePage({
               marginBottom: '16px',
             }}
           >
-            ${producto.precio.toLocaleString('es-AR')}
+            {formatPrecio(producto.precio)}
           </p>
 
           <p

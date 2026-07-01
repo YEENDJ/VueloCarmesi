@@ -64,7 +64,7 @@ export default function ProductoFormModal({
         nombre: form.nombre, descripcion: form.descripcion, slug: form.slug,
         precio: Number(form.precio), stock: Number(form.stock),
         categoria: form.categoria, imagen: form.imagen,
-        badge: form.badge === '' ? undefined : (form.badge as 'Nuevo' | 'Destacado'),
+        badge: form.badge === '' ? null : (form.badge as 'Nuevo' | 'Destacado'),
       }
       const saved = isEdit
         ? await updateProducto(producto!.id, data)
