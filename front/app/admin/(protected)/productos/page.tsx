@@ -6,12 +6,15 @@ import { revalidateProductos } from '@/app/actions/revalidate'
 import ProductoFormModal from '@/components/admin/ProductoFormModal'
 import ConfirmModal, { TrashIcon } from '@/components/admin/ConfirmModal'
 
-const CATEGORIAS = ['Todos', 'Cacao', 'Chocolates', 'Kits']
-
 export default function ProductosPage() {
   const [productos, setProductos] = useState<AdminProducto[]>([])
   const [loading, setLoading] = useState(true)
   const [cat, setCat] = useState('Todos')
+
+  const categorias = useMemo(
+    () => ['Todos', ...Array.from(new Set(productos.map(p => p.categoria)))],
+    [productos],
+  )
   const [stockEdit, setStockEdit] = useState<Record<string, number>>({})
   const [savingStock, setSavingStock] = useState<string | null>(null)
   const [modal, setModal] = useState<AdminProducto | null | 'new'>()
@@ -71,8 +74,10 @@ export default function ProductosPage() {
       </div>
 
       <div className="admin-pills" style={{ marginBottom: 20 }}>
-        {CATEGORIAS.map(c => (
-          <button key={c} className={`admin-pill${cat === c ? ' active' : ''}`} onClick={() => setCat(c)}>{c}</button>
+        {categorias.map(c => (
+          <button key={c} className={`admin-pill${cat === c ? ' active' : ''}`} onClick={() => setCat(c)}>
+            {c === 'Todos' ? c : c.charAt(0).toUpperCase() + c.slice(1)}
+          </button>
         ))}
       </div>
 
