@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsOptional, Min } from 'class-validator'
+import { IsString, IsNumber, IsOptional, IsIn, Min } from 'class-validator'
 
 export class CreateProductoDto {
   @IsString() nombre: string
@@ -8,4 +8,5 @@ export class CreateProductoDto {
   @IsNumber() @Min(0) stock: number
   @IsString() categoria: string
   @IsOptional() @IsString() imagen?: string
+  @IsOptional() @IsIn(['Nuevo', 'Destacado']) badge?: string
 }
