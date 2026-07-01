@@ -21,8 +21,9 @@ export interface Producto {
   precio: number
   stock: number
   imagen: string
-  categoria: 'cacao' | 'chocolate' | 'otro'
+  categoria: string
   images?: string[]
+  badge?: 'Nuevo' | 'Destacado' | null
 }
 
 export interface Reserva {

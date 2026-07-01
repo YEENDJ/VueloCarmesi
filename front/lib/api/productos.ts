@@ -11,7 +11,8 @@ export const MOCK_PRODUCTOS: Producto[] = [
     precio: 22000,
     stock: 40,
     imagen: '',
-    categoria: 'chocolate',
+    categoria: 'chocolates',
+    badge: 'Destacado',
     images: ['https://placehold.co/800x600/872b13/ffeaca?text=Chocolate+70'],
   },
   {
@@ -22,7 +23,8 @@ export const MOCK_PRODUCTOS: Producto[] = [
     precio: 18000,
     stock: 20,
     imagen: '',
-    categoria: 'cacao',
+    categoria: 'despensa',
+    badge: 'Nuevo',
     images: ['https://placehold.co/800x600/ea5b0c/ffeaca?text=Nibs+Cacao'],
   },
   {
@@ -33,8 +35,19 @@ export const MOCK_PRODUCTOS: Producto[] = [
     precio: 32000,
     stock: 22,
     imagen: '',
-    categoria: 'otro',
+    categoria: 'cafe',
     images: ['https://placehold.co/800x600/f59c00/ffeaca?text=Cafe+Especial'],
+  },
+  {
+    id: '4',
+    slug: 'kit-regalo-carmesi',
+    nombre: 'Kit Regalo Vuelo Carmesí',
+    descripcion: 'Caja de madera artesanal con tableta negra, tableta de leche, nibs y café especial.',
+    precio: 88000,
+    stock: 0,
+    imagen: '',
+    categoria: 'regalos',
+    images: ['https://placehold.co/800x600/d51312/ffeaca?text=Kit+Regalo'],
   },
 ]
 
