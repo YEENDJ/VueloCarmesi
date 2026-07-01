@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import CartBadge from '@/components/shop/CartBadge'
 
 export default function Navbar() {
   return (
@@ -26,6 +27,7 @@ export default function Navbar() {
         <li><Link href="/experiencias" style={{ color: 'var(--color-cream)', textDecoration: 'none' }}>Experiencias</Link></li>
         <li><Link href="/tienda" style={{ color: 'var(--color-cream)', textDecoration: 'none' }}>Tienda</Link></li>
         <li><Link href="/contacto" style={{ color: 'var(--color-cream)', textDecoration: 'none' }}>Contacto</Link></li>
+        <li><CartBadge /></li>
       </ul>
     </nav>
   )
