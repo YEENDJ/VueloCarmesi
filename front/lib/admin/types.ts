@@ -53,7 +53,10 @@ export interface AdminPedido {
   id: string
   nombre: string
   email: string
+  telefono: string
   direccion: string
+  ciudad: string
+  codigoPostal: string
   total: number
   estado: EstadoPedido
   createdAt: string
