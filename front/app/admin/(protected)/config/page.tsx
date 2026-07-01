@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { getSiteConfigAdmin, patchSiteConfig } from '@/lib/admin/api'
 import { revalidateSiteConfig } from '@/app/actions/revalidate'
-import ImageUploader from '@/components/admin/ImageUploader'
+import HeroImageEditor from '@/components/admin/HeroImageEditor'
 
 export default function ConfigPage() {
   const [config, setConfig] = useState<Record<string, string>>({})
@@ -19,8 +19,7 @@ export default function ConfigPage() {
   }
 
   async function guardar(keys: string[]) {
-    const sección = keys[0].replace('_', ' ')
-    setSaving(sección)
+    setSaving(keys[0])
     try {
       const data = Object.fromEntries(keys.map(k => [k, config[k] ?? '']))
       await patchSiteConfig(data)
@@ -56,32 +55,43 @@ export default function ConfigPage() {
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-        {/* Sección: Imágenes del sitio */}
+        {/* Sección: Hero */}
+        <div style={{ background: '#fff', borderRadius: 14, padding: 32, boxShadow: '0 2px 8px rgba(135,43,19,.06)' }}>
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: 'var(--color-brown)' }}>
+            Imagen principal (Hero)
+          </div>
+          <div style={{ fontSize: 13, color: 'var(--admin-text-muted)', marginBottom: 24 }}>
+            Subí la foto y ajustá el recorte antes de guardar
+          </div>
+          <HeroImageEditor
+            value={config.hero_image ?? ''}
+            onChange={url => set('hero_image', url)}
+            onSave={async url => {
+              await patchSiteConfig({ hero_image: url })
+              await revalidateSiteConfig()
+              setToast('Guardado correctamente')
+              setTimeout(() => setToast(''), 3000)
+            }}
+          />
+        </div>
+
+        {/* Sección: Sobre Nosotros */}
         <div style={{ background: '#fff', borderRadius: 14, padding: 32, boxShadow: '0 2px 8px rgba(135,43,19,.06)' }}>
           <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 24, color: 'var(--color-brown)' }}>
-            Imágenes del sitio
+            Foto Sobre Nosotros
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-            <ImageUploader
-              value={config.hero_image ?? ''}
-              onChange={url => set('hero_image', url)}
-              label="Imagen principal (Hero)"
-            />
-            <ImageUploader
-              value={config.about_image ?? ''}
-              onChange={url => set('about_image', url)}
-              label="Foto sección Sobre Nosotros"
-            />
-          </div>
-          <div style={{ marginTop: 24 }}>
-            <button
-              className="btn-primary"
-              onClick={() => guardar(['hero_image', 'about_image'])}
-              disabled={saving === 'hero_image'}
-            >
-              {saving === 'hero_image' ? 'Guardando…' : 'Guardar imágenes'}
-            </button>
-          </div>
+          <HeroImageEditor
+            value={config.about_image ?? ''}
+            onChange={url => set('about_image', url)}
+            onSave={async url => {
+              await patchSiteConfig({ about_image: url })
+              await revalidateSiteConfig()
+              setToast('Guardado correctamente')
+              setTimeout(() => setToast(''), 3000)
+            }}
+            defaultAspect={4 / 3}
+            previewAspect="4 / 3"
+          />
         </div>
 
         {/* Sección: Notificaciones */}
