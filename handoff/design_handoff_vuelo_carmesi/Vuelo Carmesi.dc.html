@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Honey Lips';src:url('fonts/HoneyLips.ttf') format('truetype');font-weight:400;font-display:swap;}
+@font-face{font-family:'Bellota';src:url('fonts/Bellota-Bold.ttf') format('truetype');font-weight:700;font-display:swap;}
+@font-face{font-family:'Bellota';src:url('fonts/Bellota-Regular.ttf') format('truetype');font-weight:400;font-display:swap;}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{font-family:'Bellota',sans-serif;background:#cdb38b;color:#872B13;-webkit-font-smoothing:antialiased;}
+::selection{background:#F59C00;color:#872B13;}
+@keyframes vc-spin{to{transform:rotate(360deg);}}
+@keyframes vc-bob{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+select.vc-sel{appearance:none;-webkit-appearance:none;}
+</style>
+</helmet>
+
+<div style="position:fixed;top:0;left:0;right:0;height:52px;z-index:80;background:#5C1D0D;display:flex;align-items:center;gap:16px;padding:0 16px;box-shadow:0 2px 10px rgba(0,0,0,.3);">
+  <span style="font-family:'Honey Lips',serif;font-size:22px;color:#FDC300;line-height:1;white-space:nowrap;">Vuelo Carmesí</span>
+  <span style="width:1px;height:24px;background:rgba(255,234,202,.2);"></span>
+  <select class="vc-sel" value="{{ screen }}" onChange="{{ onNav }}" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:14px;color:#FFEACA;background:#872B13 url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path d=%22M2 4l4 4 4-4%22 stroke=%22%23FDC300%22 stroke-width=%221.6%22 fill=%22none%22/></svg>') no-repeat right 12px center;border:1.5px solid rgba(253,195,0,.4);border-radius:8px;padding:7px 34px 7px 14px;cursor:pointer;outline:none;">
+    <optgroup label="Sistema">
+      <option value="sistema">◆ Sistema base · Componentes</option>
+    </optgroup>
+    <optgroup label="Vistas">
+      <option value="landing">1 · Landing</option>
+      <option value="contacto">2 · Contacto</option>
+      <option value="experiencias">3 · Catálogo de Experiencias</option>
+      <option value="experiencia">4 · Detalle de Experiencia</option>
+      <option value="reservar">5 · Formulario de Reserva</option>
+      <option value="confirmacion">6 · Confirmación de Reserva</option>
+      <option value="tienda">7 · Catálogo de Productos</option>
+      <option value="producto">8 · Detalle de Producto</option>
+      <option value="carrito">9 · Carrito</option>
+      <option value="checkout">10 · Checkout</option>
+    </optgroup>
+  </select>
+  <span style="flex:1;"></span>
+  <div style="display:flex;gap:0;border:1.5px solid rgba(253,195,0,.4);border-radius:8px;overflow:hidden;">
+    <button onClick="{{ setDesktop }}" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:13px;padding:7px 14px;border:none;cursor:pointer;background:{{ deskBtnBg }};color:{{ deskBtnFg }};">Desktop</button>
+    <button onClick="{{ setMobile }}" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:13px;padding:7px 14px;border:none;cursor:pointer;background:{{ mobBtnBg }};color:{{ mobBtnFg }};">Mobile</button>
+  </div>
+</div>
+
+<div style="padding-top:52px;min-height:100vh;background:#cdb38b;display:flex;justify-content:center;">
+  <div style="max-width:{{ wrapMax }};width:100%;margin:0 auto;container-type:inline-size;background:#FFEACA;min-height:calc(100vh - 52px);box-shadow:0 8px 50px rgba(0,0,0,.25);overflow:hidden;border-radius:{{ wrapRadius }};border:{{ wrapBorder }};margin-top:{{ wrapTop }};margin-bottom:{{ wrapTop }};position:relative;">
+    <sc-if value="{{ is_sistema }}" hint-placeholder-val="{{ true }}">
+<div style="font-family:'Bellota',sans-serif;">
+  <div style="background:#D51312;padding:clamp(40px,7cqw,72px) clamp(16px,3cqw,40px);">
+    <div style="max-width:1000px;margin:0 auto;">
+      <div style="font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#FDC300;margin-bottom:14px;">Vuelo Carmesí · Design System</div>
+      <h1 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(40px,6cqw,72px);line-height:1.05;color:#FFEACA;margin:0 0 16px;max-width:14ch;">Sistema de diseño</h1>
+      <p style="font-size:clamp(16px,1.5cqw,19px);line-height:1.6;color:rgba(255,234,202,.9);max-width:60ch;margin:0;">Tierra, cacao y naturaleza con carácter audaz. 70% Héroe, 30% Sabio. Cream domina, crimson jerarquiza, orange activa, brown ancla, amber y gold acentúan.</p>
+    </div>
+  </div>
+
+  <div style="max-width:1000px;margin:0 auto;padding:clamp(40px,5cqw,64px) clamp(16px,3cqw,40px);display:flex;flex-direction:column;gap:clamp(48px,6cqw,80px);">
+
+    <!-- COLORES -->
+    <section>
+      <div style="font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;margin-bottom:8px;">01 — Color</div>
+      <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(28px,3.4cqw,40px);color:#D51312;margin:0 0 24px;">Paleta</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">
+        <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);background:#FFF6E4;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+          <div style="height:96px;background:#FFEACA;border-bottom:1px solid rgba(135,43,19,.12);"></div>
+          <div style="padding:14px 16px;"><div style="font-weight:700;font-size:15px;color:#872B13;">Cream</div><div style="font-family:monospace;font-size:13px;color:#872B13;opacity:.7;">#FFEACA</div><div style="font-size:12px;color:#872B13;opacity:.6;margin-top:4px;">Fondo dominante</div></div>
+        </div>
+        <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);background:#FFF6E4;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+          <div style="height:96px;background:#D51312;"></div>
+          <div style="padding:14px 16px;"><div style="font-weight:700;font-size:15px;color:#872B13;">Crimson</div><div style="font-family:monospace;font-size:13px;color:#872B13;opacity:.7;">#D51312</div><div style="font-size:12px;color:#872B13;opacity:.6;margin-top:4px;">Primario · CTAs</div></div>
+        </div>
+        <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);background:#FFF6E4;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+          <div style="height:96px;background:#EA5B0C;"></div>
+          <div style="padding:14px 16px;"><div style="font-weight:700;font-size:15px;color:#872B13;">Orange</div><div style="font-family:monospace;font-size:13px;color:#872B13;opacity:.7;">#EA5B0C</div><div style="font-size:12px;color:#872B13;opacity:.6;margin-top:4px;">Acento activo · hover</div></div>
+        </div>
+        <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);background:#FFF6E4;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+          <div style="height:96px;background:#872B13;"></div>
+          <div style="padding:14px 16px;"><div style="font-weight:700;font-size:15px;color:#872B13;">Brown</div><div style="font-family:monospace;font-size:13px;color:#872B13;opacity:.7;">#872B13</div><div style="font-size:12px;color:#872B13;opacity:.6;margin-top:4px;">Texto · ancla</div></div>
+        </div>
+        <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);background:#FFF6E4;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+          <div style="height:96px;background:#F59C00;"></div>
+          <div style="padding:14px 16px;"><div style="font-weight:700;font-size:15px;color:#872B13;">Amber</div><div style="font-family:monospace;font-size:13px;color:#872B13;opacity:.7;">#F59C00</div><div style="font-size:12px;color:#872B13;opacity:.6;margin-top:4px;">Precios · rating</div></div>
+        </div>
+        <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);background:#FFF6E4;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+          <div style="height:96px;background:#FDC300;"></div>
+          <div style="padding:14px 16px;"><div style="font-weight:700;font-size:15px;color:#872B13;">Gold</div><div style="font-family:monospace;font-size:13px;color:#872B13;opacity:.7;">#FDC300</div><div style="font-size:12px;color:#872B13;opacity:.6;margin-top:4px;">Ornamentos · detalles</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIPOGRAFIA -->
+    <section>
+      <div style="font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;margin-bottom:8px;">02 — Tipografía</div>
+      <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(28px,3.4cqw,40px);color:#D51312;margin:0 0 24px;">Escala</h2>
+      <div style="border-radius:12px;border:1px solid rgba(135,43,19,.15);background:#FFF6E4;box-shadow:0 2px 8px rgba(135,43,19,.1);overflow:hidden;">
+        <div style="display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;padding:20px 24px;border-bottom:1px solid rgba(135,43,19,.1);"><span style="flex:1;min-width:200px;font-family:'Honey Lips',serif;font-size:56px;line-height:1;color:#D51312;">Vuelo Carmesí</span><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">Honey Lips · H1 Light 56px</span></div>
+        <div style="display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;padding:20px 24px;border-bottom:1px solid rgba(135,43,19,.1);"><span style="flex:1;min-width:200px;font-family:'Honey Lips',serif;font-size:40px;line-height:1;color:#872B13;">Del árbol a la barra</span><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">Honey Lips · H2 40px</span></div>
+        <div style="display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;padding:20px 24px;border-bottom:1px solid rgba(135,43,19,.1);"><span style="flex:1;min-width:200px;font-weight:700;font-size:24px;line-height:1.2;color:#872B13;">Experiencias agroecológicas</span><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">Bellota Bold · H3 24px</span></div>
+        <div style="display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;padding:20px 24px;border-bottom:1px solid rgba(135,43,19,.1);"><span style="flex:1;min-width:200px;font-weight:700;font-size:18px;line-height:1.5;color:#872B13;">Body Large — recorré los cacaotales al amanecer.</span><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">Bellota · 18px</span></div>
+        <div style="display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;padding:20px 24px;border-bottom:1px solid rgba(135,43,19,.1);"><span style="flex:1;min-width:200px;font-weight:700;font-size:16px;line-height:1.6;color:#872B13;">Body — fermentación, secado y tostado del grano.</span><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">Bellota · 16px</span></div>
+        <div style="display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;padding:20px 24px;"><span style="flex:1;min-width:200px;font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:#F59C00;">Label · Disponible</span><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">Bellota · Label 14px</span></div>
+      </div>
+    </section>
+
+    <!-- ESPACIADO -->
+    <section>
+      <div style="font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;margin-bottom:8px;">03 — Espaciado</div>
+      <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(28px,3.4cqw,40px);color:#D51312;margin:0 0 24px;">Escala base 8px</h2>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;gap:16px;"><span style="width:64px;font-weight:700;font-size:13px;color:#872B13;">space-1</span><div style="height:16px;width:8px;background:#EA5B0C;border-radius:2px;"></div><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">8px</span></div>
+        <div style="display:flex;align-items:center;gap:16px;"><span style="width:64px;font-weight:700;font-size:13px;color:#872B13;">space-2</span><div style="height:16px;width:16px;background:#EA5B0C;border-radius:2px;"></div><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">16px</span></div>
+        <div style="display:flex;align-items:center;gap:16px;"><span style="width:64px;font-weight:700;font-size:13px;color:#872B13;">space-3</span><div style="height:16px;width:24px;background:#EA5B0C;border-radius:2px;"></div><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">24px</span></div>
+        <div style="display:flex;align-items:center;gap:16px;"><span style="width:64px;font-weight:700;font-size:13px;color:#872B13;">space-4</span><div style="height:16px;width:32px;background:#F59C00;border-radius:2px;"></div><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">32px</span></div>
+        <div style="display:flex;align-items:center;gap:16px;"><span style="width:64px;font-weight:700;font-size:13px;color:#872B13;">space-6</span><div style="height:16px;width:48px;background:#F59C00;border-radius:2px;"></div><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">48px</span></div>
+        <div style="display:flex;align-items:center;gap:16px;"><span style="width:64px;font-weight:700;font-size:13px;color:#872B13;">space-8</span><div style="height:16px;width:64px;background:#FDC300;border-radius:2px;"></div><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">64px</span></div>
+        <div style="display:flex;align-items:center;gap:16px;"><span style="width:64px;font-weight:700;font-size:13px;color:#872B13;">space-10</span><div style="height:16px;width:80px;background:#FDC300;border-radius:2px;"></div><span style="font-family:monospace;font-size:12px;color:#872B13;opacity:.6;">80px</span></div>
+      </div>
+    </section>
+
+    <!-- BOTONES -->
+    <section>
+      <div style="font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;margin-bottom:8px;">04 — Componentes</div>
+      <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(28px,3.4cqw,40px);color:#D51312;margin:0 0 24px;">Button</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;">
+        <div style="border-radius:12px;border:1px solid rgba(135,43,19,.15);background:#FFF6E4;padding:24px;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+          <div style="font-weight:700;font-size:14px;color:#872B13;margin-bottom:16px;">Primary · crimson</div>
+          <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start;">
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:14px 28px;cursor:pointer;">Reservar ahora</button><span style="font-size:12px;color:#872B13;opacity:.6;">default</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:#EA5B0C;border:none;border-radius:8px;padding:14px 28px;cursor:pointer;">Reservar ahora</button><span style="font-size:12px;color:#872B13;opacity:.6;">hover</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:#872B13;border:none;border-radius:8px;padding:14px 28px;cursor:pointer;">Reservar ahora</button><span style="font-size:12px;color:#872B13;opacity:.6;">active</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:rgba(255,234,202,.5);background:rgba(213,19,18,.4);border:none;border-radius:8px;padding:14px 28px;cursor:not-allowed;">Reservar ahora</button><span style="font-size:12px;color:#872B13;opacity:.6;">disabled</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:14px 28px;cursor:wait;display:inline-flex;align-items:center;gap:10px;"><span style="width:16px;height:16px;border:2px solid rgba(255,234,202,.4);border-top-color:#FFEACA;border-radius:50%;display:inline-block;animation:vc-spin .7s linear infinite;"></span>Reservar ahora</button><span style="font-size:12px;color:#872B13;opacity:.6;">loading</span></div>
+          </div>
+        </div>
+        <div style="border-radius:12px;border:1px solid rgba(135,43,19,.15);background:#FFF6E4;padding:24px;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+          <div style="font-weight:700;font-size:14px;color:#872B13;margin-bottom:16px;">Secondary · orange outline</div>
+          <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start;">
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#EA5B0C;background:transparent;border:2px solid #EA5B0C;border-radius:8px;padding:12px 26px;cursor:pointer;">Ver más</button><span style="font-size:12px;color:#872B13;opacity:.6;">default</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:#EA5B0C;border:2px solid #EA5B0C;border-radius:8px;padding:12px 26px;cursor:pointer;">Ver más</button><span style="font-size:12px;color:#872B13;opacity:.6;">hover</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:#872B13;border:2px solid #872B13;border-radius:8px;padding:12px 26px;cursor:pointer;">Ver más</button><span style="font-size:12px;color:#872B13;opacity:.6;">active</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:rgba(234,91,12,.4);background:transparent;border:2px solid rgba(234,91,12,.4);border-radius:8px;padding:12px 26px;cursor:not-allowed;">Ver más</button><span style="font-size:12px;color:#872B13;opacity:.6;">disabled</span></div>
+          </div>
+        </div>
+        <div style="border-radius:12px;border:1px solid rgba(135,43,19,.15);background:#FFF6E4;padding:24px;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+          <div style="font-weight:700;font-size:14px;color:#872B13;margin-bottom:16px;">Ghost · brown outline</div>
+          <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start;">
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:transparent;border:1.5px solid #872B13;border-radius:8px;padding:12px 26px;cursor:pointer;">Ver todas</button><span style="font-size:12px;color:#872B13;opacity:.6;">default</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:#872B13;border:1.5px solid #872B13;border-radius:8px;padding:12px 26px;cursor:pointer;">Ver todas</button><span style="font-size:12px;color:#872B13;opacity:.6;">hover</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:#6e2310;border:1.5px solid #6e2310;border-radius:8px;padding:12px 26px;cursor:pointer;">Ver todas</button><span style="font-size:12px;color:#872B13;opacity:.6;">active</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:rgba(135,43,19,.4);background:transparent;border:1.5px solid rgba(135,43,19,.4);border-radius:8px;padding:12px 26px;cursor:not-allowed;">Ver todas</button><span style="font-size:12px;color:#872B13;opacity:.6;">disabled</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INPUTS Y BADGES -->
+    <section>
+      <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(28px,3.4cqw,40px);color:#D51312;margin:0 0 24px;">Input &amp; Badge</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;">
+        <div style="border-radius:12px;border:1px solid rgba(135,43,19,.15);background:#FFF6E4;padding:24px;box-shadow:0 2px 8px rgba(135,43,19,.1);display:flex;flex-direction:column;gap:18px;">
+          <div><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Nombre · default</label><input type="text" placeholder="Tu nombre" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFEACA;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+          <div><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Email · focus</label><input type="text" value="hola@vuelo" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFEACA;border:2px solid #D51312;border-radius:4px;padding:12px 16px;outline:none;box-shadow:0 0 0 3px rgba(213,19,18,.15);"/></div>
+          <div><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Teléfono · error</label><input type="text" value="123" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFEACA;border:2px solid #D51312;border-radius:4px;padding:12px 16px;outline:none;"/><div style="font-weight:700;font-size:13px;color:#D51312;margin-top:6px;">Ingresá un teléfono válido</div></div>
+          <div><label style="display:block;font-weight:700;font-size:14px;color:rgba(135,43,19,.5);margin-bottom:6px;">Asunto · disabled</label><input type="text" placeholder="No disponible" disabled style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:rgba(255,234,202,.6);border:1.5px solid rgba(135,43,19,.2);border-radius:4px;padding:12px 16px;cursor:not-allowed;"/></div>
+          <div><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Mensaje · textarea</label><textarea placeholder="Escribí tu consulta…" style="width:100%;min-height:120px;resize:vertical;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFEACA;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"></textarea></div>
+        </div>
+        <div style="border-radius:12px;border:1px solid rgba(135,43,19,.15);background:#FFF6E4;padding:24px;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+          <div style="font-weight:700;font-size:14px;color:#872B13;margin-bottom:16px;">Badge</div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;">
+            <span style="font-weight:700;font-size:12px;background:#F59C00;color:#872B13;border-radius:100px;padding:4px 10px;">Disponible</span>
+            <span style="font-weight:700;font-size:12px;background:#EA5B0C;color:#FFEACA;border-radius:100px;padding:4px 10px;">Nuevo</span>
+            <span style="font-weight:700;font-size:12px;background:rgba(135,43,19,.15);color:rgba(135,43,19,.6);border-radius:100px;padding:4px 10px;">Agotado</span>
+            <span style="font-weight:700;font-size:12px;background:#FDC300;color:#872B13;border-radius:100px;padding:4px 10px;">Destacado</span>
+          </div>
+          <div style="font-weight:700;font-size:14px;color:#872B13;margin:28px 0 12px;">Card · hover (elevada)</div>
+          <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);background:#FFEACA;box-shadow:0 8px 24px rgba(135,43,19,.2);transform:translateY(-4px);max-width:240px;">
+            <div style="height:120px;background:repeating-linear-gradient(135deg,#F0D6A8 0 12px,#E9CB97 12px 24px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:11px;letter-spacing:1px;color:rgba(135,43,19,.5);text-transform:uppercase;">imagen</span></div>
+            <div style="padding:16px;"><div style="font-weight:700;font-size:18px;color:#872B13;">Card base</div><div style="font-size:13px;color:rgba(135,43,19,.65);margin-top:4px;">cream · radius 12 · sombra hover</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVBAR -->
+    <section>
+      <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(28px,3.4cqw,40px);color:#D51312;margin:0 0 24px;">Navbar &amp; Footer</h2>
+      <div style="font-weight:700;font-size:14px;color:#872B13;margin-bottom:10px;">Navbar desktop · 72px</div>
+      <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);box-shadow:0 2px 8px rgba(135,43,19,.1);margin-bottom:24px;">
+        <div style="height:72px;background:#D51312;display:flex;align-items:center;justify-content:space-between;padding:0 24px;">
+          <span style="font-family:'Honey Lips',serif;font-size:26px;color:#FFEACA;">Vuelo Carmesí</span>
+          <div style="display:flex;align-items:center;gap:32px;">
+            <span style="font-weight:700;font-size:16px;color:#FFEACA;border-bottom:2px solid #F59C00;padding-bottom:2px;">Inicio</span>
+            <span style="font-weight:700;font-size:16px;color:#FFEACA;">Experiencias</span>
+            <span style="font-weight:700;font-size:16px;color:#FFEACA;">Tienda</span>
+            <span style="font-weight:700;font-size:16px;color:#FFEACA;">Contacto</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-weight:700;font-size:14px;color:#872B13;margin-bottom:10px;">Navbar mobile · panel desplegado</div>
+      <div style="max-width:340px;border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);box-shadow:0 2px 8px rgba(135,43,19,.1);margin-bottom:24px;">
+        <div style="height:60px;background:#D51312;display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
+          <span style="font-family:'Honey Lips',serif;font-size:22px;color:#FFEACA;">Vuelo Carmesí</span>
+          <div style="display:flex;flex-direction:column;gap:5px;"><span style="width:24px;height:2px;background:#FFEACA;"></span><span style="width:24px;height:2px;background:#FFEACA;"></span><span style="width:24px;height:2px;background:#FFEACA;"></span></div>
+        </div>
+        <div style="background:#872B13;padding:8px 0;">
+          <div style="text-align:center;font-weight:700;font-size:20px;color:#FFEACA;padding:16px 0;">Inicio</div>
+          <div style="text-align:center;font-weight:700;font-size:20px;color:#FFEACA;padding:16px 0;">Experiencias</div>
+          <div style="text-align:center;font-weight:700;font-size:20px;color:#FFEACA;padding:16px 0;">Tienda</div>
+          <div style="text-align:center;font-weight:700;font-size:20px;color:#FFEACA;padding:16px 0;">Contacto</div>
+        </div>
+      </div>
+      <div style="font-weight:700;font-size:14px;color:#872B13;margin-bottom:10px;">Footer</div>
+      <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);box-shadow:0 2px 8px rgba(135,43,19,.1);">
+        <div style="background:#872B13;padding:48px 32px 24px;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:32px;">
+            <div><div style="font-family:'Honey Lips',serif;font-size:24px;color:#FFEACA;margin-bottom:10px;">Vuelo Carmesí</div><div style="font-weight:700;font-size:14px;color:rgba(255,234,202,.8);line-height:1.6;">Experiencias agroecológicas con sabor a cacao.</div></div>
+            <div><div style="font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:#FDC300;margin-bottom:14px;">Navegación</div><div style="display:flex;flex-direction:column;gap:10px;font-weight:700;font-size:14px;color:rgba(255,234,202,.85);"><span>Experiencias</span><span>Tienda</span><span>Sobre nosotros</span><span>Contacto</span></div></div>
+            <div><div style="font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:#FDC300;margin-bottom:14px;">Contacto</div><div style="display:flex;flex-direction:column;gap:10px;font-weight:700;font-size:14px;color:rgba(255,234,202,.85);"><span>hola@vuelocarmesi.com</span><span>+54 9 11 5555 5555</span><span>Misiones, Argentina</span></div></div>
+          </div>
+          <div style="border-top:1px solid rgba(253,195,0,.3);margin-top:32px;padding-top:24px;text-align:center;font-size:12px;color:rgba(255,234,202,.6);">© 2026 Vuelo Carmesí. Todos los derechos reservados.</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{ is_landing }}" hint-placeholder-val="{{ false }}">
+<div style="font-family:'Bellota',sans-serif;">
+
+  <!-- NAVBAR -->
+  <div style="height:72px;background:#D51312;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,3cqw,24px);flex-wrap:wrap;gap:8px;">
+    <span style="font-family:'Honey Lips',serif;font-size:clamp(22px,2.4cqw,26px);color:#FFEACA;">Vuelo Carmesí</span>
+    <div style="display:flex;align-items:center;gap:clamp(14px,2.4cqw,32px);flex-wrap:wrap;">
+      <span style="font-weight:700;font-size:16px;color:#FFEACA;border-bottom:2px solid #F59C00;padding-bottom:2px;">Inicio</span>
+      <span style="font-weight:700;font-size:16px;color:#FFEACA;">Experiencias</span>
+      <span style="font-weight:700;font-size:16px;color:#FFEACA;">Tienda</span>
+      <span style="font-weight:700;font-size:16px;color:#FFEACA;">Contacto</span>
+    </div>
+  </div>
+
+  <!-- HERO A -->
+  <sc-if value="{{ heroA }}" hint-placeholder-val="{{ true }}">
+  <div style="position:relative;min-height:86vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(40px,8cqw,80px) clamp(16px,4cqw,40px);background:linear-gradient(rgba(135,43,19,.7),rgba(135,43,19,.5)),repeating-linear-gradient(135deg,#7a2611 0 14px,#6e2310 14px 28px);">
+    <div style="font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#FDC300;margin-bottom:16px;">Experiencias agroecológicas</div>
+    <h1 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(40px,7cqw,72px);line-height:1.1;color:#FFEACA;margin:0;max-width:16ch;">Del cacaotal a tus manos</h1>
+    <p style="font-weight:700;font-size:clamp(16px,1.8cqw,20px);line-height:1.6;color:rgba(255,234,202,.85);max-width:52ch;margin:16px 0 0;">Viví la cosecha, la fermentación y la cata en una finca viva del corazón de la selva.</p>
+    <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:18px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:18px 40px;cursor:pointer;margin-top:40px;box-shadow:0 8px 24px rgba(0,0,0,.25);">Reservá tu experiencia</button>
+    <div style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:#FFEACA;animation:vc-bob 1.8s ease-in-out infinite;font-size:24px;">↓</div>
+  </div>
+  </sc-if>
+
+  <!-- HERO B -->
+  <sc-if value="{{ heroB }}" hint-placeholder-val="{{ false }}">
+  <div style="display:flex;flex-wrap:wrap;min-height:86vh;">
+    <div style="flex:1 1 380px;background:#872B13;display:flex;flex-direction:column;justify-content:center;padding:clamp(40px,6cqw,80px);">
+      <div style="font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#FDC300;margin-bottom:16px;">Experiencias agroecológicas</div>
+      <h1 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(40px,6cqw,72px);line-height:1.05;color:#FFEACA;margin:0;">Del árbol<br/>a la barra</h1>
+      <p style="font-weight:700;font-size:clamp(16px,1.7cqw,20px);line-height:1.6;color:rgba(255,234,202,.85);max-width:44ch;margin:20px 0 0;">Una jornada completa entre cacaotales, fogones y catas guiadas por nuestros maestros.</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;">
+        <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:18px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:16px 34px;cursor:pointer;">Reservá ahora</button>
+        <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:18px;color:#FFEACA;background:transparent;border:2px solid #FFEACA;border-radius:8px;padding:14px 32px;cursor:pointer;">Ver experiencias</button>
+      </div>
+    </div>
+    <div style="flex:1 1 380px;min-height:320px;background:repeating-linear-gradient(135deg,#9a3417 0 16px,#8a2e14 16px 32px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:12px;letter-spacing:1px;color:rgba(255,234,202,.55);text-transform:uppercase;">foto · finca de cacao</span></div>
+  </div>
+  </sc-if>
+
+  <!-- HERO C -->
+  <sc-if value="{{ heroC }}" hint-placeholder-val="{{ false }}">
+  <div style="min-height:86vh;background:#FFEACA;display:flex;flex-direction:column;justify-content:center;padding:clamp(40px,7cqw,90px) clamp(16px,5cqw,64px);">
+    <div style="font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;margin-bottom:16px;">Experiencias agroecológicas</div>
+    <h1 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(44px,8cqw,96px);line-height:1;color:#D51312;margin:0;max-width:18ch;">El sabor maduro de la tierra</h1>
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:32px;margin-top:40px;">
+      <div style="flex:1 1 300px;">
+        <p style="font-weight:700;font-size:clamp(16px,1.7cqw,20px);line-height:1.7;color:#872B13;max-width:46ch;margin:0;">Cosechamos, fermentamos y catamos junto a vos. Conocé el cacao desde su raíz, en una finca que respira selva.</p>
+        <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:18px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:16px 36px;cursor:pointer;margin-top:28px;">Reservá tu experiencia</button>
+      </div>
+      <div style="flex:1 1 300px;height:280px;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(135,43,19,.16);background:repeating-linear-gradient(135deg,#F0D6A8 0 14px,#E9CB97 14px 28px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:12px;letter-spacing:1px;color:rgba(135,43,19,.5);text-transform:uppercase;">foto · mazorca abierta</span></div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- SWITCHER HERO (control demo) -->
+  <div style="background:#5C1D0D;display:flex;align-items:center;justify-content:center;gap:10px;padding:10px;flex-wrap:wrap;">
+    <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,234,202,.6);">Variación de Hero</span>
+    <button onClick="{{ setHeroA }}" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:13px;color:{{ heroTabA }};background:{{ heroTabABg }};border:1px solid rgba(253,195,0,.3);border-radius:6px;padding:6px 16px;cursor:pointer;">A · Centrado</button>
+    <button onClick="{{ setHeroB }}" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:13px;color:{{ heroTabB }};background:{{ heroTabBBg }};border:1px solid rgba(253,195,0,.3);border-radius:6px;padding:6px 16px;cursor:pointer;">B · Split imagen</button>
+    <button onClick="{{ setHeroC }}" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:13px;color:{{ heroTabC }};background:{{ heroTabCBg }};border:1px solid rgba(253,195,0,.3);border-radius:6px;padding:6px 16px;cursor:pointer;">C · Editorial cream</button>
+  </div>
+
+  <!-- PREVIEW EXPERIENCIAS -->
+  <div style="background:#FFEACA;padding:clamp(48px,8cqw,80px) clamp(16px,3cqw,40px);">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(28px,3.4cqw,40px);color:#D51312;text-align:center;margin:0 0 12px;">Experiencias que dejan huella</h2>
+      <p style="font-weight:700;font-size:clamp(16px,1.5cqw,18px);color:rgba(135,43,19,.7);text-align:center;max-width:50ch;margin:0 auto 48px;">Elegí cómo querés conocer el mundo del cacao: de la cosecha a la cata.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;">
+        <sc-for list="{{ experienciasTop3 }}" as="e" hint-placeholder-count="3">
+        <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);background:#FFEACA;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+          <div style="position:relative;height:200px;background:repeating-linear-gradient(135deg,#F0D6A8 0 14px,#E9CB97 14px 28px);display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:monospace;font-size:11px;letter-spacing:1px;color:rgba(135,43,19,.5);text-transform:uppercase;">{{ e.img }}</span>
+            <span style="position:absolute;top:12px;right:12px;font-weight:700;font-size:12px;background:#F59C00;color:#872B13;border-radius:100px;padding:4px 10px;">{{ e.badge }}</span>
+          </div>
+          <div style="padding:24px;">
+            <div style="font-weight:700;font-size:20px;color:#872B13;margin-bottom:8px;">{{ e.t }}</div>
+            <div style="font-size:14px;line-height:1.5;color:rgba(135,43,19,.7);margin-bottom:16px;">{{ e.d }}</div>
+            <div style="display:flex;align-items:center;gap:12px;font-weight:700;font-size:14px;color:#F59C00;"><span>⏱ {{ e.dur }}</span><span style="color:rgba(135,43,19,.25);">|</span><span>{{ e.precio }}</span></div>
+            <button style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#EA5B0C;background:transparent;border:2px solid #EA5B0C;border-radius:8px;padding:12px;cursor:pointer;margin-top:16px;">Ver más</button>
+          </div>
+        </div>
+        </sc-for>
+      </div>
+      <div style="text-align:center;margin-top:40px;"><button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:transparent;border:1.5px solid #872B13;border-radius:8px;padding:14px 28px;cursor:pointer;">Ver todas las experiencias</button></div>
+    </div>
+  </div>
+
+  <!-- SOBRE NOSOTROS -->
+  <div style="background:#872B13;padding:clamp(56px,9cqw,100px) clamp(16px,3cqw,40px);">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:clamp(32px,6cqw,80px);">
+      <div style="flex:1 1 300px;height:380px;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.25);background:repeating-linear-gradient(135deg,#9a3417 0 16px,#8a2e14 16px 32px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:12px;letter-spacing:1px;color:rgba(255,234,202,.5);text-transform:uppercase;">foto · familia / finca</span></div>
+      <div style="flex:1 1 320px;">
+        <div style="font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#FDC300;margin-bottom:14px;">Quiénes somos</div>
+        <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(28px,3.4cqw,40px);color:#FFEACA;margin:0 0 20px;">Una finca que cree en la tierra</h2>
+        <p style="font-weight:700;font-size:clamp(16px,1.5cqw,18px);line-height:1.7;color:rgba(255,234,202,.85);margin:0 0 32px;">Trabajamos el cacao de forma agroecológica, respetando los ciclos del monte y a quienes lo habitan. Cada experiencia es una invitación a entender de dónde viene el chocolate que amás.</p>
+        <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:transparent;border:1.5px solid #FFEACA;border-radius:8px;padding:14px 28px;cursor:pointer;">Conocé nuestra historia</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALERIA -->
+  <div style="background:#FFEACA;padding:clamp(48px,8cqw,80px) clamp(16px,3cqw,40px);">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(28px,3.4cqw,40px);color:#D51312;text-align:center;margin:0 0 40px;">La finca en imágenes</h2>
+      <div style="columns:4 160px;column-gap:12px;">
+        <sc-for list="{{ galeria }}" as="g" hint-placeholder-count="8">
+        <div style="break-inside:avoid;margin-bottom:12px;border-radius:8px;overflow:hidden;background:repeating-linear-gradient(135deg,#F0D6A8 0 12px,#E9CB97 12px 24px);display:flex;align-items:center;justify-content:center;height:{{ g.h }}px;"><span style="font-family:monospace;font-size:11px;letter-spacing:1px;color:rgba(135,43,19,.45);text-transform:uppercase;">{{ g.img }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- BANDA CTA -->
+  <div style="background:#D51312;padding:clamp(48px,8cqw,80px) clamp(16px,3cqw,40px);text-align:center;">
+    <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(32px,4cqw,48px);color:#FFEACA;margin:0 auto;max-width:24ch;">¿Listo para vivir el cacao?</h2>
+    <p style="font-weight:700;font-size:clamp(16px,1.5cqw,18px);color:rgba(255,234,202,.85);max-width:46ch;margin:16px auto 0;">Reservá tu lugar y dejate llevar por los aromas de la selva.</p>
+    <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:18px;color:#FFEACA;background:transparent;border:2px solid #FFEACA;border-radius:8px;padding:18px 40px;cursor:pointer;margin-top:32px;">Reservar experiencia</button>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="background:#872B13;padding:clamp(48px,7cqw,64px) clamp(16px,3cqw,32px) 24px;">
+    <div style="max-width:1200px;margin:0 auto;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;">
+        <div><div style="font-family:'Honey Lips',serif;font-size:26px;color:#FFEACA;margin-bottom:12px;">Vuelo Carmesí</div><div style="font-weight:700;font-size:14px;color:rgba(255,234,202,.8);line-height:1.6;max-width:30ch;">Experiencias agroecológicas con sabor a cacao.</div></div>
+        <div><div style="font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:#FDC300;margin-bottom:14px;">Navegación</div><div style="display:flex;flex-direction:column;gap:10px;font-weight:700;font-size:14px;color:rgba(255,234,202,.85);"><span>Experiencias</span><span>Tienda</span><span>Sobre nosotros</span><span>Contacto</span></div></div>
+        <div><div style="font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:#FDC300;margin-bottom:14px;">Contacto</div><div style="display:flex;flex-direction:column;gap:10px;font-weight:700;font-size:14px;color:rgba(255,234,202,.85);"><span>hola@vuelocarmesi.com</span><span>+54 9 11 5555 5555</span><span>Misiones, Argentina</span></div></div>
+      </div>
+      <div style="border-top:1px solid rgba(253,195,0,.3);margin-top:32px;padding-top:24px;text-align:center;font-size:12px;color:rgba(255,234,202,.6);">© 2026 Vuelo Carmesí. Todos los derechos reservados.</div>
+    </div>
+  </div>
+
+</div>
+</sc-if>
+<!-- ============ VISTA 2: CONTACTO ============ -->
+<sc-if value="{{ is_contacto }}" hint-placeholder-val="{{ false }}">
+<div style="font-family:'Bellota',sans-serif;">
+  <div style="height:72px;background:#D51312;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,3cqw,24px);flex-wrap:wrap;gap:8px;">
+    <span style="font-family:'Honey Lips',serif;font-size:clamp(22px,2.4cqw,26px);color:#FFEACA;">Vuelo Carmesí</span>
+    <div style="display:flex;align-items:center;gap:clamp(14px,2.4cqw,32px);flex-wrap:wrap;">
+      <span style="font-weight:700;font-size:16px;color:#FFEACA;">Inicio</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Experiencias</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Tienda</span><span style="font-weight:700;font-size:16px;color:#FFEACA;border-bottom:2px solid #F59C00;padding-bottom:2px;">Contacto</span>
+    </div>
+  </div>
+
+  <div style="padding:clamp(40px,6cqw,80px) clamp(16px,3cqw,40px);background:#FFEACA;">
+    <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(135,43,19,.16);">
+      <!-- INFO -->
+      <div style="flex:1 1 320px;background:#872B13;padding:clamp(32px,4cqw,48px);">
+        <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(28px,3.4cqw,40px);color:#FFEACA;margin:0 0 16px;">Hablemos</h2>
+        <p style="font-weight:700;font-size:clamp(16px,1.5cqw,18px);line-height:1.7;color:rgba(255,234,202,.8);margin:0 0 32px;">¿Tenés dudas sobre una experiencia o querés organizar una visita grupal? Escribinos y te respondemos a la brevedad.</p>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="display:flex;align-items:center;gap:14px;"><span style="font-size:20px;color:#F59C00;">✉</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">hola@vuelocarmesi.com</span></div>
+          <div style="display:flex;align-items:center;gap:14px;"><span style="font-size:20px;color:#F59C00;">☎</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">+54 9 11 5555 5555</span></div>
+          <div style="display:flex;align-items:center;gap:14px;"><span style="font-size:20px;color:#F59C00;">📍</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Ruta 12 km 7, Misiones, Argentina</span></div>
+        </div>
+      </div>
+      <!-- FORM -->
+      <div style="flex:1 1 380px;background:#FFEACA;padding:clamp(32px,4cqw,48px);">
+        <h3 style="font-weight:700;font-size:24px;color:#872B13;margin:0 0 32px;">Envianos un mensaje</h3>
+        <div style="display:flex;flex-direction:column;gap:18px;">
+          <div><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Nombre</label><input type="text" placeholder="Tu nombre" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFF6E4;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+          <div><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Email</label><input type="email" placeholder="tu@email.com" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFF6E4;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+          <div><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Asunto</label><input type="text" placeholder="¿Sobre qué querés escribirnos?" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFF6E4;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+          <div><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Mensaje</label><textarea placeholder="Escribí tu consulta…" style="width:100%;min-height:160px;resize:vertical;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFF6E4;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"></textarea></div>
+          <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:14px;cursor:pointer;width:100%;margin-top:8px;">Enviar mensaje</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESTADO DE EXITO (variante) -->
+    <div style="max-width:1100px;margin:32px auto 0;">
+      <div style="font-family:monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:rgba(135,43,19,.5);margin-bottom:10px;">Estado · mensaje enviado</div>
+      <div style="background:#FFF6E4;border:1px solid rgba(135,43,19,.15);border-radius:12px;padding:clamp(32px,4cqw,48px);text-align:center;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+        <div style="font-size:48px;color:#F59C00;line-height:1;">✓</div>
+        <h3 style="font-family:'Honey Lips',serif;font-weight:400;font-size:28px;color:#D51312;margin:16px 0 8px;">¡Mensaje enviado!</h3>
+        <p style="font-weight:700;font-size:16px;color:#872B13;margin:0 0 20px;max-width:44ch;margin-left:auto;margin-right:auto;">Gracias por escribirnos. Te responderemos dentro de las próximas 24 horas.</p>
+        <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:transparent;border:1.5px solid #872B13;border-radius:8px;padding:12px 26px;cursor:pointer;">Volver al inicio</button>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ VISTA 3: CATALOGO EXPERIENCIAS ============ -->
+<sc-if value="{{ is_experiencias }}" hint-placeholder-val="{{ false }}">
+<div style="font-family:'Bellota',sans-serif;">
+  <div style="height:72px;background:#D51312;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,3cqw,24px);flex-wrap:wrap;gap:8px;">
+    <span style="font-family:'Honey Lips',serif;font-size:clamp(22px,2.4cqw,26px);color:#FFEACA;">Vuelo Carmesí</span>
+    <div style="display:flex;align-items:center;gap:clamp(14px,2.4cqw,32px);flex-wrap:wrap;"><span style="font-weight:700;font-size:16px;color:#FFEACA;">Inicio</span><span style="font-weight:700;font-size:16px;color:#FFEACA;border-bottom:2px solid #F59C00;padding-bottom:2px;">Experiencias</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Tienda</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Contacto</span></div>
+  </div>
+
+  <!-- hero interno -->
+  <div style="min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px clamp(16px,3cqw,40px);background:linear-gradient(rgba(135,43,19,.72),rgba(135,43,19,.6)),repeating-linear-gradient(135deg,#7a2611 0 14px,#6e2310 14px 28px);">
+    <h1 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(36px,4.4cqw,48px);color:#FFEACA;margin:0;">Nuestras experiencias</h1>
+    <p style="font-weight:700;font-size:16px;color:rgba(255,234,202,.8);margin:12px 0 0;max-width:50ch;">Del cacaotal a la cata: elegí tu próxima aventura agroecológica.</p>
+  </div>
+
+  <!-- barra controles -->
+  <div style="background:#FFEACA;border-bottom:1px solid rgba(135,43,19,.15);padding:16px clamp(16px,3cqw,40px);">
+    <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <span style="font-weight:700;font-size:14px;color:rgba(135,43,19,.6);">6 experiencias disponibles</span>
+      <select class="vc-sel" style="font-family:'Bellota',sans-serif;font-weight:700;font-size:14px;color:#872B13;background:#FFF6E4 url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path d=%22M2 4l4 4 4-4%22 stroke=%22%23872B13%22 stroke-width=%221.6%22 fill=%22none%22/></svg>') no-repeat right 12px center;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:10px 34px 10px 14px;cursor:pointer;outline:none;"><option>Precio: menor a mayor</option><option>Precio: mayor a menor</option><option>Más recientes</option></select>
+    </div>
+  </div>
+
+  <!-- grid -->
+  <div style="background:#FFEACA;padding:48px clamp(16px,3cqw,40px);">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;">
+      <sc-for list="{{ experiencias }}" as="e" hint-placeholder-count="6">
+      <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);background:#FFEACA;box-shadow:0 2px 8px rgba(135,43,19,.1);">
+        <div style="position:relative;height:200px;background:repeating-linear-gradient(135deg,#F0D6A8 0 14px,#E9CB97 14px 28px);display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:monospace;font-size:11px;letter-spacing:1px;color:rgba(135,43,19,.5);text-transform:uppercase;">{{ e.img }}</span>
+          <span style="position:absolute;top:12px;right:12px;font-weight:700;font-size:12px;background:#F59C00;color:#872B13;border-radius:100px;padding:4px 10px;">{{ e.badge }}</span>
+        </div>
+        <div style="padding:24px;">
+          <div style="font-weight:700;font-size:20px;color:#872B13;margin-bottom:8px;">{{ e.t }}</div>
+          <div style="font-size:14px;line-height:1.5;color:rgba(135,43,19,.7);margin-bottom:16px;">{{ e.d }}</div>
+          <div style="display:flex;align-items:center;gap:12px;font-weight:700;font-size:14px;color:#F59C00;"><span>⏱ {{ e.dur }}</span><span style="color:rgba(135,43,19,.25);">|</span><span>{{ e.precio }}</span></div>
+          <button style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#EA5B0C;background:transparent;border:2px solid #EA5B0C;border-radius:8px;padding:12px;cursor:pointer;margin-top:16px;">Ver más</button>
+        </div>
+      </div>
+      </sc-for>
+    </div>
+
+    <!-- empty state variante -->
+    <div style="max-width:1200px;margin:40px auto 0;">
+      <div style="font-family:monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:rgba(135,43,19,.5);margin-bottom:10px;">Estado · sin resultados</div>
+      <div style="border:1px dashed rgba(135,43,19,.3);border-radius:12px;padding:56px 24px;text-align:center;background:#FFF6E4;">
+        <div style="font-size:48px;color:#F59C00;line-height:1;">🌱</div>
+        <h3 style="font-weight:700;font-size:24px;color:#872B13;margin:16px 0 8px;">Próximamente nuevas experiencias</h3>
+        <p style="font-weight:700;font-size:16px;color:rgba(135,43,19,.7);margin:0 0 20px;">Estamos preparando nuevas aventuras. Dejanos tu consulta y te avisamos.</p>
+        <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:12px 26px;cursor:pointer;">Contactanos</button>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ VISTA 4: DETALLE EXPERIENCIA ============ -->
+<sc-if value="{{ is_experiencia }}" hint-placeholder-val="{{ false }}">
+<div style="font-family:'Bellota',sans-serif;">
+  <div style="height:72px;background:#D51312;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,3cqw,24px);flex-wrap:wrap;gap:8px;">
+    <span style="font-family:'Honey Lips',serif;font-size:clamp(22px,2.4cqw,26px);color:#FFEACA;">Vuelo Carmesí</span>
+    <div style="display:flex;align-items:center;gap:clamp(14px,2.4cqw,32px);flex-wrap:wrap;"><span style="font-weight:700;font-size:16px;color:#FFEACA;">Inicio</span><span style="font-weight:700;font-size:16px;color:#FFEACA;border-bottom:2px solid #F59C00;padding-bottom:2px;">Experiencias</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Tienda</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Contacto</span></div>
+  </div>
+
+  <!-- hero -->
+  <div style="position:relative;min-height:clamp(300px,40cqw,480px);display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(24px,4cqw,48px);background:linear-gradient(rgba(135,43,19,.35),rgba(135,43,19,.7)),repeating-linear-gradient(135deg,#8a2e14 0 16px,#7a2611 16px 32px);">
+    <span style="display:inline-block;width:fit-content;font-weight:700;font-size:12px;background:#F59C00;color:#872B13;border-radius:100px;padding:5px 12px;margin-bottom:14px;">Disponible</span>
+    <h1 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(32px,5cqw,56px);color:#FFEACA;margin:0;max-width:18ch;">Taller del árbol a la barra</h1>
+  </div>
+
+  <!-- cuerpo 2 cols -->
+  <div style="background:#FFEACA;padding:clamp(32px,5cqw,48px) clamp(16px,3cqw,40px);">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:clamp(24px,4cqw,48px);align-items:flex-start;">
+      <!-- principal -->
+      <div style="flex:1 1 420px;min-width:0;">
+        <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(26px,2.8cqw,32px);color:#D51312;margin:0 0 16px;">Sobre esta experiencia</h2>
+        <p style="font-weight:700;font-size:clamp(16px,1.5cqw,18px);line-height:1.8;color:#872B13;margin:0;">Acompañanos en el viaje completo del grano al chocolate. Vas a fermentar, secar y tostar cacao con tus manos, guiado por nuestro maestro chocolatero, y terminarás moldeando tu propia tableta para llevar a casa.</p>
+        <h3 style="font-weight:700;font-size:24px;color:#872B13;margin:40px 0 16px;">¿Qué incluye?</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;color:#872B13;"><span style="color:#F59C00;">✓</span>Guía especializada durante toda la jornada</div>
+          <div style="display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;color:#872B13;"><span style="color:#F59C00;">✓</span>Materiales y delantal de trabajo</div>
+          <div style="display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;color:#872B13;"><span style="color:#F59C00;">✓</span>Merienda de monte y bebida de cacao</div>
+          <div style="display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;color:#872B13;"><span style="color:#F59C00;">✓</span>Tu propia tableta artesanal para llevar</div>
+        </div>
+        <h3 style="font-weight:700;font-size:24px;color:#872B13;margin:40px 0 16px;">¿Qué traer?</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;color:#872B13;"><span style="color:#F59C00;">✓</span>Calzado cómodo y cerrado</div>
+          <div style="display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;color:#872B13;"><span style="color:#F59C00;">✓</span>Repelente y protector solar</div>
+          <div style="display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;color:#872B13;"><span style="color:#F59C00;">✓</span>Muchas ganas de aprender</div>
+        </div>
+        <h3 style="font-weight:700;font-size:24px;color:#872B13;margin:40px 0 16px;">Galería</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;">
+          <div style="height:120px;border-radius:8px;background:repeating-linear-gradient(135deg,#F0D6A8 0 12px,#E9CB97 12px 24px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:10px;color:rgba(135,43,19,.45);text-transform:uppercase;">taller 1</span></div>
+          <div style="height:120px;border-radius:8px;background:repeating-linear-gradient(135deg,#F0D6A8 0 12px,#E9CB97 12px 24px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:10px;color:rgba(135,43,19,.45);text-transform:uppercase;">taller 2</span></div>
+          <div style="height:120px;border-radius:8px;background:repeating-linear-gradient(135deg,#F0D6A8 0 12px,#E9CB97 12px 24px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:10px;color:rgba(135,43,19,.45);text-transform:uppercase;">taller 3</span></div>
+        </div>
+      </div>
+      <!-- sticky card -->
+      <div style="flex:0 1 320px;position:sticky;top:72px;align-self:flex-start;">
+        <div style="background:#FFEACA;border:1px solid rgba(135,43,19,.15);border-radius:12px;box-shadow:0 4px 16px rgba(135,43,19,.16);padding:32px;">
+          <div style="font-weight:700;font-size:32px;color:#F59C00;">$26.000</div>
+          <div style="display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;color:#872B13;margin-top:16px;"><span style="color:#F59C00;">⏱</span>Duración: 5 horas</div>
+          <div style="display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;color:#872B13;margin-top:10px;"><span style="color:#F59C00;">👥</span>Hasta 8 personas</div>
+          <div style="height:1px;background:rgba(253,195,0,.4);margin:24px 0;"></div>
+          <button style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:18px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:16px;cursor:pointer;">Reservar ahora</button>
+          <div style="text-align:center;font-size:12px;color:rgba(135,43,19,.6);margin-top:12px;">Sin compromiso de pago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+<!-- ============ VISTA 5: RESERVAR ============ -->
+<sc-if value="{{ is_reservar }}" hint-placeholder-val="{{ false }}">
+<div style="font-family:'Bellota',sans-serif;">
+  <div style="height:72px;background:#D51312;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,3cqw,24px);flex-wrap:wrap;gap:8px;">
+    <span style="font-family:'Honey Lips',serif;font-size:clamp(22px,2.4cqw,26px);color:#FFEACA;">Vuelo Carmesí</span>
+    <div style="display:flex;align-items:center;gap:clamp(14px,2.4cqw,32px);flex-wrap:wrap;"><span style="font-weight:700;font-size:16px;color:#FFEACA;">Inicio</span><span style="font-weight:700;font-size:16px;color:#FFEACA;border-bottom:2px solid #F59C00;padding-bottom:2px;">Experiencias</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Tienda</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Contacto</span></div>
+  </div>
+
+  <div style="background:#FFEACA;padding:clamp(32px,5cqw,64px) clamp(16px,3cqw,40px);">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h1 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(32px,3.6cqw,40px);color:#D51312;margin:0;">Reservá tu experiencia</h1>
+      <p style="font-weight:700;font-size:16px;color:rgba(135,43,19,.7);margin:8px 0 32px;">Completá tus datos y nos pondremos en contacto para confirmar disponibilidad.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(24px,4cqw,40px);align-items:flex-start;">
+        <!-- form -->
+        <div style="flex:1 1 420px;min-width:0;background:#FFF6E4;border:1px solid rgba(135,43,19,.15);border-radius:12px;box-shadow:0 4px 16px rgba(135,43,19,.16);padding:clamp(24px,3cqw,40px);">
+          <div style="display:flex;flex-wrap:wrap;gap:18px;">
+            <div style="flex:1 1 180px;"><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Nombre completo</label><input type="text" placeholder="Tu nombre" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFEACA;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+            <div style="flex:1 1 180px;"><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Teléfono</label><input type="tel" placeholder="+54 9 ..." style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFEACA;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+          </div>
+          <div style="margin-top:18px;"><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Email</label><input type="email" placeholder="tu@email.com" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFEACA;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+          <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:18px;">
+            <div style="flex:1 1 180px;"><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Fecha deseada</label><input type="date" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFEACA;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:11px 16px;outline:none;"/></div>
+            <div style="flex:1 1 180px;"><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Personas</label><select class="vc-sel" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFEACA url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path d=%22M2 4l4 4 4-4%22 stroke=%22%23872B13%22 stroke-width=%221.6%22 fill=%22none%22/></svg>') no-repeat right 12px center;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 34px 12px 16px;outline:none;cursor:pointer;"><option>1 persona</option><option>2 personas</option><option>3 personas</option><option>4+ personas</option></select></div>
+          </div>
+          <div style="margin-top:18px;"><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Comentarios</label><textarea placeholder="¿Algo que debamos saber?" style="width:100%;min-height:120px;resize:vertical;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFEACA;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"></textarea></div>
+          <button style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:18px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:16px;cursor:pointer;margin-top:24px;">Confirmar reserva</button>
+          <div style="text-align:center;font-size:12px;color:rgba(135,43,19,.6);margin-top:12px;">Te contactaremos para confirmar disponibilidad</div>
+        </div>
+        <!-- resumen sticky -->
+        <div style="flex:0 1 340px;position:sticky;top:72px;align-self:flex-start;">
+          <div style="background:#872B13;border-radius:12px;padding:32px;">
+            <div style="font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#FDC300;margin-bottom:10px;">Estás reservando</div>
+            <div style="font-family:'Honey Lips',serif;font-size:28px;color:#FFEACA;line-height:1.1;">Taller del árbol a la barra</div>
+            <div style="height:160px;border-radius:8px;margin:16px 0;background:repeating-linear-gradient(135deg,#9a3417 0 14px,#8a2e14 14px 28px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:11px;color:rgba(255,234,202,.5);text-transform:uppercase;">taller · cacao</span></div>
+            <div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;color:#FFEACA;margin-bottom:8px;"><span>Precio</span><span style="color:#F59C00;">$26.000</span></div>
+            <div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;color:#FFEACA;"><span>Duración</span><span>5 horas</span></div>
+            <div style="height:1px;background:rgba(253,195,0,.4);margin:20px 0;"></div>
+            <div style="font-size:12px;color:rgba(255,234,202,.6);">El pago se coordina luego de confirmar la disponibilidad de la fecha.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ VISTA 6: CONFIRMACION ============ -->
+<sc-if value="{{ is_confirmacion }}" hint-placeholder-val="{{ false }}">
+<div style="font-family:'Bellota',sans-serif;">
+  <div style="height:72px;background:#D51312;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,3cqw,24px);flex-wrap:wrap;gap:8px;">
+    <span style="font-family:'Honey Lips',serif;font-size:clamp(22px,2.4cqw,26px);color:#FFEACA;">Vuelo Carmesí</span>
+    <div style="display:flex;align-items:center;gap:clamp(14px,2.4cqw,32px);flex-wrap:wrap;"><span style="font-weight:700;font-size:16px;color:#FFEACA;">Inicio</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Experiencias</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Tienda</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Contacto</span></div>
+  </div>
+
+  <div style="background:#FFEACA;padding:clamp(48px,7cqw,80px) clamp(16px,3cqw,40px);">
+    <div style="max-width:600px;margin:0 auto;text-align:center;">
+      <div style="width:80px;height:80px;border-radius:50%;background:#FDC300;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:40px;color:#872B13;font-weight:700;">✓</div>
+      <h1 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(36px,4.4cqw,48px);color:#D51312;margin:24px 0 0;">¡Reserva recibida!</h1>
+      <p style="font-weight:700;font-size:clamp(16px,1.5cqw,18px);color:#872B13;max-width:44ch;margin:16px auto 0;">Te enviamos un correo con los detalles. Nos pondremos en contacto para confirmar la disponibilidad de tu fecha.</p>
+      <div style="background:#FFF6E4;border:1px solid #F59C00;border-radius:12px;padding:32px;margin:40px 0;text-align:left;">
+        <div style="font-weight:700;font-size:20px;color:#F59C00;">Código de reserva: #ABC123</div>
+        <div style="height:1px;background:rgba(135,43,19,.15);margin:20px 0;"></div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div><div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:rgba(135,43,19,.6);">Experiencia</div><div style="font-weight:700;font-size:16px;color:#872B13;">Taller del árbol a la barra</div></div>
+          <div style="display:flex;flex-wrap:wrap;gap:24px;">
+            <div><div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:rgba(135,43,19,.6);">Fecha</div><div style="font-weight:700;font-size:16px;color:#872B13;">12 de julio, 2026</div></div>
+            <div><div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:rgba(135,43,19,.6);">Personas</div><div style="font-weight:700;font-size:16px;color:#872B13;">2 personas</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:transparent;border:1.5px solid #872B13;border-radius:8px;padding:14px 26px;cursor:pointer;">Volver al inicio</button>
+        <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:14px 26px;cursor:pointer;">Ver tienda</button>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ VISTA 7: TIENDA ============ -->
+<sc-if value="{{ is_tienda }}" hint-placeholder-val="{{ false }}">
+<div style="font-family:'Bellota',sans-serif;">
+  <div style="height:72px;background:#D51312;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,3cqw,24px);flex-wrap:wrap;gap:8px;">
+    <span style="font-family:'Honey Lips',serif;font-size:clamp(22px,2.4cqw,26px);color:#FFEACA;">Vuelo Carmesí</span>
+    <div style="display:flex;align-items:center;gap:clamp(14px,2.4cqw,32px);flex-wrap:wrap;"><span style="font-weight:700;font-size:16px;color:#FFEACA;">Inicio</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Experiencias</span><span style="font-weight:700;font-size:16px;color:#FFEACA;border-bottom:2px solid #F59C00;padding-bottom:2px;">Tienda</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Contacto</span></div>
+  </div>
+
+  <div style="min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px clamp(16px,3cqw,40px);background:linear-gradient(rgba(135,43,19,.72),rgba(135,43,19,.6)),repeating-linear-gradient(135deg,#7a2611 0 14px,#6e2310 14px 28px);">
+    <h1 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(36px,4.4cqw,48px);color:#FFEACA;margin:0;">Nuestra Tienda</h1>
+    <p style="font-weight:700;font-size:16px;color:rgba(255,234,202,.8);margin:12px 0 0;max-width:52ch;">Cacao en grano, chocolates artesanales y kits para llevar la finca a tu casa.</p>
+  </div>
+
+  <!-- filtros -->
+  <div style="background:#FFEACA;border-bottom:1px solid rgba(135,43,19,.15);padding:16px clamp(16px,3cqw,40px);">
+    <div style="max-width:1200px;margin:0 auto;display:flex;gap:10px;flex-wrap:wrap;">
+      <span style="font-weight:700;font-size:14px;background:#D51312;color:#FFEACA;border-radius:100px;padding:8px 18px;cursor:pointer;">Todos</span>
+      <span style="font-weight:700;font-size:14px;background:transparent;color:#872B13;border:1.5px solid #872B13;border-radius:100px;padding:8px 18px;cursor:pointer;">Cacao</span>
+      <span style="font-weight:700;font-size:14px;background:transparent;color:#872B13;border:1.5px solid #872B13;border-radius:100px;padding:8px 18px;cursor:pointer;">Chocolates</span>
+      <span style="font-weight:700;font-size:14px;background:transparent;color:#872B13;border:1.5px solid #872B13;border-radius:100px;padding:8px 18px;cursor:pointer;">Kits</span>
+    </div>
+  </div>
+
+  <!-- grid productos -->
+  <div style="background:#FFEACA;padding:48px clamp(16px,3cqw,40px);">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+      <sc-for list="{{ productos }}" as="p" hint-placeholder-count="8">
+      <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);background:#FFEACA;box-shadow:0 2px 8px rgba(135,43,19,.1);display:flex;flex-direction:column;">
+        <div style="position:relative;height:220px;background:repeating-linear-gradient(135deg,#F0D6A8 0 14px,#E9CB97 14px 28px);display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:monospace;font-size:11px;letter-spacing:1px;color:rgba(135,43,19,.5);text-transform:uppercase;">{{ p.img }}</span>
+          <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:12px;right:12px;font-weight:700;font-size:12px;background:#FDC300;color:#872B13;border-radius:100px;padding:4px 10px;">{{ p.badge }}</span></sc-if>
+        </div>
+        <div style="padding:20px;display:flex;flex-direction:column;flex:1;">
+          <div style="font-weight:700;font-size:18px;color:#872B13;">{{ p.t }}</div>
+          <div style="font-size:13px;color:rgba(135,43,19,.65);margin:4px 0 12px;">{{ p.d }}</div>
+          <div style="font-weight:700;font-size:20px;color:#F59C00;margin-top:auto;">{{ p.precio }}</div>
+          <button style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:12px;cursor:pointer;margin-top:12px;">Agregar al carrito</button>
+        </div>
+      </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+<!-- ============ VISTA 8: DETALLE PRODUCTO ============ -->
+<sc-if value="{{ is_producto }}" hint-placeholder-val="{{ false }}">
+<div style="font-family:'Bellota',sans-serif;">
+  <div style="height:72px;background:#D51312;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,3cqw,24px);flex-wrap:wrap;gap:8px;">
+    <span style="font-family:'Honey Lips',serif;font-size:clamp(22px,2.4cqw,26px);color:#FFEACA;">Vuelo Carmesí</span>
+    <div style="display:flex;align-items:center;gap:clamp(14px,2.4cqw,32px);flex-wrap:wrap;"><span style="font-weight:700;font-size:16px;color:#FFEACA;">Inicio</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Experiencias</span><span style="font-weight:700;font-size:16px;color:#FFEACA;border-bottom:2px solid #F59C00;padding-bottom:2px;">Tienda</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Contacto</span></div>
+  </div>
+
+  <div style="background:#FFEACA;padding:clamp(32px,5cqw,64px) clamp(16px,3cqw,40px);">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:clamp(24px,4cqw,48px);align-items:flex-start;">
+      <!-- galeria -->
+      <div style="flex:1 1 380px;min-width:0;">
+        <div style="width:100%;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:repeating-linear-gradient(135deg,#F0D6A8 0 16px,#E9CB97 16px 32px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:12px;letter-spacing:1px;color:rgba(135,43,19,.5);text-transform:uppercase;">tableta · principal</span></div>
+        <div style="display:flex;gap:10px;margin-top:12px;">
+          <div style="width:64px;height:64px;border-radius:8px;border:2px solid #D51312;background:repeating-linear-gradient(135deg,#F0D6A8 0 8px,#E9CB97 8px 16px);"></div>
+          <div style="width:64px;height:64px;border-radius:8px;border:2px solid transparent;background:repeating-linear-gradient(135deg,#F0D6A8 0 8px,#E9CB97 8px 16px);"></div>
+          <div style="width:64px;height:64px;border-radius:8px;border:2px solid transparent;background:repeating-linear-gradient(135deg,#F0D6A8 0 8px,#E9CB97 8px 16px);"></div>
+          <div style="width:64px;height:64px;border-radius:8px;border:2px solid transparent;background:repeating-linear-gradient(135deg,#F0D6A8 0 8px,#E9CB97 8px 16px);"></div>
+        </div>
+      </div>
+      <!-- info -->
+      <div style="flex:1 1 340px;min-width:0;">
+        <span style="display:inline-block;font-weight:700;font-size:12px;background:#FDC300;color:#872B13;border-radius:100px;padding:4px 10px;">Chocolates</span>
+        <h1 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(28px,3.6cqw,40px);color:#872B13;margin:14px 0 0;">Tableta 72% intenso</h1>
+        <div style="font-weight:700;font-size:32px;color:#F59C00;margin:16px 0;">$4.500</div>
+        <p style="font-weight:700;font-size:16px;line-height:1.8;color:#872B13;margin:0;">Cacao puro de origen único, sin emulsionantes ni aditivos. Notas de fruta madura y un final largo y terroso. Tableta de 80g elaborada en pequeños lotes.</p>
+        <div style="height:1px;background:rgba(253,195,0,.5);margin:24px 0;"></div>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <span style="font-weight:700;font-size:14px;color:#872B13;">Cantidad</span>
+          <div style="display:flex;align-items:center;gap:0;">
+            <button style="width:40px;height:40px;font-size:20px;font-weight:700;color:#872B13;background:transparent;border:1.5px solid #872B13;border-radius:8px 0 0 8px;cursor:pointer;">−</button>
+            <span style="min-width:48px;text-align:center;font-weight:700;font-size:20px;color:#872B13;border-top:1.5px solid #872B13;border-bottom:1.5px solid #872B13;height:40px;line-height:40px;">1</span>
+            <button style="width:40px;height:40px;font-size:20px;font-weight:700;color:#872B13;background:transparent;border:1.5px solid #872B13;border-radius:0 8px 8px 0;cursor:pointer;">+</button>
+          </div>
+        </div>
+        <button style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:18px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:16px;cursor:pointer;margin-top:24px;">Agregar al carrito</button>
+        <div style="font-size:12px;color:rgba(135,43,19,.6);margin-top:12px;">En stock · envío en 24-48 h</div>
+      </div>
+    </div>
+
+    <!-- relacionados -->
+    <div style="max-width:1200px;margin:0 auto;">
+      <h2 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(26px,2.8cqw,32px);color:#D51312;margin:64px 0 32px;">También te puede gustar</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+        <sc-for list="{{ productosRel }}" as="p" hint-placeholder-count="4">
+        <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(135,43,19,.15);background:#FFEACA;box-shadow:0 2px 8px rgba(135,43,19,.1);display:flex;flex-direction:column;">
+          <div style="height:200px;background:repeating-linear-gradient(135deg,#F0D6A8 0 14px,#E9CB97 14px 28px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:11px;color:rgba(135,43,19,.5);text-transform:uppercase;">{{ p.img }}</span></div>
+          <div style="padding:20px;display:flex;flex-direction:column;flex:1;">
+            <div style="font-weight:700;font-size:18px;color:#872B13;">{{ p.t }}</div>
+            <div style="font-size:13px;color:rgba(135,43,19,.65);margin:4px 0 12px;">{{ p.d }}</div>
+            <div style="font-weight:700;font-size:20px;color:#F59C00;margin-top:auto;">{{ p.precio }}</div>
+            <button style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:15px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:12px;cursor:pointer;margin-top:12px;">Agregar al carrito</button>
+          </div>
+        </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ VISTA 9: CARRITO ============ -->
+<sc-if value="{{ is_carrito }}" hint-placeholder-val="{{ false }}">
+<div style="font-family:'Bellota',sans-serif;">
+  <div style="height:72px;background:#D51312;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,3cqw,24px);flex-wrap:wrap;gap:8px;">
+    <span style="font-family:'Honey Lips',serif;font-size:clamp(22px,2.4cqw,26px);color:#FFEACA;">Vuelo Carmesí</span>
+    <div style="display:flex;align-items:center;gap:clamp(14px,2.4cqw,32px);flex-wrap:wrap;"><span style="font-weight:700;font-size:16px;color:#FFEACA;">Inicio</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Experiencias</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Tienda</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Contacto</span></div>
+  </div>
+
+  <div style="background:#FFEACA;padding:clamp(32px,5cqw,64px) clamp(16px,3cqw,40px);">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h1 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(30px,3.4cqw,36px);color:#D51312;margin:0 0 32px;">Tu carrito</h1>
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(24px,4cqw,40px);align-items:flex-start;">
+        <!-- items -->
+        <div style="flex:1 1 420px;min-width:0;">
+          <sc-for list="{{ carrito }}" as="c" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:16px;padding:20px 0;border-bottom:1px solid rgba(135,43,19,.1);flex-wrap:wrap;">
+            <div style="width:80px;height:80px;border-radius:8px;flex:none;background:repeating-linear-gradient(135deg,#F0D6A8 0 10px,#E9CB97 10px 20px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:9px;color:rgba(135,43,19,.45);text-transform:uppercase;">{{ c.img }}</span></div>
+            <div style="flex:1 1 140px;min-width:0;"><div style="font-weight:700;font-size:18px;color:#872B13;">{{ c.t }}</div><div style="font-size:13px;color:rgba(135,43,19,.6);">{{ c.d }}</div></div>
+            <div style="display:flex;align-items:center;">
+              <button style="width:32px;height:32px;font-size:16px;font-weight:700;color:#872B13;background:transparent;border:1.5px solid #872B13;border-radius:6px 0 0 6px;cursor:pointer;">−</button>
+              <span style="min-width:36px;text-align:center;font-weight:700;font-size:16px;color:#872B13;border-top:1.5px solid #872B13;border-bottom:1.5px solid #872B13;height:32px;line-height:32px;">{{ c.q }}</span>
+              <button style="width:32px;height:32px;font-size:16px;font-weight:700;color:#872B13;background:transparent;border:1.5px solid #872B13;border-radius:0 6px 6px 0;cursor:pointer;">+</button>
+            </div>
+            <div style="font-weight:700;font-size:18px;color:#F59C00;min-width:80px;text-align:right;">{{ c.precio }}</div>
+            <button style="background:none;border:none;cursor:pointer;font-size:18px;color:rgba(135,43,19,.4);">🗑</button>
+          </div>
+          </sc-for>
+          <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:14px;color:#872B13;background:transparent;border:1.5px solid #872B13;border-radius:8px;padding:10px 20px;cursor:pointer;margin-top:20px;">🗑 Vaciar carrito</button>
+        </div>
+        <!-- resumen -->
+        <div style="flex:0 1 340px;position:sticky;top:72px;align-self:flex-start;">
+          <div style="background:#FFF6E4;border:1px solid rgba(135,43,19,.15);border-radius:12px;box-shadow:0 4px 16px rgba(135,43,19,.16);padding:32px;">
+            <h3 style="font-weight:700;font-size:22px;color:#872B13;margin:0 0 20px;">Resumen del pedido</h3>
+            <div style="display:flex;justify-content:space-between;font-weight:700;font-size:15px;color:#872B13;margin-bottom:10px;"><span>Tableta 72% × 2</span><span>$9.000</span></div>
+            <div style="display:flex;justify-content:space-between;font-weight:700;font-size:15px;color:#872B13;margin-bottom:10px;"><span>Cacao en grano × 1</span><span>$6.900</span></div>
+            <div style="display:flex;justify-content:space-between;font-weight:700;font-size:15px;color:#872B13;"><span>Bombones × 1</span><span>$7.400</span></div>
+            <div style="height:1px;background:rgba(135,43,19,.15);margin:20px 0;"></div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-weight:700;font-size:22px;color:#872B13;">Total</span><span style="font-weight:700;font-size:24px;color:#F59C00;">$23.300</span></div>
+            <button style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:18px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:16px;cursor:pointer;margin-top:24px;">Ir al checkout</button>
+            <div style="text-align:center;margin-top:14px;"><span style="font-weight:700;font-size:14px;color:#872B13;border-bottom:1.5px solid #872B13;padding-bottom:1px;cursor:pointer;">Seguir comprando</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- empty state variante -->
+      <div style="margin-top:48px;">
+        <div style="font-family:monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:rgba(135,43,19,.5);margin-bottom:10px;">Estado · carrito vacío</div>
+        <div style="border:1px dashed rgba(135,43,19,.3);border-radius:12px;padding:56px 24px;text-align:center;background:#FFF6E4;">
+          <div style="font-size:48px;color:#F59C00;line-height:1;">🛍</div>
+          <h3 style="font-weight:700;font-size:24px;color:#872B13;margin:16px 0 8px;">Tu carrito está vacío</h3>
+          <p style="font-weight:700;font-size:16px;color:rgba(135,43,19,.7);margin:0 0 20px;">Descubrí nuestros chocolates y cacao artesanal.</p>
+          <button style="font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:12px 26px;cursor:pointer;">Ver tienda</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ VISTA 10: CHECKOUT ============ -->
+<sc-if value="{{ is_checkout }}" hint-placeholder-val="{{ false }}">
+<div style="font-family:'Bellota',sans-serif;">
+  <div style="height:72px;background:#D51312;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,3cqw,24px);flex-wrap:wrap;gap:8px;">
+    <span style="font-family:'Honey Lips',serif;font-size:clamp(22px,2.4cqw,26px);color:#FFEACA;">Vuelo Carmesí</span>
+    <div style="display:flex;align-items:center;gap:clamp(14px,2.4cqw,32px);flex-wrap:wrap;"><span style="font-weight:700;font-size:16px;color:#FFEACA;">Inicio</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Experiencias</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Tienda</span><span style="font-weight:700;font-size:16px;color:#FFEACA;">Contacto</span></div>
+  </div>
+
+  <div style="background:#FFEACA;padding:clamp(32px,5cqw,64px) clamp(16px,3cqw,40px);">
+    <div style="max-width:1200px;margin:0 auto;">
+      <h1 style="font-family:'Honey Lips',serif;font-weight:400;font-size:clamp(30px,3.4cqw,36px);color:#D51312;margin:0 0 32px;">Finalizar pedido</h1>
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(24px,4cqw,40px);align-items:flex-start;">
+        <!-- form -->
+        <div style="flex:1 1 420px;min-width:0;">
+          <h3 style="font-weight:700;font-size:18px;color:#872B13;margin:0 0 6px;">Datos de contacto</h3>
+          <div style="height:2px;background:#F59C00;width:48px;margin-bottom:20px;"></div>
+          <div><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Nombre completo</label><input type="text" placeholder="Tu nombre" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFF6E4;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+          <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:18px;">
+            <div style="flex:2 1 200px;"><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Email</label><input type="email" placeholder="tu@email.com" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFF6E4;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+            <div style="flex:1 1 140px;"><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Teléfono</label><input type="tel" placeholder="+54 9 ..." style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFF6E4;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+          </div>
+
+          <h3 style="font-weight:700;font-size:18px;color:#872B13;margin:32px 0 6px;">Datos de entrega</h3>
+          <div style="height:2px;background:#F59C00;width:48px;margin-bottom:20px;"></div>
+          <div><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Dirección</label><input type="text" placeholder="Calle y número" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFF6E4;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+          <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:18px;">
+            <div style="flex:1 1 160px;"><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Ciudad</label><input type="text" placeholder="Ciudad" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFF6E4;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+            <div style="flex:1 1 160px;"><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Código postal</label><input type="text" placeholder="CP" style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFF6E4;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"/></div>
+          </div>
+          <div style="margin-top:18px;"><label style="display:block;font-weight:700;font-size:14px;color:#872B13;margin-bottom:6px;">Notas de entrega</label><textarea placeholder="Referencias, horarios…" style="width:100%;min-height:80px;resize:vertical;font-family:'Bellota',sans-serif;font-weight:700;font-size:16px;color:#872B13;background:#FFF6E4;border:1.5px solid rgba(135,43,19,.4);border-radius:4px;padding:12px 16px;outline:none;"></textarea></div>
+          <button style="width:100%;font-family:'Bellota',sans-serif;font-weight:700;font-size:18px;color:#FFEACA;background:#D51312;border:none;border-radius:8px;padding:16px;cursor:pointer;margin-top:32px;">Confirmar pedido</button>
+          <div style="text-align:center;font-size:12px;color:rgba(135,43,19,.6);margin-top:12px;">Al confirmar aceptás nuestras condiciones de venta</div>
+        </div>
+        <!-- resumen brown -->
+        <div style="flex:0 1 340px;position:sticky;top:72px;align-self:flex-start;">
+          <div style="background:#872B13;border-radius:12px;padding:32px;">
+            <div style="font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#FDC300;margin-bottom:18px;">Resumen de tu pedido</div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;"><span style="font-weight:700;font-size:15px;color:#FFEACA;flex:1;">Tableta 72% intenso</span><span style="font-weight:700;font-size:12px;background:#F59C00;color:#872B13;border-radius:100px;padding:2px 8px;">×2</span><span style="font-weight:700;font-size:15px;color:#FFEACA;">$9.000</span></div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;"><span style="font-weight:700;font-size:15px;color:#FFEACA;flex:1;">Cacao en grano</span><span style="font-weight:700;font-size:12px;background:#F59C00;color:#872B13;border-radius:100px;padding:2px 8px;">×1</span><span style="font-weight:700;font-size:15px;color:#FFEACA;">$6.900</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-weight:700;font-size:15px;color:#FFEACA;flex:1;">Bombones de monte</span><span style="font-weight:700;font-size:12px;background:#F59C00;color:#872B13;border-radius:100px;padding:2px 8px;">×1</span><span style="font-weight:700;font-size:15px;color:#FFEACA;">$7.400</span></div>
+            <div style="height:1px;background:rgba(253,195,0,.4);margin:20px 0;"></div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-weight:700;font-size:20px;color:#FFEACA;">Total</span><span style="font-weight:700;font-size:22px;color:#F59C00;">$23.300</span></div>
+            <div style="font-size:12px;color:rgba(255,234,202,.6);margin-top:16px;">Coordinamos el método de pago al confirmar el pedido.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+<!--SCREENS-->
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { screen: 'sistema', mobile: false, hero: 'a' };
+  go(v){ this.setState({ screen: v }); try{ window.scrollTo(0,0); }catch(e){} }
+  renderVals(){
+    const s = this.state.screen;
+    const m = this.state.mobile;
+    const screens = ['sistema','landing','contacto','experiencias','experiencia','reservar','confirmacion','tienda','producto','carrito','checkout'];
+    const flags = {};
+    screens.forEach(k => flags['is_'+k] = (s === k));
+
+    const experiencias = [
+      { t:'Cosecha de cacao al amanecer', d:'Recorré los árboles madre y aprendé a abrir la mazorca con tus propias manos.', dur:'3 h', precio:'$18.000', badge:'Disponible', img:'cosecha · finca' },
+      { t:'Taller del árbol a la barra', d:'Fermentación, secado y tostado: el viaje completo del grano al chocolate.', dur:'5 h', precio:'$26.000', badge:'Nuevo', img:'taller · cacao' },
+      { t:'Sendero agroecológico guiado', d:'Caminata interpretativa por la selva productiva con merienda de monte.', dur:'2 h', precio:'$12.000', badge:'Destacado', img:'sendero · selva' },
+      { t:'Cata sensorial de orígenes', d:'Seis orígenes, una mesa. Entrená el paladar con nuestro maestro chocolatero.', dur:'90 min', precio:'$15.000', badge:'Disponible', img:'cata · chocolate' },
+      { t:'Noche de fogón y cacao', d:'Bebida ancestral de cacao caliente junto al fuego y relatos de la tierra.', dur:'2.5 h', precio:'$14.000', badge:'Disponible', img:'fogón · noche' },
+      { t:'Inmersión de fin de semana', d:'Dos días entre cacaotales: cosecha, taller, cata y descanso en la finca.', dur:'2 días', precio:'$72.000', badge:'Agotado', img:'finca · estadía' }
+    ];
+    const productos = [
+      { t:'Cacao en grano tostado', d:'Origen único, lote 2026', precio:'$6.900', cat:'Cacao', badge:'Nuevo', img:'grano · bolsa' },
+      { t:'Tableta 72% intenso', d:'Cacao puro, sin emulsionantes', precio:'$4.500', cat:'Chocolates', badge:'Destacado', img:'tableta · 72%' },
+      { t:'Nibs de cacao crocantes', d:'Para postres y desayunos', precio:'$3.800', cat:'Cacao', badge:'', img:'nibs · frasco' },
+      { t:'Pasta de cacao 100%', d:'Para repostería de autor', precio:'$5.200', cat:'Cacao', badge:'', img:'pasta · bloque' },
+      { t:'Bombones de monte x6', d:'Rellenos de frutas nativas', precio:'$7.400', cat:'Chocolates', badge:'Nuevo', img:'bombones · caja' },
+      { t:'Kit del árbol a la barra', d:'Todo para hacer tu chocolate', precio:'$12.900', cat:'Kits', badge:'Destacado', img:'kit · caja' },
+      { t:'Cacao en polvo puro', d:'Sin azúcar agregada', precio:'$4.100', cat:'Cacao', badge:'', img:'polvo · lata' },
+      { t:'Kit cata 6 orígenes', d:'Degustación en casa', precio:'$9.800', cat:'Kits', badge:'Agotado', img:'kit · cata' }
+    ];
+    const galeria = [
+      { img:'mazorca abierta', h:260 },{ img:'manos · grano', h:200 },{ img:'cacaotal', h:320 },{ img:'secado al sol', h:220 },
+      { img:'maestro · cata', h:200 },{ img:'fogón', h:280 },{ img:'tableta', h:240 },{ img:'selva', h:300 }
+    ];
+    const carrito = [
+      { t:'Tableta 72% intenso', d:'Cacao puro · 80g', q:2, precio:'$9.000', img:'tableta' },
+      { t:'Cacao en grano tostado', d:'Origen único · 250g', q:1, precio:'$6.900', img:'grano' },
+      { t:'Bombones de monte x6', d:'Frutas nativas', q:1, precio:'$7.400', img:'bombones' }
+    ];
+
+    return Object.assign(flags, {
+      screen: s,
+      mobile: m,
+      desktop: !m,
+      onNav: (e)=> this.go(e.target.value),
+      setDesktop: ()=> this.setState({ mobile:false }),
+      setMobile: ()=> this.setState({ mobile:true }),
+      deskBtnBg: m ? 'transparent' : '#D51312',
+      deskBtnFg: m ? '#FFEACA' : '#FFEACA',
+      mobBtnBg: m ? '#D51312' : 'transparent',
+      mobBtnFg: '#FFEACA',
+      wrapMax: m ? '420px' : '1280px',
+      wrapRadius: m ? '34px' : '0px',
+      wrapBorder: m ? '10px solid #2a1109' : 'none',
+      wrapTop: m ? '24px' : '0px',
+      experiencias, productos, galeria, carrito,
+      experienciasTop3: experiencias.slice(0,3),
+      productosRel: productos.slice(0,4),
+      heroA: this.state.hero==='a', heroB: this.state.hero==='b', heroC: this.state.hero==='c',
+      setHeroA: ()=> this.setState({hero:'a'}),
+      setHeroB: ()=> this.setState({hero:'b'}),
+      setHeroC: ()=> this.setState({hero:'c'}),
+      heroTabA: this.state.hero==='a' ? '#FDC300' : 'rgba(255,234,202,.5)',
+      heroTabB: this.state.hero==='b' ? '#FDC300' : 'rgba(255,234,202,.5)',
+      heroTabC: this.state.hero==='c' ? '#FDC300' : 'rgba(255,234,202,.5)',
+      heroTabABg: this.state.hero==='a' ? 'rgba(253,195,0,.18)' : 'transparent',
+      heroTabBBg: this.state.hero==='b' ? 'rgba(253,195,0,.18)' : 'transparent',
+      heroTabCBg: this.state.hero==='c' ? 'rgba(253,195,0,.18)' : 'transparent'
+    });
+  }
+}
+</script>
+</body>
+</html>

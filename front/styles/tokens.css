@@ -1,0 +1,56 @@
+@font-face {
+  font-family: 'Honey Lips';
+  src: url('/fonts/Honey Lips Personal Use.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bellota';
+  src: url('/fonts/Bellota-Bold.otf') format('opentype'),
+       url('/fonts/Bellota-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Colores de marca — Manual de Marca Vuelo Carmesí */
+  --color-cream:   #ffeaca;
+  --color-crimson: #d51312;
+  --color-orange:  #ea5b0c;
+  --color-brown:   #872b13;
+  --color-amber:   #f59c00;
+  --color-gold:    #fdc300;
+  --color-brown-overlay: rgba(135, 43, 19, 0.5);
+
+  /* Tipografías */
+  --font-display: 'Honey Lips', cursive;
+  --font-body:    'Bellota', sans-serif;
+
+  /* Admin — colores semánticos de estado */
+  --admin-bg:          #FBF6EC;
+  --admin-surface:     #FFFFFF;
+  --admin-sidebar:     #872B13;
+  --admin-border:      rgba(135, 43, 19, 0.12);
+  --admin-border-row:  rgba(135, 43, 19, 0.08);
+  --admin-text-muted:  rgba(135, 43, 19, 0.55);
+  --admin-hover-row:   #FBF6EC;
+
+  --status-confirmada-bg:  rgba(31, 138, 91, 0.12);
+  --status-confirmada-txt: #1F8A5B;
+  --status-pendiente-bg:   rgba(245, 156, 0, 0.15);
+  --status-pendiente-txt:  #B45309;
+  --status-enviado-bg:     rgba(42, 111, 219, 0.12);
+  --status-enviado-txt:    #2A6FDB;
+  --status-cancelada-bg:   rgba(135, 43, 19, 0.12);
+  --status-cancelada-txt:  rgba(135, 43, 19, 0.6);
+  --status-entregado-bg:   rgba(31, 138, 91, 0.12);
+  --status-entregado-txt:  #1F8A5B;
+  --status-activa-bg:      rgba(31, 138, 91, 0.12);
+  --status-activa-txt:     #1F8A5B;
+
+  --stock-alert-bg:    rgba(245, 156, 0, 0.18);
+  --stock-alert-txt:   #B45309;
+}

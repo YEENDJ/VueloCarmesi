@@ -1,0 +1,169 @@
+@import '../styles/tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+}
+
+.footer-social a {
+  color: rgba(255, 234, 202, 0.75);
+  transition: color 150ms ease;
+  display: flex;
+}
+.footer-social a:hover {
+  color: var(--color-amber);
+}
+
+/* Detail page responsive layouts */
+.detail-grid-exp {
+  display: grid;
+  grid-template-columns: 65fr 35fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.detail-grid-prod {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+/* Sobre Nosotros section */
+.sobre-nosotros-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.btn-ghost-cream {
+  display: inline-block;
+  padding: 12px 26px;
+  border-radius: 8px;
+  border: 1.5px solid var(--color-cream);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  background-color: transparent;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-ghost-cream:hover {
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+}
+
+/* Sobre Nosotros page — section grids */
+.valores-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.proceso-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.equipo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.galeria-sobre {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.finca-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Booking form page */
+.reserva-grid {
+  display: grid;
+  grid-template-columns: 60fr 40fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 767px) {
+  .detail-grid-exp,
+  .detail-grid-prod {
+    grid-template-columns: 1fr;
+  }
+
+  .related-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gallery-thumbnails {
+    display: none !important;
+  }
+
+  .sidebar-sticky {
+    position: static !important;
+  }
+
+  .sobre-nosotros-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .valores-grid,
+  .equipo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .proceso-grid,
+  .galeria-sobre {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .reserva-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reserva-summary {
+    order: -1;
+  }
+
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+}
