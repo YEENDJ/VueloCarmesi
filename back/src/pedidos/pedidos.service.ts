@@ -102,7 +102,11 @@ export class PedidosService {
 
   async update(id: string, dto: UpdatePedidoDto) {
     await this.findById(id)
-    return this.prisma.pedido.update({ where: { id }, data: { estado: dto.estado } })
+    return this.prisma.pedido.update({
+      where: { id },
+      data: { estado: dto.estado },
+      include: { items: { include: { producto: true } } },
+    })
   }
 
   async remove(id: string) {
