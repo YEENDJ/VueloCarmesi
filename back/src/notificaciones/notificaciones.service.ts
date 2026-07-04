@@ -3,17 +3,9 @@ import { EmailService } from './email.service'
 import { TelegramService } from './telegram.service'
 import { PrismaService } from '../prisma.service'
 import { formatDireccionPedido } from './format-direccion.util'
+import { escapeHtml } from './escape-html.util'
 
 const ADMIN_URL = process.env.FRONTEND_URL ?? 'http://localhost:3000'
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-}
 
 function filaHtml(label: string, value: string): string {
   return `<div style="padding:8px 0;border-bottom:1px solid #eee;font-size:14px">
