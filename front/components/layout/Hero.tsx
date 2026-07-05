@@ -33,7 +33,8 @@ export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: H
       <h1 style={{
         fontFamily: 'var(--font-display)',
         fontSize: 'clamp(44px, 8vw, 96px)',
-        lineHeight: 1,
+        lineHeight: 1.05,
+        letterSpacing: '-0.01em',
         color: 'var(--color-crimson)',
         margin: 0,
         maxWidth: '18ch',

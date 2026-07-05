@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -23,9 +24,19 @@ export default function Sidebar() {
     <aside className="admin-sidebar">
       {/* Logo */}
       <div style={{ padding: '28px 20px 24px', borderBottom: '1px solid rgba(255,234,202,.12)' }}>
-        <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, color: 'var(--color-gold)', lineHeight: 1.1 }}>
+        {/* <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 22, color: 'var(--color-gold)', lineHeight: 1.1 }}>
           Vuelo Carmesí
-        </div>
+        </div> */}
+
+        <Link href="/admin" style={{ display: 'flex', alignItems: 'center' }}>
+        <Image
+          src="/images/logo.png"
+          alt="Vuelo Carmesí"
+          width={220}
+          height={30}
+          priority
+        />
+      </Link>
         <div style={{ fontSize: 11, color: 'rgba(255,234,202,.55)', marginTop: 4, fontWeight: 700, letterSpacing: '.5px', textTransform: 'uppercase' }}>
           Panel de administración
         </div>

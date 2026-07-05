@@ -2,6 +2,7 @@ import Hero from '@/components/layout/Hero'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
 import SobreNosotros from '@/components/secciones/SobreNosotros'
+import Certificaciones from '@/components/secciones/Certificaciones'
 import { getSiteConfig } from '@/lib/api/site-config'
 import { getExperienciasDestacadas } from '@/lib/api/experiencias'
 
@@ -52,9 +53,12 @@ export default async function HomePage() {
 
       <SobreNosotros imagen={config.about_image || undefined} />
 
-      <section style={{ padding: '5rem 2rem', textAlign: 'center', backgroundColor: 'var(--color-cream)' }}>
-        <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--color-brown)' }}>¿Listo para vivir la experiencia?</h2>
-        <Button href="/experiencias" variant="primary">Reservar ahora</Button>
+      <Certificaciones />
+
+      {/* Banda CTA en crimson para mantener la alternancia de fondos tras la sección cream de certificaciones */}
+      <section style={{ padding: '5rem 2rem', textAlign: 'center', backgroundColor: 'var(--color-crimson)' }}>
+        <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--color-cream)' }}>¿Listo para vivir la experiencia?</h2>
+        <a href="/experiencias" className="btn-ghost-cream">Reservar ahora</a>
       </section>
     </>
   )

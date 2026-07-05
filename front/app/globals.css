@@ -19,6 +19,14 @@ h1, h2, h3 {
   font-family: var(--font-display);
 }
 
+h1 {
+  font-weight: 700;
+}
+
+h2, h3 {
+  font-weight: 600;
+}
+
 .footer-social a {
   color: rgba(255, 234, 202, 0.75);
   transition: color 150ms ease;
@@ -26,6 +34,42 @@ h1, h2, h3 {
 }
 .footer-social a:hover {
   color: var(--color-amber);
+}
+
+/* Tira de certificaciones en el footer: círculo cream para que los
+   logos a color original se lean sobre el fondo brown */
+.cert-badge-footer {
+  background-color: var(--color-cream);
+  border: 1px solid rgba(253, 195, 0, 0.25);
+}
+
+/* Barra legal del footer: copyright a un lado, crédito de desarrollo al otro */
+.footer-legal {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 24px;
+  text-align: center;
+}
+
+.footer-credito {
+  color: var(--color-gold);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+.footer-credito:hover {
+  color: var(--color-orange);
+}
+
+@media (max-width: 767px) {
+  .footer-legal {
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 
 /* Detail page responsive layouts */

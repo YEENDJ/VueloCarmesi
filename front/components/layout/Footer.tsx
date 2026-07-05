@@ -1,4 +1,9 @@
 import Link from 'next/link'
+import CertBadge from '@/components/secciones/CertBadge'
+import { CERTIFICACIONES } from '@/lib/certificaciones'
+
+// Crédito de desarrollo mostrado en la barra legal del footer
+const AGENCIA = { nombre: 'Xyra Code', url: 'https://Xyracode.com' }
 
 const SOCIAL = [
   {
@@ -51,7 +56,7 @@ export default function Footer() {
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2.5rem' }}>
 
         <div>
-          <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', marginBottom: '12px', color: 'var(--color-cream)' }}>
+          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.6rem', marginBottom: '12px', color: 'var(--color-cream)' }}>
             Vuelo Carmesí
           </div>
           <p style={{ fontSize: '14px', lineHeight: 1.6, color: 'rgba(255, 234, 202, 0.8)', maxWidth: '30ch' }}>
@@ -96,10 +101,27 @@ export default function Footer() {
           </div>
         </div>
 
+        <div>
+          <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--color-gold)', marginBottom: '14px' }}>
+            Certificados por
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
+            {CERTIFICACIONES.map((cert) => (
+              <CertBadge key={cert.nombre} cert={cert} variant="footer" />
+            ))}
+          </div>
+        </div>
+
       </div>
 
-      <div style={{ borderTop: '1px solid rgba(253, 195, 0, 0.3)', marginTop: '32px', paddingTop: '24px', textAlign: 'center', fontWeight: 700, fontSize: '12px', color: 'rgba(255, 234, 202, 0.6)' }}>
-        © {new Date().getFullYear()} Vuelo Carmesí. Todos los derechos reservados.
+      <div className="footer-legal" style={{ borderTop: '1px solid rgba(253, 195, 0, 0.3)', marginTop: '32px', paddingTop: '24px', fontWeight: 700, fontSize: '12px', color: 'rgba(255, 234, 202, 0.6)' }}>
+        <span>RNT No. 179868 · © {new Date().getFullYear()} Vuelo Carmesí. Todos los derechos reservados.</span>
+        <span>
+          Desarrollado por{' '}
+          <a href={AGENCIA.url} target="_blank" rel="noopener noreferrer" className="footer-credito">
+            {AGENCIA.nombre}
+          </a>
+        </span>
       </div>
     </footer>
   )

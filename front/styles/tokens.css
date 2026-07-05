@@ -1,7 +1,8 @@
+/* Fuente variable (subset latin), cubre pesos 500-700 */
 @font-face {
-  font-family: 'Honey Lips';
-  src: url('/fonts/Honey Lips Personal Use.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'Playfair Display';
+  src: url('/fonts/PlayfairDisplay-Variable.woff2') format('woff2');
+  font-weight: 500 700;
   font-style: normal;
   font-display: swap;
 }
@@ -26,7 +27,7 @@
   --color-brown-overlay: rgba(135, 43, 19, 0.5);
 
   /* Tipografías */
-  --font-display: 'Honey Lips', cursive;
+  --font-display: 'Playfair Display', Georgia, serif;
   --font-body:    'Bellota', sans-serif;
 
   /* Admin — colores semánticos de estado */

@@ -3,17 +3,10 @@ import { EmailService } from './email.service'
 import { TelegramService } from './telegram.service'
 import { PrismaService } from '../prisma.service'
 import { formatDireccionPedido } from './format-direccion.util'
+import { escapeHtml } from './escape-html.util'
+import { tablaItemsHtml, lineasItemsTexto, ItemPedido } from './format-items-pedido.util'
 
 const ADMIN_URL = process.env.FRONTEND_URL ?? 'http://localhost:3000'
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-}
 
 function filaHtml(label: string, value: string): string {
   return `<div style="padding:8px 0;border-bottom:1px solid #eee;font-size:14px">
@@ -79,15 +72,19 @@ export class NotificacionesService {
   async enviarConfirmacionPedido(pedido: {
     id: string; nombre: string; email: string
     direccion: string; ciudad: string; codigoPostal: string; total: number
+    items: ItemPedido[]
   }): Promise<void> {
     const totalStr = pedido.total.toLocaleString('es-CO')
     const direccionCompleta = formatDireccionPedido(pedido)
+    const itemsTableCliente = tablaItemsHtml(pedido.items, 'cliente')
+    const itemsTableAdmin = tablaItemsHtml(pedido.items, 'admin')
+    const lineasItems = lineasItemsTexto(pedido.items)
 
     const htmlCliente = this.email.templateConfirmacionPedido({
       nombre: pedido.nombre,
       id: pedido.id,
       direccion: direccionCompleta,
-      total: totalStr,
+      itemsTable: itemsTableCliente,
     })
     await this.email.send(pedido.email, `Recibimos tu pedido — Vuelo Carmesí`, htmlCliente)
 
@@ -98,7 +95,7 @@ export class NotificacionesService {
         filaHtml('Nombre', pedido.nombre),
         filaHtml('Email', pedido.email),
         filaHtml('Dirección', direccionCompleta),
-        filaHtml('Total', `$ ${totalStr} COP`),
+        itemsTableAdmin,
       ].join('')
       const htmlAdmin = this.email.templateAlertaAdmin({
         tipo: '🛒 Nuevo Pedido',
@@ -109,7 +106,7 @@ export class NotificacionesService {
     }
 
     await this.telegram.send(
-      `🛒 *Nuevo Pedido*\nNombre: ${pedido.nombre}\nEmail: ${pedido.email}\nTotal: $ ${totalStr} COP`,
+      `🛒 *Nuevo Pedido*\nNombre: ${pedido.nombre}\nEmail: ${pedido.email}\n\n${lineasItems}\n\nTotal: $ ${totalStr} COP`,
     )
   }
 

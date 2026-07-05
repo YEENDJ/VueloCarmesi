@@ -36,7 +36,7 @@ export default function AdminLoginPage() {
         boxShadow: '0 2px 8px rgba(135,43,19,.06)', width: '100%', maxWidth: 380,
       }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ fontFamily: 'var(--font-display)', fontSize: 28, color: 'var(--color-crimson)' }}>
+          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 28, color: 'var(--color-crimson)' }}>
             Vuelo Carmesí
           </div>
           <div style={{ fontSize: 13, color: 'var(--admin-text-muted)', marginTop: 4 }}>
