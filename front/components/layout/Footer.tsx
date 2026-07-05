@@ -51,7 +51,7 @@ export default function Footer() {
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2.5rem' }}>
 
         <div>
-          <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', marginBottom: '12px', color: 'var(--color-cream)' }}>
+          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.6rem', marginBottom: '12px', color: 'var(--color-cream)' }}>
             Vuelo Carmesí
           </div>
           <p style={{ fontSize: '14px', lineHeight: 1.6, color: 'rgba(255, 234, 202, 0.8)', maxWidth: '30ch' }}>
