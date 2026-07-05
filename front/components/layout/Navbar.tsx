@@ -5,6 +5,9 @@ import CartBadge from '@/components/shop/CartBadge'
 export default function Navbar() {
   return (
     <nav style={{
+      position: 'sticky',
+      top: 0,
+      zIndex: 100,
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -16,9 +19,8 @@ export default function Navbar() {
         <Image
           src="/images/logo.png"
           alt="Vuelo Carmesí"
-          width={8000}
-          height={4501}
-          style={{ height: '58px', width: 'auto' }}
+          width={250}
+          height={40}
           priority
         />
       </Link>
