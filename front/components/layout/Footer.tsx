@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import CertBadge from '@/components/secciones/CertBadge'
+import { CERTIFICACIONES } from '@/lib/certificaciones'
 
 const SOCIAL = [
   {
@@ -92,6 +94,17 @@ export default function Footer() {
               <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
                 {icon}
               </a>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--color-gold)', marginBottom: '14px' }}>
+            Certificados por
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
+            {CERTIFICACIONES.map((cert) => (
+              <CertBadge key={cert.nombre} cert={cert} variant="footer" />
             ))}
           </div>
         </div>
