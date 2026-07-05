@@ -2,6 +2,9 @@ import Link from 'next/link'
 import CertBadge from '@/components/secciones/CertBadge'
 import { CERTIFICACIONES } from '@/lib/certificaciones'
 
+// Crédito de desarrollo mostrado en la barra legal del footer
+const AGENCIA = { nombre: 'Xyra Code', url: 'https://Xyracode.com' }
+
 const SOCIAL = [
   {
     label: 'Instagram',
@@ -111,8 +114,14 @@ export default function Footer() {
 
       </div>
 
-      <div style={{ borderTop: '1px solid rgba(253, 195, 0, 0.3)', marginTop: '32px', paddingTop: '24px', textAlign: 'center', fontWeight: 700, fontSize: '12px', color: 'rgba(255, 234, 202, 0.6)' }}>
-        © {new Date().getFullYear()} Vuelo Carmesí. Todos los derechos reservados.
+      <div className="footer-legal" style={{ borderTop: '1px solid rgba(253, 195, 0, 0.3)', marginTop: '32px', paddingTop: '24px', fontWeight: 700, fontSize: '12px', color: 'rgba(255, 234, 202, 0.6)' }}>
+        <span>RNT No. 179868 · © {new Date().getFullYear()} Vuelo Carmesí. Todos los derechos reservados.</span>
+        <span>
+          Desarrollado por{' '}
+          <a href={AGENCIA.url} target="_blank" rel="noopener noreferrer" className="footer-credito">
+            {AGENCIA.nombre}
+          </a>
+        </span>
       </div>
     </footer>
   )
