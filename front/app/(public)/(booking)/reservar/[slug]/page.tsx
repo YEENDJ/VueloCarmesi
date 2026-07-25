@@ -14,8 +14,8 @@ export default async function ReservarPage({
   const thumbnail = exp.images?.[0] ?? exp.imagen
 
   return (
-    <div style={{ backgroundColor: 'var(--color-cream)', minHeight: '100vh' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: 'clamp(40px,6vw,64px) 24px 80px' }}>
+    <div style={{ backgroundColor: 'var(--color-cream)', minHeight: '100svh' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: 'clamp(40px,6vw,64px) clamp(16px,4vw,24px) 80px' }}>
 
         {/* Page header */}
         <div style={{ marginBottom: '40px' }}>

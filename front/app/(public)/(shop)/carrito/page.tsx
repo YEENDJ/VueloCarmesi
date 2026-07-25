@@ -9,7 +9,7 @@ export default function CarritoPage() {
 
   if (items.length === 0) {
     return (
-      <section style={{ maxWidth: '600px', margin: '4rem auto', padding: '0 2rem', textAlign: 'center' }}>
+      <section className="page-shell" style={{ maxWidth: '600px', textAlign: 'center' }}>
         <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🛍️</div>
         <h1 style={{ marginBottom: '0.5rem', color: 'var(--color-brown)' }}>Tu carrito está vacío</h1>
         <p style={{ marginBottom: '1.5rem', opacity: 0.7 }}>Descubrí nuestros chocolates y cacao artesanal.</p>
@@ -19,38 +19,34 @@ export default function CarritoPage() {
   }
 
   return (
-    <section style={{ maxWidth: '1000px', margin: '0 auto', padding: '4rem 2rem', display: 'flex', gap: '2.5rem', flexWrap: 'wrap', alignItems: 'flex-start' }}>
-      <div style={{ flex: '1 1 420px', minWidth: 0 }}>
+    <section className="page-shell shop-columns" style={{ maxWidth: '1000px' }}>
+      <div className="shop-main">
         <h1 style={{ marginBottom: '2rem', color: 'var(--color-brown)' }}>Carrito</h1>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {items.map(item => (
-            <div key={item.productoId} style={{
-              display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 0',
-              borderBottom: '1px solid rgba(135,43,19,0.1)', flexWrap: 'wrap',
-            }}>
-              <div style={{
-                width: '80px', height: '80px', borderRadius: '8px', flex: 'none',
-                backgroundColor: 'var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
+            <div key={item.productoId} className="cart-row">
+              <div className="cart-row-media">
                 <span style={{ fontSize: '1.75rem' }}>🍫</span>
               </div>
-              <div style={{ flex: '1 1 140px', minWidth: 0 }}>
+              <div className="cart-row-info">
                 <p style={{ fontWeight: 700, color: 'var(--color-brown)' }}>{item.nombre}</p>
                 <p style={{ opacity: 0.6, fontSize: '0.85rem' }}>{formatPrecio(item.precio)} c/u</p>
               </div>
-              <QuantitySelector
-                value={item.q}
-                onChange={next => next > item.q ? inc(item.productoId) : dec(item.productoId)}
-                min={1}
-                max={item.stock}
-              />
-              <span style={{ fontWeight: 700, color: 'var(--color-amber)', minWidth: '90px', textAlign: 'right' }}>
+              <div className="cart-row-cantidad">
+                <QuantitySelector
+                  value={item.q}
+                  onChange={next => next > item.q ? inc(item.productoId) : dec(item.productoId)}
+                  min={1}
+                  max={item.stock}
+                />
+              </div>
+              <span className="cart-row-total">
                 {formatPrecio(item.precio * item.q)}
               </span>
               <button
                 onClick={() => remove(item.productoId)}
-                title="Quitar"
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.1rem', color: 'rgba(135,43,19,0.5)' }}
+                className="cart-row-remove"
+                aria-label={`Quitar ${item.nombre} del carrito`}
               >
                 🗑
               </button>
@@ -73,8 +69,7 @@ export default function CarritoPage() {
         </div>
       </div>
 
-      <div style={{
-        flex: '0 1 320px', minWidth: '280px', position: 'sticky', top: '96px',
+      <div className="shop-aside" style={{
         background: 'var(--color-cream)', border: '1px solid rgba(135,43,19,0.15)',
         borderRadius: '12px', padding: '2rem', boxShadow: '0 4px 16px rgba(135,43,19,0.16)',
       }}>

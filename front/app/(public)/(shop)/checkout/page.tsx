@@ -47,7 +47,7 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <section style={{ maxWidth: '600px', margin: '4rem auto', padding: '0 2rem', textAlign: 'center' }}>
+      <section className="page-shell" style={{ maxWidth: '600px', textAlign: 'center' }}>
         <h1 style={{ marginBottom: '1rem', color: 'var(--color-brown)' }}>No hay productos en tu carrito</h1>
         <Button href="/tienda">Ir a la tienda</Button>
       </section>
@@ -55,8 +55,8 @@ export default function CheckoutPage() {
   }
 
   return (
-    <section style={{ maxWidth: '1000px', margin: '0 auto', padding: '4rem 2rem', display: 'flex', gap: '2.5rem', flexWrap: 'wrap', alignItems: 'flex-start' }}>
-      <form onSubmit={handleSubmit(onSubmit)} style={{ flex: '1 1 420px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <section className="page-shell shop-columns" style={{ maxWidth: '1000px' }}>
+      <form onSubmit={handleSubmit(onSubmit)} className="shop-main" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
         <h1 style={{ color: 'var(--color-brown)' }}>Checkout</h1>
 
         <h3 style={{ color: 'var(--color-brown)', marginBottom: 0 }}>Datos de contacto</h3>
@@ -79,8 +79,7 @@ export default function CheckoutPage() {
         </p>
       </form>
 
-      <div style={{
-        flex: '0 1 320px', minWidth: '280px', position: 'sticky', top: '96px',
+      <div className="shop-aside" style={{
         background: 'var(--color-brown)', borderRadius: '12px', padding: '2rem',
       }}>
         <p style={{
