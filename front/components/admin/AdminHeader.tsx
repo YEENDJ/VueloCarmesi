@@ -1,5 +1,6 @@
 'use client'
 import { usePathname, useRouter } from 'next/navigation'
+import { Menu, X } from 'lucide-react'
 
 const BREADCRUMBS: Record<string, string> = {
   '/admin':               'Overview',
@@ -10,7 +11,13 @@ const BREADCRUMBS: Record<string, string> = {
   '/admin/config':        'Configuración',
 }
 
-export default function AdminHeader() {
+export default function AdminHeader({
+  menuAbierto = false,
+  onToggleMenu,
+}: {
+  menuAbierto?: boolean
+  onToggleMenu?: () => void
+}) {
   const pathname = usePathname()
   const router = useRouter()
   const section = BREADCRUMBS[pathname] ?? ''
@@ -22,12 +29,25 @@ export default function AdminHeader() {
 
   return (
     <header className="admin-header">
-      <div style={{ fontSize: 13, color: 'var(--admin-text-muted)', fontWeight: 700 }}>
-        Admin <span style={{ margin: '0 6px' }}>/</span>
-        <span style={{ color: 'var(--color-brown)' }}>{section}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+        <button
+          type="button"
+          className="admin-menu-toggle"
+          aria-expanded={menuAbierto}
+          aria-label={menuAbierto ? 'Cerrar menú' : 'Abrir menú'}
+          onClick={onToggleMenu}
+        >
+          {menuAbierto ? <X size={20} /> : <Menu size={20} />}
+        </button>
+        <div style={{ fontSize: 13, color: 'var(--admin-text-muted)', fontWeight: 700 }}>
+          <span className="admin-breadcrumb-root">
+            Admin <span style={{ margin: '0 6px' }}>/</span>
+          </span>
+          <span style={{ color: 'var(--color-brown)' }}>{section}</span>
+        </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--admin-text-muted)' }}>Admin</div>
+        <div className="admin-header-user" style={{ fontSize: 13, fontWeight: 700, color: 'var(--admin-text-muted)' }}>Admin</div>
         <button
           onClick={handleLogout}
           style={{

@@ -28,11 +28,11 @@ export default function AdminLoginPage() {
 
   return (
     <div style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'var(--admin-bg)', fontFamily: 'var(--font-body)',
+      minHeight: '100svh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: 'var(--admin-bg)', fontFamily: 'var(--font-body)', padding: 20,
     }}>
       <div style={{
-        background: '#fff', borderRadius: 14, padding: '40px 48px',
+        background: '#fff', borderRadius: 14, padding: 'clamp(28px, 6vw, 40px) clamp(20px, 7vw, 48px)',
         boxShadow: '0 2px 8px rgba(135,43,19,.06)', width: '100%', maxWidth: 380,
       }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>

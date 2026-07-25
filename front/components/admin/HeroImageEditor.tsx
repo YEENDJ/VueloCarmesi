@@ -101,10 +101,7 @@ export default function HeroImageEditor({
           </span>
         </div>
 
-        <div style={{
-          position: 'relative', width: '100%', height: 440,
-          background: '#111', borderRadius: 10, overflow: 'hidden',
-        }}>
+        <div className="admin-cropper">
           <Cropper
             image={srcLocal}
             crop={crop}

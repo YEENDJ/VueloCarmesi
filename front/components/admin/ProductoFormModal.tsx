@@ -95,7 +95,7 @@ export default function ProductoFormModal({
             <FormRow label="Descripción">
               <textarea className="admin-input" value={form.descripcion} onChange={e => set('descripcion', e.target.value)} rows={3} style={{ resize: 'vertical' }} />
             </FormRow>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
+            <div className="admin-form-row-3">
               <FormRow label="Precio (COP) *">
                 <input className="admin-input" type="number" min={0} value={form.precio} onChange={e => set('precio', e.target.value)} />
               </FormRow>
