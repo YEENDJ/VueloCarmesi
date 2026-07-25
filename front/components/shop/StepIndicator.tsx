@@ -15,11 +15,7 @@ export default function StepIndicator() {
   const current = stepForPath(pathname)
 
   return (
-    <div style={{
-      display: 'flex', justifyContent: 'center', gap: '2rem',
-      padding: '0.75rem 1rem', backgroundColor: 'var(--color-cream)',
-      borderBottom: '1px solid rgba(135,43,19,0.15)', flexWrap: 'wrap',
-    }}>
+    <div className="step-indicator">
       {STEPS.map((step, index) => {
         const color = index < current
           ? '#1F8A5B'

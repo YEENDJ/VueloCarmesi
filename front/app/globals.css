@@ -1,11 +1,19 @@
 @import '../styles/tokens.css';
 
+/* ─────────────────────────────────────────────────────────
+   Reset
+   ───────────────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html {
+  /* Evita que iOS reescale el texto al girar el dispositivo */
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -27,10 +35,193 @@ h2, h3 {
   font-weight: 600;
 }
 
+/* ─────────────────────────────────────────────────────────
+   Piso de calidad: nada desborda, todo es alcanzable
+   ───────────────────────────────────────────────────────── */
+
+/* Ningún medio se sale de su contenedor */
+img, svg, video, canvas, iframe {
+  max-width: 100%;
+}
+
+/* Emails, URLs y slugs largos cortan en lugar de estirar el layout */
+p, h1, h2, h3, span, a, li, td, th, label, dd, dt {
+  overflow-wrap: break-word;
+}
+
+/* Foco visible para teclado — los enlaces del sitio usan estilos inline
+   sin subrayado, así que sin esto no hay ninguna pista de foco */
+:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+/* Sobre fondos crimson/brown el naranja no contrasta: usamos oro */
+.navbar :focus-visible,
+footer :focus-visible {
+  outline-color: var(--color-gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Contenedor de página
+   maxWidth lo define cada página; el padding vive acá para
+   que se ajuste al ancho de pantalla en un solo lugar.
+   ───────────────────────────────────────────────────────── */
+.page-shell {
+  margin-inline: auto;
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1rem, 4vw, 2rem);
+}
+
+/* ─────────────────────────────────────────────────────────
+   Navbar
+   ───────────────────────────────────────────────────────── */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 1rem clamp(1rem, 3vw, 2rem);
+  background-color: var(--color-crimson);
+  color: var(--color-cream);
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  flex: none;
+  width: 250px;
+  max-width: 46vw;
+}
+.navbar-logo img {
+  width: 100%;
+  height: auto;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  list-style: none;
+}
+
+.navbar-link {
+  color: var(--color-cream);
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 150ms ease;
+}
+.navbar-link:hover {
+  color: var(--color-gold);
+}
+
+/* Acciones móviles (carrito + hamburguesa) — ocultas en desktop */
+.navbar-mobile-actions {
+  display: none;
+  align-items: center;
+  gap: 18px;
+}
+
+.navbar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 44px: mínimo cómodo para el pulgar */
+  width: 44px;
+  height: 44px;
+  margin-right: -10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-cream);
+  cursor: pointer;
+}
+
+/* Panel desplegable — sólo existe en móvil */
+.navbar-panel {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-mobile-actions {
+    display: flex;
+  }
+
+  .navbar-panel {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--color-crimson);
+    border-top: 1px solid rgba(255, 234, 202, 0.2);
+    box-shadow: 0 12px 24px rgba(135, 43, 19, 0.25);
+    padding: 8px 0 16px;
+  }
+  .navbar-panel.open {
+    display: block;
+  }
+  .navbar-panel ul {
+    list-style: none;
+  }
+  .navbar-panel .navbar-link {
+    display: block;
+    padding: 14px clamp(1rem, 3vw, 2rem);
+    font-size: 1.0625rem;
+  }
+  .navbar-panel .navbar-link:hover {
+    background-color: rgba(255, 234, 202, 0.08);
+    color: var(--color-gold);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Hero
+   ───────────────────────────────────────────────────────── */
+.hero {
+  min-height: 86vh;
+  background-color: var(--color-cream);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(40px, 7vw, 90px) clamp(16px, 5vw, 64px);
+}
+
+.hero-media {
+  flex: 1 1 300px;
+  height: 280px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(135, 43, 19, 0.16);
+}
+
+/* ─────────────────────────────────────────────────────────
+   Footer
+   ───────────────────────────────────────────────────────── */
 .footer-social a {
   color: rgba(255, 234, 202, 0.75);
   transition: color 150ms ease;
   display: flex;
+  /* Área táctil cómoda alrededor del ícono de 20px */
+  padding: 6px;
+  margin: -6px;
 }
 .footer-social a:hover {
   color: var(--color-amber);
@@ -65,14 +256,9 @@ h2, h3 {
   color: var(--color-orange);
 }
 
-@media (max-width: 767px) {
-  .footer-legal {
-    flex-direction: column;
-    justify-content: center;
-  }
-}
-
-/* Detail page responsive layouts */
+/* ─────────────────────────────────────────────────────────
+   Grillas de detalle
+   ───────────────────────────────────────────────────────── */
 .detail-grid-exp {
   display: grid;
   grid-template-columns: 65fr 35fr;
@@ -93,12 +279,35 @@ h2, h3 {
   gap: 24px;
 }
 
-/* Sobre Nosotros section */
+/* Miniaturas de galería */
+.gallery-thumbnails {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.gallery-thumbnails button {
+  width: 64px;
+  height: 64px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Sección Sobre Nosotros
+   ───────────────────────────────────────────────────────── */
 .sobre-nosotros-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 80px;
   align-items: center;
+}
+
+.about-media {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(135, 43, 19, 0.16);
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-ghost-cream {
@@ -121,7 +330,9 @@ h2, h3 {
   color: var(--color-brown);
 }
 
-/* Sobre Nosotros page — section grids */
+/* ─────────────────────────────────────────────────────────
+   Página Sobre Nosotros — grillas de sección
+   ───────────────────────────────────────────────────────── */
 .valores-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -152,7 +363,9 @@ h2, h3 {
   gap: 16px;
 }
 
-/* Booking form page */
+/* ─────────────────────────────────────────────────────────
+   Reserva
+   ───────────────────────────────────────────────────────── */
 .reserva-grid {
   display: grid;
   grid-template-columns: 60fr 40fr;
@@ -166,7 +379,145 @@ h2, h3 {
   gap: 16px;
 }
 
+/* ─────────────────────────────────────────────────────────
+   Tienda / carrito / checkout
+   ───────────────────────────────────────────────────────── */
+.shop-columns {
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.shop-main {
+  flex: 1 1 420px;
+  min-width: 0;
+}
+
+.shop-aside {
+  flex: 0 1 320px;
+  min-width: 280px;
+  position: sticky;
+  top: 96px;
+}
+
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-cream);
+  border-bottom: 1px solid rgba(135, 43, 19, 0.15);
+  flex-wrap: wrap;
+}
+
+.cart-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid rgba(135, 43, 19, 0.1);
+  flex-wrap: wrap;
+}
+
+.cart-row-media {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  flex: none;
+  background-color: var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-row-info {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+
+.cart-row-total {
+  font-weight: 700;
+  color: var(--color-amber);
+  min-width: 90px;
+  text-align: right;
+}
+
+.cart-row-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: rgba(135, 43, 19, 0.5);
+}
+.cart-row-remove:hover {
+  color: var(--color-crimson);
+  background: rgba(213, 19, 18, 0.08);
+}
+
+/* ═════════════════════════════════════════════════════════
+   TABLET — hasta 1023px
+   ═════════════════════════════════════════════════════════ */
+@media (max-width: 1023px) {
+  .detail-grid-exp,
+  .detail-grid-prod {
+    gap: 32px;
+  }
+
+  .related-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .sobre-nosotros-grid {
+    gap: 40px;
+  }
+
+  .about-media {
+    min-height: 340px;
+  }
+
+  .proceso-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* El formulario de reserva necesita ancho para sus filas de dos campos:
+     apilamos las columnas y subimos el resumen */
+  .reserva-grid {
+    grid-template-columns: 1fr;
+  }
+  .reserva-summary {
+    order: -1;
+  }
+  .reserva-summary > div {
+    position: static !important;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════
+   MÓVIL — hasta 767px
+   ═════════════════════════════════════════════════════════ */
 @media (max-width: 767px) {
+  .hero {
+    /* 86vh es poco fiable en móvil por la barra de direcciones,
+       y el contenido ya define una altura suficiente */
+    min-height: 0;
+  }
+
+  .hero-media {
+    height: clamp(200px, 52vw, 280px);
+  }
+
+  .footer-legal {
+    flex-direction: column;
+    justify-content: center;
+  }
+
   .detail-grid-exp,
   .detail-grid-prod {
     grid-template-columns: 1fr;
@@ -176,8 +527,11 @@ h2, h3 {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .gallery-thumbnails {
-    display: none !important;
+  /* Las miniaturas siguen siendo la única forma de ver el resto de las
+     fotos, así que se quedan — sólo se achican */
+  .gallery-thumbnails button {
+    width: 56px;
+    height: 56px;
   }
 
   .sidebar-sticky {
@@ -189,25 +543,96 @@ h2, h3 {
     gap: 32px;
   }
 
+  .about-media {
+    min-height: 260px;
+  }
+
   .valores-grid,
   .equipo-grid {
     grid-template-columns: 1fr;
   }
 
-  .proceso-grid,
   .galeria-sobre {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .reserva-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .reserva-summary {
-    order: -1;
-  }
-
   .form-row-2 {
     grid-template-columns: 1fr;
+  }
+
+  .shop-aside {
+    position: static;
+    flex-basis: 100%;
+    min-width: 0;
+  }
+
+  .step-indicator {
+    gap: 0.5rem 1rem;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════
+   MÓVIL ANGOSTO — hasta 559px
+   ═════════════════════════════════════════════════════════ */
+@media (max-width: 559px) {
+  .proceso-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Cada ítem del carrito pasa a dos filas: la foto ocupa ambas,
+     cantidad y subtotal bajan a la segunda */
+  .cart-row {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    grid-template-areas:
+      'media info   remove'
+      'media cantidad total';
+    gap: 10px 12px;
+    align-items: center;
+  }
+  .cart-row-media {
+    grid-area: media;
+    width: 64px;
+    height: 64px;
+    align-self: start;
+  }
+  .cart-row-info {
+    grid-area: info;
+  }
+  .cart-row-cantidad {
+    grid-area: cantidad;
+  }
+  .cart-row-total {
+    grid-area: total;
+    min-width: 0;
+  }
+  .cart-row-remove {
+    grid-area: remove;
+    justify-self: end;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════
+   MÓVIL MUY ANGOSTO — hasta 419px
+   ═════════════════════════════════════════════════════════ */
+@media (max-width: 419px) {
+  .related-grid,
+  .galeria-sobre {
+    grid-template-columns: 1fr;
+  }
+
+  .finca-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════
+   Touch: iOS hace zoom al enfocar campos con texto < 16px
+   ═════════════════════════════════════════════════════════ */
+@media (max-width: 1023px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
   }
 }

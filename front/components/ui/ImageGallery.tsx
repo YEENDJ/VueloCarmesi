@@ -40,17 +40,18 @@ export default function ImageGallery({ images, alt, aspectRatio = '1/1' }: Image
         />
       </div>
 
-      {/* Thumbnails — hidden on mobile via .gallery-thumbnails class */}
+      {/* Miniaturas — se achican en móvil, no se ocultan: son la única
+          forma de llegar al resto de las fotos */}
       {displayed.length > 1 && (
-        <div className="gallery-thumbnails" style={{ display: 'flex', gap: '8px' }}>
+        <div className="gallery-thumbnails">
           {displayed.map((src, i) => (
             <button
               key={i}
               type="button"
+              aria-label={`Ver foto ${i + 1} de ${displayed.length}`}
+              aria-pressed={i === activeIndex}
               onClick={() => setActiveIndex(i)}
               style={{
-                width: 64,
-                height: 64,
                 padding: 0,
                 borderRadius: '6px',
                 overflow: 'hidden',

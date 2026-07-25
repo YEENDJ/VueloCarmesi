@@ -10,14 +10,7 @@ interface HeroProps {
 
 export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: HeroProps) {
   return (
-    <section style={{
-      minHeight: '86vh',
-      backgroundColor: 'var(--color-cream)',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      padding: 'clamp(40px, 7vw, 90px) clamp(16px, 5vw, 64px)',
-    }}>
+    <section className="hero">
       <div style={{
         fontFamily: 'var(--font-body)',
         fontWeight: 700,
@@ -67,17 +60,12 @@ export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: H
         </div>
 
         {imagen ? (
-          <div style={{
-            flex: '1 1 300px', height: '280px', borderRadius: '12px',
-            overflow: 'hidden', boxShadow: '0 4px 16px rgba(135, 43, 19, 0.16)',
-          }}>
+          <div className="hero-media">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={imagen} alt="Vuelo Carmesí" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         ) : (
-          <div style={{
-            flex: '1 1 300px', height: '280px', borderRadius: '12px',
-            overflow: 'hidden', boxShadow: '0 4px 16px rgba(135, 43, 19, 0.16)',
+          <div className="hero-media" style={{
             background: 'repeating-linear-gradient(135deg, #F0D6A8 0 14px, #E9CB97 14px 28px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>

@@ -16,14 +16,8 @@ export default function SobreNosotros({ imagen }: Props) {
 
           {/* Columna izquierda — imagen */}
           <div
+            className="about-media"
             style={{
-              borderRadius: '12px',
-              overflow: 'hidden',
-              boxShadow: '0 4px 16px rgba(135,43,19,.16)',
-              minHeight: '420px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
               background: imagen
                 ? undefined
                 : 'repeating-linear-gradient(135deg, #9A3417 0 14px, #8A2E14 14px 28px)',
