@@ -70,7 +70,7 @@ export default function AdminOverviewPage() {
       </div>
 
       {/* Listas recientes */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+      <div className="admin-cards-2">
         {/* Últimas reservas */}
         <div style={{ background: '#fff', borderRadius: 14, padding: 24, boxShadow: '0 2px 8px rgba(135,43,19,.06)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>

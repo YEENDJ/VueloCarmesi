@@ -3,7 +3,7 @@ import CertBadge from '@/components/secciones/CertBadge'
 import { CERTIFICACIONES } from '@/lib/certificaciones'
 
 // Crédito de desarrollo mostrado en la barra legal del footer
-const AGENCIA = { nombre: 'Xyra Code', url: 'https://Xyracode.com' }
+const AGENCIA = { nombre: 'XyraCode', url: 'https://Xyracode.com' }
 
 const SOCIAL = [
   {

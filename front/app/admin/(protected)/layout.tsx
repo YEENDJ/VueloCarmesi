@@ -1,7 +1,6 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import Sidebar from '@/components/admin/Sidebar'
-import AdminHeader from '@/components/admin/AdminHeader'
+import AdminShell from '@/components/admin/AdminShell'
 
 export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
@@ -11,13 +10,5 @@ export default async function ProtectedLayout({ children }: { children: React.Re
     redirect('/admin/login')
   }
 
-  return (
-    <div className="admin-shell">
-      <Sidebar />
-      <div className="admin-main">
-        <AdminHeader />
-        <div className="admin-content">{children}</div>
-      </div>
-    </div>
-  )
+  return <AdminShell>{children}</AdminShell>
 }

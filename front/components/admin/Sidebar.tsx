@@ -12,7 +12,7 @@ const NAV_ITEMS = [
   { href: '/admin/config',       label: 'Configuración', icon: '⚙️' },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ abierto = false }: { abierto?: boolean }) {
   const pathname = usePathname()
 
   function isActive(href: string) {
@@ -21,22 +21,22 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="admin-sidebar">
+    <aside className={`admin-sidebar${abierto ? ' abierto' : ''}`}>
       {/* Logo */}
       <div style={{ padding: '28px 20px 24px', borderBottom: '1px solid rgba(255,234,202,.12)' }}>
         {/* <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 22, color: 'var(--color-gold)', lineHeight: 1.1 }}>
           Vuelo Carmesí
         </div> */}
 
-        <Link href="/admin" style={{ display: 'flex', alignItems: 'center' }}>
-        <Image
-          src="/images/logo.png"
-          alt="Vuelo Carmesí"
-          width={220}
-          height={30}
-          priority
-        />
-      </Link>
+        <Link href="/admin" className="admin-sidebar-logo">
+          <Image
+            src="/images/logo.png"
+            alt="Vuelo Carmesí"
+            width={220}
+            height={30}
+            priority
+          />
+        </Link>
         <div style={{ fontSize: 11, color: 'rgba(255,234,202,.55)', marginTop: 4, fontWeight: 700, letterSpacing: '.5px', textTransform: 'uppercase' }}>
           Panel de administración
         </div>

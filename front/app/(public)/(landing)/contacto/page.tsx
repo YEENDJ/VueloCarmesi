@@ -30,7 +30,7 @@ export default function ContactoPage() {
   }
 
   return (
-    <section style={{ maxWidth: '600px', margin: '4rem auto', padding: '0 2rem' }}>
+    <section className="page-shell" style={{ maxWidth: '600px' }}>
       <h1 style={{ marginBottom: '2rem', color: 'var(--color-brown)' }}>Contacto</h1>
       {estado === 'ok' ? (
         <p style={{ color: 'var(--color-crimson)', fontSize: '1.1rem' }}>

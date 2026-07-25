@@ -24,8 +24,8 @@ export default async function HomePage() {
       />
 
       {preview.length > 0 && (
-        <section style={{ padding: '5rem 2rem', maxWidth: '1200px', margin: '0 auto' }}>
-          <h2 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '3rem', color: 'var(--color-brown)' }}>
+        <section style={{ padding: 'clamp(3rem, 8vw, 5rem) clamp(1rem, 4vw, 2rem)', maxWidth: '1200px', margin: '0 auto' }}>
+          <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', marginBottom: '3rem', color: 'var(--color-brown)' }}>
             Nuestras Experiencias
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
@@ -56,8 +56,8 @@ export default async function HomePage() {
       <Certificaciones />
 
       {/* Banda CTA en crimson para mantener la alternancia de fondos tras la sección cream de certificaciones */}
-      <section style={{ padding: '5rem 2rem', textAlign: 'center', backgroundColor: 'var(--color-crimson)' }}>
-        <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--color-cream)' }}>¿Listo para vivir la experiencia?</h2>
+      <section style={{ padding: 'clamp(3rem, 8vw, 5rem) clamp(1rem, 4vw, 2rem)', textAlign: 'center', backgroundColor: 'var(--color-crimson)' }}>
+        <h2 style={{ fontSize: 'clamp(1.5rem, 4.5vw, 2rem)', marginBottom: '1rem', color: 'var(--color-cream)' }}>¿Listo para vivir la experiencia?</h2>
         <a href="/experiencias" className="btn-ghost-cream">Reservar ahora</a>
       </section>
     </>
