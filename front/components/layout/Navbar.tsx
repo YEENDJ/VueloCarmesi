@@ -39,7 +39,7 @@ export default function Navbar() {
     <nav className="navbar">
       <Link href="/" className="navbar-logo" aria-label="Vuelo Carmesí — ir al inicio">
         <Image
-          src="/images/logo.png"
+          src="/images/marca/logo-crema.png"
           alt="Vuelo Carmesí"
           width={250}
           height={40}

@@ -30,7 +30,7 @@ export default function Sidebar({ abierto = false }: { abierto?: boolean }) {
 
         <Link href="/admin" className="admin-sidebar-logo">
           <Image
-            src="/images/logo.png"
+            src="/images/marca/logo-crema.png"
             alt="Vuelo Carmesí"
             width={220}
             height={30}
