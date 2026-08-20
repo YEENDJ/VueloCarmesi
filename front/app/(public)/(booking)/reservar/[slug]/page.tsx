@@ -2,6 +2,10 @@ import { getExperienciaBySlug } from '@/lib/api/experiencias'
 import ReservaForm from '@/components/booking/ReservaForm'
 import { notFound } from 'next/navigation'
 
+// El segmento caduca siempre: sin esto un 404 renderizado durante una caída del
+// backend quedaba cacheado de forma indefinida.
+export const revalidate = 60
+
 export default async function ReservarPage({
   params,
 }: {
@@ -28,7 +32,7 @@ export default async function ReservarPage({
               lineHeight: 1.15,
             }}
           >
-            Reservá tu experiencia
+            Reserva tu experiencia
           </h1>
           <p
             style={{
@@ -38,7 +42,7 @@ export default async function ReservarPage({
               opacity: 0.7,
             }}
           >
-            Completá el formulario y nos comunicamos para confirmar tu lugar.
+            Completa el formulario y nos comunicamos para confirmar tu lugar.
           </p>
         </div>
 

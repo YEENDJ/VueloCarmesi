@@ -20,6 +20,28 @@ export default function TiendaGrid({ productos }: { productos: Producto[] }) {
     return productos.filter(p => p.categoria === filtro)
   }, [productos, filtro])
 
+  // Sin productos no hay nada que filtrar: la barra de categorías sobra y solo
+  // mostraría un "Todos" huérfano.
+  if (productos.length === 0) {
+    return (
+      <p
+        style={{
+          border: '1.5px dashed var(--color-gold)',
+          borderRadius: '12px',
+          padding: 'clamp(24px, 6vw, 48px) clamp(16px, 4vw, 32px)',
+          textAlign: 'center',
+          color: 'var(--color-brown)',
+          fontSize: 'clamp(0.95rem, 2.5vw, 1.05rem)',
+          lineHeight: 1.7,
+          opacity: 0.75,
+          minWidth: 0,
+        }}
+      >
+        Aún no hay productos disponibles. Vuelve pronto.
+      </p>
+    )
+  }
+
   return (
     <>
       <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
@@ -42,7 +64,7 @@ export default function TiendaGrid({ productos }: { productos: Producto[] }) {
           )
         })}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(230px, 100%), 1fr))', gap: '2rem' }}>
         {filtrados.map(p => <ProductoCard key={p.id} producto={p} />)}
       </div>
     </>

@@ -4,9 +4,21 @@ import Badge from '@/components/ui/Badge'
 import ImageGallery from '@/components/ui/ImageGallery'
 import { notFound } from 'next/navigation'
 
+// El segmento caduca siempre, haya respondido el backend o no. Sin esto Next
+// deriva el revalidate solo de los fetch que completaron: un detalle renderizado
+// durante una caída se guardaba como 404 permanente e ni revalidateTag lo tocaba.
+export const revalidate = 60
+export const dynamicParams = true
+
 export async function generateStaticParams() {
-  const experiencias = await getExperiencias()
-  return experiencias.map(e => ({ slug: e.slug }))
+  try {
+    const experiencias = await getExperiencias()
+    return experiencias.map(e => ({ slug: e.slug }))
+  } catch {
+    // Prerenderizar es solo una optimización: si la API no está disponible en el
+    // build, cada detalle se genera bajo demanda en vez de romper el despliegue.
+    return []
+  }
 }
 
 export default async function ExperienciaDetallePage({
