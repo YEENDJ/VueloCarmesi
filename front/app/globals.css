@@ -125,7 +125,10 @@ footer :focus-visible {
   display: flex;
   align-items: center;
   flex: none;
-  width: 250px;
+  /* Mismo ancho que el logotipo del footer: la marca se ve igual arriba y
+     abajo. El tope en vw se queda porque acá el logo comparte fila con el
+     carrito y la hamburguesa, y a 320px los tres no caben a tamaño completo. */
+  width: 220px;
   max-width: 46vw;
 }
 .navbar-logo img {

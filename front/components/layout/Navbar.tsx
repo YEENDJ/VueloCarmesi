@@ -44,8 +44,11 @@ export default function Navbar() {
         <Image
           src="/images/marca/logo-crema.png"
           alt="Vuelo Carmesí"
-          width={250}
-          height={40}
+          width={220}
+          height={35}
+          // El ancho real lo fija .navbar-logo, que baja a 46vw en pantallas
+          // angostas; sizes se lo dice al optimizador para que no sirva de mas.
+          sizes="(max-width: 478px) 46vw, 220px"
           priority
         />
       </Link>
