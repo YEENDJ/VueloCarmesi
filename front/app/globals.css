@@ -227,11 +227,68 @@ footer :focus-visible {
   color: var(--color-amber);
 }
 
-/* Tira de certificaciones en el footer: círculo cream para que los
-   logos a color original se lean sobre el fondo brown */
+/* ── Tira de confianza ──────────────────────────────────────────
+   Recurso fijo de marca: BPA · Calidad Turística · RNT · marca registrada.
+   El tamaño de los cuatro avales cuelga de --cert-size para que escalen
+   juntos; en móvil bajan solos sin romper la fila. */
+.tira-confianza {
+  --cert-size: 46px;
+  max-width: 1200px;
+  margin: 32px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(253, 195, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+@media (min-width: 768px) {
+  .tira-confianza {
+    --cert-size: 60px;
+  }
+}
+
+.tira-confianza-sellos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px 20px;
+}
+
+.tira-confianza-legal {
+  min-width: 0;
+  max-width: 60ch;
+  text-align: center;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  color: rgba(255, 234, 202, 0.6);
+}
+
+/* Círculo cream para que los logos a color original se lean sobre el brown */
 .cert-badge-footer {
+  width: var(--cert-size, 60px);
+  height: var(--cert-size, 60px);
   background-color: var(--color-cream);
   border: 1px solid rgba(253, 195, 0, 0.25);
+}
+
+/* Sellos con zona de respeto: van completos, solo se les fija el alto */
+.cert-sello-footer {
+  height: var(--cert-size, 60px);
+}
+
+/* El ® va desnudo y en oro: sobre brown es el único color de marca que contrasta */
+.cert-simbolo-footer {
+  width: calc(var(--cert-size, 60px) * 0.66);
+  height: calc(var(--cert-size, 60px) * 0.66);
+  color: var(--color-gold);
+}
+
+.cert-simbolo-card {
+  color: var(--color-crimson);
 }
 
 /* Barra legal del footer: copyright a un lado, crédito de desarrollo al otro */

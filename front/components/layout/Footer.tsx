@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import CertBadge from '@/components/secciones/CertBadge'
-import { CERTIFICACIONES } from '@/lib/certificaciones'
+import TiraConfianza from '@/components/layout/TiraConfianza'
 
 // Crédito de desarrollo mostrado en la barra legal del footer
 const AGENCIA = { nombre: 'XyraCode', url: 'https://Xyracode.com' }
@@ -101,21 +100,14 @@ export default function Footer() {
           </div>
         </div>
 
-        <div>
-          <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--color-gold)', marginBottom: '14px' }}>
-            Certificados por
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
-            {CERTIFICACIONES.map((cert) => (
-              <CertBadge key={cert.nombre} cert={cert} variant="footer" />
-            ))}
-          </div>
-        </div>
-
       </div>
 
-      <div className="footer-legal" style={{ borderTop: '1px solid rgba(253, 195, 0, 0.3)', marginTop: '32px', paddingTop: '24px', fontWeight: 700, fontSize: '12px', color: 'rgba(255, 234, 202, 0.6)' }}>
-        <span>RNT No. 179868 · © {new Date().getFullYear()} Vuelo Carmesí. Todos los derechos reservados.</span>
+      {/* Los cuatro avales van a lo ancho, no apretados en una columna: es la
+          tira de confianza de la marca y se lee igual que en el portafolio. */}
+      <TiraConfianza />
+
+      <div className="footer-legal" style={{ marginTop: '24px', paddingTop: '20px', fontWeight: 700, fontSize: '12px', color: 'rgba(255, 234, 202, 0.6)' }}>
+        <span>© {new Date().getFullYear()} Vuelo Carmesí. Todos los derechos reservados.</span>
         <span>
           Desarrollado por{' '}
           <a href={AGENCIA.url} target="_blank" rel="noopener noreferrer" className="footer-credito">
