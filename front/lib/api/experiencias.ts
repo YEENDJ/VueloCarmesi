@@ -19,7 +19,7 @@ export const MOCK_EXPERIENCIAS: Experiencia[] = [
     capacidad: 12,
     imagen: '/images/cacao/mazorca-abierta.jpg',
     destacada: true,
-    images: [
+    imagenes: [
       '/images/cacao/mazorca-abierta.jpg',
       '/images/experiencias/paso-3.jpg',
     ],
@@ -36,7 +36,7 @@ export const MOCK_EXPERIENCIAS: Experiencia[] = [
     capacidad: 8,
     imagen: '/images/lugar/selva.jpg',
     destacada: true,
-    images: [
+    imagenes: [
       '/images/lugar/selva.jpg',
       '/images/experiencias/refrigerio.jpg',
     ],
@@ -53,7 +53,7 @@ export const MOCK_EXPERIENCIAS: Experiencia[] = [
     capacidad: 10,
     imagen: '/images/experiencias/chocoterapia.jpg',
     destacada: false,
-    images: [
+    imagenes: [
       '/images/experiencias/chocoterapia.jpg',
       '/images/cacao/bodegon-granos.jpg',
     ],

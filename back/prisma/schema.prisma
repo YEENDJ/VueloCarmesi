@@ -13,11 +13,21 @@ model Experiencia {
   id          String    @id @default(cuid())
   slug        String    @unique
   nombre      String
+  // Corta: la que va en la tarjeta del listado y en la meta description.
   descripcion String
+  // Larga: el detalle completo. Vacía al migrar, y la ficha cae a `descripcion`
+  // mientras no se llene, para que ninguna experiencia quede sin texto.
+  descripcionLarga String @default("")
   duracion    String
   precio      Float
   capacidad   Int
+  // `imagenes` es la fuente de verdad y su primer elemento es la portada.
+  // `imagen` se conserva porque lo consumen tarjetas, carrito y correos; el
+  // service lo mantiene sincronizado con imagenes[0] para que no se separen.
   imagen      String    @default("")
+  imagenes    String[]  @default([])
+  incluye     String[]  @default([])
+  queTraer    String[]  @default([])
   destacada   Boolean   @default(false)
   archivada   Boolean   @default(false)
   createdAt   DateTime  @default(now())
@@ -42,10 +52,14 @@ model Producto {
   id          String       @id @default(cuid())
   slug        String       @unique
   nombre      String
+  // Mismo reparto que en Experiencia: corta para la tarjeta, larga para la ficha.
   descripcion String
+  descripcionLarga String  @default("")
   precio      Float
   stock       Int
+  // imagenes[0] es la portada; `imagen` queda sincronizada por el service.
   imagen      String       @default("")
+  imagenes    String[]     @default([])
   categoria   String
   badge       String?
   createdAt   DateTime     @default(now())

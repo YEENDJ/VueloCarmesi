@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { toSlug, slugUnico } from '../common/slug'
+import { portadaDe } from '../common/portada'
 import { CreateProductoDto } from './dto/create-producto.dto'
 import { UpdateProductoDto } from './dto/update-producto.dto'
 
@@ -27,7 +28,13 @@ export class ProductosService {
   async create(dto: CreateProductoDto) {
     const nombre = dto.nombre.trim()
     return this.prisma.producto.create({
-      data: { ...dto, nombre, slug: await this.slugLibre(nombre) },
+      data: {
+        ...dto,
+        nombre,
+        slug: await this.slugLibre(nombre),
+        // Ver experiencias.service: la portada se deriva, no se edita aparte.
+        imagen: portadaDe(dto.imagenes),
+      },
     })
   }
 
@@ -42,6 +49,10 @@ export class ProductosService {
     if (dto.nombre !== undefined) {
       data.nombre = dto.nombre.trim()
       data.slug = await this.slugLibre(data.nombre, id)
+    }
+    // Un PATCH de solo stock no debe tocar la portada; solo si viene galería.
+    if (dto.imagenes !== undefined) {
+      (data as { imagen?: string }).imagen = portadaDe(dto.imagenes)
     }
     return this.prisma.producto.update({ where: { id }, data })
   }

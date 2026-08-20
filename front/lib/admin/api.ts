@@ -93,6 +93,24 @@ export async function uploadImage(file: File): Promise<{ url: string; publicId: 
   return res.json()
 }
 
+/**
+ * Borra la imagen de Cloudinary al quitarla de una galería. No lanza si falla:
+ * dejar un archivo huérfano allá es molesto, pero impedir que el panel guarde
+ * por eso lo es más. El backend ya trata como éxito el caso de "ya no existe".
+ */
+export async function deleteImage(url: string): Promise<void> {
+  try {
+    await fetch(`${BASE}/uploads/image`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+      credentials: 'include',
+    })
+  } catch {
+    // silencio deliberado: ver comentario de arriba
+  }
+}
+
 // ── SiteConfig ─────────────────────────────────────────────
 export function getSiteConfigAdmin(): Promise<Record<string, string>> {
   return fetch(`${BASE}/site-config`).then(checked)

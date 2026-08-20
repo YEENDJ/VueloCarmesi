@@ -2,7 +2,8 @@ import { getExperienciaBySlug, getExperiencias } from '@/lib/api/experiencias'
 import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
 import ImageGallery from '@/components/ui/ImageGallery'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
+import { SLUGS_EXPERIENCIAS_LEGADOS, destinoLegado } from '@/lib/slugs-legados'
 
 // El segmento caduca siempre, haya respondido el backend o no. Sin esto Next
 // deriva el revalidate solo de los fetch que completaron: un detalle renderizado
@@ -28,10 +29,22 @@ export default async function ExperienciaDetallePage({
 }) {
   const { slug } = await params
   const exp = await getExperienciaBySlug(slug)
-  if (!exp) notFound()
+  if (!exp) {
+    // Antes de dar por perdida la URL: puede ser un slug viejo, de cuando se
+    // guardaban sin normalizar. Si lo es, se manda al nuevo con un 308 para que
+    // los enlaces ya compartidos sigan llegando a su ficha.
+    const destino = destinoLegado(SLUGS_EXPERIENCIAS_LEGADOS, slug)
+    if (destino) permanentRedirect(`/experiencias/${destino}`)
+    notFound()
+  }
 
-  const images = exp.images ?? []
+  // `imagenes` es la galería; si la ficha es anterior a ella, la portada suelta
+  // en `imagen` sigue sirviendo como galería de una sola foto. Antes esto leía
+  // `exp.images`, un campo que la API nunca devolvió: la ficha se quedaba sin
+  // ninguna foto aunque hubiera una cargada desde el panel.
+  const images = exp.imagenes?.length ? exp.imagenes : exp.imagen ? [exp.imagen] : []
   const heroImage = images[0] ?? ''
+  const descripcion = exp.descripcionLarga?.trim() || exp.descripcion
   const incluye = exp.incluye ?? []
   const queTraer = exp.queTraer ?? []
 
@@ -87,7 +100,7 @@ export default async function ExperienciaDetallePage({
                 marginBottom: '32px',
               }}
             >
-              {exp.descripcion}
+              {descripcion}
             </p>
 
             {incluye.length > 0 && (

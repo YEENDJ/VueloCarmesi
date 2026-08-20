@@ -20,8 +20,16 @@ export default function ProductoCard({ producto }: { producto: Producto }) {
 
   return (
     <Card>
-      <Link href={`/tienda/${producto.slug}`} style={{ position: 'relative', height: '200px', backgroundColor: 'var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: '3rem' }}>🍫</span>
+      {/* aspect-ratio en vez de alto fijo: el marco sigue a la columna del grid y
+          reserva el espacio antes de que cargue la foto, así la tarjeta no salta.
+          Antes esto pintaba el emoji siempre e ignoraba producto.imagen, y por eso
+          la tienda no mostraba ninguna foto aunque estuvieran cargadas. */}
+      <Link href={`/tienda/${producto.slug}`} style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', backgroundColor: 'var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {producto.imagen
+          // eslint-disable-next-line @next/next/no-img-element
+          ? <img src={producto.imagen} alt={producto.nombre} style={{ width: '100%', height: '100%', maxWidth: '100%', objectFit: 'cover', display: 'block' }} />
+          : <span style={{ fontSize: 'clamp(2rem, 8vw, 3rem)' }}>🍫</span>
+        }
         {badge && (
           <span style={{
             position: 'absolute', top: '12px', right: '12px', fontWeight: 700, fontSize: '0.75rem',
@@ -31,13 +39,13 @@ export default function ProductoCard({ producto }: { producto: Producto }) {
           </span>
         )}
       </Link>
-      <div style={{ padding: '1.5rem' }}>
+      <div style={{ padding: 'clamp(1rem, 4vw, 1.5rem)', minWidth: 0 }}>
         <Link href={`/tienda/${producto.slug}`} style={{ textDecoration: 'none' }}>
-          <h3 style={{ margin: '0 0 0.5rem', color: 'var(--color-brown)' }}>{producto.nombre}</h3>
+          <h3 style={{ margin: '0 0 0.5rem', color: 'var(--color-brown)', minWidth: 0, fontSize: 'clamp(1.05rem, 3vw, 1.25rem)', overflowWrap: 'anywhere' }}>{producto.nombre}</h3>
         </Link>
-        <p style={{ opacity: 0.8, fontSize: '0.9rem', marginBottom: '1rem' }}>{producto.descripcion}</p>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontWeight: 700, color: 'var(--color-crimson)', fontSize: '1.2rem' }}>
+        <p style={{ opacity: 0.8, fontSize: 'clamp(0.85rem, 2.5vw, 0.9rem)', marginBottom: '1rem', minWidth: 0, overflowWrap: 'anywhere' }}>{producto.descripcion}</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <span style={{ fontWeight: 700, color: 'var(--color-crimson)', fontSize: 'clamp(1.05rem, 3vw, 1.2rem)', minWidth: 0 }}>
             {formatPrecio(producto.precio)}
           </span>
           <Button onClick={() => addToCart(producto, 1)} variant="secondary" disabled={agotado}>

@@ -115,7 +115,7 @@ export function addToCart(producto: Producto, qty = 1): void {
       slug: producto.slug,
       nombre: producto.nombre,
       precio: producto.precio,
-      imagen: producto.images?.[0] ?? producto.imagen,
+      imagen: producto.imagenes?.[0] ?? producto.imagen,
       stock: producto.stock,
       q: Math.min(qty, producto.stock),
     }]

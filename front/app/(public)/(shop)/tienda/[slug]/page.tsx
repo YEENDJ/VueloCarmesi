@@ -3,7 +3,8 @@ import Badge from '@/components/ui/Badge'
 import ImageGallery from '@/components/ui/ImageGallery'
 import ProductoCard from '@/components/shop/ProductoCard'
 import AddToCartSection from './AddToCartSection'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
+import { SLUGS_PRODUCTOS_LEGADOS, destinoLegado } from '@/lib/slugs-legados'
 import { formatPrecio } from '@/lib/format'
 
 // El segmento caduca siempre, haya respondido el backend o no. Sin esto Next
@@ -33,9 +34,19 @@ export default async function ProductoDetallePage({
     getProductoBySlug(slug),
     getProductos(),
   ])
-  if (!producto) notFound()
+  if (!producto) {
+    // Ver la ficha de experiencia: rescate de slugs viejos antes del 404.
+    const destino = destinoLegado(SLUGS_PRODUCTOS_LEGADOS, slug)
+    if (destino) permanentRedirect(`/tienda/${destino}`)
+    notFound()
+  }
 
-  const images = producto.images ?? []
+  // Mismo arreglo que en la ficha de experiencia: se leía `producto.images`,
+  // que la API nunca devolvió, y por eso la tienda no mostraba ni una foto.
+  const images = producto.imagenes?.length
+    ? producto.imagenes
+    : producto.imagen ? [producto.imagen] : []
+  const descripcion = producto.descripcionLarga?.trim() || producto.descripcion
 
   const relacionados = todos
     .filter(p => p.categoria === producto.categoria && p.slug !== slug)
@@ -88,7 +99,7 @@ export default async function ProductoDetallePage({
               marginBottom: '24px',
             }}
           >
-            {producto.descripcion}
+            {descripcion}
           </p>
 
           <div style={{ borderTop: '2px solid var(--color-gold)', marginBottom: '24px' }} />

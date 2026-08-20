@@ -15,7 +15,7 @@ export default async function ReservarPage({
   const exp = await getExperienciaBySlug(slug)
   if (!exp) notFound()
 
-  const thumbnail = exp.images?.[0] ?? exp.imagen
+  const thumbnail = exp.imagenes?.[0] ?? exp.imagen
 
   return (
     <div style={{ backgroundColor: 'var(--color-cream)', minHeight: '100svh' }}>
