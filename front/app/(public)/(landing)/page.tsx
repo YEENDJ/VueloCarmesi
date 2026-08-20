@@ -1,10 +1,13 @@
+import Link from 'next/link'
 import Hero from '@/components/layout/Hero'
 import Button from '@/components/ui/Button'
-import Card from '@/components/ui/Card'
+import ExperienciaCard from '@/components/booking/ExperienciaCard'
 import SobreNosotros from '@/components/secciones/SobreNosotros'
 import Certificaciones from '@/components/secciones/Certificaciones'
 import { getSiteConfig } from '@/lib/api/site-config'
 import { getExperienciasDestacadas } from '@/lib/api/experiencias'
+
+export const revalidate = 60
 
 export default async function HomePage() {
   const [config, destacadas] = await Promise.all([
@@ -17,8 +20,8 @@ export default async function HomePage() {
     <>
       <Hero
         titulo="El sabor maduro de la tierra"
-        subtitulo="Cosechamos, fermentamos y catamos junto a vos. Conocé el cacao desde su raíz, en una finca que respira selva."
-        ctaTexto="Reservá tu experiencia"
+        subtitulo="Cosechamos, fermentamos y catamos junto a ti. Conoce el cacao desde su raíz, en una finca que respira selva."
+        ctaTexto="Reserva tu experiencia"
         ctaHref="/experiencias"
         imagen={config.hero_image || undefined}
       />
@@ -28,21 +31,14 @@ export default async function HomePage() {
           <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', marginBottom: '3rem', color: 'var(--color-brown)' }}>
             Nuestras Experiencias
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
+          {/* min() en el minmax: por debajo de 280px la columna sigue al viewport
+              en vez de forzar el ancho y desbordar. Mismo idioma que el catálogo. */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: '2rem', marginBottom: '2rem' }}>
             {preview.map((exp) => (
-              <Card key={exp.slug}>
-                <div style={{ height: '200px', backgroundColor: 'var(--color-amber)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ fontSize: '3rem' }}>🍫</span>
-                </div>
-                <div style={{ padding: '1.5rem' }}>
-                  <h3 style={{ marginBottom: '0.5rem', color: 'var(--color-brown)' }}>{exp.nombre}</h3>
-                  <p style={{ opacity: 0.8, marginBottom: '1rem', fontSize: '0.95rem' }}>{exp.descripcion}</p>
-                  <p style={{ fontWeight: 700, color: 'var(--color-crimson)', marginBottom: '1rem' }}>
-                    ${exp.precio.toLocaleString('es-CO')} — {exp.duracion}
-                  </p>
-                  <Button href={`/experiencias/${exp.slug}`} variant="outline">Ver detalle</Button>
-                </div>
-              </Card>
+              // La misma tarjeta del catálogo: una sola definición de cómo se ve una
+              // experiencia. La copia que vivía acá ignoraba exp.imagen y dejaba el
+              // placeholder aunque la foto ya estuviera cargada desde el admin.
+              <ExperienciaCard key={exp.slug} experiencia={exp} mostrarBadgeDestacada={false} />
             ))}
           </div>
           <div style={{ textAlign: 'center' }}>
@@ -58,7 +54,7 @@ export default async function HomePage() {
       {/* Banda CTA en crimson para mantener la alternancia de fondos tras la sección cream de certificaciones */}
       <section style={{ padding: 'clamp(3rem, 8vw, 5rem) clamp(1rem, 4vw, 2rem)', textAlign: 'center', backgroundColor: 'var(--color-crimson)' }}>
         <h2 style={{ fontSize: 'clamp(1.5rem, 4.5vw, 2rem)', marginBottom: '1rem', color: 'var(--color-cream)' }}>¿Listo para vivir la experiencia?</h2>
-        <a href="/experiencias" className="btn-ghost-cream">Reservar ahora</a>
+        <Link href="/experiencias" className="btn-ghost-cream">Reservar ahora</Link>
       </section>
     </>
   )
