@@ -52,6 +52,10 @@ export default function TiendaGrid({ productos }: { productos: Producto[] }) {
               key={cat}
               onClick={() => setFiltro(cat)}
               style={{
+                // Ahora que el filtro es lo primero de la página, las píldoras son
+                // el control principal: medían 35 px de alto, por debajo del mínimo
+                // táctil.
+                display: 'inline-flex', alignItems: 'center', minHeight: 44,
                 padding: '0.5rem 1.25rem', borderRadius: '999px', fontWeight: 700,
                 fontFamily: 'var(--font-body)', cursor: 'pointer',
                 border: activo ? 'none' : '1.5px solid var(--color-brown)',
@@ -64,7 +68,7 @@ export default function TiendaGrid({ productos }: { productos: Producto[] }) {
           )
         })}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(230px, 100%), 1fr))', gap: '2rem' }}>
+      <div className="tienda-grid">
         {filtrados.map(p => <ProductoCard key={p.id} producto={p} />)}
       </div>
     </>

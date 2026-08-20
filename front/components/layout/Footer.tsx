@@ -81,7 +81,7 @@ export default function Footer() {
             Navegación
           </div>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {([['Experiencias', '/experiencias'], ['Tienda', '/tienda'], ['Sobre nosotros', '/sobre-nosotros'], ['Contacto', '/contacto']] as [string, string][]).map(([label, href]) => (
+            {([['Experiencias', '/experiencias'], ['Tienda', '/tienda'], ['Sobre nosotros', '/sobre-nosotros'], ['Contacto', '/contacto'], ['Cancelaciones', '/politicas/cancelacion']] as [string, string][]).map(([label, href]) => (
               <li key={href}>
                 <Link href={href} style={{ fontWeight: 700, fontSize: '14px', color: 'rgba(255, 234, 202, 0.85)', textDecoration: 'none' }}>
                   {label}

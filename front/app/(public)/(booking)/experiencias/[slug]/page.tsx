@@ -1,15 +1,48 @@
 import { getExperienciaBySlug, getExperiencias } from '@/lib/api/experiencias'
 import Button from '@/components/ui/Button'
-import Badge from '@/components/ui/Badge'
-import ImageGallery from '@/components/ui/ImageGallery'
+import HeroExperiencia from '@/components/booking/HeroExperiencia'
+import DatosPracticos from '@/components/booking/DatosPracticos'
+import ListaFicha from '@/components/booking/ListaFicha'
+import { getSiteConfig } from '@/lib/api/site-config'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { SLUGS_EXPERIENCIAS_LEGADOS, destinoLegado } from '@/lib/slugs-legados'
+import { formatPrecio } from '@/lib/format'
+import { metaDescription, partirRelato } from '@/lib/seo'
+import type { Metadata } from 'next'
 
 // El segmento caduca siempre, haya respondido el backend o no. Sin esto Next
 // deriva el revalidate solo de los fetch que completaron: un detalle renderizado
 // durante una caída se guardaba como 404 permanente e ni revalidateTag lo tocaba.
 export const revalidate = 60
 export const dynamicParams = true
+
+/**
+ * Hasta ahora ninguna ruta definía metadata propia, así que las cinco fichas
+ * compartían el título y la descripción del layout: en Google se veían iguales
+ * y competían entre sí. Cada una pasa a tener los suyos, con la foto de portada
+ * como imagen para cuando el enlace se comparte por WhatsApp.
+ */
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> },
+): Promise<Metadata> {
+  const { slug } = await params
+  const exp = await getExperienciaBySlug(slug).catch(() => null)
+  if (!exp) return {}
+
+  const descripcion = metaDescription(exp.descripcion, exp.descripcionLarga)
+  const portada = exp.imagenes?.[0] ?? exp.imagen
+
+  return {
+    title: `${exp.nombre} · Vuelo Carmesí`,
+    description: descripcion,
+    openGraph: {
+      title: exp.nombre,
+      description: descripcion,
+      type: 'website',
+      ...(portada ? { images: [portada] } : {}),
+    },
+  }
+}
 
 export async function generateStaticParams() {
   try {
@@ -30,189 +63,125 @@ export default async function ExperienciaDetallePage({
   const { slug } = await params
   const exp = await getExperienciaBySlug(slug)
   if (!exp) {
-    // Antes de dar por perdida la URL: puede ser un slug viejo, de cuando se
-    // guardaban sin normalizar. Si lo es, se manda al nuevo con un 308 para que
-    // los enlaces ya compartidos sigan llegando a su ficha.
     const destino = destinoLegado(SLUGS_EXPERIENCIAS_LEGADOS, slug)
     if (destino) permanentRedirect(`/experiencias/${destino}`)
     notFound()
   }
 
-  // `imagenes` es la galería; si la ficha es anterior a ella, la portada suelta
-  // en `imagen` sigue sirviendo como galería de una sola foto. Antes esto leía
-  // `exp.images`, un campo que la API nunca devolvió: la ficha se quedaba sin
-  // ninguna foto aunque hubiera una cargada desde el panel.
-  const images = exp.imagenes?.length ? exp.imagenes : exp.imagen ? [exp.imagen] : []
-  const heroImage = images[0] ?? ''
+  const imagenes = exp.imagenes?.length
+    ? exp.imagenes
+    : exp.imagen ? [exp.imagen] : []
   const descripcion = exp.descripcionLarga?.trim() || exp.descripcion
   const incluye = exp.incluye ?? []
   const queTraer = exp.queTraer ?? []
+  const noIncluye = exp.noIncluye ?? []
+
+  // El punto de encuentro casi siempre es el mismo, así que vive en la
+  // configuración del sitio y se escribe una vez. La experiencia solo lo trae
+  // cuando sale de otro lado, y entonces manda el suyo.
+  const config = await getSiteConfig()
+  const puntoEncuentro = exp.puntoEncuentro?.trim() || config.punto_encuentro || ''
+
+  // El primer párrafo abre el relato en grande; el resto va en cuerpo normal.
+  // Se parte por párrafo y no por el primer punto: cortar por punto se rompía
+  // con "Cra. 5" o "$1.500", y un texto sin puntos terminaba entero en display.
+  const { entradilla, resto } = partirRelato(descripcion)
 
   return (
     <>
-      {/* Hero */}
-      <div
-        style={{
-          position: 'relative',
-          height: 'clamp(300px, 40vw, 480px)',
-          backgroundImage: heroImage ? `url(${heroImage})` : 'none',
-          backgroundColor: 'var(--color-brown)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-        }}
-      >
-        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.45)' }} />
-        <h1
-          style={{
-            position: 'relative',
-            fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(36px, 5vw, 56px)',
-            color: 'var(--color-cream)',
-            textAlign: 'center',
-            padding: '0 2rem',
-            lineHeight: 1.15,
-          }}
-        >
-          {exp.nombre}
-        </h1>
-        <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-          <Badge color="amber">Disponible</Badge>
-        </div>
-      </div>
+      <HeroExperiencia
+        nombre={exp.nombre}
+        imagenes={imagenes}
+        duracion={exp.duracion}
+        capacidad={exp.capacidad}
+        precio={exp.precio}
+        slug={exp.slug}
+        avisoCancelacion={config.resumen_cancelacion || ''}
+      />
 
-      {/* Main content */}
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 24px' }}>
-        <div className="detail-grid-exp">
-          {/* Left column — content */}
-          <div>
-            <h2 style={{ color: 'var(--color-crimson)', marginBottom: '16px' }}>
-              Sobre esta experiencia
-            </h2>
+      <section className="ficha-exp-relato">
+        <div className="ficha-exp-relato-grid">
+          <h2 className="ficha-eyebrow" style={{ color: 'var(--color-gold)', fontFamily: 'var(--font-body)', minWidth: 0 }}>
+            La experiencia
+          </h2>
+          <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: 'clamp(18px, 3vw, 26px)' }}>
             <p
               style={{
-                fontSize: '1rem',
-                lineHeight: 1.8,
-                color: 'var(--color-brown)',
-                marginBottom: '32px',
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(20px, 4vw, 30px)',
+                fontWeight: 500,
+                fontStyle: 'italic',
+                lineHeight: 1.45,
+                color: 'var(--color-cream)',
+                whiteSpace: 'pre-wrap',
+                overflowWrap: 'anywhere',
+                minWidth: 0,
               }}
             >
-              {descripcion}
+              {entradilla}
             </p>
-
-            {incluye.length > 0 && (
-              <>
-                <h3 style={{ color: 'var(--color-brown)', marginBottom: '12px' }}>¿Qué incluye?</h3>
-                <ul style={{ listStyle: 'none', marginBottom: '32px' }}>
-                  {incluye.map((item, i) => (
-                    <li
-                      key={i}
-                      style={{
-                        display: 'flex',
-                        gap: '10px',
-                        alignItems: 'flex-start',
-                        marginBottom: '8px',
-                        color: 'var(--color-brown)',
-                      }}
-                    >
-                      <span style={{ color: 'var(--color-amber)', fontWeight: 700, flexShrink: 0 }}>
-                        ✓
-                      </span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-
-            {queTraer.length > 0 && (
-              <>
-                <h3 style={{ color: 'var(--color-brown)', marginBottom: '12px' }}>¿Qué traer?</h3>
-                <ul style={{ listStyle: 'none', marginBottom: '32px' }}>
-                  {queTraer.map((item, i) => (
-                    <li
-                      key={i}
-                      style={{
-                        display: 'flex',
-                        gap: '10px',
-                        alignItems: 'flex-start',
-                        marginBottom: '8px',
-                        color: 'var(--color-brown)',
-                      }}
-                    >
-                      <span style={{ flexShrink: 0 }}>•</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-
-            <div style={{ borderTop: '2px solid var(--color-gold)', marginBottom: '32px' }} />
-
-            <ImageGallery images={images} alt={exp.nombre} aspectRatio="4/3" />
-          </div>
-
-          {/* Right column — sticky sidebar */}
-          <div>
-            <div
-              className="sidebar-sticky"
-              style={{
-                position: 'sticky',
-                top: '88px',
-                backgroundColor: 'var(--color-cream)',
-                border: '1px solid rgba(135,43,19,0.1)',
-                borderRadius: '12px',
-                padding: '28px',
-              }}
-            >
-              <div style={{ marginBottom: '16px' }}>
-                <span
-                  style={{
-                    fontSize: '2rem',
-                    fontWeight: 700,
-                    color: 'var(--color-amber)',
-                    fontFamily: 'var(--font-body)',
-                  }}
-                >
-                  ${exp.precio.toLocaleString('es-AR')}
-                </span>
-              </div>
-
-              <div
+            {resto && (
+              <p
                 style={{
-                  display: 'flex',
-                  gap: '24px',
-                  marginBottom: '20px',
-                  color: 'var(--color-brown)',
-                  fontSize: '0.9rem',
+                  fontSize: 'clamp(0.95rem, 2.5vw, 1.09rem)',
+                  lineHeight: 1.85,
+                  color: 'rgba(255,234,202,0.78)',
+                  maxWidth: '62ch',
+                  whiteSpace: 'pre-wrap',
+                  overflowWrap: 'anywhere',
+                  minWidth: 0,
                 }}
               >
-                <span>⏱ {exp.duracion}</span>
-                <span>👥 {exp.capacidad} personas</span>
-              </div>
-
-              <div style={{ borderTop: '2px solid var(--color-gold)', marginBottom: '20px' }} />
-
-              <div style={{ marginBottom: '12px' }}>
-                <Button
-                  href={`/reservar/${exp.slug}`}
-                  variant="primary"
-                  style={{ display: 'block', textAlign: 'center', width: '100%' }}
-                >
-                  Reservar ahora
-                </Button>
-              </div>
-
-              <p style={{ fontSize: '0.75rem', color: 'var(--color-brown)', opacity: 0.6 }}>
-                Sin compromiso · Cancelación flexible
+                {resto}
               </p>
-            </div>
+            )}
           </div>
         </div>
+      </section>
+
+      <DatosPracticos
+        horarios={exp.horarios}
+        puntoEncuentro={puntoEncuentro}
+        recomendaciones={exp.recomendaciones}
+      />
+
+      {/* Los tres bloques comparten forma y solo aparecen los que tienen datos.
+          Si únicamente hay "Incluye", ocupa la sección entera y se ve
+          deliberado, no incompleto. */}
+      {(incluye.length > 0 || queTraer.length > 0 || noIncluye.length > 0) && (
+        <div className="ficha-exp-claro">
+          <div style={{
+            maxWidth: 'var(--contenido-ancho)', margin: '0 auto', minWidth: 0,
+            display: 'flex', flexDirection: 'column', gap: 'clamp(36px, 6vw, 56px)',
+          }}>
+            <ListaFicha titulo="Incluido en tu cupo" items={incluye} variante="incluye" />
+            <ListaFicha titulo="Qué traer" items={queTraer} variante="traer" />
+            <ListaFicha titulo="No incluye" items={noIncluye} variante="noIncluye" />
+          </div>
+        </div>
+      )}
+
+      <div className="ficha-exp-barra">
+        <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '6px 14px', minWidth: 0 }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(22px, 4vw, 30px)',
+              fontWeight: 700,
+              color: 'var(--color-gold)',
+              minWidth: 0,
+              overflowWrap: 'anywhere',
+            }}
+          >
+            {formatPrecio(exp.precio)}
+          </span>
+          <span style={{ fontSize: 'clamp(0.8rem, 2.2vw, 0.875rem)', color: 'rgba(255,234,202,0.7)', minWidth: 0 }}>
+            por persona · {exp.duracion}
+          </span>
+        </div>
+        <Button href={`/reservar/${exp.slug}`} style={{ flexShrink: 0 }}>
+          Reservar ahora
+        </Button>
       </div>
     </>
   )

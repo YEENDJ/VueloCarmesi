@@ -7,9 +7,8 @@ export default async function ExperienciasPage() {
   const experiencias = await getExperiencias()
 
   return (
-    <section className="page-shell" style={{ maxWidth: '1200px' }}>
-      <h1 style={{ marginBottom: '0.5rem', color: 'var(--color-brown)' }}>Nuestras Experiencias</h1>
-      <p style={{ marginBottom: '3rem', opacity: 0.7 }}>Viví el cacao desde adentro.</p>
+    <section className="page-shell page-shell--listado" style={{ maxWidth: '1200px' }}>
+      <h1 className="solo-lectores">Nuestras Experiencias</h1>
       {experiencias.length === 0 ? (
         <p
           style={{
@@ -27,7 +26,7 @@ export default async function ExperienciasPage() {
           Aún no hay experiencias disponibles. Vuelve pronto.
         </p>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(300px, 100%), 1fr))', gap: '2rem' }}>
+        <div className="experiencias-grid">
           {experiencias.map(exp => <ExperienciaCard key={exp.id} experiencia={exp} />)}
         </div>
       )}

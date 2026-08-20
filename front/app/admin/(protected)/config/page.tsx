@@ -94,6 +94,57 @@ export default function ConfigPage() {
           />
         </div>
 
+        {/* Sección: Experiencias — lo que es igual en todas se escribe acá */}
+        <div style={{ background: '#fff', borderRadius: 14, padding: 32, boxShadow: '0 2px 8px rgba(135,43,19,.06)' }}>
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: 'var(--color-brown)' }}>
+            Datos comunes de las experiencias
+          </div>
+          <div style={{ fontSize: 13, color: 'var(--admin-text-muted)', marginBottom: 24, maxWidth: '60ch' }}>
+            Se escriben una vez y aparecen en todas las fichas. Solo hay que
+            repetirlos en el formulario de una experiencia cuando esa en concreto
+            sea la excepción.
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
+            <div style={{ minWidth: 0 }}>
+              <div className="admin-field-label">Punto de encuentro por defecto</div>
+              <textarea
+                className="admin-input"
+                rows={2}
+                value={config.punto_encuentro ?? ''}
+                onChange={e => set('punto_encuentro', e.target.value)}
+                placeholder="Finca La Fortuna, Vereda Brisas del Tonoa, Cubarral, Meta"
+                style={{ resize: 'vertical' }}
+              />
+              <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginTop: 4 }}>
+                Dónde llega el visitante. Es la duda número uno antes de reservar.
+              </div>
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <div className="admin-field-label">Resumen de cancelación</div>
+              <input
+                className="admin-input"
+                value={config.resumen_cancelacion ?? ''}
+                onChange={e => set('resumen_cancelacion', e.target.value)}
+                placeholder="Cancelación gratuita hasta 48 horas antes."
+              />
+              <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginTop: 4 }}>
+                Una línea junto al botón de reservar, con enlace a la política completa.
+                Si tu política es generosa, decirlo aquí ayuda a que reserven.
+              </div>
+            </div>
+          </div>
+          <div style={{ marginTop: 24 }}>
+            <button
+              className="btn-primary"
+              onClick={() => guardar(['punto_encuentro', 'resumen_cancelacion'])}
+              disabled={saving === 'punto_encuentro'}
+              style={{ minHeight: 44 }}
+            >
+              {saving === 'punto_encuentro' ? 'Guardando…' : 'Guardar datos comunes'}
+            </button>
+          </div>
+        </div>
+
         {/* Sección: Notificaciones */}
         <div style={{ background: '#fff', borderRadius: 14, padding: 32, boxShadow: '0 2px 8px rgba(135,43,19,.06)' }}>
           <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 24, color: 'var(--color-brown)' }}>

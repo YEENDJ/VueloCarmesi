@@ -5,11 +5,16 @@ import {
 /** Mismo tope que en experiencias, por la misma razón: peso de la ficha. */
 export const MAX_IMAGENES = 8
 
+/** Donde Google recorta la meta description. */
+export const MAX_META = 160
+
 export class CreateProductoDto {
   @IsString() nombre: string
 
-  // Corta: tarjeta de la tienda y meta description.
-  @IsString() @MaxLength(200) descripcion: string
+  // Ya no va en la tarjeta: su unico trabajo es la meta description, donde
+  // Google recorta en ~160. Opcional: si se deja vacia, el front la deriva
+  // de descripcionLarga.
+  @IsOptional() @IsString() @MaxLength(MAX_META) descripcion?: string
 
   @IsOptional() @IsString() descripcionLarga?: string
 

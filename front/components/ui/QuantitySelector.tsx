@@ -11,9 +11,11 @@ export default function QuantitySelector({
   min = 1,
   max = Infinity,
 }: QuantitySelectorProps) {
+  // 44 y no 40: es el mínimo táctil. Con 40 el dedo pisa el borde y en el
+  // carrito, con las filas apretadas, se acaba pulsando el botón de al lado.
   const btnStyle = (disabled: boolean): React.CSSProperties => ({
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
     border: '1px solid var(--color-brown)',
     borderRadius: '6px',
     backgroundColor: 'transparent',

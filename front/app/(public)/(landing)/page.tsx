@@ -32,9 +32,9 @@ export default async function HomePage() {
           <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', marginBottom: '3rem', color: 'var(--color-brown)' }}>
             Nuestras Experiencias
           </h2>
-          {/* min() en el minmax: por debajo de 280px la columna sigue al viewport
-              en vez de forzar el ancho y desbordar. Mismo idioma que el catálogo. */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: '2rem', marginBottom: '2rem' }}>
+          {/* La misma rejilla del catálogo: si la vitrina usara la suya, las
+              destacadas se verían más grandes que la página a la que llevan. */}
+          <div className="experiencias-grid" style={{ marginBottom: '2rem' }}>
             {preview.map((exp) => (
               // La misma tarjeta del catálogo: una sola definición de cómo se ve una
               // experiencia. La copia que vivía acá ignoraba exp.imagen y dejaba el

@@ -28,6 +28,10 @@ export interface AdminExperiencia {
   imagenes: string[]
   incluye: string[]
   queTraer: string[]
+  noIncluye: string[]
+  horarios: string
+  recomendaciones: string
+  puntoEncuentro: string
   destacada: boolean
   archivada: boolean
   createdAt: string

@@ -19,6 +19,11 @@ async function main() {
       { key: 'about_image', value: '' },
       { key: 'gallery_images', value: '[]' },
       { key: 'admin_email', value: '' },
+      // Se escriben una vez y las usan TODAS las fichas de experiencia: pedirlos
+      // en cada una sería repetir el mismo texto cinco veces y arriesgar que
+      // quedaran distintos entre sí.
+      { key: 'punto_encuentro', value: '' },
+      { key: 'resumen_cancelacion', value: '' },
     ],
     skipDuplicates: true,
   })

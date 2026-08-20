@@ -12,6 +12,12 @@ function stepForPath(pathname: string): number {
 
 export default function StepIndicator() {
   const pathname = usePathname()
+
+  // La tienda no es un paso del checkout, es el catálogo: ahí la barra sólo
+  // se come la primera pantalla y en la ficha además repite lo que ya dicen
+  // las migas. El progreso empieza a contar cuando hay algo en el carrito.
+  if (pathname === '/tienda' || pathname.startsWith('/tienda/')) return null
+
   const current = stepForPath(pathname)
 
   return (

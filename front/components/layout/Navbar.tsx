@@ -35,6 +35,12 @@ export default function Navbar() {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [abierto])
 
+  // Una pestaña queda activa si estamos en su ruta o en cualquier página que
+  // cuelgue de ella (/experiencias/kayak enciende «Experiencias»). Inicio es la
+  // excepción: sólo en la raíz, si no estaría siempre encendida.
+  const esActiva = (href: string) =>
+    href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`)
+
   return (
     <nav className="navbar">
       {/* .contenido alinea el logo y los enlaces con el resto de la página;
@@ -57,7 +63,13 @@ export default function Navbar() {
       <ul className="navbar-links">
         {LINKS.map(([label, href]) => (
           <li key={href}>
-            <Link href={href} className="navbar-link">{label}</Link>
+            <Link
+              href={href}
+              className={`navbar-link${esActiva(href) ? ' activo' : ''}`}
+              aria-current={esActiva(href) ? 'page' : undefined}
+            >
+              {label}
+            </Link>
           </li>
         ))}
         <li><CartBadge /></li>
@@ -84,7 +96,13 @@ export default function Navbar() {
         <ul>
           {LINKS.map(([label, href]) => (
             <li key={href}>
-              <Link href={href} className="navbar-link">{label}</Link>
+              <Link
+              href={href}
+              className={`navbar-link${esActiva(href) ? ' activo' : ''}`}
+              aria-current={esActiva(href) ? 'page' : undefined}
+            >
+              {label}
+            </Link>
             </li>
           ))}
         </ul>

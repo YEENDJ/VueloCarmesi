@@ -6,9 +6,8 @@ export const revalidate = 60
 export default async function TiendaPage() {
   const productos = await getProductos()
   return (
-    <section className="page-shell" style={{ maxWidth: '1200px' }}>
-      <h1 style={{ marginBottom: '0.5rem', color: 'var(--color-brown)' }}>Tienda</h1>
-      <p style={{ marginBottom: '3rem', opacity: 0.7 }}>Llevate el sabor a casa.</p>
+    <section className="page-shell page-shell--listado" style={{ maxWidth: '1200px' }}>
+      <h1 className="solo-lectores">Tienda</h1>
       <TiendaGrid productos={productos} />
     </section>
   )

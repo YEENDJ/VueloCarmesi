@@ -39,16 +39,30 @@ export default function ProductoCard({ producto }: { producto: Producto }) {
           </span>
         )}
       </Link>
-      <div style={{ padding: 'clamp(1rem, 4vw, 1.5rem)', minWidth: 0 }}>
+      <div style={{ padding: 'clamp(0.85rem, 3vw, 1.15rem)', minWidth: 0 }}>
         <Link href={`/tienda/${producto.slug}`} style={{ textDecoration: 'none' }}>
-          <h3 style={{ margin: '0 0 0.5rem', color: 'var(--color-brown)', minWidth: 0, fontSize: 'clamp(1.05rem, 3vw, 1.25rem)', overflowWrap: 'anywhere' }}>{producto.nombre}</h3>
+          <h3 className="producto-card-titulo" style={{ margin: '0 0 0.5rem', color: 'var(--color-brown)', minWidth: 0, fontSize: 'clamp(1rem, 2.5vw, 1.1rem)', overflowWrap: 'anywhere' }}>{producto.nombre}</h3>
         </Link>
-        <p style={{ opacity: 0.8, fontSize: 'clamp(0.85rem, 2.5vw, 0.9rem)', marginBottom: '1rem', minWidth: 0, overflowWrap: 'anywhere' }}>{producto.descripcion}</p>
+        {/* title deja ver el texto completo al pasar el ratón, ya que se recorta */}
+        {/* Mismo criterio que en las experiencias: la tarjeta no lleva párrafo,
+            así todas alinean sin importar cuánto se escribió en cada ficha. El
+            recorte a dos líneas dejaba de todos modos frases cortadas. */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-          <span style={{ fontWeight: 700, color: 'var(--color-crimson)', fontSize: 'clamp(1.05rem, 3vw, 1.2rem)', minWidth: 0 }}>
+          <span style={{ fontWeight: 700, color: 'var(--color-crimson)', fontSize: 'clamp(1rem, 2.5vw, 1.12rem)', minWidth: 0 }}>
             {formatPrecio(producto.precio)}
           </span>
-          <Button onClick={() => addToCart(producto, 1)} variant="secondary" disabled={agotado}>
+          {/* Compacto, no el tamaño por defecto: con la tarjeta a 266 px el botón
+              ancho empujaba el precio a una línea aparte. inline-flex para que el
+              rótulo siga centrado dentro de los 44 px de alto mínimo. */}
+          <Button
+            onClick={() => addToCart(producto, 1)}
+            variant="secondary"
+            disabled={agotado}
+            style={{
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              minHeight: 44, padding: '0.6rem 1.1rem', fontSize: '0.92rem',
+            }}
+          >
             {agotado ? 'Agotado' : 'Agregar'}
           </Button>
         </div>
