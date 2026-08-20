@@ -50,9 +50,12 @@ export default function Footer() {
     <footer style={{
       backgroundColor: 'var(--color-brown)',
       color: 'var(--color-cream)',
-      padding: 'clamp(48px, 7vw, 64px) clamp(16px, 3vw, 32px) 24px',
+      /* Solo vertical: el lateral y el ancho los pone .contenido, para que la
+         franja brown siga llegando a los bordes de la pantalla. */
+      paddingBlock: 'clamp(48px, 7vw, 64px) 24px',
     }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2.5rem' }}>
+      <div className="contenido">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(200px, 100%), 1fr))', gap: '2.5rem' }}>
 
         <div>
           <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.6rem', marginBottom: '12px', color: 'var(--color-cream)' }}>
@@ -114,6 +117,7 @@ export default function Footer() {
             {AGENCIA.nombre}
           </a>
         </span>
+      </div>
       </div>
     </footer>
   )

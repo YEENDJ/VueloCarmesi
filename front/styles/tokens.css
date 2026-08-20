@@ -17,6 +17,19 @@
 }
 
 :root {
+  /* ── Retícula ────────────────────────────────────────────────────────
+     Un solo ancho y un solo margen lateral para TODO el sitio, del navbar
+     al footer. Antes cada sección traía el suyo —cinco paddings distintos
+     y dos anchos máximos— y en pantallas anchas el contenido del navbar
+     arrancaba a 32 px mientras el de las secciones lo hacía a 100 px.
+
+     El margen crece con la pantalla (4vw) entre un piso de 16 px, para que
+     el texto no toque el borde en móvil, y un techo de 32 px, para que en
+     monitores grandes no se vaya de largo: ahí el ancho máximo ya es quien
+     manda. */
+  --contenido-ancho: 1200px;
+  --contenido-margen: clamp(1rem, 4vw, 2rem);
+
   /* Colores de marca — Manual de Marca Vuelo Carmesí */
   --color-cream:   #ffeaca;
   --color-crimson: #d51312;

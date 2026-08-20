@@ -7,10 +7,10 @@ export default function Certificaciones() {
       id="certificaciones"
       style={{
         backgroundColor: 'var(--color-cream)',
-        padding: 'clamp(48px, 8vw, 80px) 24px',
+        paddingBlock: 'clamp(48px, 8vw, 80px)',
       }}
     >
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+      <div className="contenido">
 
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <p

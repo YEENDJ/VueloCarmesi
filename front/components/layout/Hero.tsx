@@ -11,6 +11,7 @@ interface HeroProps {
 export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: HeroProps) {
   return (
     <section className="hero">
+      <div className="contenido">
       <div style={{
         fontFamily: 'var(--font-body)',
         fontWeight: 700,
@@ -77,6 +78,7 @@ export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: H
             </span>
           </div>
         )}
+      </div>
       </div>
     </section>
   )

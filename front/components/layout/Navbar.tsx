@@ -37,6 +37,9 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
+      {/* .contenido alinea el logo y los enlaces con el resto de la página;
+          la franja crimson de .navbar sigue llegando a los bordes. */}
+      <div className="navbar-inner contenido">
       <Link href="/" className="navbar-logo" aria-label="Vuelo Carmesí — ir al inicio">
         <Image
           src="/images/marca/logo-crema.png"
@@ -70,6 +73,8 @@ export default function Navbar() {
         >
           {abierto ? <X size={24} /> : <Menu size={24} />}
         </button>
+      </div>
+
       </div>
 
       <div id="navbar-panel" className={`navbar-panel${abierto ? ' open' : ''}`}>
