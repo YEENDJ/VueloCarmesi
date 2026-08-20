@@ -20,11 +20,26 @@ Portal web completo para **Vuelo Carmesí** — experiencias agroecológicas con
 ```
 vuelo-carmesi/
   front/          → Next.js 14+ App Router
+    public/images/  → biblioteca de fotos (ver docs/catalogo-fotos.md)
   back/           → NestJS REST API
-  docs/           → Specs y planes de implementación
+  portafolio/     → portafolio comercial: fuente + generador (se publica en /portafolio)
+  docs/           → Specs, catálogo de fotos, reportes de Lighthouse
+  assets/originales/ → originales de cámara, sin versionar
   Material de apoyo/ → Fuentes y recursos de marca
   package.json    → Workspaces root
 ```
+
+### Imágenes
+
+Dos caminos, según si el contenido es editable sin tocar código:
+
+| Tipo | Dónde vive | Cómo se sube |
+|------|-----------|--------------|
+| Contenido de autor (landing, secciones fijas) | `front/public/images/` | Se commitea con el código |
+| Contenido editable (experiencias, productos, hero) | Cloudinary | Panel admin → `POST /api/uploads/image` |
+
+El portafolio comercial lee de la **misma** biblioteca que la web: cada foto existe una
+sola vez. Detalle y catálogo completo en [`docs/catalogo-fotos.md`](docs/catalogo-fotos.md).
 
 ### Frontend — Rutas (`front/app/`)
 
