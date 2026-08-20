@@ -6,17 +6,13 @@ import Toggle from './Toggle'
 import ImageUploader from './ImageUploader'
 
 type FormData = {
-  nombre: string; descripcion: string; slug: string
+  nombre: string; descripcion: string
   precio: string; duracion: string; capacidad: string
   destacada: boolean; imagen: string
 }
 
-const EMPTY: FormData = { nombre: '', descripcion: '', slug: '', precio: '', duracion: '', capacidad: '', destacada: false, imagen: '' }
+const EMPTY: FormData = { nombre: '', descripcion: '', precio: '', duracion: '', capacidad: '', destacada: false, imagen: '' }
 
-
-function toSlug(nombre: string) {
-  return nombre.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-}
 
 export default function ExperienciaFormModal({
   experiencia,
@@ -32,7 +28,7 @@ export default function ExperienciaFormModal({
     experiencia
       ? {
           nombre: experiencia.nombre, descripcion: experiencia.descripcion,
-          slug: experiencia.slug, precio: String(experiencia.precio),
+          precio: String(experiencia.precio),
           duracion: experiencia.duracion, capacidad: String(experiencia.capacidad),
           destacada: experiencia.destacada, imagen: experiencia.imagen ?? '',
         }
@@ -42,24 +38,20 @@ export default function ExperienciaFormModal({
   const [error, setError] = useState('')
 
   function set(k: keyof FormData, v: string | boolean) {
-    setForm(prev => {
-      const next = { ...prev, [k]: v }
-      if (k === 'nombre' && !isEdit) next.slug = toSlug(v as string)
-      return next
-    })
+    setForm(prev => ({ ...prev, [k]: v }))
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!form.nombre || !form.slug || !form.precio || !form.duracion || !form.capacidad) {
-      setError('Completá todos los campos requeridos')
+    if (!form.nombre || !form.precio || !form.duracion || !form.capacidad) {
+      setError('Completa todos los campos requeridos')
       return
     }
     setSaving(true)
     setError('')
     try {
       const data = {
-        nombre: form.nombre, descripcion: form.descripcion, slug: form.slug,
+        nombre: form.nombre, descripcion: form.descripcion,
         precio: Number(form.precio), duracion: form.duracion,
         capacidad: Number(form.capacidad), destacada: form.destacada,
         imagen: form.imagen,
@@ -69,7 +61,7 @@ export default function ExperienciaFormModal({
         : await createExperiencia(data)
       onSaved(saved)
     } catch {
-      setError('Error al guardar. Revisá que el slug sea único.')
+      setError('No se pudo guardar. Revisa la conexión e inténtalo de nuevo.')
       setSaving(false)
     }
   }
@@ -85,9 +77,6 @@ export default function ExperienciaFormModal({
           <div className="admin-modal-body">
             <FormRow label="Nombre *">
               <input className="admin-input" value={form.nombre} onChange={e => set('nombre', e.target.value)} placeholder="Ej: Cacao Intenso" />
-            </FormRow>
-            <FormRow label="Slug (URL) *">
-              <input className="admin-input" value={form.slug} onChange={e => set('slug', e.target.value)} placeholder="cacao-intenso" />
             </FormRow>
             <FormRow label="Descripción">
               <textarea className="admin-input" value={form.descripcion} onChange={e => set('descripcion', e.target.value)} rows={3} style={{ resize: 'vertical' }} />

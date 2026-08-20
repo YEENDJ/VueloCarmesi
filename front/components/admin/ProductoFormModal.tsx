@@ -7,17 +7,13 @@ import ImageUploader from './ImageUploader'
 const CATEGORIAS = ['chocolates', 'despensa', 'cafe', 'regalos', 'hogar']
 
 type FormData = {
-  nombre: string; descripcion: string; slug: string
+  nombre: string; descripcion: string
   precio: string; stock: string; categoria: string; imagen: string; badge: string
 }
 
 const EMPTY: FormData = {
-  nombre: '', descripcion: '', slug: '', precio: '',
+  nombre: '', descripcion: '', precio: '',
   stock: '0', categoria: 'chocolates', imagen: '', badge: '',
-}
-
-function toSlug(nombre: string) {
-  return nombre.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 }
 
 export default function ProductoFormModal({
@@ -34,7 +30,7 @@ export default function ProductoFormModal({
     producto
       ? {
           nombre: producto.nombre, descripcion: producto.descripcion,
-          slug: producto.slug, precio: String(producto.precio),
+          precio: String(producto.precio),
           stock: String(producto.stock), categoria: producto.categoria,
           imagen: producto.imagen ?? '', badge: producto.badge ?? '',
         }
@@ -44,24 +40,20 @@ export default function ProductoFormModal({
   const [error, setError] = useState('')
 
   function set(k: keyof FormData, v: string) {
-    setForm(prev => {
-      const next = { ...prev, [k]: v }
-      if (k === 'nombre' && !isEdit) next.slug = toSlug(v)
-      return next
-    })
+    setForm(prev => ({ ...prev, [k]: v }))
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (!form.nombre || !form.slug || !form.precio || !form.categoria) {
-      setError('Completá todos los campos requeridos')
+    if (!form.nombre || !form.precio || !form.categoria) {
+      setError('Completa todos los campos requeridos')
       return
     }
     setSaving(true)
     setError('')
     try {
       const data: Partial<AdminProducto> = {
-        nombre: form.nombre, descripcion: form.descripcion, slug: form.slug,
+        nombre: form.nombre, descripcion: form.descripcion,
         precio: Number(form.precio), stock: Number(form.stock),
         categoria: form.categoria, imagen: form.imagen,
         badge: form.badge === '' ? null : (form.badge as 'Nuevo' | 'Destacado'),
@@ -72,7 +64,7 @@ export default function ProductoFormModal({
       setSaving(false)
       onSaved(saved)
     } catch {
-      setError('Error al guardar. Revisá que el slug sea único.')
+      setError('No se pudo guardar. Revisa la conexión e inténtalo de nuevo.')
       setSaving(false)
     }
   }
@@ -88,9 +80,6 @@ export default function ProductoFormModal({
           <div className="admin-modal-body">
             <FormRow label="Nombre *">
               <input className="admin-input" value={form.nombre} onChange={e => set('nombre', e.target.value)} placeholder="Ej: Chocolate Negro 70%" />
-            </FormRow>
-            <FormRow label="Slug (URL) *">
-              <input className="admin-input" value={form.slug} onChange={e => set('slug', e.target.value)} placeholder="chocolate-negro-70" />
             </FormRow>
             <FormRow label="Descripción">
               <textarea className="admin-input" value={form.descripcion} onChange={e => set('descripcion', e.target.value)} rows={3} style={{ resize: 'vertical' }} />
