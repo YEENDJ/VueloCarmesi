@@ -23,7 +23,7 @@ export default function ImageUploader({ value, onChange, label = 'Imagen' }: Pro
       const { url } = await uploadImage(file)
       onChange(url)
     } catch {
-      setError('Error al subir la imagen. Verificá el formato y tamaño (máx. 5 MB).')
+      setError('Error al subir la imagen. Verifica el formato y tamaño (máx. 5 MB).')
     } finally {
       setLoading(false)
       if (inputRef.current) inputRef.current.value = ''

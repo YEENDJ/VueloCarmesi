@@ -79,7 +79,7 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
       if (!res.ok) throw new Error()
       router.push('/reservar/confirmacion')
     } catch {
-      setError('Hubo un problema al enviar tu reserva. Por favor intentá de nuevo o escribinos directamente.')
+      setError('Hubo un problema al enviar tu reserva. Por favor inténtalo de nuevo o escríbenos directamente.')
       setLoading(false)
     }
   }

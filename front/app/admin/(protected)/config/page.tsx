@@ -61,7 +61,7 @@ export default function ConfigPage() {
             Imagen principal (Hero)
           </div>
           <div style={{ fontSize: 13, color: 'var(--admin-text-muted)', marginBottom: 24 }}>
-            Subí la foto y ajustá el recorte antes de guardar
+            Sube la foto y ajusta el recorte antes de guardar
           </div>
           <HeroImageEditor
             value={config.hero_image ?? ''}

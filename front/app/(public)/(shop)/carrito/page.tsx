@@ -12,7 +12,7 @@ export default function CarritoPage() {
       <section className="page-shell" style={{ maxWidth: '600px', textAlign: 'center' }}>
         <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🛍️</div>
         <h1 style={{ marginBottom: '0.5rem', color: 'var(--color-brown)' }}>Tu carrito está vacío</h1>
-        <p style={{ marginBottom: '1.5rem', opacity: 0.7 }}>Descubrí nuestros chocolates y cacao artesanal.</p>
+        <p style={{ marginBottom: '1.5rem', opacity: 0.7 }}>Descubre nuestros chocolates y cacao artesanal.</p>
         <Button href="/tienda">Ver tienda</Button>
       </section>
     )

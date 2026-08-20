@@ -31,7 +31,7 @@ export default function ConfirmacionPage() {
       </div>
       <h1 style={{ color: 'var(--color-crimson)', margin: '1.5rem 0 0' }}>¡Pedido recibido!</h1>
       <p style={{ color: 'var(--color-brown)', maxWidth: '44ch', margin: '1rem auto 0' }}>
-        Te enviamos un correo con los detalles. Coordinaremos el pago y el envío a la brevedad.
+        Te enviamos un correo con los detalles. Coordinaremos el pago y el envío lo antes posible.
       </p>
 
       <div style={{

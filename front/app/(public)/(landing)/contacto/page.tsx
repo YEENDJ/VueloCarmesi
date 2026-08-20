@@ -34,7 +34,7 @@ export default function ContactoPage() {
       <h1 style={{ marginBottom: '2rem', color: 'var(--color-brown)' }}>Contacto</h1>
       {estado === 'ok' ? (
         <p style={{ color: 'var(--color-crimson)', fontSize: '1.1rem' }}>
-          ¡Gracias! Te respondemos a la brevedad. Revisá tu correo.
+          ¡Gracias! Te respondemos lo antes posible. Revisa tu correo.
         </p>
       ) : (
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -43,7 +43,7 @@ export default function ContactoPage() {
           <Input label="Mensaje" name="mensaje" required value={form.mensaje} onChange={handleChange} multiline />
           {estado === 'error' && (
             <p style={{ color: 'var(--color-crimson)', fontSize: 14, margin: 0 }}>
-              Hubo un error al enviar. Intentá de nuevo o escribinos directamente a hola@vuelocarmesi.com.
+              Hubo un error al enviar. Inténtalo de nuevo o escríbenos directamente a hola@vuelocarmesi.com.
             </p>
           )}
           <Button type="submit" disabled={estado === 'loading'}>

@@ -111,7 +111,7 @@ export default function SobreNosotros({ imagen }: Props) {
             {/* CTA ghost */}
             <div>
               <a href="/sobre-nosotros" className="btn-ghost-cream">
-                Conocé más
+                Conoce más
               </a>
             </div>
 
