@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import TiraConfianza from '@/components/layout/TiraConfianza'
 
 // Crédito de desarrollo mostrado en la barra legal del footer
@@ -58,9 +59,18 @@ export default function Footer() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(200px, 100%), 1fr))', gap: '2.5rem' }}>
 
         <div>
-          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.6rem', marginBottom: '12px', color: 'var(--color-cream)' }}>
-            Vuelo Carmesí
-          </div>
+          {/* El logotipo en vez del nombre escrito. Va la variante crema, que es
+              la que se lee sobre el brown del footer; la crimson desaparecería.
+              El alt conserva el texto para lectores de pantalla y para cuando la
+              imagen no cargue, así que la marca no se pierde en ningún caso. */}
+          <Image
+            src="/images/marca/logo-crema.png"
+            alt="Vuelo Carmesí"
+            width={220}
+            height={35}
+            sizes="220px"
+            style={{ width: 'min(220px, 100%)', height: 'auto', display: 'block', marginBottom: '12px' }}
+          />
           <p style={{ fontSize: '14px', lineHeight: 1.6, color: 'rgba(255, 234, 202, 0.8)', maxWidth: '30ch' }}>
             Experiencias agroecológicas con sabor a cacao.
           </p>
