@@ -41,7 +41,7 @@ export default function ProductoCard({ producto }: { producto: Producto }) {
       </Link>
       <div style={{ padding: 'clamp(0.85rem, 3vw, 1.15rem)', minWidth: 0 }}>
         <Link href={`/tienda/${producto.slug}`} style={{ textDecoration: 'none' }}>
-          <h3 className="producto-card-titulo" style={{ margin: '0 0 0.5rem', color: 'var(--color-brown)', minWidth: 0, fontSize: 'clamp(1rem, 2.5vw, 1.1rem)', overflowWrap: 'anywhere' }}>{producto.nombre}</h3>
+          <h3 className="producto-card-titulo" style={{ margin: '0 0 0.5rem', color: 'var(--color-brown)', minWidth: 0, fontSize: 'clamp(1rem, 2.2vw, 1.08rem)', overflowWrap: 'anywhere' }}>{producto.nombre}</h3>
         </Link>
         {/* title deja ver el texto completo al pasar el ratón, ya que se recorta */}
         {/* Mismo criterio que en las experiencias: la tarjeta no lleva párrafo,
@@ -53,14 +53,15 @@ export default function ProductoCard({ producto }: { producto: Producto }) {
           </span>
           {/* Compacto, no el tamaño por defecto: con la tarjeta a 266 px el botón
               ancho empujaba el precio a una línea aparte. inline-flex para que el
-              rótulo siga centrado dentro de los 44 px de alto mínimo. */}
+              rótulo siga centrado dentro del alto mínimo. */}
           <Button
             onClick={() => addToCart(producto, 1)}
             variant="secondary"
             disabled={agotado}
+            className="btn-card"
             style={{
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              minHeight: 44, padding: '0.6rem 1.1rem', fontSize: '0.92rem',
+              minHeight: 36, padding: '0.4rem 0.95rem', fontSize: '1rem',
             }}
           >
             {agotado ? 'Agotado' : 'Agregar'}

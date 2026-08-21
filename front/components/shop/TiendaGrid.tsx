@@ -51,14 +51,12 @@ export default function TiendaGrid({ productos }: { productos: Producto[] }) {
             <button
               key={cat}
               onClick={() => setFiltro(cat)}
+              className="filtro-pill"
               style={{
-                // Ahora que el filtro es lo primero de la página, las píldoras son
-                // el control principal: medían 35 px de alto, por debajo del mínimo
-                // táctil.
-                display: 'inline-flex', alignItems: 'center', minHeight: 44,
-                padding: '0.5rem 1.25rem', borderRadius: '999px', fontWeight: 700,
-                fontFamily: 'var(--font-body)', cursor: 'pointer',
-                border: activo ? 'none' : '1.5px solid var(--color-brown)',
+                // Sólo lo que cambia con el estado: la forma y el alto viven en
+                // .filtro-pill, que baja a 36 px con ratón y recupera los 44 del
+                // mínimo táctil en pantallas de dedo.
+                border: activo ? '1.5px solid transparent' : '1.5px solid var(--color-brown)',
                 background: activo ? 'var(--color-crimson)' : 'transparent',
                 color: activo ? 'var(--color-cream)' : 'var(--color-brown)',
               }}

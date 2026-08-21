@@ -1,7 +1,6 @@
 import type { Experiencia } from '@/lib/types'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
-import Badge from '@/components/ui/Badge'
 import { formatPrecio } from '@/lib/format'
 
 interface ExperienciaCardProps {
@@ -23,6 +22,7 @@ export default function ExperienciaCard({
       {/* aspect-ratio en vez de alto fijo: el marco crece con la columna del grid
           y reserva el espacio antes de que cargue la foto, así la tarjeta no salta. */}
       <div style={{
+        position: 'relative', overflow: 'hidden',
         width: '100%', aspectRatio: '4 / 3', backgroundColor: 'var(--color-amber)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
@@ -31,16 +31,41 @@ export default function ExperienciaCard({
                  style={{ width: '100%', height: '100%', maxWidth: '100%', objectFit: 'cover', display: 'block' }} />
           : <span style={{ fontSize: 'clamp(2.5rem, 10vw, 4rem)' }}>🍫</span>
         }
+
+        {/* La etiqueta "Destacada" vive sobre la foto, arriba a la derecha:
+            equilibra la duración que va abajo a la izquierda y se ve antes
+            que el título. */}
+        {mostrarBadgeDestacada && experiencia.destacada && (
+          <span style={{
+          position: 'absolute', top: '0.75rem', right: '0.9rem',
+          color: 'var(--color-cream)',
+          fontSize: '1.15rem', lineHeight: 1,
+          textShadow: '0 1px 3px rgba(74, 23, 9, 0.6)',
+        }}>★</span>
+        )}
+
+        {/* La duración va como etiqueta sobre la foto: un dato legible sin
+            importar si la imagen de abajo es clara u oscura. El fondo
+            semi-transparente y el borde ámbar la separan del contenido sin
+            taparlo. */}
+        <div style={{
+          position: 'absolute', left: '0.9rem', bottom: '0.9rem',
+          padding: '0.35rem 0.75rem',
+          background: 'rgba(74, 23, 9, 0.55)',
+          border: '1px solid transparent',
+          borderRadius: '999px',
+          color: 'var(--color-cream)',
+          fontSize: '0.8rem', fontWeight: 700, lineHeight: 1,
+          minWidth: 0, overflowWrap: 'anywhere',
+        }}>
+          {experiencia.duracion}
+        </div>
       </div>
       <div style={{ padding: 'clamp(0.9rem, 3vw, 1.25rem)', minWidth: 0 }}>
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
-          {mostrarBadgeDestacada && experiencia.destacada && <Badge color="crimson">Destacada</Badge>}
-          <Badge color="amber">{experiencia.duracion}</Badge>
-        </div>
         {/* overflowWrap parte un nombre largo sin espacios en vez de desbordar la tarjeta. */}
         <h3 style={{
           marginBottom: '0.5rem', color: 'var(--color-brown)', minWidth: 0,
-          fontSize: 'clamp(1.1rem, 3vw, 1.25rem)', overflowWrap: 'anywhere',
+          fontSize: 'clamp(1rem, 2.2vw, 1.08rem)', overflowWrap: 'anywhere',
         }}>
           {experiencia.nombre}
         </h3>
@@ -58,7 +83,7 @@ export default function ExperienciaCard({
           }}>
             {formatPrecio(experiencia.precio)}
           </span>
-          <Button href={`/experiencias/${experiencia.slug}`} variant="outline">Ver más</Button>
+          <Button href={`/experiencias/${experiencia.slug}`} variant="outline" className="btn-card">Ver más</Button>
         </div>
       </div>
     </Card>
