@@ -56,7 +56,6 @@ export async function generateStaticParams() {
 }
 
 const AVALES = [
-  'Cosecha propia · Finca El Edén',
   'Buenas Prácticas Agrícolas · ICA',
   'Marca registrada ante la SIC',
 ]
@@ -102,7 +101,7 @@ export default async function ProductoDetallePage({
 
   return (
     <div className="ficha-prod">
-      <nav className="ficha-migas" aria-label="Migas de pan">
+      {/* <nav className="ficha-migas" aria-label="Migas de pan">
         <Link href="/tienda" style={{ color: 'inherit' }}>Tienda</Link>
         <ChevronRight size={14} aria-hidden="true" style={{ flexShrink: 0 }} />
         <span>{producto.categoria}</span>
@@ -110,7 +109,7 @@ export default async function ProductoDetallePage({
         <span style={{ color: 'var(--color-brown)', fontWeight: 700, minWidth: 0, overflowWrap: 'anywhere' }}>
           {producto.nombre}
         </span>
-      </nav>
+      </nav> */}
 
       <div className="ficha-prod-grid">
         <div className="ficha-prod-galeria">
@@ -119,14 +118,11 @@ export default async function ProductoDetallePage({
 
         <div className="ficha-prod-compra">
           <div className="ficha-prod-panel">
-            <div className="ficha-prod-rotulo">
-              <span className="ficha-eyebrow" style={{ color: 'rgba(135,43,19,0.55)', minWidth: 0 }}>
-                {producto.categoria}
-              </span>
-              {producto.badge && (
+            {producto.badge && (
+              <div className="ficha-prod-rotulo">
                 <Badge color={producto.badge === 'Nuevo' ? 'amber' : 'orange'}>{producto.badge}</Badge>
-              )}
-            </div>
+              </div>
+            )}
 
             <h1 className="ficha-prod-titulo">{producto.nombre}</h1>
 
