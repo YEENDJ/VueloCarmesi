@@ -29,7 +29,7 @@ export default async function HomePage() {
       {preview.length > 0 && (
         <section style={{ paddingBlock: 'clamp(3rem, 8vw, 5rem)' }}>
           <div className="contenido">
-          <h2 style={{ textAlign: 'center', fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', marginBottom: '3rem', color: 'var(--color-brown)' }}>
+          <h2 style={{ textAlign: 'center', fontSize: 'var(--fs-h2)', marginBottom: '3rem', color: 'var(--color-brown)' }}>
             Nuestras Experiencias
           </h2>
           {/* La misma rejilla del catálogo: si la vitrina usara la suya, las
@@ -56,7 +56,7 @@ export default async function HomePage() {
       {/* Banda CTA en crimson para mantener la alternancia de fondos tras la sección cream de certificaciones */}
       <section style={{ paddingBlock: 'clamp(3rem, 8vw, 5rem)', backgroundColor: 'var(--color-crimson)' }}>
         <div className="contenido" style={{ textAlign: 'center' }}>
-          <h2 style={{ fontSize: 'clamp(1.5rem, 4.5vw, 2rem)', marginBottom: '1rem', color: 'var(--color-cream)' }}>¿Listo para vivir la experiencia?</h2>
+          <h2 style={{ fontSize: 'clamp(1.75rem, 5vw, 3rem)', marginBottom: '1rem', color: 'var(--color-cream)' }}>¿Listo para vivir la experiencia?</h2>
           <Link href="/experiencias" className="btn-ghost-cream">Reservar ahora</Link>
         </div>
       </section>

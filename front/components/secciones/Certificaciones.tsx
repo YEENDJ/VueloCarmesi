@@ -29,7 +29,7 @@ export default function Certificaciones() {
           <h2
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(28px, 4vw, 40px)',
+              fontSize: 'var(--fs-h2)',
               color: 'var(--color-crimson)',
               lineHeight: 1.2,
               marginBottom: '16px',

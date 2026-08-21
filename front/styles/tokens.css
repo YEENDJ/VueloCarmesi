@@ -16,6 +16,41 @@
   font-display: swap;
 }
 
+/* El signo de peso, y solo él, sale de Bellota.
+   ─────────────────────────────────────────────
+   Playfair dibuja el $ con DOS barras verticales atravesando la S. Es una
+   convención didone perfectamente legítima, pero a 42px en la tarjeta de
+   precio deja de leerse como un precio y pasa a leerse como un símbolo raro.
+   Bellota lo dibuja con una sola barra, que es lo que la gente espera ver.
+
+   `unicode-range: U+0024` hace que esta familia solo se consulte para el $:
+   para cualquier otro carácter el navegador cae a la siguiente de la pila,
+   que sigue siendo Playfair. Por eso no hace falta tocar el marcado ni envolver
+   el símbolo en un <span> en los siete sitios donde se pinta un precio.
+
+   El archivo es un subset de Bellota Bold con un único glifo: 2,3 KB frente a
+   los 70 KB de la fuente entera. Se genera con `scripts/generar-peso.py`.
+
+   Ese subset lleva el glifo ya escalado al 92% en su propio contorno, y no con
+   el descriptor `size-adjust`. El 92% está medido, no elegido a ojo: el $ de
+   Bellota mide 837 unidades de em y el de Playfair 972, pero Bellota tiene el
+   ojo bastante más grande y sin ajuste el símbolo sobresale por encima de las
+   cifras. Al 92% queda a la altura de las mayúsculas de Playfair.
+
+   Va horneado en el contorno porque `size-adjust` no existe en Safari 16 y
+   anteriores: ahí el descriptor se ignora en silencio y el símbolo sale más
+   grande de la cuenta. Escalando el contorno, el resultado es idéntico en
+   todos los navegadores que entienden `unicode-range`, que son todos desde
+   2015. */
+@font-face {
+  font-family: 'Peso';
+  src: url('/fonts/Peso-Bellota.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0024;
+}
+
 :root {
   /* ── Retícula ────────────────────────────────────────────────────────
      Un solo ancho y un solo margen lateral para TODO el sitio, del navbar
@@ -40,8 +75,22 @@
   --color-brown-overlay: rgba(135, 43, 19, 0.5);
 
   /* Tipografías */
-  --font-display: 'Playfair Display', Georgia, serif;
+  /* 'Peso' va delante pero solo cubre el $ (ver el @font-face de arriba): el
+     resto de caracteres los sigue poniendo Playfair. */
+  --font-display: 'Peso', 'Playfair Display', Georgia, serif;
   --font-body:    'Bellota', sans-serif;
+
+  /* Escala tipográfica — una sola fuente de verdad para los tamaños.
+     Las secciones usan estos tokens (o clamp()s que los aterrizan) en
+     lugar de medidas sueltas: antes cada archivo definía la suya y la
+     jerarquía se desalineaba (h1 de ficha menor que h2 de sección). */
+  --fs-micro:  0.75rem;  /* 12px — avisos, legales */
+  --fs-caption: 0.875rem; /* 14px — notas, filas de tabla */
+  --fs-body:   1rem;     /* 16px — base del sitio */
+  --fs-lead:   1.125rem; /* 18px — entradas, textos guía */
+  --fs-h3:     1.25rem;  /* 20px — nombres de card */
+  --fs-h2:     clamp(1.75rem, 5vw, 2.5rem); /* 28–40px — títulos de sección */
+  --fs-h1:     clamp(2rem, 6vw, 3.5rem);   /* 32–56px — títulos de página */
 
   /* Admin — colores semánticos de estado */
   --admin-bg:          #FBF6EC;

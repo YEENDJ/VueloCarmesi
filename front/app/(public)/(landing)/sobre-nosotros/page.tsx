@@ -225,7 +225,7 @@ export default function SobreNosotrosPage() {
                 style={{
                   fontFamily: 'var(--font-body)',
                   fontWeight: 700,
-                  fontSize: 'clamp(15px, 1.5vw, 17px)',
+                  fontSize: 'clamp(16px, 1.5vw, 17px)',
                   color: 'var(--color-brown)',
                   lineHeight: 1.8,
                   marginBottom: '16px',
@@ -240,7 +240,7 @@ export default function SobreNosotrosPage() {
                 style={{
                   fontFamily: 'var(--font-body)',
                   fontWeight: 700,
-                  fontSize: 'clamp(15px, 1.5vw, 17px)',
+                  fontSize: 'clamp(16px, 1.5vw, 17px)',
                   color: 'var(--color-brown)',
                   lineHeight: 1.8,
                   marginBottom: '16px',
@@ -255,7 +255,7 @@ export default function SobreNosotrosPage() {
                 style={{
                   fontFamily: 'var(--font-body)',
                   fontWeight: 700,
-                  fontSize: 'clamp(15px, 1.5vw, 17px)',
+                  fontSize: 'clamp(16px, 1.5vw, 17px)',
                   color: 'var(--color-brown)',
                   lineHeight: 1.8,
                   opacity: 0.9,
@@ -395,7 +395,7 @@ export default function SobreNosotrosPage() {
                 style={{
                   fontFamily: 'var(--font-body)',
                   fontWeight: 700,
-                  fontSize: 'clamp(15px, 1.5vw, 17px)',
+                  fontSize: 'clamp(16px, 1.5vw, 17px)',
                   color: 'var(--color-brown)',
                   lineHeight: 1.8,
                   marginBottom: '32px',

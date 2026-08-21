@@ -67,7 +67,7 @@ export default function SobreNosotros({ imagen }: Props) {
             <h2
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(28px, 4vw, 40px)',
+                fontSize: 'var(--fs-h2)',
                 color: 'var(--color-cream)',
                 lineHeight: 1.2,
                 marginBottom: '20px',

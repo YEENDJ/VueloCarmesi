@@ -15,7 +15,7 @@ export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: H
       <div style={{
         fontFamily: 'var(--font-body)',
         fontWeight: 700,
-        fontSize: '14px',
+        fontSize: '13px',
         letterSpacing: '3px',
         textTransform: 'uppercase' as const,
         color: 'var(--color-orange)',
