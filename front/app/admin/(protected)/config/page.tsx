@@ -132,11 +132,27 @@ export default function ConfigPage() {
                 Si tu política es generosa, decirlo aquí ayuda a que reserven.
               </div>
             </div>
+            <div style={{ minWidth: 0 }}>
+              <div className="admin-field-label">WhatsApp de contacto</div>
+              <input
+                className="admin-input"
+                type="tel"
+                value={config.whatsapp ?? ''}
+                onChange={e => set('whatsapp', e.target.value)}
+                placeholder="+57 320 123 4567"
+                style={{ maxWidth: 360 }}
+              />
+              <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginTop: 4 }}>
+                Aparece bajo el precio de cada ficha, con el mensaje ya escrito y el
+                nombre de la experiencia. Quien no reserva casi siempre es porque le
+                falta un dato: esta es su salida. Déjalo vacío y la línea no sale.
+              </div>
+            </div>
           </div>
           <div style={{ marginTop: 24 }}>
             <button
               className="btn-primary"
-              onClick={() => guardar(['punto_encuentro', 'resumen_cancelacion'])}
+              onClick={() => guardar(['punto_encuentro', 'resumen_cancelacion', 'whatsapp'])}
               disabled={saving === 'punto_encuentro'}
               style={{ minHeight: 44 }}
             >

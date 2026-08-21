@@ -36,5 +36,9 @@ export async function revalidateProductos() {
 export async function revalidateSiteConfig() {
   updateTag('site-config')
   revalidatePath('/', 'page') // hero_image y about_image viven en la portada
+  // La ficha de experiencia también lee de acá —punto de encuentro, resumen de
+  // cancelación, WhatsApp—, y es una ruta de detalle: si su fetch etiquetado
+  // nunca llegó a cachear, el tag no la alcanza y el admin guarda sin ver nada.
+  revalidatePath('/experiencias/[slug]', 'page')
   refresh()
 }

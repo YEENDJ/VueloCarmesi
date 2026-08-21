@@ -24,6 +24,7 @@ async function main() {
       // quedaran distintos entre sí.
       { key: 'punto_encuentro', value: '' },
       { key: 'resumen_cancelacion', value: '' },
+      { key: 'whatsapp', value: '' },
     ],
     skipDuplicates: true,
   })
