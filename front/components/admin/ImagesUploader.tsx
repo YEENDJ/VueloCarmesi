@@ -112,7 +112,7 @@ export default function ImagesUploader({
                   <span style={{
                     position: 'absolute', bottom: 0, left: 0, right: 0,
                     background: 'var(--color-crimson)', color: '#fff',
-                    fontSize: 11, fontWeight: 700, textAlign: 'center', padding: '2px 0',
+                    fontSize: 12, fontWeight: 700, textAlign: 'center', padding: '2px 0',
                   }}>Portada</span>
                 )}
                 <button

@@ -57,7 +57,7 @@ export default function ImageUploader({ value, onChange, label = 'Imagen' }: Pro
           <div style={{
             width: 80, height: 80, borderRadius: 8, border: '2px dashed #d0c0b0',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#a08070', fontSize: 11, flexShrink: 0,
+            color: '#a08070', fontSize: 12, flexShrink: 0,
           }}>
             Sin imagen
           </div>

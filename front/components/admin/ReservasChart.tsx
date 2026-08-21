@@ -14,13 +14,13 @@ export default function ReservasChart({ data }: { data: Barra[] }) {
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, height: 140 }}>
         {data.map((d, i) => (
           <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--admin-text-muted)' }}>{d.cantidad}</div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--admin-text-muted)' }}>{d.cantidad}</div>
             <div style={{
               width: '100%', borderRadius: '4px 4px 0 0',
               background: 'linear-gradient(to top, #D51312, #EA5B0C)',
               height: `${Math.max((d.cantidad / max) * 100, 4)}%`,
             }} />
-            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--admin-text-muted)', whiteSpace: 'nowrap' }}>{d.semana}</div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--admin-text-muted)', whiteSpace: 'nowrap' }}>{d.semana}</div>
           </div>
         ))}
       </div>
