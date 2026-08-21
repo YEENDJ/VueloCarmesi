@@ -3,6 +3,7 @@ import { useState } from 'react'
 import type { AdminPedido, EstadoPedido } from '@/lib/admin/types'
 import StatusBadge from './StatusBadge'
 import { updateEstadoPedido } from '@/lib/admin/api'
+import { formatPrecio } from '@/lib/format'
 
 const ESTADOS: EstadoPedido[] = ['pendiente', 'enviado', 'entregado', 'cancelado']
 
@@ -29,7 +30,7 @@ export default function PedidoDrawer({
       <div className="admin-drawer" onClick={e => e.stopPropagation()}>
         <div className="admin-drawer-header">
           <div>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', color: 'var(--color-gold)', marginBottom: 4 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', color: 'var(--color-gold)', marginBottom: 4 }}>
               Pedido #{pedido.id.slice(-6).toUpperCase()}
             </div>
             <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-cream)' }}>{pedido.nombre}</div>
@@ -52,7 +53,7 @@ export default function PedidoDrawer({
                 <div style={{ fontSize: 12, color: 'var(--admin-text-muted)' }}>× {item.cantidad}</div>
               </div>
               <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-amber)' }}>
-                ${(item.precio * item.cantidad).toLocaleString('es-CO')}
+                {formatPrecio(item.precio * item.cantidad)}
               </div>
             </div>
           ))}
@@ -60,7 +61,7 @@ export default function PedidoDrawer({
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16, paddingTop: 12, borderTop: '2px solid var(--admin-border)' }}>
             <span style={{ fontWeight: 700, fontSize: 15 }}>Total</span>
             <span style={{ fontWeight: 700, fontSize: 17, color: 'var(--color-amber)' }}>
-              ${pedido.total.toLocaleString('es-CO')}
+              {formatPrecio(pedido.total)}
             </span>
           </div>
         </div>

@@ -6,6 +6,7 @@ import StatCard from '@/components/admin/StatCard'
 import StatusBadge from '@/components/admin/StatusBadge'
 import ReservasChart from '@/components/admin/ReservasChart'
 import Link from 'next/link'
+import { formatPrecio } from '@/lib/format'
 
 export default function AdminOverviewPage() {
   const [reservas, setReservas] = useState<AdminReserva[]>([])
@@ -60,7 +61,7 @@ export default function AdminOverviewPage() {
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 24 }}>
         <StatCard label="Reservas del mes" value={reservasMes.length} icon="📅" />
         <StatCard label="Pedidos del mes" value={pedidosMes.length} icon="📦" />
-        <StatCard label="Ingresos estimados" value={`$${ingresosMes.toLocaleString('es-CO')}`} icon="💰" />
+        <StatCard label="Ingresos estimados" value={formatPrecio(ingresosMes)} icon="💰" />
         <StatCard label="Stock bajo" value={stockBajo} icon="⚠️" alerta={stockBajo > 0} />
       </div>
 
@@ -81,7 +82,7 @@ export default function AdminOverviewPage() {
             <div key={r.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--admin-border-row)' }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 700 }}>{r.nombre}</div>
-                <div style={{ fontSize: 11, color: 'var(--admin-text-muted)' }}>{new Date(r.fecha).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}</div>
+                <div style={{ fontSize: 12, color: 'var(--admin-text-muted)' }}>{new Date(r.fecha).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}</div>
               </div>
               <StatusBadge estado={r.estado} />
             </div>
@@ -98,7 +99,7 @@ export default function AdminOverviewPage() {
             <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--admin-border-row)' }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 700 }}>{p.nombre}</div>
-                <div style={{ fontSize: 11, color: 'var(--admin-text-muted)' }}>${p.total.toLocaleString('es-CO')}</div>
+                <div style={{ fontSize: 12, color: 'var(--admin-text-muted)' }}>{formatPrecio(p.total)}</div>
               </div>
               <StatusBadge estado={p.estado} />
             </div>

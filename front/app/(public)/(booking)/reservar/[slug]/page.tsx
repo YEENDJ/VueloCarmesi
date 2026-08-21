@@ -1,6 +1,7 @@
 import { getExperienciaBySlug } from '@/lib/api/experiencias'
 import ReservaForm from '@/components/booking/ReservaForm'
 import { notFound } from 'next/navigation'
+import { formatPrecio } from '@/lib/format'
 
 // El segmento caduca siempre: sin esto un 404 renderizado durante una caída del
 // backend quedaba cacheado de forma indefinida.
@@ -79,7 +80,7 @@ export default async function ReservarPage({
                 style={{
                   fontFamily: 'var(--font-body)',
                   fontWeight: 700,
-                  fontSize: '12px',
+                  fontSize: '13px',
                   color: 'var(--color-gold)',
                   letterSpacing: '3px',
                   textTransform: 'uppercase',
@@ -92,7 +93,7 @@ export default async function ReservarPage({
               <h2
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: '28px',
+                  fontSize: 'clamp(22px, 5vw, 28px)',
                   color: 'var(--color-cream)',
                   lineHeight: 1.2,
                   marginBottom: '16px',
@@ -123,7 +124,7 @@ export default async function ReservarPage({
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
                 <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', color: 'var(--color-cream)' }}>
                   <span style={{ color: 'var(--color-amber)', fontWeight: 700 }}>
-                    ${exp.precio.toLocaleString('es-AR')}
+                    {formatPrecio(exp.precio)}
                   </span>
                   {' '}por persona
                 </p>

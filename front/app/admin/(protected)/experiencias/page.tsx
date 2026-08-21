@@ -6,6 +6,7 @@ import { revalidateExperiencias } from '@/app/actions/revalidate'
 import Toggle from '@/components/admin/Toggle'
 import ExperienciaFormModal from '@/components/admin/ExperienciaFormModal'
 import ConfirmModal, { TrashIcon } from '@/components/admin/ConfirmModal'
+import { formatPrecio } from '@/lib/format'
 
 export default function ExperienciasPage() {
   const [experiencias, setExperiencias] = useState<AdminExperiencia[]>([])
@@ -92,7 +93,7 @@ export default function ExperienciasPage() {
                     <div style={{ fontSize: 12, color: 'var(--admin-text-muted)' }}>{exp.slug}</div>
                   </td>
                   <td style={{ textAlign: 'right', color: 'var(--color-amber)', fontWeight: 700 }}>
-                    ${exp.precio.toLocaleString('es-CO')}
+                    {formatPrecio(exp.precio)}
                   </td>
                   <td style={{ textAlign: 'center' }}>{exp.duracion}</td>
                   <td style={{ textAlign: 'center' }}>{exp.capacidad} personas</td>
@@ -122,9 +123,9 @@ export default function ExperienciasPage() {
                 <tr key={exp.id} style={{ opacity: 0.45 }}>
                   <td>
                     <div style={{ fontWeight: 700 }}>{exp.nombre}</div>
-                    <div style={{ fontSize: 11, color: 'var(--admin-text-muted)' }}>Archivada</div>
+                    <div style={{ fontSize: 12, color: 'var(--admin-text-muted)' }}>Archivada</div>
                   </td>
-                  <td style={{ textAlign: 'right' }}>${exp.precio.toLocaleString('es-CO')}</td>
+                  <td style={{ textAlign: 'right' }}>{formatPrecio(exp.precio)}</td>
                   <td style={{ textAlign: 'center' }}>{exp.duracion}</td>
                   <td style={{ textAlign: 'center' }}>{exp.capacidad}</td>
                   <td />

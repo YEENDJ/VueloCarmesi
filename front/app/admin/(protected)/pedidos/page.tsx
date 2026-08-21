@@ -4,6 +4,7 @@ import type { AdminPedido, EstadoPedido } from '@/lib/admin/types'
 import { getPedidos } from '@/lib/admin/api'
 import StatusBadge from '@/components/admin/StatusBadge'
 import PedidoDrawer from '@/components/admin/PedidoDrawer'
+import { formatPrecio } from '@/lib/format'
 
 const FILTROS = ['todos', 'pendientes', 'enviados', 'entregados', 'cancelados'] as const
 type Filtro = typeof FILTROS[number]
@@ -84,7 +85,7 @@ export default function PedidosPage() {
                   </td>
                   <td style={{ textAlign: 'center' }}>{p.items.length}</td>
                   <td style={{ textAlign: 'right', color: 'var(--color-amber)', fontWeight: 700 }}>
-                    ${p.total.toLocaleString('es-CO')}
+                    {formatPrecio(p.total)}
                   </td>
                   <td><StatusBadge estado={p.estado} /></td>
                   <td style={{ textAlign: 'right' }}>

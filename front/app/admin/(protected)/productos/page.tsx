@@ -5,6 +5,7 @@ import { getProductosAdmin, updateProducto, deleteProducto } from '@/lib/admin/a
 import { revalidateProductos } from '@/app/actions/revalidate'
 import ProductoFormModal from '@/components/admin/ProductoFormModal'
 import ConfirmModal, { TrashIcon } from '@/components/admin/ConfirmModal'
+import { formatPrecio } from '@/lib/format'
 
 export default function ProductosPage() {
   const [productos, setProductos] = useState<AdminProducto[]>([])
@@ -111,7 +112,7 @@ export default function ProductosPage() {
                       </span>
                     </td>
                     <td style={{ textAlign: 'right', color: 'var(--color-amber)', fontWeight: 700 }}>
-                      ${p.precio.toLocaleString('es-CO')}
+                      {formatPrecio(p.precio)}
                     </td>
                     <td style={{ textAlign: 'center' }}>
                       {p.stock === 0 ? (
