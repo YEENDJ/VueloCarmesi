@@ -1,13 +1,13 @@
 import { getExperienciaBySlug, getExperiencias } from '@/lib/api/experiencias'
 import Button from '@/components/ui/Button'
-import HeroExperiencia from '@/components/booking/HeroExperiencia'
+import PortadaExperiencia from '@/components/booking/PortadaExperiencia'
 import DatosPracticos from '@/components/booking/DatosPracticos'
 import ListaFicha from '@/components/booking/ListaFicha'
 import { getSiteConfig } from '@/lib/api/site-config'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { SLUGS_EXPERIENCIAS_LEGADOS, destinoLegado } from '@/lib/slugs-legados'
 import { formatPrecio } from '@/lib/format'
-import { metaDescription, partirRelato } from '@/lib/seo'
+import { metaDescription, parrafosRelato } from '@/lib/seo'
 import type { Metadata } from 'next'
 
 // El segmento caduca siempre, haya respondido el backend o no. Sin esto Next
@@ -82,62 +82,72 @@ export default async function ExperienciaDetallePage({
   const config = await getSiteConfig()
   const puntoEncuentro = exp.puntoEncuentro?.trim() || config.punto_encuentro || ''
 
-  // El primer párrafo abre el relato en grande; el resto va en cuerpo normal.
-  // Se parte por párrafo y no por el primer punto: cortar por punto se rompía
-  // con "Cra. 5" o "$1.500", y un texto sin puntos terminaba entero en display.
-  const { entradilla, resto } = partirRelato(descripcion)
+  // La descripción corta solo hace de bajada cuando hay relato largo. Sin él
+  // el relato ES la descripción corta, y la misma frase saldría dos veces
+  // seguidas: bajo el título y otra vez como entradilla en cursiva.
+  const bajada = exp.descripcionLarga?.trim() ? exp.descripcion.trim() : ''
+
+  // El primer párrafo abre el relato en cursiva grande y el resto va en cuerpo.
+  // Un relato de un solo párrafo se muestra entero arriba y no lleva cuerpo
+  // debajo: ese caso también tiene que verse terminado.
+  const [entradilla, ...cuerpo] = parrafosRelato(descripcion)
+
+  // El cuerpo se reparte en dos bloques, no en dos columnas de texto: con
+  // columnas CSS el ojo tiene que subir al principio de la segunda columna al
+  // acabar la primera, y en un relato corto ese salto se nota. Dos tarjetas se
+  // leen una detrás de otra. Con un solo párrafo queda una sola tarjeta, que
+  // ocupa el ancho entero y se ve igual de deliberada.
+  const corte = Math.ceil(cuerpo.length / 2)
+  const bloques = cuerpo.length > 0 ? [cuerpo.slice(0, corte), cuerpo.slice(corte)] : []
 
   return (
-    <>
-      <HeroExperiencia
+    <div className="ficha-exp">
+      <PortadaExperiencia
         nombre={exp.nombre}
         imagenes={imagenes}
         duracion={exp.duracion}
         capacidad={exp.capacidad}
         precio={exp.precio}
         slug={exp.slug}
+        bajada={bajada}
+        incluye={incluye}
         avisoCancelacion={config.resumen_cancelacion || ''}
+        whatsapp={config.whatsapp || ''}
       />
 
-      <section className="ficha-exp-relato">
-        <div className="ficha-exp-relato-grid">
-          <h2 className="ficha-eyebrow" style={{ color: 'var(--color-gold)', fontFamily: 'var(--font-body)', minWidth: 0 }}>
-            La experiencia
-          </h2>
-          <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: 'clamp(18px, 3vw, 26px)' }}>
-            <p
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(20px, 4vw, 30px)',
-                fontWeight: 500,
-                fontStyle: 'italic',
-                lineHeight: 1.45,
-                color: 'var(--color-cream)',
-                whiteSpace: 'pre-wrap',
-                overflowWrap: 'anywhere',
-                minWidth: 0,
-              }}
-            >
-              {entradilla}
-            </p>
-            {resto && (
-              <p
-                style={{
-                  fontSize: 'clamp(0.95rem, 2.5vw, 1.09rem)',
-                  lineHeight: 1.85,
-                  color: 'rgba(255,234,202,0.78)',
-                  maxWidth: '62ch',
-                  whiteSpace: 'pre-wrap',
-                  overflowWrap: 'anywhere',
-                  minWidth: 0,
-                }}
-              >
-                {resto}
-              </p>
-            )}
+      {entradilla && (
+        <section className="ficha-exp-relato">
+          <div className="ficha-exp-relato-grid">
+            {/* El rótulo no se pinta: colgado a la izquierda dejaba media
+                pantalla de banda vacía. Sigue en el documento porque sin él
+                la sección se queda sin nombre para lectores de pantalla y sin
+                encabezado en el esquema que lee Google. */}
+            <h2 className="solo-lectores">La experiencia</h2>
+            <div className="ficha-exp-relato-texto">
+              <p className="ficha-exp-entradilla">{entradilla}</p>
+              {/* El cuerpo va en dos columnas para que ocupar el ancho de la
+                  página no signifique líneas de 130 caracteres. La entradilla
+                  queda fuera: es la apertura y va a una sola medida. */}
+              {bloques.length > 0 && (
+                <div className="ficha-exp-cuerpo">
+                  {bloques.filter(b => b.length > 0).map((bloque, i) => (
+                    <div key={i} className="ficha-exp-bloque">
+                      {bloque.map((parrafo, j) => (
+                        <p key={j} className="ficha-exp-parrafo">{parrafo}</p>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* Cierra el relato y abre los datos. Sin él, el texto y la primera
+          tarjeta de "Antes de reservar" se tocan sin que nada diga que ahí
+          cambia lo que se está leyendo. */}
+      {entradilla && <hr className="ficha-exp-separador" />}
 
       <DatosPracticos
         horarios={exp.horarios}
@@ -149,40 +159,62 @@ export default async function ExperienciaDetallePage({
           Si únicamente hay "Incluye", ocupa la sección entera y se ve
           deliberado, no incompleto. */}
       {(incluye.length > 0 || queTraer.length > 0 || noIncluye.length > 0) && (
-        <div className="ficha-exp-claro">
-          <div style={{
-            maxWidth: 'var(--contenido-ancho)', margin: '0 auto', minWidth: 0,
-            display: 'flex', flexDirection: 'column', gap: 'clamp(36px, 6vw, 56px)',
-          }}>
-            <ListaFicha titulo="Incluido en tu cupo" items={incluye} variante="incluye" />
-            <ListaFicha titulo="Qué traer" items={queTraer} variante="traer" />
-            <ListaFicha titulo="No incluye" items={noIncluye} variante="noIncluye" />
-          </div>
+        <div className="ficha-exp-listas">
+          <ListaFicha titulo="Incluido en tu cupo" items={incluye} variante="incluye" />
+          <ListaFicha titulo="Qué traer" items={queTraer} variante="traer" />
+          <ListaFicha titulo="No incluye" items={noIncluye} variante="noIncluye" />
         </div>
       )}
 
+      {/* El precio sale dos veces y es a propósito: la tarjeta lo presenta en
+          el momento del antojo y la barra lo mantiene a mano durante el scroll.
+          En escritorio la barra no se pinta —igual que en la ficha de producto—
+          y ahí el que cierra es el bloque de abajo. */}
       <div className="ficha-exp-barra">
-        <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '6px 14px', minWidth: 0 }}>
-          <span
+        <div className="ficha-exp-barra-contenido">
+          <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '4px 8px', minWidth: 0 }}>
+            <span className="ficha-exp-barra-precio">{formatPrecio(exp.precio)}</span>
+            <span style={{ fontSize: '14px', fontWeight: 700, color: 'rgba(255,234,202,0.8)', minWidth: 0 }}>
+              por persona · {exp.duracion}
+            </span>
+          </div>
+          <Button
+            href={`/reservar/${exp.slug}`}
             style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(22px, 4vw, 30px)',
-              fontWeight: 700,
-              color: 'var(--color-gold)',
-              minWidth: 0,
-              overflowWrap: 'anywhere',
+              flexShrink: 0, borderRadius: '8px', padding: '14px 24px',
+              fontSize: '16px', minHeight: '44px', whiteSpace: 'nowrap',
             }}
           >
-            {formatPrecio(exp.precio)}
-          </span>
-          <span style={{ fontSize: 'clamp(0.8rem, 2.2vw, 0.875rem)', color: 'rgba(255,234,202,0.7)', minWidth: 0 }}>
-            por persona · {exp.duracion}
-          </span>
+            Reservar ahora
+          </Button>
         </div>
-        <Button href={`/reservar/${exp.slug}`} style={{ flexShrink: 0 }}>
-          Reservar ahora
-        </Button>
       </div>
-    </>
+
+      {/* Se mete entre la barra y el pie del sitio a propósito: los dos son del
+          mismo marrón y al final del scroll se tocaban, así que la barra dejaba
+          de leerse como una acción y parecía el principio del footer. Con un
+          bloque claro en medio, la barra aparca sobre algo que no es el pie.
+
+          Y no es solo un separador: en escritorio la barra no existe, y sin
+          esto la ficha terminaría en una lista de viñetas y nada que pulsar. */}
+      <section className="ficha-exp-cierre">
+        <div className="ficha-exp-cierre-caja">
+          <h2 className="ficha-exp-cierre-titulo">Reserva tu cupo</h2>
+          <p className="ficha-exp-cierre-precio">
+            No pierdas la oportunidad de vivir una experiencia agroecológica
+            inolvidable. Desde {formatPrecio(exp.precio)} por persona · {exp.duracion}
+          </p>
+          <Button
+            href={`/reservar/${exp.slug}`}
+            style={{
+              borderRadius: '8px', padding: '15px 32px',
+              fontSize: '17px', minHeight: '44px',
+            }}
+          >
+            Reservar ahora
+          </Button>
+        </div>
+      </section>
+    </div>
   )
 }

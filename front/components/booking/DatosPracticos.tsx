@@ -1,17 +1,19 @@
+import { Clock, MapPin, TriangleAlert } from 'lucide-react'
+
 interface Props {
   horarios?: string
   puntoEncuentro?: string
   recomendaciones?: string
 }
 
-const RELOJ = <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>
-const PIN = <><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z" /><circle cx="12" cy="10" r="2.5" /></>
-const AVISO = <><path d="M12 3.5 2.8 19.5h18.4L12 3.5Z" /><path d="M12 10v4M12 17h.01" /></>
-
 /**
  * Las respuestas a "¿cuándo?", "¿dónde llego?" y "¿esto es para mí?" — las tres
- * dudas que aparecen justo antes de reservar y que hasta ahora la ficha no
- * respondía en ningún lado.
+ * dudas que aparecen justo antes de reservar.
+ *
+ * Cada dato es una tarjeta con el icono en un disco de color. Antes eran tres
+ * columnas colgadas de un filete ámbar: sobre el crema de la ficha se leían
+ * como texto suelto, y lo que se busca aquí es justo lo contrario — que las
+ * tres respuestas se localicen de un vistazo sin tener que leerlas.
  *
  * Los tres campos son opcionales y el bloque entero desaparece si no hay
  * ninguno: la ficha tiene que verse intencional sin ellos, no a medio llenar.
@@ -19,52 +21,47 @@ const AVISO = <><path d="M12 3.5 2.8 19.5h18.4L12 3.5Z" /><path d="M12 10v4M12 1
  */
 export default function DatosPracticos({ horarios, puntoEncuentro, recomendaciones }: Props) {
   const datos = [
-    { icono: RELOJ, titulo: 'Cuándo', texto: horarios?.trim() },
-    { icono: PIN, titulo: 'Punto de encuentro', texto: puntoEncuentro?.trim() },
-    { icono: AVISO, titulo: 'Ten en cuenta', texto: recomendaciones?.trim() },
+    { Icono: Clock, titulo: 'Cuándo', texto: horarios?.trim() },
+    { Icono: MapPin, titulo: 'Punto de encuentro', texto: puntoEncuentro?.trim() },
+    { Icono: TriangleAlert, titulo: 'Ten en cuenta', texto: recomendaciones?.trim() },
   ].filter(d => d.texto)
 
   if (datos.length === 0) return null
 
   return (
     <section className="ficha-exp-practicos">
-      <div style={{ maxWidth: 'var(--contenido-ancho)', margin: '0 auto', minWidth: 0 }}>
-        <dl className="ficha-exp-practicos-grid">
-          {datos.map(d => (
-            <div key={d.titulo} style={{ minWidth: 0, display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
-              <svg
-                width="22" height="22" viewBox="0 0 24 24" fill="none"
-                stroke="var(--color-gold)" strokeWidth="1.8"
-                strokeLinecap="round" strokeLinejoin="round"
-                aria-hidden="true" style={{ flexShrink: 0, marginTop: '2px' }}
-              >
-                {d.icono}
-              </svg>
-              <div style={{ minWidth: 0 }}>
-                <dt
-                  className="ficha-eyebrow"
-                  style={{ color: 'var(--color-gold)', display: 'block', marginBottom: '6px' }}
-                >
-                  {d.titulo}
-                </dt>
-                <dd
-                  style={{
-                    margin: 0,
-                    fontSize: 'clamp(0.95rem, 2.5vw, 1.05rem)',
-                    lineHeight: 1.65,
-                    color: 'rgba(255,234,202,0.85)',
-                    minWidth: 0,
-                    overflowWrap: 'anywhere',
-                    whiteSpace: 'pre-wrap',
-                  }}
-                >
-                  {d.texto}
-                </dd>
-              </div>
-            </div>
-          ))}
-        </dl>
+      {/* El rótulo va centrado entre dos filetes. Colgado a la izquierda con
+          una regla larguísima al lado, el bloque se leía como el principio de
+          algo; centrado cierra la sección y la separa del relato de arriba. */}
+      <div className="ficha-exp-practicos-cabecera">
+        <span className="ficha-exp-regla" aria-hidden="true" />
+        <h2 className="ficha-eyebrow" style={{ color: 'var(--color-crimson)', fontFamily: 'var(--font-body)', textAlign: 'center' }}>
+          Antes de reservar
+        </h2>
+        <span className="ficha-exp-regla" aria-hidden="true" />
       </div>
+
+      <dl className="ficha-exp-practicos-grid">
+        {datos.map(({ Icono, titulo, texto }) => (
+          <div key={titulo} className="ficha-exp-practico">
+            {/* El icono va en un disco de color y no suelto junto al rótulo:
+                dentro de una tarjeta, un icono a pelo se lee como decoración,
+                y en disco se lee como la marca del dato. */}
+            <span className="ficha-exp-practico-icono" aria-hidden="true">
+              <Icono size={22} strokeWidth={1.85} color="var(--color-orange)" />
+            </span>
+            <div style={{ minWidth: 0 }}>
+              <dt
+                className="ficha-eyebrow"
+                style={{ fontSize: '12px', letterSpacing: '2px', color: 'rgba(135,43,19,0.6)', minWidth: 0 }}
+              >
+                {titulo}
+              </dt>
+              <dd className="ficha-exp-practico-valor">{texto}</dd>
+            </div>
+          </div>
+        ))}
+      </dl>
     </section>
   )
 }

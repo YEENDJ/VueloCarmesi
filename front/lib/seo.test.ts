@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { metaDescription, partirRelato, MAX_META } from './seo'
+import { metaDescription, parrafosRelato, MAX_META } from './seo'
 
 describe('metaDescription', () => {
   it('prefiere la escrita a mano', () => {
@@ -44,30 +44,30 @@ describe('metaDescription', () => {
   })
 })
 
-describe('partirRelato', () => {
+describe('parrafosRelato', () => {
   it('separa por párrafo, no por punto', () => {
-    const { entradilla, resto } = partirRelato('Vive el cacao.\n\nY luego el resto del relato.')
-    expect(entradilla).toBe('Vive el cacao.')
-    expect(resto).toBe('Y luego el resto del relato.')
+    expect(parrafosRelato('Vive el cacao.\n\nY luego el resto del relato.')).toEqual([
+      'Vive el cacao.',
+      'Y luego el resto del relato.',
+    ])
   })
 
   // Cortar por el primer punto rompía con abreviaturas y precios.
   it('no se rompe con abreviaturas ni precios', () => {
-    const { entradilla, resto } = partirRelato('Salimos de la Cra. 5 con $1.500 en la mano y todo listo.')
-    expect(entradilla).toBe('Salimos de la Cra. 5 con $1.500 en la mano y todo listo.')
-    expect(resto).toBe('')
+    expect(parrafosRelato('Salimos de la Cra. 5 con $1.500 en la mano y todo listo.'))
+      .toEqual(['Salimos de la Cra. 5 con $1.500 en la mano y todo listo.'])
   })
 
-  it('sin párrafos, todo va en la entradilla', () => {
-    expect(partirRelato('Una sola línea sin puntos')).toEqual({
-      entradilla: 'Una sola línea sin puntos',
-      resto: '',
-    })
+  // Un solo párrafo se muestra entero en la entradilla, sin cuerpo debajo.
+  it('sin línea en blanco devuelve un solo párrafo', () => {
+    expect(parrafosRelato('Una sola línea sin puntos')).toEqual(['Una sola línea sin puntos'])
   })
 
   it('tolera varios saltos y espacios entre párrafos', () => {
-    const { entradilla, resto } = partirRelato('Uno\n   \n\nDos\n\nTres')
-    expect(entradilla).toBe('Uno')
-    expect(resto).toBe('Dos\n\nTres')
+    expect(parrafosRelato('Uno\n   \n\nDos\n\nTres')).toEqual(['Uno', 'Dos', 'Tres'])
+  })
+
+  it('descarta el relato vacío', () => {
+    expect(parrafosRelato('   \n\n  ')).toEqual([])
   })
 })

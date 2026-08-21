@@ -39,19 +39,20 @@ export function metaDescription(corta: string | undefined, larga: string | undef
 }
 
 /**
- * Parte el relato en un primer párrafo destacado y el resto.
+ * Parte el relato en párrafos, tal como los escribió el administrador.
  *
- * Se corta por párrafo y no por el primer punto: cortar por punto se rompe con
- * "Cra. 5" o "$1.500", y un texto sin puntos terminaba entero en tipografía
- * display de 30px. Con párrafos, quien escribe decide dónde cae el corte
- * pulsando Enter, que es justo el control que se espera tener.
+ * El corte es por línea en blanco y no por el primer punto: cortar por punto
+ * se rompe con "Cra. 5" o "$1.500", y un texto sin puntos terminaba entero en
+ * tipografía display de 30px. Con párrafos, quien escribe decide dónde cae el
+ * corte pulsando Enter, que es justo el control que se espera tener.
+ *
+ * El primero abre el relato en cursiva grande y el resto va en cuerpo; un
+ * relato de un solo párrafo devuelve un solo elemento y se muestra entero en
+ * la entradilla, sin cuerpo debajo.
  */
-export function partirRelato(texto: string): { entradilla: string; resto: string } {
-  const limpio = texto.trim()
-  const corte = limpio.search(/\n\s*\n/)
-  if (corte === -1) return { entradilla: limpio, resto: '' }
-  return {
-    entradilla: limpio.slice(0, corte).trim(),
-    resto: limpio.slice(corte).trim(),
-  }
+export function parrafosRelato(texto: string): string[] {
+  return texto
+    .split(/\n\s*\n/)
+    .map(p => p.trim())
+    .filter(Boolean)
 }

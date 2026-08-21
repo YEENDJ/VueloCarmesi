@@ -170,6 +170,7 @@ footer :focus-visible {
   display: inline-block;
   color: var(--color-cream);
   text-decoration: none;
+  font-size: 1rem;
   font-weight: 700;
   /* Sólo lateral: cualquier padding vertical acá engorda la franja. El área
      táctil cómoda la da el panel móvil, que es donde se toca con el dedo. */
@@ -449,6 +450,36 @@ footer :focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────
+   Píldoras de filtro de categoría
+   ─────────────────────────────────────────────────────────
+   Estaban clavadas en 44 px de alto para respetar el mínimo
+   táctil, pero con ratón esa altura las hacía ver infladas
+   frente al texto que llevan dentro. Se separan los dos casos:
+   con cursor fino basta con 36 px, y en pantalla táctil vuelve
+   el 44 completo. */
+
+.filtro-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0.35rem 1.1rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(0.9rem, 2.2vw, 0.95rem);
+  line-height: 1.2;
+  cursor: pointer;
+  min-width: 0;
+}
+
+@media (pointer: coarse) {
+  .filtro-pill {
+    min-height: 44px;
+    padding-block: 0.5rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
    Rejillas de catálogo
    ─────────────────────────────────────────────────────────
    Las dos van mobile-first, al revés que los bloques de más
@@ -491,10 +522,6 @@ footer :focus-visible {
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(1rem, 2.5vw, 1.5rem);
-  /* El tope va acá y no en la tarjeta: así el hueco sobrante se reparte a los
-     dos lados en vez de quedar todo pegado al borde derecho. */
-  max-width: 1020px;
-  margin-inline: auto;
 }
 @media (min-width: 560px) {
   .experiencias-grid {
@@ -555,7 +582,7 @@ footer :focus-visible {
 
 .btn-ghost-cream {
   display: inline-block;
-  padding: 12px 26px;
+  padding: 8px 22px;
   border-radius: 8px;
   border: 1.5px solid var(--color-cream);
   color: var(--color-cream);
@@ -571,6 +598,80 @@ footer :focus-visible {
 .btn-ghost-cream:hover {
   background-color: var(--color-cream);
   color: var(--color-brown);
+}
+
+/* ─────────────────────────────────────────────────────────
+   Botón de tarjeta — «Ver más» y «Agregar»
+   ─────────────────────────────────────────────────────────
+   El componente Button pinta sus colores con style inline, que le gana por
+   especificidad a cualquier regla de acá. Por eso el hover no toca
+   background-color: se arma con propiedades que el inline no declara
+   —transform, box-shadow, filter y un ::after—, así no hay pelea ni
+   !important. El destello es lo que lo hace llamativo; el resto (subida y
+   sombra) es lo que lo hace legible como «esto se puede clickear». */
+.btn-card {
+  position: relative;
+  /* Recorta el destello a la silueta del botón */
+  overflow: hidden;
+  transition: transform 200ms ease, box-shadow 200ms ease, filter 200ms ease;
+}
+
+.btn-card:hover,
+.btn-card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(135, 43, 19, 0.32);
+  /* Sube el color un punto sin sustituirlo: sirve igual para el naranja de
+     «Agregar» que para el contorno crimson de «Ver más». */
+  filter: brightness(1.08) saturate(1.12);
+}
+
+.btn-card:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 9px rgba(135, 43, 19, 0.26);
+}
+
+/* Banda de luz que cruza el botón una vez por hover */
+.btn-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 45%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 234, 202, 0.6),
+    transparent
+  );
+  transform: translateX(-160%) skewX(-18deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-card:hover::after,
+.btn-card:focus-visible::after {
+  animation: btn-card-destello 700ms ease-out;
+}
+
+@keyframes btn-card-destello {
+  0%   { opacity: 0; transform: translateX(-160%) skewX(-18deg); }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(340%) skewX(-18deg); }
+}
+
+/* Agotado: el botón sigue ahí pero no finge ser clickeable */
+.btn-card:disabled {
+  cursor: not-allowed;
+}
+.btn-card:disabled:hover {
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+.btn-card:disabled:hover::after {
+  animation: none;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -972,7 +1073,9 @@ footer :focus-visible {
 }
 
 .ficha-prod-titulo {
-  font-size: clamp(24px, 5vw, 31px);
+  /* Mismo tamaño que .ficha-exp-titulo: las dos fichas de detalle —producto y
+     experiencia— tienen que abrir con el mismo peso. */
+  font-size: clamp(24px, 5.5vw, 44px);
   line-height: 1.2;
   color: var(--color-brown);
   margin-bottom: 8px;
@@ -981,7 +1084,7 @@ footer :focus-visible {
 }
 
 .ficha-prod-resumen {
-  font-size: clamp(0.88rem, 2.5vw, 0.94rem);
+  font-size: clamp(0.95rem, 2.5vw, 1rem);
   line-height: 1.6;
   color: rgba(135, 43, 19, 0.8);
   margin-bottom: 16px;
@@ -1144,7 +1247,7 @@ footer :focus-visible {
   border-radius: 999px;
   background: rgba(74, 23, 9, 0.72);
   color: var(--color-cream);
-  font-size: 11.5px;
+  font-size: 13px;
   font-weight: 700;
   pointer-events: none;
 }
@@ -1303,6 +1406,60 @@ footer :focus-visible {
   min-width: 0;
 }
 
+/* Selector de cantidad (ficha de producto y carrito). */
+.qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 44 y no 40: es el minimo tactil. Con 40 el dedo pisa el borde y en el
+   carrito, con las filas apretadas, se acaba pulsando el boton de al lado. */
+.qty-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-brown);
+  border-radius: 6px;
+  background-color: transparent;
+  color: var(--color-brown);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.qty-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.qty-valor {
+  min-width: 40px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--color-brown);
+}
+
+/* Con mouse el minimo tactil no aplica y 44px se ve desproporcionado al lado
+   del rotulo, sobre todo dentro del panel angosto de la ficha. Se pide ademas
+   pantalla ancha para que una tablet apaisada siga teniendo el boton grande. */
+@media (min-width: 900px) and (pointer: fine) {
+  .qty-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1.05rem;
+  }
+  .qty-valor {
+    min-width: 28px;
+    font-size: 1rem;
+  }
+}
+
 /* Los dos botones van uno debajo del otro y a todo el ancho: en la columna de
    384px, lado a lado, ninguno de los dos rótulos entra en una línea. */
 .ficha-compra-acciones {
@@ -1363,7 +1520,7 @@ footer :focus-visible {
   overflow-wrap: anywhere;
 }
 .ficha-prod-barra-detalle {
-  font-size: 0.78rem;
+  font-size: 0.8125rem;
   color: rgba(255, 234, 202, 0.7);
 }
 
@@ -1380,8 +1537,8 @@ footer :focus-visible {
   margin-bottom: 20px;
 }
 .ficha-pestana {
-  padding: 12px 20px;
-  min-height: 44px;
+  padding: 8px 17px;
+  min-height: 36px;
   border: none;
   border-bottom: 3px solid transparent;
   margin-bottom: -1px;
@@ -1443,159 +1600,589 @@ footer :focus-visible {
 }
 
 
-/* ── Experiencia: inmersiva ──────────────────────────────── */
-.ficha-exp-hero {
-  position: relative;
-  height: clamp(440px, 70dvh, 700px);
-  overflow: hidden;
+/* ── Experiencia: la ficha ───────────────────────────────
+   La foto ya no lleva texto encima. Antes era una portada inmersiva con el
+   título sobre la imagen y un velo para poder leerlo; eso obligaba a que
+   todas las fotos que sube el administrador fueran oscuras y tranquilas por
+   abajo, y ninguna lo es. Ahora foto y texto van lado a lado: la foto se ve
+   entera y el título se lee siempre, venga la foto que venga.
+
+   Todo el bloque es fluido y sin breakpoints. Las bases de `flex`
+   (460px / 320px) y los `auto-fit` de las rejillas reparten las columnas
+   solos entre 320px y 1200px, así que no hay una sola media query aquí. */
+.ficha-exp {
+  background: var(--color-cream);
 }
 
-/* El velo arranca suave y cierra opaco: el título se apoya en la
-   parte densa y la foto respira arriba. */
-.ficha-exp-velo {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(74, 23, 9, 0.15) 0%,
-    rgba(74, 23, 9, 0.4) 45%,
-    rgba(74, 23, 9, 0.94) 100%
-  );
+/* El anillo de foco del diseño es oro. Sobre crema el oro no llega ni a
+   1.5:1 y el foco desaparece, así que ahí se queda el naranja del sitio con
+   el grosor que pide el diseño. Con la ficha entera sobre crema, la barra de
+   reserva es lo único oscuro que queda y el único sitio donde va oro. */
+.ficha-exp :focus-visible {
+  outline: 3px solid var(--color-orange);
+  outline-offset: 3px;
+}
+.ficha-exp-barra :focus-visible {
+  outline-color: var(--color-gold);
 }
 
-.ficha-exp-hero-contenido {
-  position: absolute;
-  left: var(--contenido-margen);
-  right: var(--contenido-margen);
-  bottom: clamp(24px, 5vw, 48px);
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  align-items: end;
+/* ── Portada: foto + título + tarjeta de precio ── */
+.ficha-exp-portada {
   max-width: var(--contenido-ancho);
   margin: 0 auto;
+  padding: clamp(1rem, 4vw, 2rem) var(--contenido-margen) 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(20px, 3vw, 40px);
+  align-items: flex-start;
 }
-@media (min-width: 900px) {
-  .ficha-exp-hero-contenido {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 48px;
-  }
+.ficha-exp-galeria {
+  flex: 1 1 460px;
+  min-width: min(100%, 280px);
+}
+.ficha-exp-resumen {
+  flex: 1 1 320px;
+  min-width: min(100%, 280px);
+}
+
+/* La proporción se reserva antes de que llegue la foto: sin esto la página
+   pega un salto al cargar y el título baja de golpe bajo el dedo. */
+.ficha-exp-foto {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(135, 43, 19, 0.08);
+}
+.ficha-exp-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ficha-exp-contador {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--color-brown);
+  background: rgba(255, 234, 202, 0.88);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Las flechas salen en cualquier dispositivo, sin condicionar por tipo de
+   puntero: un portátil con pantalla táctil reporta `pointer: coarse` y se
+   quedaba sin ellas aunque hubiera fotos fuera de vista. La galería de
+   producto ya las muestra siempre, y este bloque hace lo mismo.
+
+   Van encima de la tira, no a los lados. Puestas al lado le
+   robaban 104px de ancho y la tira dejaba de medir lo mismo que la foto de
+   arriba: dos bloques que arrancan y acaban en sitios distintos se leen como
+   un descuadre. Ahora la tira ocupa el ancho entero de la foto y las flechas
+   se apoyan en sus extremos. */
+.ficha-exp-tira {
+  position: relative;
+  min-width: 0;
+  margin-top: 8px;
+}
+.ficha-exp-tira-flecha {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  border-radius: 999px;
+  /* Va sobre una foto, así que necesita fondo propio y una sombra que la
+     despegue: el borde solo no la separa de una miniatura clara. */
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--color-brown);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(74, 23, 9, 0.18);
+}
+.ficha-exp-tira-flecha--prev {
+  left: 0;
+}
+.ficha-exp-tira-flecha--next {
+  right: 0;
+}
+/* Una sola fila que se desplaza, no una rejilla que baja de línea: así el alto
+   de la galería es el mismo con tres fotos que con veinte, y la portada no se
+   descuadra según lo que suba el administrador.
+
+   Las miniaturas van a 88px fijos y sin encoger. Con eso entran seis en la
+   columna de escritorio sin desplazar nada —que es como se veía hasta ahora— y
+   a partir de la séptima empieza a haber tira que arrastrar. */
+.ficha-exp-miniaturas {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Sin barra: quien puede verla ya tiene las flechas, y en táctil nunca se
+     pintó. Una barra gris bajo las miniaturas ensuciaba el bloque. */
+  scrollbar-width: none;
+  /* Que el arrastre horizontal no acabe navegando hacia atrás en el móvil. */
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+}
+.ficha-exp-miniaturas::-webkit-scrollbar {
+  display: none;
+}
+.ficha-exp-miniaturas button {
+  flex: 0 0 88px;
+  scroll-snap-align: start;
+  height: clamp(64px, 10vw, 84px);
+  padding: 0;
+  border: 3px solid rgba(135, 43, 19, 0.14);
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
+.ficha-exp-miniaturas button[aria-current='true'] {
+  border-color: var(--color-gold);
+  opacity: 1;
+}
+.ficha-exp-miniaturas img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Las miniaturas se ven pero no se leen como pulsables: el aviso lo dice. */
+.ficha-exp-aviso-fotos {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(135, 43, 19, 0.6);
+  margin-top: 8px;
 }
 
 .ficha-exp-titulo {
-  font-size: clamp(34px, 7vw, 76px);
-  font-weight: 700;
-  color: var(--color-cream);
+  /* Tope de 52px a propósito: la portada del sitio usa 96px y un título de
+     detalle más grande que ella descoloca la jerarquía de todo el sitio. */
+  font-size: clamp(24px, 5.5vw, 44px);
   line-height: 1.04;
-  letter-spacing: -0.015em;
+  color: var(--color-brown);
+  margin: 10px 0 16px;
+}
+
+/* La descripción corta hace de bajada entre el título y las pastillas. Se
+   corta en 46ch: la columna llega a ~560px en pantallas grandes y a esa medida
+   una sola frase se lee como un renglón que no encuentra dónde terminar. */
+.ficha-exp-bajada {
+  max-width: 46ch;
+  min-width: 0;
+  font-size: clamp(15px, 1.3vw, 17px);
+  line-height: 1.6;
+  color: rgba(135, 43, 19, 0.78);
+  margin: 0 0 18px;
   overflow-wrap: anywhere;
 }
 
-.ficha-exp-datos {
+.ficha-exp-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 24px;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.ficha-exp-pill {
+  display: inline-flex;
   align-items: center;
+  gap: 8px;
   min-width: 0;
+  background: rgba(135, 43, 19, 0.08);
+  border-radius: 22px;
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--color-brown);
 }
 
 .ficha-exp-precio-card {
-  background: rgba(255, 234, 202, 0.97);
+  min-width: 0;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.14);
   border-radius: 10px;
-  padding: 22px 24px;
+  padding: clamp(16px, 2.5vw, 22px);
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  min-width: 0;
+  gap: 10px;
 }
-@media (min-width: 900px) {
-  .ficha-exp-precio-card {
-    min-width: 290px;
-  }
-}
-
-.ficha-exp-tira {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 3px;
-  background: #4a1709;
-}
-@media (min-width: 640px) {
-  .ficha-exp-tira {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-.ficha-exp-tira button {
-  min-width: 0;
-  height: clamp(96px, 14vw, 128px);
-  padding: 0;
-  border: none;
-  cursor: pointer;
-  display: block;
-  overflow: hidden;
-  position: relative;
-  background: none;
+.ficha-exp-precio {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(30px, 5vw, 42px);
+  line-height: 1.1;
+  color: var(--color-brown);
 }
 
+/* El resumen de "incluye" que acompaña al precio. Sin `list-style: none` el
+   navegador pinta sus viñetas de serie y cada línea sale con un punto negro
+   además del check naranja: dos marcadores distintos diciendo lo mismo. */
+.ficha-exp-incluye-mini {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.ficha-exp-incluye-mini li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(135, 43, 19, 0.85);
+}
+.ficha-exp-incluye-mini span {
+  min-width: 0;
+}
+/* El recuento de los que no caben no lleva check: no es un ítem más. La
+   sangría son los 16px del icono más los 8 del hueco, para que arranque en la
+   misma columna que los textos de arriba y la lista no se vea escalonada. */
+.ficha-exp-incluye-resto {
+  padding-left: 24px;
+  font-style: italic;
+  color: rgba(135, 43, 19, 0.6);
+}
+
+/* El contacto va fuera de la tarjeta: dentro competía con el botón, y no es
+   una alternativa a reservar sino la salida de quien no reserva porque le
+   falta un dato. El enlace ocupa su propia línea para que el área táctil
+   llegue a 44px sin inflar el interlineado de la pregunta de arriba. */
+.ficha-exp-contacto {
+  margin-top: 14px;
+  min-width: 0;
+  /* La pregunta y el enlace van en una sola línea, y el wrap es lo que la
+     salva: en la columna estrecha de móvil los dos textos juntos no caben, y
+     sin él el enlace se saldría de la tarjeta en vez de bajar una línea.
+     El gap vertical de 4px es el que se aplica cuando eso pasa. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+.ficha-exp-contacto p {
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(135, 43, 19, 0.7);
+}
+.ficha-exp-contacto a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 44px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-crimson);
+  text-decoration: underline;
+}
+.ficha-exp-contacto a span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* El glifo pinta con currentColor y heredado del enlace saldría carmesí. Se le
+   pone el naranja de los demás iconos de la ficha —reloj, personas, checks—
+   para que la columna entera se lea con un solo acento. */
+.ficha-exp-contacto a svg {
+  color: var(--color-orange);
+}
+
+/* ── El relato ──
+   Iba sobre una banda de marrón muy oscuro. La ficha entera va ahora sobre el
+   mismo crema, sin una sola banda de otro tono: los fondos distintos quedan
+   para los componentes —tarjeta de precio, viñetas—, nunca para las secciones.
+
+   Sin cambio de fondo el bloque necesitaba otra cosa que lo marque, y es el
+   filete ámbar: una línea vertical de la que cuelga todo el relato. Hace el
+   trabajo que hacía la banda —decir dónde empieza y dónde acaba— con un
+   recurso que ya está en la paleta y que la sección de abajo repite en
+   horizontal, así que las dos se leen como el mismo sistema.
+
+   Lo que se gana: la barra de reserva pasa a ser lo único oscuro de la
+   pantalla, así que el marrón deja de ser decoración y marca la acción. */
+/* El tope y el margen van en la sección, no en el hijo. Estaban repartidos —el
+   padding lateral aquí y el `max-width: 1200px` en .ficha-exp-relato-grid— y
+   eso hacía que el contenido del relato midiera 1200px mientras portada,
+   prácticos, listas y cierre miden 1136 (los mismos 1200 menos sus dos
+   márgenes). El relato se salía 64px por cada lado respecto a todo lo demás.
+   Con las tres declaraciones juntas, mide lo mismo que sus vecinos. */
 .ficha-exp-relato {
-  background: #4a1709;
-  padding: clamp(48px, 9vw, 96px) var(--contenido-margen);
-}
-.ficha-exp-relato-grid {
   max-width: var(--contenido-ancho);
   margin: 0 auto;
+  padding: clamp(3rem, 7vw, 4.5rem) var(--contenido-margen);
+}
+.ficha-exp-relato-grid {
+  min-width: 0;
+}
+/* El rótulo "LA EXPERIENCIA" iba colgado en una columna propia a la izquierda.
+   Con un relato largo esa columna quedaba vacía media pantalla, así que el
+   rótulo sale de la vista —sigue en el documento para lectores de pantalla y
+   buscadores— y el texto arranca en el margen.
+
+   El relato ocupa el mismo ancho que el resto de la página: arranca en el
+   margen del contenedor y llega hasta el otro lado, igual que la portada, los
+   datos prácticos y las listas. Nada de sangrías ni de medidas propias — si
+   este bloque empieza treinta píxeles más adentro, se nota. */
+.ficha-exp-relato-texto {
+  min-width: 0;
+}
+/* La entradilla se centra y va entrecomillada: deja de ser "el primer párrafo
+   más grande" y pasa a leerse como la frase que resume la experiencia. Las
+   comillas las pone el CSS y no el texto, porque el relato lo escribe el
+   administrador y no tiene por qué acordarse de ponerlas.
+
+   42ch de medida: centrado y en cursiva, un renglón más largo que eso cuesta
+   de seguir de una línea a la siguiente. */
+.ficha-exp-entradilla {
+  max-width: 42ch;
+  margin: 0 auto clamp(32px, 5vw, 48px);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(20px, 4vw, 30px);
+  line-height: 1.4;
+  color: var(--color-brown);
+  text-align: center;
+  white-space: pre-line;
+}
+.ficha-exp-entradilla::before {
+  content: '“';
+}
+.ficha-exp-entradilla::after {
+  content: '”';
+}
+/* Ocupar el ancho de la página dejaba líneas de unos 130 caracteres y el ojo
+   perdía el renglón al saltar. Dos columnas devuelven la medida a lo cómodo
+   sin encoger el bloque ni desalinearlo del resto.
+
+   El reparto lo decide `column-width`, no un número fijo: el navegador mete
+   las columnas que quepan a 26rem y como mucho dos, así que sobre ~870px son
+   dos y por debajo una sola, sin una media query de por medio. */
+/* El cuerpo se reparte en tarjetas, no en columnas de texto: con `columns` el
+   ojo tenía que volver arriba al acabar la primera columna, y en un relato de
+   tres párrafos ese salto se nota más de lo que ahorra. Cada tarjeta se lee
+   entera, una detrás de otra.
+
+   `auto-fit` y no dos columnas fijas: si el relato trae un solo párrafo queda
+   una sola tarjeta ocupando el ancho entero, y se ve deliberada en vez de
+   media rejilla vacía. */
+.ficha-exp-cuerpo {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  /* El hueco es lo que estrecha las tarjetas: el bloque sigue arrancando y
+     acabando donde el resto de la página, y lo que se lleva el aire es el
+     centro. A 1136px de contenido, cada tarjeta baja de 586px a 536. */
+  gap: clamp(20px, 5vw, 64px);
   align-items: start;
 }
-@media (min-width: 900px) {
-  .ficha-exp-relato-grid {
-    grid-template-columns: 260px minmax(0, 1fr);
-    gap: 56px;
-  }
+.ficha-exp-bloque {
+  min-width: 0;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.1);
+  border-radius: 16px;
+  padding: clamp(20px, 4vw, 32px);
 }
 
-/* Datos prácticos: banda oscura entre el relato y las listas. Mobile-first —
-   una columna en móvil, y solo agrega columnas cuando hay sitio de sobra. */
+/* Cierra el relato y abre los datos prácticos. Un filete y no una banda: la
+   ficha entera va sobre el mismo crema y los cambios de fondo están
+   reservados a los componentes, nunca a las secciones. */
+.ficha-exp-separador {
+  /* Mismo desajuste que tenía el relato: un `max-width: 1200px` a secas deja el
+     filete 64px más ancho que las secciones que separa. En un <hr> el padding
+     no sirve —el borde se pinta hasta el borde de la caja de relleno—, así que
+     el ancho se descuenta directamente. */
+  width: calc(100% - 2 * var(--contenido-margen));
+  max-width: calc(var(--contenido-ancho) - 2 * var(--contenido-margen));
+  margin-inline: auto;
+  border: 0;
+  border-top: 1px solid rgba(135, 43, 19, 0.14);
+}
+.ficha-exp-parrafo {
+  font-size: clamp(16px, 1.3vw, 17px);
+  line-height: 1.85;
+  color: rgba(135, 43, 19, 0.78);
+  margin-bottom: 18px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+.ficha-exp-parrafo:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Antes de reservar ──
+   Iba en una banda marrón pegada a la del relato: dos oscuros seguidos se
+   confundían entre sí y el bloque se leía como nota al pie. Sobre crema con
+   filete ámbar pesa lo que tiene que pesar sin quedar encerrado. */
 .ficha-exp-practicos {
-  background: var(--color-brown);
-  padding: clamp(32px, 6vw, 56px) var(--contenido-margen);
+  max-width: var(--contenido-ancho);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 3.5rem) var(--contenido-margen) 0;
+}
+.ficha-exp-practicos-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: clamp(16px, 2.5vw, 22px);
+}
+/* Un filete a cada lado del rótulo. Con `flex: 1` sobre base 0 se reparten lo
+   que sobre y encogen hasta desaparecer en pantallas estrechas, así que el
+   rótulo nunca se ve empujado ni parte la línea. */
+.ficha-exp-regla {
+  flex: 1;
+  height: 2px;
+  background: var(--color-amber);
 }
 .ficha-exp-practicos-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(24px, 4vw, 40px);
+  /* El `min(...)` es lo que impide que la celda exija 260px cuando la
+     pantalla no los tiene: sin él, a 320px la rejilla desborda. */
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: clamp(18px, 3vw, 28px);
   margin: 0;
 }
-@media (min-width: 720px) {
-  .ficha-exp-practicos-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
-  }
+/* Tarjeta y no columna colgada de un filete: sobre el crema de la ficha, tres
+   textos con una línea encima se leían como párrafos sueltos, y lo que se pide
+   aquí es localizar la respuesta de un vistazo sin llegar a leerla. */
+.ficha-exp-practico {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 12px;
+  padding: clamp(16px, 3vw, 20px);
+}
+/* El disco es lo que convierte el icono en marca del dato en vez de adorno.
+   44px son además el área táctil de referencia del sitio, así que la tarjeta
+   nunca queda por debajo de esa altura por poco texto que tenga. */
+.ficha-exp-practico-icono {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(234, 91, 12, 0.12);
+}
+/* El bloque cierra sin padding porque abajo siempre vienen las listas con el
+   suyo. "Incluye" es obligatorio, así que eso pasa siempre… salvo que un día
+   deje de serlo, y entonces los datos prácticos quedarían pegados a la barra. */
+.ficha-exp-practicos:has(+ .ficha-exp-barra) {
+  padding-bottom: clamp(2rem, 4vw, 3rem);
+}
+.ficha-exp-practico-valor {
+  min-width: 0;
+  margin-top: 4px;
+  font-size: clamp(16px, 1.3vw, 17px);
+  line-height: 1.6;
+  color: var(--color-brown);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
-.ficha-exp-claro {
-  background: var(--color-cream);
-  padding: clamp(40px, 8vw, 80px) var(--contenido-margen);
-}
-.ficha-exp-tarjetas {
+/* ── Las tres listas ──
+   Cada lista es una tarjeta con su icono y sus filas dentro. Fueron píldoras
+   sueltas en una fila que envolvía, y el problema era que las tres listas se
+   mezclaban en una sola mancha de píldoras: para saber si algo entraba en el
+   cupo o no, había que rastrear bajo qué rótulo caía. Con recinto propio, la
+   respuesta se ve antes de leerla.
+
+   `auto-fit` reparte las que haya: con las tres van en fila, con una sola
+   ocupa el ancho y sigue viéndose intencional. */
+.ficha-exp-listas {
+  max-width: var(--contenido-ancho);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 3.5rem) var(--contenido-margen) clamp(2rem, 4vw, 3rem);
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: clamp(18px, 3vw, 28px);
+  align-items: start;
 }
-@media (min-width: 640px) {
-  .ficha-exp-tarjetas {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.ficha-exp-lista-card {
+  min-width: 0;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 16px;
+  padding: clamp(20px, 4vw, 26px);
 }
-@media (min-width: 1024px) {
-  .ficha-exp-tarjetas {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+/* Lo que NO entra pesa menos que lo que sí: misma forma, medio tono por
+   debajo. Sin rojo ni aspa de alerta, que esto se lee justo antes de pagar. */
+.ficha-exp-lista-card--apagada {
+  background: rgba(135, 43, 19, 0.03);
+}
+.ficha-exp-lista-titulo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin-bottom: clamp(14px, 2.5vw, 18px);
+  font-family: var(--font-display);
+  font-size: clamp(19px, 2.2vw, 22px);
+  line-height: 1.25;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.ficha-exp-vinetas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+/* Filas y no píldoras: dentro de la tarjeta, alineadas a la izquierda y con el
+   mismo ancho, la lista se recorre de arriba abajo sin saltos. */
+.ficha-exp-vineta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  background: var(--admin-surface);
+  border: 1px solid rgba(135, 43, 19, 0.1);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.ficha-exp-lista-card--apagada .ficha-exp-vineta {
+  background: rgba(135, 43, 19, 0.04);
+  border-color: rgba(135, 43, 19, 0.08);
+}
+.ficha-exp-punto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
 }
 
-/* Barra de acción pegada abajo: en móvil es la única forma de tener
-   el botón siempre a mano sin duplicarlo por toda la página. */
+/* ── Barra de reserva ──
+   El diseño la pide `fixed`. Aquí va `sticky`, que se comporta igual
+   —pegada al borde inferior durante todo el scroll de la ficha— pero
+   ocupa su sitio en el flujo y por eso no tapa el footer del sitio, que el
+   prototipo no tiene. Sin eso haría falta un padding-bottom de 104px en el
+   documento y aun así el pie quedaría cubierto al final. */
 .ficha-exp-barra {
   position: sticky;
   bottom: 0;
@@ -1603,16 +2190,82 @@ footer :focus-visible {
   background: var(--color-brown);
   padding: 14px var(--contenido-margen);
   padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -4px 18px rgba(74, 23, 9, 0.28);
+}
+.ficha-exp-barra-contenido {
+  max-width: var(--contenido-ancho);
+  margin: 0 auto;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px 24px;
+  gap: 12px;
+}
+.ficha-exp-barra-precio {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(22px, 4vw, 30px);
+  color: var(--color-gold);
+}
+/* A partir de 900px la barra desaparece, que es la misma regla que ya sigue la
+   ficha de producto. En escritorio la tarjeta de precio de la portada y el
+   bloque de cierre cubren los dos extremos del scroll, y una franja marrón
+   fija a lo ancho de 1400px para repetir un dato que ya está dos veces pesaba
+   más de lo que resolvía. */
+@media (min-width: 900px) {
+  .ficha-exp-barra {
+    display: none;
+  }
+}
+
+/* ── Cierre ──
+   La ficha acababa en la barra de reserva, y la barra es del mismo marrón que
+   el footer del sitio: al final del scroll los dos bloques oscuros se tocaban
+   y se leían como uno solo. Este bloque va entre los dos, en claro, para que
+   eso no pueda pasar — y en escritorio, donde ya no hay barra, es además lo
+   que cierra la página con algo que pulsar. */
+/* Los espacios de esta caja son la mitad de los que tenía. Con 64px de padding
+   arriba y abajo, tres líneas de contenido ocupaban casi 400px de alto y el
+   bloque se leía como una sección entera en vez de como el cierre de la ficha.
+   Los tamaños de letra no cambian: lo que sobraba era aire, no tipografía. */
+.ficha-exp-cierre {
+  max-width: var(--contenido-ancho);
+  margin: 0 auto;
+  padding: clamp(1.25rem, 3vw, 2rem) var(--contenido-margen) clamp(2rem, 4vw, 2.75rem);
+}
+.ficha-exp-cierre-caja {
+  max-width: 860px;
+  margin: 0 auto;
+  min-width: 0;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  border-radius: 24px;
+  padding: clamp(24px, 3vw, 32px) clamp(20px, 4vw, 36px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.ficha-exp-cierre-titulo {
+  min-width: 0;
+  font-size: clamp(24px, 4vw, 34px);
+  line-height: 1.15;
+  color: var(--color-brown);
+}
+.ficha-exp-cierre-precio {
+  max-width: 48ch;
+  min-width: 0;
+  margin-bottom: clamp(14px, 2vw, 20px);
+  font-size: clamp(15px, 1.4vw, 17px);
+  line-height: 1.6;
+  color: rgba(135, 43, 19, 0.78);
+  overflow-wrap: anywhere;
 }
 
 .ficha-eyebrow {
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 3px;
   text-transform: uppercase;
 }
