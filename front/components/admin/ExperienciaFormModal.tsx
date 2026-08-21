@@ -137,7 +137,7 @@ export default function ExperienciaFormModal({
 
   return (
     <div className="admin-modal-overlay" onClick={onClose}>
-      <div className="admin-modal" onClick={e => e.stopPropagation()}>
+      <div className="admin-modal admin-modal--grande" onClick={e => e.stopPropagation()}>
         <div className="admin-modal-header">
           <div style={{ fontSize: 17, fontWeight: 700, minWidth: 0 }}>
             {isEdit ? 'Editar experiencia' : 'Nueva experiencia'}
@@ -215,7 +215,7 @@ export default function ExperienciaFormModal({
 
             <Seccion titulo="Datos prácticos" />
             <div className="admin-form-row-3">
-              <FormRow label="Precio (COP) *">
+              <FormRow label="Precio ($) *">
                 <input className="admin-input" type="number" min={0} value={form.precio} onChange={e => set('precio', e.target.value)} placeholder="95000" />
               </FormRow>
               <FormRow label="Duración *">
