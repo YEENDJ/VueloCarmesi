@@ -79,7 +79,7 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
       if (!res.ok) throw new Error()
       router.push('/reservar/confirmacion')
     } catch {
-      setError('Hubo un problema al enviar tu reserva. Por favor intentá de nuevo o escribinos directamente.')
+      setError('Hubo un problema al enviar tu reserva. Por favor inténtalo de nuevo o escríbenos directamente.')
       setLoading(false)
     }
   }
@@ -203,14 +203,14 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
           disabled={loading}
           style={{
             width: '100%',
-            padding: '18px 40px',
+            padding: '12px 32px',
             borderRadius: '8px',
             border: 'none',
             backgroundColor: loading ? 'rgba(213,19,18,.6)' : 'var(--color-crimson)',
             color: 'var(--color-cream)',
             fontFamily: 'var(--font-body)',
             fontWeight: 700,
-            fontSize: '18px',
+            fontSize: '16px',
             cursor: loading ? 'not-allowed' : 'pointer',
             transition: 'background-color 0.2s',
           }}

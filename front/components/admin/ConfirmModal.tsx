@@ -37,7 +37,7 @@ export default function ConfirmModal({
     try {
       await onConfirm()
     } catch {
-      setError('Ocurrió un error. Intentá de nuevo.')
+      setError('Ocurrió un error. Inténtalo de nuevo.')
       setBusy(false)
     }
   }

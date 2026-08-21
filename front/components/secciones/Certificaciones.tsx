@@ -7,10 +7,10 @@ export default function Certificaciones() {
       id="certificaciones"
       style={{
         backgroundColor: 'var(--color-cream)',
-        padding: 'clamp(48px, 8vw, 80px) 24px',
+        paddingBlock: 'clamp(48px, 8vw, 80px)',
       }}
     >
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+      <div className="contenido">
 
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <p
@@ -29,7 +29,7 @@ export default function Certificaciones() {
           <h2
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(28px, 4vw, 40px)',
+              fontSize: 'var(--fs-h2)',
               color: 'var(--color-crimson)',
               lineHeight: 1.2,
               marginBottom: '16px',
@@ -48,7 +48,7 @@ export default function Certificaciones() {
               margin: '0 auto',
             }}
           >
-            Nuestras prácticas agroecológicas y turísticas están certificadas por
+            Nuestras prácticas agroecológicas y turísticas están respaldadas por
             organismos oficiales. Trabajamos con transparencia, del monte a tu mesa.
           </p>
         </div>
@@ -64,6 +64,7 @@ export default function Certificaciones() {
             <div
               key={cert.nombre}
               style={{
+                minWidth: 0,
                 backgroundColor: '#FFF6E4',
                 border: '1px solid rgba(135,43,19,.15)',
                 borderRadius: '12px',
@@ -75,7 +76,11 @@ export default function Certificaciones() {
                 textAlign: 'center',
               }}
             >
-              <CertBadge cert={cert} />
+              {/* Alto fijo para que los cuatro sellos queden a la misma línea
+                  base, aunque uno sea circular y otro apaisado */}
+              <div style={{ minHeight: 96, display: 'flex', alignItems: 'center' }}>
+                <CertBadge cert={cert} />
+              </div>
               <p
                 style={{
                   fontFamily: 'var(--font-body)',
@@ -100,6 +105,18 @@ export default function Certificaciones() {
               >
                 {cert.entidad}
               </p>
+              {cert.referencia && (
+                <p
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '20px',
+                    color: 'var(--color-crimson)',
+                    margin: '-6px 0 12px',
+                  }}
+                >
+                  {cert.referencia}
+                </p>
+              )}
               <p
                 style={{
                   fontFamily: 'var(--font-body)',

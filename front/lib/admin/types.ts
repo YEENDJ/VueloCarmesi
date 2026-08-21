@@ -20,10 +20,18 @@ export interface AdminExperiencia {
   slug: string
   nombre: string
   descripcion: string
+  descripcionLarga: string
   duracion: string
   precio: number
   capacidad: number
   imagen: string
+  imagenes: string[]
+  incluye: string[]
+  queTraer: string[]
+  noIncluye: string[]
+  horarios: string
+  recomendaciones: string
+  puntoEncuentro: string
   destacada: boolean
   archivada: boolean
   createdAt: string
@@ -34,9 +42,11 @@ export interface AdminProducto {
   slug: string
   nombre: string
   descripcion: string
+  descripcionLarga: string
   precio: number
   stock: number
   imagen: string
+  imagenes: string[]
   categoria: string
   badge?: 'Nuevo' | 'Destacado' | null
   createdAt: string

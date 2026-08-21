@@ -35,14 +35,26 @@ export default function Navbar() {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [abierto])
 
+  // Una pestaña queda activa si estamos en su ruta o en cualquier página que
+  // cuelgue de ella (/experiencias/kayak enciende «Experiencias»). Inicio es la
+  // excepción: sólo en la raíz, si no estaría siempre encendida.
+  const esActiva = (href: string) =>
+    href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`)
+
   return (
     <nav className="navbar">
+      {/* .contenido alinea el logo y los enlaces con el resto de la página;
+          la franja crimson de .navbar sigue llegando a los bordes. */}
+      <div className="navbar-inner contenido">
       <Link href="/" className="navbar-logo" aria-label="Vuelo Carmesí — ir al inicio">
         <Image
-          src="/images/logo.png"
+          src="/images/marca/logo-crema.png"
           alt="Vuelo Carmesí"
-          width={250}
-          height={40}
+          width={220}
+          height={35}
+          // El ancho real lo fija .navbar-logo, que baja a 46vw en pantallas
+          // angostas; sizes se lo dice al optimizador para que no sirva de mas.
+          sizes="(max-width: 478px) 46vw, 220px"
           priority
         />
       </Link>
@@ -51,7 +63,13 @@ export default function Navbar() {
       <ul className="navbar-links">
         {LINKS.map(([label, href]) => (
           <li key={href}>
-            <Link href={href} className="navbar-link">{label}</Link>
+            <Link
+              href={href}
+              className={`navbar-link${esActiva(href) ? ' activo' : ''}`}
+              aria-current={esActiva(href) ? 'page' : undefined}
+            >
+              {label}
+            </Link>
           </li>
         ))}
         <li><CartBadge /></li>
@@ -72,11 +90,19 @@ export default function Navbar() {
         </button>
       </div>
 
+      </div>
+
       <div id="navbar-panel" className={`navbar-panel${abierto ? ' open' : ''}`}>
         <ul>
           {LINKS.map(([label, href]) => (
             <li key={href}>
-              <Link href={href} className="navbar-link">{label}</Link>
+              <Link
+              href={href}
+              className={`navbar-link${esActiva(href) ? ' activo' : ''}`}
+              aria-current={esActiva(href) ? 'page' : undefined}
+            >
+              {label}
+            </Link>
             </li>
           ))}
         </ul>

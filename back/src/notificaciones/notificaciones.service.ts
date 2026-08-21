@@ -4,7 +4,7 @@ import { TelegramService } from './telegram.service'
 import { PrismaService } from '../prisma.service'
 import { formatDireccionPedido } from './format-direccion.util'
 import { escapeHtml } from './escape-html.util'
-import { tablaItemsHtml, lineasItemsTexto, ItemPedido } from './format-items-pedido.util'
+import { tablaItemsHtml, lineasItemsTexto, formatPrecio, ItemPedido } from './format-items-pedido.util'
 
 const ADMIN_URL = process.env.FRONTEND_URL ?? 'http://localhost:3000'
 
@@ -74,7 +74,6 @@ export class NotificacionesService {
     direccion: string; ciudad: string; codigoPostal: string; total: number
     items: ItemPedido[]
   }): Promise<void> {
-    const totalStr = pedido.total.toLocaleString('es-CO')
     const direccionCompleta = formatDireccionPedido(pedido)
     const itemsTableCliente = tablaItemsHtml(pedido.items, 'cliente')
     const itemsTableAdmin = tablaItemsHtml(pedido.items, 'admin')
@@ -106,7 +105,7 @@ export class NotificacionesService {
     }
 
     await this.telegram.send(
-      `🛒 *Nuevo Pedido*\nNombre: ${pedido.nombre}\nEmail: ${pedido.email}\n\n${lineasItems}\n\nTotal: $ ${totalStr} COP`,
+      `🛒 *Nuevo Pedido*\nNombre: ${pedido.nombre}\nEmail: ${pedido.email}\n\n${lineasItems}\n\nTotal: ${formatPrecio(pedido.total)}`,
     )
   }
 

@@ -225,7 +225,7 @@ export default function SobreNosotrosPage() {
                 style={{
                   fontFamily: 'var(--font-body)',
                   fontWeight: 700,
-                  fontSize: 'clamp(15px, 1.5vw, 17px)',
+                  fontSize: 'clamp(16px, 1.5vw, 17px)',
                   color: 'var(--color-brown)',
                   lineHeight: 1.8,
                   marginBottom: '16px',
@@ -240,7 +240,7 @@ export default function SobreNosotrosPage() {
                 style={{
                   fontFamily: 'var(--font-body)',
                   fontWeight: 700,
-                  fontSize: 'clamp(15px, 1.5vw, 17px)',
+                  fontSize: 'clamp(16px, 1.5vw, 17px)',
                   color: 'var(--color-brown)',
                   lineHeight: 1.8,
                   marginBottom: '16px',
@@ -255,7 +255,7 @@ export default function SobreNosotrosPage() {
                 style={{
                   fontFamily: 'var(--font-body)',
                   fontWeight: 700,
-                  fontSize: 'clamp(15px, 1.5vw, 17px)',
+                  fontSize: 'clamp(16px, 1.5vw, 17px)',
                   color: 'var(--color-brown)',
                   lineHeight: 1.8,
                   opacity: 0.9,
@@ -395,7 +395,7 @@ export default function SobreNosotrosPage() {
                 style={{
                   fontFamily: 'var(--font-body)',
                   fontWeight: 700,
-                  fontSize: 'clamp(15px, 1.5vw, 17px)',
+                  fontSize: 'clamp(16px, 1.5vw, 17px)',
                   color: 'var(--color-brown)',
                   lineHeight: 1.8,
                   marginBottom: '32px',
@@ -709,7 +709,7 @@ export default function SobreNosotrosPage() {
               marginBottom: '16px',
             }}
           >
-            ¿Querés vivir el cacao en persona?
+            ¿Quieres vivir el cacao en persona?
           </h2>
           <p
             style={{
@@ -721,7 +721,7 @@ export default function SobreNosotrosPage() {
               marginBottom: '32px',
             }}
           >
-            Reservá tu lugar en alguna de nuestras experiencias y descubrí la finca de primera mano.
+            Reserva tu lugar en alguna de nuestras experiencias y descubre la finca de primera mano.
           </p>
           <a href="/experiencias" className="btn-ghost-cream">
             Ver experiencias

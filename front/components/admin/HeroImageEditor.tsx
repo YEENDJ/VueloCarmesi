@@ -79,7 +79,7 @@ export default function HeroImageEditor({
       await onSave?.(url)
       setSrcLocal(null)
     } catch {
-      setError('Error al guardar. Intentá de nuevo.')
+      setError('Error al guardar. Inténtalo de nuevo.')
     } finally {
       setSaving(false)
     }
@@ -95,9 +95,9 @@ export default function HeroImageEditor({
     return (
       <div>
         <div className="admin-field-label" style={{ marginBottom: 12 }}>
-          Ajustá el recorte{' '}
+          Ajusta el recorte{' '}
           <span style={{ fontWeight: 400, color: 'var(--admin-text-muted)' }}>
-            — arrastrá para mover · scroll para hacer zoom
+            — arrastra para mover · scroll para hacer zoom
           </span>
         </div>
 

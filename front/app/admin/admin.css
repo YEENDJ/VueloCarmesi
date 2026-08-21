@@ -188,21 +188,21 @@
 
 /* Botones */
 .btn-primary {
-  padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer;
+  padding: 7px 15px; border-radius: 8px; border: none; cursor: pointer;
   background: var(--color-crimson); color: var(--color-cream);
   font-family: var(--font-body); font-weight: 700; font-size: 14px;
 }
 .btn-secondary {
-  padding: 10px 18px; border-radius: 8px; cursor: pointer;
+  padding: 7px 15px; border-radius: 8px; cursor: pointer;
   background: transparent; border: 1.5px solid var(--color-orange); color: var(--color-orange);
   font-family: var(--font-body); font-weight: 700; font-size: 14px;
 }
 .btn-ghost {
-  padding: 10px 18px; border-radius: 8px; cursor: pointer;
+  padding: 7px 15px; border-radius: 8px; cursor: pointer;
   background: transparent; border: 1.5px solid var(--admin-border); color: var(--admin-text-muted);
   font-family: var(--font-body); font-weight: 700; font-size: 14px;
 }
-.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-sm { padding: 6px 12px; font-size: 13px; }
 
 /* Input / select */
 .admin-input {
@@ -239,6 +239,11 @@
 .admin-modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,.4);
   display: flex; align-items: center; justify-content: center; z-index: 200;
+  /* dvh y no vh: en móvil la barra del navegador se come el 100vh y el pie
+     del modal queda debajo del borde. El padding es el único margen que
+     separa el modal del borde de la pantalla. */
+  height: 100dvh;
+  padding: clamp(12px, 2vw, 24px);
 }
 .admin-modal {
   background: #fff; border-radius: 14px; width: 560px; max-width: 92vw;
@@ -253,6 +258,42 @@
 .admin-modal-footer {
   padding: 20px 24px; border-top: 1px solid var(--admin-border);
   display: flex; justify-content: flex-end; gap: 12px;
+}
+
+/* Modal grande: el de crear/editar. Son formularios largos y en 560px
+   quedaban como un tubo con scroll infinito; acá ocupan lo que da la
+   pantalla menos el margen del overlay. El resto de modales (confirmar,
+   avisos) siguen chicos con .admin-modal a secas. */
+.admin-modal--grande {
+  width: min(1200px, 100%);
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  /* Columna con el cuerpo scrolleando: así el título y los botones de
+     guardar quedan siempre a la vista, que es lo que se pierde cuando el
+     scroll está en el modal entero. */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+/* El <form> se interpone entre el modal y su cuerpo; sin esto no propaga la
+   altura y el scroll termina en el contenedor equivocado. */
+.admin-modal--grande > form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.admin-modal--grande .admin-modal-header,
+.admin-modal--grande .admin-modal-footer {
+  flex: none;
+}
+.admin-modal--grande .admin-modal-body {
+  flex: 1;
+  /* min-height: 0 es lo que le permite encogerse por debajo de su contenido
+     y, recién ahí, scrollear. */
+  min-height: 0;
+  overflow-y: auto;
 }
 
 /* Field label */
@@ -306,7 +347,7 @@
 
   /* Los botones chicos quedan por debajo del área táctil cómoda */
   .btn-sm {
-    padding: 9px 14px;
+    padding: 6px 12px;
     font-size: 13px;
   }
   .admin-pill {
@@ -353,6 +394,12 @@
     max-height: 92vh;
   }
 
+  /* En móvil el grande usa toda la altura disponible: no sobra pantalla
+     para dejar margen extra. */
+  .admin-modal--grande {
+    max-height: 100%;
+  }
+
   .admin-modal-header,
   .admin-modal-footer,
   .admin-drawer-header,
@@ -364,9 +411,5 @@
   .admin-modal-body,
   .admin-drawer-body {
     padding: 18px;
-  }
-
-  .admin-modal-overlay {
-    padding: 12px;
   }
 }

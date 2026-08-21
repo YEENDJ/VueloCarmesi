@@ -48,7 +48,7 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <section className="page-shell" style={{ maxWidth: '600px', textAlign: 'center' }}>
-        <h1 style={{ marginBottom: '1rem', color: 'var(--color-brown)' }}>No hay productos en tu carrito</h1>
+        <h1 style={{ marginBottom: '1rem', color: 'var(--color-brown)', fontSize: 'var(--fs-h1)' }}>No hay productos en tu carrito</h1>
         <Button href="/tienda">Ir a la tienda</Button>
       </section>
     )
@@ -57,14 +57,14 @@ export default function CheckoutPage() {
   return (
     <section className="page-shell shop-columns" style={{ maxWidth: '1000px' }}>
       <form onSubmit={handleSubmit(onSubmit)} className="shop-main" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-        <h1 style={{ color: 'var(--color-brown)' }}>Checkout</h1>
+        <h1 style={{ color: 'var(--color-brown)', fontSize: 'var(--fs-h1)' }}>Checkout</h1>
 
-        <h3 style={{ color: 'var(--color-brown)', marginBottom: 0 }}>Datos de contacto</h3>
+        <h3 style={{ color: 'var(--color-brown)', marginBottom: 0, fontSize: 'var(--fs-h3)' }}>Datos de contacto</h3>
         <Input label="Nombre completo" error={errors.nombre?.message} {...register('nombre')} />
         <Input label="Email" type="email" error={errors.email?.message} {...register('email')} />
         <Input label="Teléfono" type="tel" error={errors.telefono?.message} {...register('telefono')} />
 
-        <h3 style={{ color: 'var(--color-brown)', marginBottom: 0 }}>Datos de entrega</h3>
+        <h3 style={{ color: 'var(--color-brown)', marginBottom: 0, fontSize: 'var(--fs-h3)' }}>Datos de entrega</h3>
         <Input label="Dirección" error={errors.direccion?.message} {...register('direccion')} />
         <Input label="Ciudad" error={errors.ciudad?.message} {...register('ciudad')} />
         <Input label="Código postal" error={errors.codigoPostal?.message} {...register('codigoPostal')} />
@@ -74,7 +74,7 @@ export default function CheckoutPage() {
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Procesando...' : `Confirmar pedido · ${formatPrecio(cartTotal)}`}
         </Button>
-        <p style={{ textAlign: 'center', fontSize: '0.75rem', color: 'rgba(135,43,19,0.6)' }}>
+        <p style={{ textAlign: 'center', fontSize: '0.8125rem', color: 'rgba(135,43,19,0.6)' }}>
           Al confirmar aceptás nuestras condiciones de venta
         </p>
       </form>
@@ -83,7 +83,7 @@ export default function CheckoutPage() {
         background: 'var(--color-brown)', borderRadius: '12px', padding: '2rem',
       }}>
         <p style={{
-          fontWeight: 700, fontSize: '0.75rem', letterSpacing: '2px', textTransform: 'uppercase',
+          fontWeight: 700, fontSize: '13px', letterSpacing: '3px', textTransform: 'uppercase',
           color: 'var(--color-gold)', marginBottom: '1.1rem',
         }}>
           Resumen de tu pedido

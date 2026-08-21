@@ -1,12 +1,20 @@
-import { IsString, IsNumber, IsOptional, IsIn, Min } from 'class-validator'
+import {
+  IsString, IsNumber, IsOptional, IsIn, IsArray, Min, MaxLength, ArrayMaxSize,
+} from 'class-validator'
+import { MAX_IMAGENES, MAX_META } from './create-producto.dto'
 
 export class UpdateProductoDto {
   @IsOptional() @IsString() nombre?: string
-  @IsOptional() @IsString() slug?: string
-  @IsOptional() @IsString() descripcion?: string
+  @IsOptional() @IsString() @MaxLength(MAX_META) descripcion?: string
+  @IsOptional() @IsString() descripcionLarga?: string
   @IsOptional() @IsNumber() @Min(0) precio?: number
   @IsOptional() @IsNumber() @Min(0) stock?: number
   @IsOptional() @IsString() categoria?: string
-  @IsOptional() @IsString() imagen?: string
+
+  // `imagen` ya no se acepta: la deriva el service de imagenes[0]. Mandarla por
+  // separado era la vía para que portada y galería terminaran desalineadas.
+  @IsOptional() @IsArray() @IsString({ each: true }) @ArrayMaxSize(MAX_IMAGENES)
+  imagenes?: string[]
+
   @IsOptional() @IsIn(['Nuevo', 'Destacado', null]) badge?: string | null
 }

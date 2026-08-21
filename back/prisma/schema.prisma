@@ -13,11 +13,30 @@ model Experiencia {
   id          String    @id @default(cuid())
   slug        String    @unique
   nombre      String
-  descripcion String
+  // Ya no va en la tarjeta: su único trabajo es la meta description de Google,
+  // donde el recorte cae en ~160 caracteres. Es opcional; si está vacía se
+  // derivan las primeras líneas de descripcionLarga.
+  descripcion String    @default("")
+  // El relato. Es el texto principal de la ficha y se escribe en párrafos.
+  descripcionLarga String @default("")
   duracion    String
   precio      Float
   capacidad   Int
+  // Prácticos: opcionales, la ficha absorbe su ausencia sin verse incompleta.
+  horarios        String @default("")
+  // Edad mínima, condición física, advertencias.
+  recomendaciones String @default("")
+  // Vacío = se usa el punto de encuentro por defecto de SiteConfig. Solo se
+  // llena cuando esta experiencia sale de otro lado.
+  puntoEncuentro  String @default("")
+  // `imagenes` es la fuente de verdad y su primer elemento es la portada.
+  // `imagen` se conserva porque lo consumen tarjetas, carrito y correos; el
+  // service lo mantiene sincronizado con imagenes[0] para que no se separen.
   imagen      String    @default("")
+  imagenes    String[]  @default([])
+  incluye     String[]  @default([])
+  queTraer    String[]  @default([])
+  noIncluye   String[]  @default([])
   destacada   Boolean   @default(false)
   archivada   Boolean   @default(false)
   createdAt   DateTime  @default(now())
@@ -42,10 +61,15 @@ model Producto {
   id          String       @id @default(cuid())
   slug        String       @unique
   nombre      String
-  descripcion String
+  // Igual que en Experiencia: la corta sale de la tarjeta y queda como meta
+  // description, opcional y con respaldo desde la larga.
+  descripcion String       @default("")
+  descripcionLarga String  @default("")
   precio      Float
   stock       Int
+  // imagenes[0] es la portada; `imagen` queda sincronizada por el service.
   imagen      String       @default("")
+  imagenes    String[]     @default([])
   categoria   String
   badge       String?
   createdAt   DateTime     @default(now())

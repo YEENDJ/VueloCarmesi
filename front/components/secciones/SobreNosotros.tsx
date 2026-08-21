@@ -8,10 +8,10 @@ export default function SobreNosotros({ imagen }: Props) {
       id="sobre-nosotros"
       style={{
         backgroundColor: 'var(--color-brown)',
-        padding: 'clamp(64px, 8vw, 100px) 24px',
+        paddingBlock: 'clamp(64px, 8vw, 100px)',
       }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <div className="contenido">
         <div className="sobre-nosotros-grid">
 
           {/* Columna izquierda — imagen */}
@@ -67,7 +67,7 @@ export default function SobreNosotros({ imagen }: Props) {
             <h2
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(28px, 4vw, 40px)',
+                fontSize: 'var(--fs-h2)',
                 color: 'var(--color-cream)',
                 lineHeight: 1.2,
                 marginBottom: '20px',
@@ -111,7 +111,7 @@ export default function SobreNosotros({ imagen }: Props) {
             {/* CTA ghost */}
             <div>
               <a href="/sobre-nosotros" className="btn-ghost-cream">
-                Conocé más
+                Conoce más
               </a>
             </div>
 

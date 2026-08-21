@@ -80,7 +80,46 @@ footer :focus-visible {
    ───────────────────────────────────────────────────────── */
 .page-shell {
   margin-inline: auto;
-  padding: clamp(2.5rem, 6vw, 4rem) clamp(1rem, 4vw, 2rem);
+  /* El maxWidth lo fija cada página; el margen lateral es el del sitio. */
+  max-width: var(--contenido-ancho);
+  padding: clamp(2.5rem, 6vw, 4rem) var(--contenido-margen);
+}
+
+/* Los listados abren directo en el filtro y las tarjetas, sin bloque de
+   titular: ahí el respiro de 64 px de arriba deja la primera fila fuera de
+   pantalla sin nada que la justifique. */
+.page-shell--listado {
+  padding-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+/* Visible para buscadores y lectores de pantalla, invisible en la página.
+   Se usa en el h1 de los listados: quitarlo del todo dejaría dos páginas sin
+   encabezado, y el titular no aporta nada que la rejilla no diga ya. */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Retícula: el contenedor de TODO el contenido
+   ─────────────────────────────────────────────────────────
+   Se pone en el hijo, nunca en la banda de fondo. Los fondos
+   (crimson del navbar, cream del hero, brown del footer) van
+   de borde a borde; lo que se alinea es el contenido de
+   adentro. Así las franjas de color siguen siendo franjas y
+   el texto queda sobre la misma línea en toda la página. */
+.contenido {
+  width: 100%;
+  max-width: var(--contenido-ancho);
+  margin-inline: auto;
+  padding-inline: var(--contenido-margen);
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -90,20 +129,28 @@ footer :focus-visible {
   position: sticky;
   top: 0;
   z-index: 100;
+  /* Solo vertical: el lateral lo pone .contenido en el hijo, para que la
+     franja crimson siga llegando a los bordes de la pantalla. */
+  padding-block: 1rem;
+  background-color: var(--color-crimson);
+  color: var(--color-cream);
+}
+
+.navbar-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  padding: 1rem clamp(1rem, 3vw, 2rem);
-  background-color: var(--color-crimson);
-  color: var(--color-cream);
 }
 
 .navbar-logo {
   display: flex;
   align-items: center;
   flex: none;
-  width: 250px;
+  /* Mismo ancho que el logotipo del footer: la marca se ve igual arriba y
+     abajo. El tope en vw se queda porque acá el logo comparte fila con el
+     carrito y la hamburguesa, y a 320px los tres no caben a tamaño completo. */
+  width: 220px;
   max-width: 46vw;
 }
 .navbar-logo img {
@@ -119,13 +166,53 @@ footer :focus-visible {
 }
 
 .navbar-link {
+  position: relative;
+  display: inline-block;
   color: var(--color-cream);
   text-decoration: none;
+  font-size: 1rem;
   font-weight: 700;
+  /* Sólo lateral: cualquier padding vertical acá engorda la franja. El área
+     táctil cómoda la da el panel móvil, que es donde se toca con el dedo. */
+  padding-inline: 2px;
   transition: color 150ms ease;
 }
+
+/* Subrayado: crece al pasar el mouse y ya viene puesto en la ruta actual */
+.navbar-link::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  bottom: -6px;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--color-gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms ease;
+}
+
 .navbar-link:hover {
   color: var(--color-gold);
+}
+.navbar-link:hover::after,
+.navbar-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Estando dentro de la ruta el enlace ya está dorado y subrayado, así que el
+   hover de los demás (ponerse dorado) acá no diría nada. Invierte: el texto
+   vuelve a cream y el subrayado dorado se queda. Se siente distinto y deja
+   claro que ya estás en esa página. */
+.navbar-link.activo {
+  color: var(--color-gold);
+}
+.navbar-link.activo::after {
+  transform: scaleX(1);
+}
+.navbar-link.activo:hover {
+  color: var(--color-cream);
 }
 
 /* Acciones móviles (carrito + hamburguesa) — ocultas en desktop */
@@ -183,12 +270,37 @@ footer :focus-visible {
   }
   .navbar-panel .navbar-link {
     display: block;
-    padding: 14px clamp(1rem, 3vw, 2rem);
+    padding: 14px var(--contenido-margen);
     font-size: 1.0625rem;
   }
-  .navbar-panel .navbar-link:hover {
+  /* En el panel el enlace ocupa la fila entera y un subrayado se perdería:
+     la misma pieza ::after pasa a ser una barra lateral. */
+  .navbar-panel .navbar-link::after {
+    inset: 0 auto 0 0;
+    width: 3px;
+    height: auto;
+    border-radius: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  .navbar-panel .navbar-link:hover,
+  .navbar-panel .navbar-link:focus-visible {
     background-color: rgba(255, 234, 202, 0.08);
     color: var(--color-gold);
+  }
+  .navbar-panel .navbar-link:hover::after,
+  .navbar-panel .navbar-link:focus-visible::after,
+  .navbar-panel .navbar-link.activo::after {
+    transform: scaleY(1);
+  }
+  /* Mismo criterio que en escritorio: la ruta actual ya viene marcada y el
+     hover la invierte en vez de repetir el dorado. */
+  .navbar-panel .navbar-link.activo {
+    background-color: rgba(255, 234, 202, 0.1);
+    color: var(--color-gold);
+  }
+  .navbar-panel .navbar-link.activo:hover {
+    color: var(--color-cream);
   }
 }
 
@@ -196,12 +308,13 @@ footer :focus-visible {
    Hero
    ───────────────────────────────────────────────────────── */
 .hero {
-  min-height: 86vh;
+  min-height: 86dvh;
   background-color: var(--color-cream);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(40px, 7vw, 90px) clamp(16px, 5vw, 64px);
+  /* Vertical propio; el lateral lo aporta .contenido del hijo. */
+  padding-block: clamp(40px, 7vw, 90px);
 }
 
 .hero-media {
@@ -227,11 +340,68 @@ footer :focus-visible {
   color: var(--color-amber);
 }
 
-/* Tira de certificaciones en el footer: círculo cream para que los
-   logos a color original se lean sobre el fondo brown */
+/* ── Tira de confianza ──────────────────────────────────────────
+   Recurso fijo de marca: BPA · Calidad Turística · RNT · marca registrada.
+   El tamaño de los cuatro avales cuelga de --cert-size para que escalen
+   juntos; en móvil bajan solos sin romper la fila. */
+.tira-confianza {
+  --cert-size: 46px;
+  max-width: 1200px;
+  margin: 32px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(253, 195, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+@media (min-width: 768px) {
+  .tira-confianza {
+    --cert-size: 60px;
+  }
+}
+
+.tira-confianza-sellos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px 20px;
+}
+
+.tira-confianza-legal {
+  min-width: 0;
+  max-width: 60ch;
+  text-align: center;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  color: rgba(255, 234, 202, 0.6);
+}
+
+/* Círculo cream para que los logos a color original se lean sobre el brown */
 .cert-badge-footer {
+  width: var(--cert-size, 60px);
+  height: var(--cert-size, 60px);
   background-color: var(--color-cream);
   border: 1px solid rgba(253, 195, 0, 0.25);
+}
+
+/* Sellos con zona de respeto: van completos, solo se les fija el alto */
+.cert-sello-footer {
+  height: var(--cert-size, 60px);
+}
+
+/* El ® va desnudo y en oro: sobre brown es el único color de marca que contrasta */
+.cert-simbolo-footer {
+  width: calc(var(--cert-size, 60px) * 0.66);
+  height: calc(var(--cert-size, 60px) * 0.66);
+  color: var(--color-gold);
+}
+
+.cert-simbolo-card {
+  color: var(--color-crimson);
 }
 
 /* Barra legal del footer: copyright a un lado, crédito de desarrollo al otro */
@@ -279,6 +449,106 @@ footer :focus-visible {
   gap: 24px;
 }
 
+/* ─────────────────────────────────────────────────────────
+   Píldoras de filtro de categoría
+   ─────────────────────────────────────────────────────────
+   Estaban clavadas en 44 px de alto para respetar el mínimo
+   táctil, pero con ratón esa altura las hacía ver infladas
+   frente al texto que llevan dentro. Se separan los dos casos:
+   con cursor fino basta con 36 px, y en pantalla táctil vuelve
+   el 44 completo. */
+
+.filtro-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0.35rem 1.1rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(0.9rem, 2.2vw, 0.95rem);
+  line-height: 1.2;
+  cursor: pointer;
+  min-width: 0;
+}
+
+@media (pointer: coarse) {
+  .filtro-pill {
+    min-height: 44px;
+    padding-block: 0.5rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Rejillas de catálogo
+   ─────────────────────────────────────────────────────────
+   Las dos van mobile-first, al revés que los bloques de más
+   abajo: la base es una columna y los breakpoints sólo suman.
+
+   La regla que comparten es la misma de la foto de la ficha:
+   la tarjeta no crece hasta llenar el ancho disponible, se le
+   pone tope. Con tres columnas en 1200 px cada tarjeta medía
+   357 px y la foto, cuadrada, otros tantos de alto: había que
+   bajar la página para ver cuatro productos.
+
+   Dónde se separan: la tienda tiene diecisiete productos y la
+   densidad ayuda a barrerlos, así que suma una cuarta columna.
+   Las experiencias son cinco; una cuarta columna dejaría una
+   sola tarjeta huérfana en la segunda fila, así que se quedan
+   en tres y el tope se lo pone la rejilla entera, centrada. */
+
+.tienda-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+}
+@media (min-width: 480px) {
+  .tienda-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 720px) {
+  .tienda-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 1000px) {
+  .tienda-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.experiencias-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+}
+@media (min-width: 560px) {
+  .experiencias-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 900px) {
+  .experiencias-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Título y descripción de la ficha de producto: alto fijo en líneas, no en
+   palabras. Fijando las líneas, un nombre largo se recorta y uno corto reserva
+   igual el hueco, así todas las tarjetas miden lo mismo. La descripción salió
+   de la tarjeta por esta misma razón: su largo variable era el que más
+   desnivelaba la rejilla. El texto completo vive en la ficha de detalle. */
+.producto-card-titulo {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  line-height: 1.3;
+  min-height: calc(2 * 1.3em);
+}
+
 /* Miniaturas de galería */
 .gallery-thumbnails {
   display: flex;
@@ -312,7 +582,7 @@ footer :focus-visible {
 
 .btn-ghost-cream {
   display: inline-block;
-  padding: 12px 26px;
+  padding: 8px 22px;
   border-radius: 8px;
   border: 1.5px solid var(--color-cream);
   color: var(--color-cream);
@@ -328,6 +598,80 @@ footer :focus-visible {
 .btn-ghost-cream:hover {
   background-color: var(--color-cream);
   color: var(--color-brown);
+}
+
+/* ─────────────────────────────────────────────────────────
+   Botón de tarjeta — «Ver más» y «Agregar»
+   ─────────────────────────────────────────────────────────
+   El componente Button pinta sus colores con style inline, que le gana por
+   especificidad a cualquier regla de acá. Por eso el hover no toca
+   background-color: se arma con propiedades que el inline no declara
+   —transform, box-shadow, filter y un ::after—, así no hay pelea ni
+   !important. El destello es lo que lo hace llamativo; el resto (subida y
+   sombra) es lo que lo hace legible como «esto se puede clickear». */
+.btn-card {
+  position: relative;
+  /* Recorta el destello a la silueta del botón */
+  overflow: hidden;
+  transition: transform 200ms ease, box-shadow 200ms ease, filter 200ms ease;
+}
+
+.btn-card:hover,
+.btn-card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(135, 43, 19, 0.32);
+  /* Sube el color un punto sin sustituirlo: sirve igual para el naranja de
+     «Agregar» que para el contorno crimson de «Ver más». */
+  filter: brightness(1.08) saturate(1.12);
+}
+
+.btn-card:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 9px rgba(135, 43, 19, 0.26);
+}
+
+/* Banda de luz que cruza el botón una vez por hover */
+.btn-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 45%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 234, 202, 0.6),
+    transparent
+  );
+  transform: translateX(-160%) skewX(-18deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-card:hover::after,
+.btn-card:focus-visible::after {
+  animation: btn-card-destello 700ms ease-out;
+}
+
+@keyframes btn-card-destello {
+  0%   { opacity: 0; transform: translateX(-160%) skewX(-18deg); }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(340%) skewX(-18deg); }
+}
+
+/* Agotado: el botón sigue ahí pero no finge ser clickeable */
+.btn-card:disabled {
+  cursor: not-allowed;
+}
+.btn-card:disabled:hover {
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+.btn-card:disabled:hover::after {
+  animation: none;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -635,4 +979,1293 @@ footer :focus-visible {
   textarea {
     font-size: 16px;
   }
+}
+
+/* ═════════════════════════════════════════════════════════
+   FICHAS DE DETALLE
+   Dos direcciones distintas a propósito: la tienda vende un
+   objeto y la ficha de experiencia vende un lugar.
+   Todo mobile-first — la base es la pantalla chica y los
+   breakpoints sólo suman.
+   ═════════════════════════════════════════════════════════ */
+
+/* ── Producto: ficha comercial ───────────────────────────── */
+/* Reparte la pantalla como las tiendas que la gente ya sabe usar: la foto manda
+   a la izquierda, la caja de compra se queda a la derecha siguiendo el scroll y
+   la ficha técnica cae debajo de la foto, nunca debajo del botón de comprar. */
+.ficha-prod {
+  max-width: var(--contenido-ancho);
+  margin: 0 auto;
+  /* El colchón de abajo es para la barra fija de móvil: sin él tapa el último
+     bloque de la página cuando aparece. */
+  padding: 20px var(--contenido-margen) 108px;
+}
+
+.ficha-prod-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+.ficha-prod-galeria,
+.ficha-prod-compra,
+.ficha-prod-info {
+  min-width: 0;
+}
+
+/* La columna de compra se separa recién cuando hay ancho de sobra; antes de eso
+   va debajo de la foto, que es el orden de lectura. El orden del HTML —foto,
+   compra, ficha técnica— ya es el bueno para móvil, así que en escritorio sólo
+   se recolocan las celdas y el marcado se queda quieto. */
+@media (min-width: 900px) {
+  .ficha-prod {
+    /* 600 de la foto + 40 de hueco + 384 del panel. El tope va en la ficha
+       entera y no solo en la rejilla: si no, las migas de arriba y los
+       relacionados de abajo llegan a 1136 y el bloque central se ve hundido. */
+    max-width: calc(1024px + 2 * var(--contenido-margen));
+    padding-bottom: 64px;
+  }
+
+  /* La columna de la foto lleva tope. Con 1fr se comía los 776 px libres y,
+     al ser cuadrada, la foto medía eso de alto: había que bajar para verla
+     entera antes de llegar siquiera al precio. Con el tope, el bloque entero
+     se centra en el ancho de contenido. */
+  .ficha-prod-grid {
+    grid-template-columns: minmax(0, 600px) minmax(300px, 384px);
+    gap: 40px;
+    align-items: start;
+  }
+  .ficha-prod-galeria { grid-column: 1; grid-row: 1; }
+  .ficha-prod-compra  { grid-column: 2; grid-row: 1 / span 2; }
+  .ficha-prod-info    { grid-column: 1; grid-row: 2; }
+
+  /* El hueco entre filas de la reja ya separa la foto de la ficha técnica:
+     sumarle el margen propio de las pestañas abre un vacío de 84 px. */
+  .ficha-prod-info .ficha-pestanas {
+    margin-top: 0;
+  }
+}
+
+/* El panel sigue al scroll sólo en escritorio: pegado en móvil taparía la
+   mitad de la pantalla. */
+.ficha-prod-panel {
+  background: var(--color-surface, #fff);
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  border-radius: 12px;
+  padding: clamp(18px, 4vw, 22px);
+  box-shadow: 0 4px 20px rgba(135, 43, 19, 0.07);
+  min-width: 0;
+}
+@media (min-width: 900px) {
+  .ficha-prod-panel {
+    position: sticky;
+    top: 88px;
+  }
+}
+
+.ficha-prod-rotulo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin-bottom: 10px;
+  min-width: 0;
+}
+
+.ficha-prod-titulo {
+  /* Mismo tamaño que .ficha-exp-titulo: las dos fichas de detalle —producto y
+     experiencia— tienen que abrir con el mismo peso. */
+  font-size: clamp(24px, 5.5vw, 44px);
+  line-height: 1.2;
+  color: var(--color-brown);
+  margin-bottom: 8px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.ficha-prod-resumen {
+  font-size: clamp(0.95rem, 2.5vw, 1rem);
+  line-height: 1.6;
+  color: rgba(135, 43, 19, 0.8);
+  margin-bottom: 16px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.ficha-prod-precio {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-bottom: 14px;
+  min-width: 0;
+}
+.ficha-prod-precio-cifra {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 6vw, 40px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-brown);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ficha-prod-precio-nota {
+  font-size: 0.85rem;
+  color: rgba(135, 43, 19, 0.6);
+}
+
+.ficha-migas {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(135, 43, 19, 0.6);
+  margin-bottom: 18px;
+  min-width: 0;
+}
+
+.ficha-avales {
+  border-top: 1px solid rgba(135, 43, 19, 0.12);
+  margin-top: 18px;
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.ficha-aval {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgba(135, 43, 19, 0.75);
+  min-width: 0;
+}
+
+/* ── Galería del producto ────────────────────────────────── */
+/* Una sola rejilla para las dos formas: la tira de miniaturas cae debajo de la
+   foto en móvil y se pone de canto a su izquierda en escritorio. */
+.ficha-galeria {
+  display: grid;
+  grid-template-areas:
+    "principal"
+    "rail";
+  gap: 10px;
+  min-width: 0;
+}
+@media (min-width: 900px) {
+  .ficha-galeria {
+    grid-template-columns: 68px minmax(0, 1fr);
+    grid-template-areas: "rail principal";
+    gap: 12px;
+  }
+}
+
+/* De 560 px a 899 px la ficha sigue en una columna: sin tope, la foto ocupa
+   los 836 px de ancho de la página. Arriba de 900 el tope lo pone ya la
+   columna de la rejilla. */
+@media (min-width: 560px) {
+  .ficha-galeria {
+    max-width: 460px;
+    margin-inline: auto;
+  }
+}
+@media (min-width: 900px) {
+  .ficha-galeria {
+    max-width: none;
+  }
+}
+
+.ficha-galeria-vacia {
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  border: 2px dashed rgba(135, 43, 19, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(135, 43, 19, 0.5);
+}
+
+.ficha-galeria-principal {
+  grid-area: principal;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--color-gold);
+  min-width: 0;
+}
+
+.ficha-galeria-zoom {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+}
+.ficha-galeria-zoom img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ficha-galeria-flecha {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--color-brown);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(74, 23, 9, 0.18);
+}
+.ficha-galeria-flecha--prev { left: 8px; }
+.ficha-galeria-flecha--next { right: 8px; }
+
+.ficha-galeria-lupa,
+.ficha-galeria-contador {
+  position: absolute;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(74, 23, 9, 0.72);
+  color: var(--color-cream);
+  font-size: 13px;
+  font-weight: 700;
+  pointer-events: none;
+}
+.ficha-galeria-lupa { left: 10px; }
+.ficha-galeria-contador { right: 10px; }
+
+.ficha-galeria-rail {
+  grid-area: rail;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 2px;
+  min-width: 0;
+  scrollbar-width: thin;
+}
+@media (min-width: 900px) {
+  .ficha-galeria-rail {
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-bottom: 0;
+    padding-right: 2px;
+    min-height: 0;
+  }
+}
+
+.ficha-galeria-thumb {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background: none;
+  border: 2px solid rgba(135, 43, 19, 0.15);
+}
+.ficha-galeria-thumb[aria-current="true"] {
+  border-color: var(--color-crimson);
+}
+.ficha-galeria-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Vista ampliada. dvh y no vh: con la barra del navegador de móvil, 100vh se
+   pasa de largo y el botón de cerrar queda fuera de la pantalla. */
+.ficha-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(56px, 9vw, 76px) clamp(12px, 4vw, 64px);
+  background: rgba(74, 23, 9, 0.94);
+}
+.ficha-lightbox-fondo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: none;
+  cursor: zoom-out;
+}
+.ficha-lightbox-foto {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.ficha-lightbox-btn {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 234, 202, 0.35);
+  background: rgba(74, 23, 9, 0.6);
+  color: var(--color-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.ficha-lightbox-btn--cerrar {
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  right: clamp(12px, 4vw, 24px);
+}
+.ficha-lightbox-btn--prev,
+.ficha-lightbox-btn--next {
+  top: 50%;
+  transform: translateY(-50%);
+}
+.ficha-lightbox-btn--prev { left: clamp(8px, 2vw, 20px); }
+.ficha-lightbox-btn--next { right: clamp(8px, 2vw, 20px); }
+.ficha-lightbox-contador {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-cream);
+}
+
+/* ── Caja de compra ──────────────────────────────────────── */
+.ficha-compra-estado {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-brown);
+  margin-bottom: 12px;
+  min-width: 0;
+}
+.ficha-compra-estado--agotado {
+  color: rgba(135, 43, 19, 0.6);
+}
+
+.ficha-compra-alerta {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background-color: var(--stock-alert-bg);
+  color: var(--stock-alert-txt);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  min-width: 0;
+}
+
+.ficha-compra-cantidad {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-bottom: 16px;
+  min-width: 0;
+}
+.ficha-compra-cantidad-rotulo {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-brown);
+}
+.ficha-compra-disponibles {
+  font-size: 0.85rem;
+  color: rgba(135, 43, 19, 0.6);
+  min-width: 0;
+}
+
+/* Selector de cantidad (ficha de producto y carrito). */
+.qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 44 y no 40: es el minimo tactil. Con 40 el dedo pisa el borde y en el
+   carrito, con las filas apretadas, se acaba pulsando el boton de al lado. */
+.qty-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-brown);
+  border-radius: 6px;
+  background-color: transparent;
+  color: var(--color-brown);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.qty-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.qty-valor {
+  min-width: 40px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--color-brown);
+}
+
+/* Con mouse el minimo tactil no aplica y 44px se ve desproporcionado al lado
+   del rotulo, sobre todo dentro del panel angosto de la ficha. Se pide ademas
+   pantalla ancha para que una tablet apaisada siga teniendo el boton grande. */
+@media (min-width: 900px) and (pointer: fine) {
+  .qty-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1.05rem;
+  }
+  .qty-valor {
+    min-width: 28px;
+    font-size: 1rem;
+  }
+}
+
+/* Los dos botones van uno debajo del otro y a todo el ancho: en la columna de
+   384px, lado a lado, ninguno de los dos rótulos entra en una línea. */
+.ficha-compra-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ficha-compra-subtotal,
+.ficha-compra-nota {
+  margin-top: 10px;
+  font-size: 0.875rem;
+  color: rgba(135, 43, 19, 0.7);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Barra fija de móvil: sólo se monta cuando los botones de verdad ya salieron
+   de pantalla, así que entra deslizándose desde abajo. */
+.ficha-prod-barra {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  background: var(--color-brown);
+  padding: 12px var(--contenido-margen);
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -4px 18px rgba(74, 23, 9, 0.28);
+  animation: ficha-barra-entra 180ms ease-out;
+}
+@keyframes ficha-barra-entra {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+/* En escritorio el panel ya viaja pegado al scroll: la barra sobra. */
+@media (min-width: 900px) {
+  .ficha-prod-barra { display: none; }
+}
+
+.ficha-prod-barra-precio {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.ficha-prod-barra-cifra {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 5vw, 26px);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-gold);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ficha-prod-barra-detalle {
+  font-size: 0.8125rem;
+  color: rgba(255, 234, 202, 0.7);
+}
+
+/* ── Pestañas y ficha técnica ────────────────────────────── */
+.ficha-pestanas {
+  margin-top: clamp(32px, 6vw, 44px);
+  min-width: 0;
+}
+.ficha-pestanas-tira {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid rgba(135, 43, 19, 0.16);
+  margin-bottom: 20px;
+}
+.ficha-pestana {
+  padding: 8px 17px;
+  min-height: 36px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: rgba(135, 43, 19, 0.6);
+}
+.ficha-pestana--activa {
+  color: var(--color-crimson);
+  border-bottom-color: var(--color-crimson);
+}
+
+/* La tabla scrollea dentro de su marco: con un valor largo en 320px, lo que se
+   iría de lado si no es el documento entero. */
+.ficha-tabla-marco {
+  overflow-x: auto;
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  border-radius: 12px;
+  background: var(--color-surface, #fff);
+}
+.ficha-tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ficha-tabla th,
+.ficha-tabla td {
+  padding: 13px clamp(12px, 3vw, 18px);
+  font-size: 0.93rem;
+  line-height: 1.5;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.ficha-tabla th {
+  width: 38%;
+  font-weight: 700;
+  color: rgba(135, 43, 19, 0.7);
+  background: rgba(135, 43, 19, 0.05);
+}
+.ficha-tabla td {
+  color: var(--color-brown);
+}
+.ficha-tabla tr + tr th,
+.ficha-tabla tr + tr td {
+  border-top: 1px solid rgba(135, 43, 19, 0.1);
+}
+
+.ficha-descripcion-larga {
+  font-size: clamp(0.95rem, 2.5vw, 1rem);
+  line-height: 1.8;
+  color: var(--color-brown);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  min-width: 0;
+  max-width: 72ch;
+}
+
+
+/* ── Experiencia: la ficha ───────────────────────────────
+   La foto ya no lleva texto encima. Antes era una portada inmersiva con el
+   título sobre la imagen y un velo para poder leerlo; eso obligaba a que
+   todas las fotos que sube el administrador fueran oscuras y tranquilas por
+   abajo, y ninguna lo es. Ahora foto y texto van lado a lado: la foto se ve
+   entera y el título se lee siempre, venga la foto que venga.
+
+   Todo el bloque es fluido y sin breakpoints. Las bases de `flex`
+   (460px / 320px) y los `auto-fit` de las rejillas reparten las columnas
+   solos entre 320px y 1200px, así que no hay una sola media query aquí. */
+.ficha-exp {
+  background: var(--color-cream);
+}
+
+/* El anillo de foco del diseño es oro. Sobre crema el oro no llega ni a
+   1.5:1 y el foco desaparece, así que ahí se queda el naranja del sitio con
+   el grosor que pide el diseño. Con la ficha entera sobre crema, la barra de
+   reserva es lo único oscuro que queda y el único sitio donde va oro. */
+.ficha-exp :focus-visible {
+  outline: 3px solid var(--color-orange);
+  outline-offset: 3px;
+}
+.ficha-exp-barra :focus-visible {
+  outline-color: var(--color-gold);
+}
+
+/* ── Portada: foto + título + tarjeta de precio ── */
+.ficha-exp-portada {
+  max-width: var(--contenido-ancho);
+  margin: 0 auto;
+  padding: clamp(1rem, 4vw, 2rem) var(--contenido-margen) 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(20px, 3vw, 40px);
+  align-items: flex-start;
+}
+.ficha-exp-galeria {
+  flex: 1 1 460px;
+  min-width: min(100%, 280px);
+}
+.ficha-exp-resumen {
+  flex: 1 1 320px;
+  min-width: min(100%, 280px);
+}
+
+/* La proporción se reserva antes de que llegue la foto: sin esto la página
+   pega un salto al cargar y el título baja de golpe bajo el dedo. */
+.ficha-exp-foto {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(135, 43, 19, 0.08);
+}
+.ficha-exp-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ficha-exp-contador {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--color-brown);
+  background: rgba(255, 234, 202, 0.88);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Las flechas salen en cualquier dispositivo, sin condicionar por tipo de
+   puntero: un portátil con pantalla táctil reporta `pointer: coarse` y se
+   quedaba sin ellas aunque hubiera fotos fuera de vista. La galería de
+   producto ya las muestra siempre, y este bloque hace lo mismo.
+
+   Van encima de la tira, no a los lados. Puestas al lado le
+   robaban 104px de ancho y la tira dejaba de medir lo mismo que la foto de
+   arriba: dos bloques que arrancan y acaban en sitios distintos se leen como
+   un descuadre. Ahora la tira ocupa el ancho entero de la foto y las flechas
+   se apoyan en sus extremos. */
+.ficha-exp-tira {
+  position: relative;
+  min-width: 0;
+  margin-top: 8px;
+}
+.ficha-exp-tira-flecha {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  border-radius: 999px;
+  /* Va sobre una foto, así que necesita fondo propio y una sombra que la
+     despegue: el borde solo no la separa de una miniatura clara. */
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--color-brown);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(74, 23, 9, 0.18);
+}
+.ficha-exp-tira-flecha--prev {
+  left: 0;
+}
+.ficha-exp-tira-flecha--next {
+  right: 0;
+}
+/* Una sola fila que se desplaza, no una rejilla que baja de línea: así el alto
+   de la galería es el mismo con tres fotos que con veinte, y la portada no se
+   descuadra según lo que suba el administrador.
+
+   Las miniaturas van a 88px fijos y sin encoger. Con eso entran seis en la
+   columna de escritorio sin desplazar nada —que es como se veía hasta ahora— y
+   a partir de la séptima empieza a haber tira que arrastrar. */
+.ficha-exp-miniaturas {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Sin barra: quien puede verla ya tiene las flechas, y en táctil nunca se
+     pintó. Una barra gris bajo las miniaturas ensuciaba el bloque. */
+  scrollbar-width: none;
+  /* Que el arrastre horizontal no acabe navegando hacia atrás en el móvil. */
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+}
+.ficha-exp-miniaturas::-webkit-scrollbar {
+  display: none;
+}
+.ficha-exp-miniaturas button {
+  flex: 0 0 88px;
+  scroll-snap-align: start;
+  height: clamp(64px, 10vw, 84px);
+  padding: 0;
+  border: 3px solid rgba(135, 43, 19, 0.14);
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
+.ficha-exp-miniaturas button[aria-current='true'] {
+  border-color: var(--color-gold);
+  opacity: 1;
+}
+.ficha-exp-miniaturas img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Las miniaturas se ven pero no se leen como pulsables: el aviso lo dice. */
+.ficha-exp-aviso-fotos {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(135, 43, 19, 0.6);
+  margin-top: 8px;
+}
+
+.ficha-exp-titulo {
+  /* Tope de 52px a propósito: la portada del sitio usa 96px y un título de
+     detalle más grande que ella descoloca la jerarquía de todo el sitio. */
+  font-size: clamp(24px, 5.5vw, 44px);
+  line-height: 1.04;
+  color: var(--color-brown);
+  margin: 10px 0 16px;
+}
+
+/* La descripción corta hace de bajada entre el título y las pastillas. Se
+   corta en 46ch: la columna llega a ~560px en pantallas grandes y a esa medida
+   una sola frase se lee como un renglón que no encuentra dónde terminar. */
+.ficha-exp-bajada {
+  max-width: 46ch;
+  min-width: 0;
+  font-size: clamp(15px, 1.3vw, 17px);
+  line-height: 1.6;
+  color: rgba(135, 43, 19, 0.78);
+  margin: 0 0 18px;
+  overflow-wrap: anywhere;
+}
+
+.ficha-exp-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.ficha-exp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  background: rgba(135, 43, 19, 0.08);
+  border-radius: 22px;
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--color-brown);
+}
+
+.ficha-exp-precio-card {
+  min-width: 0;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  border-radius: 10px;
+  padding: clamp(16px, 2.5vw, 22px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ficha-exp-precio {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(30px, 5vw, 42px);
+  line-height: 1.1;
+  color: var(--color-brown);
+}
+
+/* El resumen de "incluye" que acompaña al precio. Sin `list-style: none` el
+   navegador pinta sus viñetas de serie y cada línea sale con un punto negro
+   además del check naranja: dos marcadores distintos diciendo lo mismo. */
+.ficha-exp-incluye-mini {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.ficha-exp-incluye-mini li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(135, 43, 19, 0.85);
+}
+.ficha-exp-incluye-mini span {
+  min-width: 0;
+}
+/* El recuento de los que no caben no lleva check: no es un ítem más. La
+   sangría son los 16px del icono más los 8 del hueco, para que arranque en la
+   misma columna que los textos de arriba y la lista no se vea escalonada. */
+.ficha-exp-incluye-resto {
+  padding-left: 24px;
+  font-style: italic;
+  color: rgba(135, 43, 19, 0.6);
+}
+
+/* El contacto va fuera de la tarjeta: dentro competía con el botón, y no es
+   una alternativa a reservar sino la salida de quien no reserva porque le
+   falta un dato. El enlace ocupa su propia línea para que el área táctil
+   llegue a 44px sin inflar el interlineado de la pregunta de arriba. */
+.ficha-exp-contacto {
+  margin-top: 14px;
+  min-width: 0;
+  /* La pregunta y el enlace van en una sola línea, y el wrap es lo que la
+     salva: en la columna estrecha de móvil los dos textos juntos no caben, y
+     sin él el enlace se saldría de la tarjeta en vez de bajar una línea.
+     El gap vertical de 4px es el que se aplica cuando eso pasa. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+.ficha-exp-contacto p {
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(135, 43, 19, 0.7);
+}
+.ficha-exp-contacto a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 44px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-crimson);
+  text-decoration: underline;
+}
+.ficha-exp-contacto a span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* El glifo pinta con currentColor y heredado del enlace saldría carmesí. Se le
+   pone el naranja de los demás iconos de la ficha —reloj, personas, checks—
+   para que la columna entera se lea con un solo acento. */
+.ficha-exp-contacto a svg {
+  color: var(--color-orange);
+}
+
+/* ── El relato ──
+   Iba sobre una banda de marrón muy oscuro. La ficha entera va ahora sobre el
+   mismo crema, sin una sola banda de otro tono: los fondos distintos quedan
+   para los componentes —tarjeta de precio, viñetas—, nunca para las secciones.
+
+   Sin cambio de fondo el bloque necesitaba otra cosa que lo marque, y es el
+   filete ámbar: una línea vertical de la que cuelga todo el relato. Hace el
+   trabajo que hacía la banda —decir dónde empieza y dónde acaba— con un
+   recurso que ya está en la paleta y que la sección de abajo repite en
+   horizontal, así que las dos se leen como el mismo sistema.
+
+   Lo que se gana: la barra de reserva pasa a ser lo único oscuro de la
+   pantalla, así que el marrón deja de ser decoración y marca la acción. */
+/* El tope y el margen van en la sección, no en el hijo. Estaban repartidos —el
+   padding lateral aquí y el `max-width: 1200px` en .ficha-exp-relato-grid— y
+   eso hacía que el contenido del relato midiera 1200px mientras portada,
+   prácticos, listas y cierre miden 1136 (los mismos 1200 menos sus dos
+   márgenes). El relato se salía 64px por cada lado respecto a todo lo demás.
+   Con las tres declaraciones juntas, mide lo mismo que sus vecinos. */
+.ficha-exp-relato {
+  max-width: var(--contenido-ancho);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 4.5rem) var(--contenido-margen);
+}
+.ficha-exp-relato-grid {
+  min-width: 0;
+}
+/* El rótulo "LA EXPERIENCIA" iba colgado en una columna propia a la izquierda.
+   Con un relato largo esa columna quedaba vacía media pantalla, así que el
+   rótulo sale de la vista —sigue en el documento para lectores de pantalla y
+   buscadores— y el texto arranca en el margen.
+
+   El relato ocupa el mismo ancho que el resto de la página: arranca en el
+   margen del contenedor y llega hasta el otro lado, igual que la portada, los
+   datos prácticos y las listas. Nada de sangrías ni de medidas propias — si
+   este bloque empieza treinta píxeles más adentro, se nota. */
+.ficha-exp-relato-texto {
+  min-width: 0;
+}
+/* La entradilla se centra y va entrecomillada: deja de ser "el primer párrafo
+   más grande" y pasa a leerse como la frase que resume la experiencia. Las
+   comillas las pone el CSS y no el texto, porque el relato lo escribe el
+   administrador y no tiene por qué acordarse de ponerlas.
+
+   42ch de medida: centrado y en cursiva, un renglón más largo que eso cuesta
+   de seguir de una línea a la siguiente. */
+.ficha-exp-entradilla {
+  max-width: 42ch;
+  margin: 0 auto clamp(32px, 5vw, 48px);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(20px, 4vw, 30px);
+  line-height: 1.4;
+  color: var(--color-brown);
+  text-align: center;
+  white-space: pre-line;
+}
+.ficha-exp-entradilla::before {
+  content: '“';
+}
+.ficha-exp-entradilla::after {
+  content: '”';
+}
+/* Ocupar el ancho de la página dejaba líneas de unos 130 caracteres y el ojo
+   perdía el renglón al saltar. Dos columnas devuelven la medida a lo cómodo
+   sin encoger el bloque ni desalinearlo del resto.
+
+   El reparto lo decide `column-width`, no un número fijo: el navegador mete
+   las columnas que quepan a 26rem y como mucho dos, así que sobre ~870px son
+   dos y por debajo una sola, sin una media query de por medio. */
+/* El cuerpo se reparte en tarjetas, no en columnas de texto: con `columns` el
+   ojo tenía que volver arriba al acabar la primera columna, y en un relato de
+   tres párrafos ese salto se nota más de lo que ahorra. Cada tarjeta se lee
+   entera, una detrás de otra.
+
+   `auto-fit` y no dos columnas fijas: si el relato trae un solo párrafo queda
+   una sola tarjeta ocupando el ancho entero, y se ve deliberada en vez de
+   media rejilla vacía. */
+.ficha-exp-cuerpo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  /* El hueco es lo que estrecha las tarjetas: el bloque sigue arrancando y
+     acabando donde el resto de la página, y lo que se lleva el aire es el
+     centro. A 1136px de contenido, cada tarjeta baja de 586px a 536. */
+  gap: clamp(20px, 5vw, 64px);
+  align-items: start;
+}
+.ficha-exp-bloque {
+  min-width: 0;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.1);
+  border-radius: 16px;
+  padding: clamp(20px, 4vw, 32px);
+}
+
+/* Cierra el relato y abre los datos prácticos. Un filete y no una banda: la
+   ficha entera va sobre el mismo crema y los cambios de fondo están
+   reservados a los componentes, nunca a las secciones. */
+.ficha-exp-separador {
+  /* Mismo desajuste que tenía el relato: un `max-width: 1200px` a secas deja el
+     filete 64px más ancho que las secciones que separa. En un <hr> el padding
+     no sirve —el borde se pinta hasta el borde de la caja de relleno—, así que
+     el ancho se descuenta directamente. */
+  width: calc(100% - 2 * var(--contenido-margen));
+  max-width: calc(var(--contenido-ancho) - 2 * var(--contenido-margen));
+  margin-inline: auto;
+  border: 0;
+  border-top: 1px solid rgba(135, 43, 19, 0.14);
+}
+.ficha-exp-parrafo {
+  font-size: clamp(16px, 1.3vw, 17px);
+  line-height: 1.85;
+  color: rgba(135, 43, 19, 0.78);
+  margin-bottom: 18px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+.ficha-exp-parrafo:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Antes de reservar ──
+   Iba en una banda marrón pegada a la del relato: dos oscuros seguidos se
+   confundían entre sí y el bloque se leía como nota al pie. Sobre crema con
+   filete ámbar pesa lo que tiene que pesar sin quedar encerrado. */
+.ficha-exp-practicos {
+  max-width: var(--contenido-ancho);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 3.5rem) var(--contenido-margen) 0;
+}
+.ficha-exp-practicos-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: clamp(16px, 2.5vw, 22px);
+}
+/* Un filete a cada lado del rótulo. Con `flex: 1` sobre base 0 se reparten lo
+   que sobre y encogen hasta desaparecer en pantallas estrechas, así que el
+   rótulo nunca se ve empujado ni parte la línea. */
+.ficha-exp-regla {
+  flex: 1;
+  height: 2px;
+  background: var(--color-amber);
+}
+.ficha-exp-practicos-grid {
+  display: grid;
+  /* El `min(...)` es lo que impide que la celda exija 260px cuando la
+     pantalla no los tiene: sin él, a 320px la rejilla desborda. */
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: clamp(18px, 3vw, 28px);
+  margin: 0;
+}
+/* Tarjeta y no columna colgada de un filete: sobre el crema de la ficha, tres
+   textos con una línea encima se leían como párrafos sueltos, y lo que se pide
+   aquí es localizar la respuesta de un vistazo sin llegar a leerla. */
+.ficha-exp-practico {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 12px;
+  padding: clamp(16px, 3vw, 20px);
+}
+/* El disco es lo que convierte el icono en marca del dato en vez de adorno.
+   44px son además el área táctil de referencia del sitio, así que la tarjeta
+   nunca queda por debajo de esa altura por poco texto que tenga. */
+.ficha-exp-practico-icono {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(234, 91, 12, 0.12);
+}
+/* El bloque cierra sin padding porque abajo siempre vienen las listas con el
+   suyo. "Incluye" es obligatorio, así que eso pasa siempre… salvo que un día
+   deje de serlo, y entonces los datos prácticos quedarían pegados a la barra. */
+.ficha-exp-practicos:has(+ .ficha-exp-barra) {
+  padding-bottom: clamp(2rem, 4vw, 3rem);
+}
+.ficha-exp-practico-valor {
+  min-width: 0;
+  margin-top: 4px;
+  font-size: clamp(16px, 1.3vw, 17px);
+  line-height: 1.6;
+  color: var(--color-brown);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+/* ── Las tres listas ──
+   Cada lista es una tarjeta con su icono y sus filas dentro. Fueron píldoras
+   sueltas en una fila que envolvía, y el problema era que las tres listas se
+   mezclaban en una sola mancha de píldoras: para saber si algo entraba en el
+   cupo o no, había que rastrear bajo qué rótulo caía. Con recinto propio, la
+   respuesta se ve antes de leerla.
+
+   `auto-fit` reparte las que haya: con las tres van en fila, con una sola
+   ocupa el ancho y sigue viéndose intencional. */
+.ficha-exp-listas {
+  max-width: var(--contenido-ancho);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 3.5rem) var(--contenido-margen) clamp(2rem, 4vw, 3rem);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: clamp(18px, 3vw, 28px);
+  align-items: start;
+}
+.ficha-exp-lista-card {
+  min-width: 0;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 16px;
+  padding: clamp(20px, 4vw, 26px);
+}
+/* Lo que NO entra pesa menos que lo que sí: misma forma, medio tono por
+   debajo. Sin rojo ni aspa de alerta, que esto se lee justo antes de pagar. */
+.ficha-exp-lista-card--apagada {
+  background: rgba(135, 43, 19, 0.03);
+}
+.ficha-exp-lista-titulo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin-bottom: clamp(14px, 2.5vw, 18px);
+  font-family: var(--font-display);
+  font-size: clamp(19px, 2.2vw, 22px);
+  line-height: 1.25;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.ficha-exp-vinetas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+/* Filas y no píldoras: dentro de la tarjeta, alineadas a la izquierda y con el
+   mismo ancho, la lista se recorre de arriba abajo sin saltos. */
+.ficha-exp-vineta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  background: var(--admin-surface);
+  border: 1px solid rgba(135, 43, 19, 0.1);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.ficha-exp-lista-card--apagada .ficha-exp-vineta {
+  background: rgba(135, 43, 19, 0.04);
+  border-color: rgba(135, 43, 19, 0.08);
+}
+.ficha-exp-punto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+/* ── Barra de reserva ──
+   El diseño la pide `fixed`. Aquí va `sticky`, que se comporta igual
+   —pegada al borde inferior durante todo el scroll de la ficha— pero
+   ocupa su sitio en el flujo y por eso no tapa el footer del sitio, que el
+   prototipo no tiene. Sin eso haría falta un padding-bottom de 104px en el
+   documento y aun así el pie quedaría cubierto al final. */
+.ficha-exp-barra {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  background: var(--color-brown);
+  padding: 14px var(--contenido-margen);
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -4px 18px rgba(74, 23, 9, 0.28);
+}
+.ficha-exp-barra-contenido {
+  max-width: var(--contenido-ancho);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.ficha-exp-barra-precio {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(22px, 4vw, 30px);
+  color: var(--color-gold);
+}
+/* A partir de 900px la barra desaparece, que es la misma regla que ya sigue la
+   ficha de producto. En escritorio la tarjeta de precio de la portada y el
+   bloque de cierre cubren los dos extremos del scroll, y una franja marrón
+   fija a lo ancho de 1400px para repetir un dato que ya está dos veces pesaba
+   más de lo que resolvía. */
+@media (min-width: 900px) {
+  .ficha-exp-barra {
+    display: none;
+  }
+}
+
+/* ── Cierre ──
+   La ficha acababa en la barra de reserva, y la barra es del mismo marrón que
+   el footer del sitio: al final del scroll los dos bloques oscuros se tocaban
+   y se leían como uno solo. Este bloque va entre los dos, en claro, para que
+   eso no pueda pasar — y en escritorio, donde ya no hay barra, es además lo
+   que cierra la página con algo que pulsar. */
+/* Los espacios de esta caja son la mitad de los que tenía. Con 64px de padding
+   arriba y abajo, tres líneas de contenido ocupaban casi 400px de alto y el
+   bloque se leía como una sección entera en vez de como el cierre de la ficha.
+   Los tamaños de letra no cambian: lo que sobraba era aire, no tipografía. */
+.ficha-exp-cierre {
+  max-width: var(--contenido-ancho);
+  margin: 0 auto;
+  padding: clamp(1.25rem, 3vw, 2rem) var(--contenido-margen) clamp(2rem, 4vw, 2.75rem);
+}
+.ficha-exp-cierre-caja {
+  max-width: 860px;
+  margin: 0 auto;
+  min-width: 0;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  border-radius: 24px;
+  padding: clamp(24px, 3vw, 32px) clamp(20px, 4vw, 36px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.ficha-exp-cierre-titulo {
+  min-width: 0;
+  font-size: clamp(24px, 4vw, 34px);
+  line-height: 1.15;
+  color: var(--color-brown);
+}
+.ficha-exp-cierre-precio {
+  max-width: 48ch;
+  min-width: 0;
+  margin-bottom: clamp(14px, 2vw, 20px);
+  font-size: clamp(15px, 1.4vw, 17px);
+  line-height: 1.6;
+  color: rgba(135, 43, 19, 0.78);
+  overflow-wrap: anywhere;
+}
+
+.ficha-eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }

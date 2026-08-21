@@ -54,8 +54,8 @@ describe('NotificacionesService.enviarConfirmacionPedido', () => {
     const varsCliente = mockEmail.templateConfirmacionPedido.mock.calls[0][0]
     expect(varsCliente.itemsTable).toContain('Café Premium 500g')
     expect(varsCliente.itemsTable).toContain('Miel Orgánica 250g')
-    expect(varsCliente.itemsTable).toContain('$ 40.000')
-    expect(varsCliente.itemsTable).toContain('$ 55.000')
+    expect(varsCliente.itemsTable).toContain('$40.000')
+    expect(varsCliente.itemsTable).toContain('$55.000')
   })
 
   it('incluye la tabla de detalle de items en las filas del email admin, sin fila de total duplicada', async () => {
@@ -63,7 +63,7 @@ describe('NotificacionesService.enviarConfirmacionPedido', () => {
 
     const varsAdmin = mockEmail.templateAlertaAdmin.mock.calls[0][0]
     expect(varsAdmin.filas).toContain('Café Premium 500g')
-    expect(varsAdmin.filas).toContain('$ 55.000')
+    expect(varsAdmin.filas).toContain('$55.000')
     expect((varsAdmin.filas.match(/Total/g) ?? []).length).toBe(1)
   })
 
@@ -71,8 +71,8 @@ describe('NotificacionesService.enviarConfirmacionPedido', () => {
     await service.enviarConfirmacionPedido(pedido)
 
     const mensaje = mockTelegram.send.mock.calls[0][0]
-    expect(mensaje).toContain('Café Premium 500g × 2 — $ 20.000 c/u — $ 40.000')
-    expect(mensaje).toContain('Miel Orgánica 250g × 1 — $ 15.000 c/u — $ 15.000')
-    expect(mensaje).toContain('Total: $ 55.000 COP')
+    expect(mensaje).toContain('Café Premium 500g × 2 — $20.000 c/u — $40.000')
+    expect(mensaje).toContain('Miel Orgánica 250g × 1 — $15.000 c/u — $15.000')
+    expect(mensaje).toContain('Total: $55.000')
   })
 })

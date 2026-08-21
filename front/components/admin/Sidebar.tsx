@@ -30,14 +30,14 @@ export default function Sidebar({ abierto = false }: { abierto?: boolean }) {
 
         <Link href="/admin" className="admin-sidebar-logo">
           <Image
-            src="/images/logo.png"
+            src="/images/marca/logo-crema.png"
             alt="Vuelo Carmesí"
             width={220}
             height={30}
             priority
           />
         </Link>
-        <div style={{ fontSize: 11, color: 'rgba(255,234,202,.55)', marginTop: 4, fontWeight: 700, letterSpacing: '.5px', textTransform: 'uppercase' }}>
+        <div style={{ fontSize: 12, color: 'rgba(255,234,202,.55)', marginTop: 4, fontWeight: 700, letterSpacing: '.5px', textTransform: 'uppercase' }}>
           Panel de administración
         </div>
       </div>
@@ -68,7 +68,7 @@ export default function Sidebar({ abierto = false }: { abierto?: boolean }) {
         }}>A</div>
         <div>
           <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-cream)' }}>Admin</div>
-          <div style={{ fontSize: 11, color: 'rgba(255,234,202,.6)' }}>Vuelo Carmesí</div>
+          <div style={{ fontSize: 12, color: 'rgba(255,234,202,.6)' }}>Vuelo Carmesí</div>
         </div>
       </div>
     </aside>

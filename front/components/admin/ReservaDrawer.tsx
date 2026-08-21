@@ -41,7 +41,7 @@ export default function ReservaDrawer({
         {/* Header */}
         <div className="admin-drawer-header">
           <div>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', color: 'var(--color-gold)', marginBottom: 4 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', color: 'var(--color-gold)', marginBottom: 4 }}>
               Detalle de Reserva
             </div>
             <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-cream)' }}>

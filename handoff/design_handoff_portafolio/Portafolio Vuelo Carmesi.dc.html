@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet"/>
+<style>
+@font-face{font-family:'Bellota';src:url('fonts/Bellota-Bold.ttf') format('truetype');font-weight:700;font-display:swap;}
+@font-face{font-family:'Bellota';src:url('fonts/Bellota-Regular.ttf') format('truetype');font-weight:400;font-display:swap;}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:#5C1D0D;}
+body{font-family:'Bellota',sans-serif;-webkit-font-smoothing:antialiased;}
+a{color:#EA5B0C;text-decoration:none;}
+a:hover{color:#D51312;}
+</style>
+</helmet>
+
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Portada" data-screen-label="01" data-speaker-notes="Presentar la marca y el propósito del portafolio. Edición 2026." style="width:100%;height:100%;display:flex;background:#FFEACA;">
+  <div style="flex:0 0 56%;padding:96px 80px 80px 110px;display:flex;flex-direction:column;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:20px;">
+      <span style="width:52px;height:52px;border-radius:50%;background:repeating-linear-gradient(135deg,#F0D6A8 0 8px,#E9CB97 8px 16px);border:2px solid rgba(135,43,19,.15);display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:9px;color:rgba(135,43,19,.5);">logo</span>
+      <span style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:5px;text-transform:uppercase;color:#D51312;">Vuelo Carmesí</span>
+    </div>
+    <div>
+      <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;letter-spacing:6px;text-transform:uppercase;color:rgba(135,43,19,.65);margin-bottom:34px;">Portafolio de servicios · Edición 2026</div>
+      <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:132px;line-height:.98;color:#872B13;margin:0;">Del cacaotal<br/><span style="font-style:italic;font-weight:500;color:#D51312;">a tus manos</span></h1>
+      <div style="width:150px;height:5px;background:#FFEACA;margin:44px 0 34px;"></div>
+      <p style="font-family:'Bellota',sans-serif;font-weight:700;font-size:32px;line-height:1.55;color:rgba(135,43,19,.8);margin:0;max-width:26ch;">Experiencias agroecológicas de cacao y naturaleza, vividas en el corazón de la finca.</p>
+    </div>
+    <div style="display:flex;gap:44px;font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;color:rgba(135,43,19,.6);">
+      <span>Colegios y familias</span><span style="color:rgba(135,43,19,.3);">·</span><span>Agencias y aliados</span>
+    </div>
+  </div>
+  <div style="flex:1 1 auto;position:relative;background:repeating-linear-gradient(135deg,#F0D6A8 0 18px,#E9CB97 18px 36px);display:flex;align-items:center;justify-content:center;">
+    <span style="font-family:monospace;font-size:20px;letter-spacing:2px;color:rgba(135,43,19,.5);text-transform:uppercase;text-align:center;line-height:1.6;">foto vertical<br/>cacaotal / mazorca abierta</span>
+  </div>
+</section>
+
+<section data-label="Bienvenidos" data-screen-label="02" data-speaker-notes="Carta de apertura: qué somos más allá del producto." style="position:relative;width:100%;height:100%;background:#FFEACA;padding:96px 110px;display:flex;flex-direction:column;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#872B13;"></div>
+  <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:20px;">01 · Bienvenidos</div>
+  <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:82px;line-height:1.06;color:#D51312;margin:0 0 48px;max-width:24ch;">Más que cacao, cultivamos historias</h2>
+  <div style="display:flex;gap:70px;flex:1;align-items:stretch;">
+    <div style="flex:1 1 0;display:flex;flex-direction:column;gap:30px;">
+      <p style="font-family:'Bellota',sans-serif;font-weight:700;font-size:30px;line-height:1.62;color:#872B13;margin:0;">En Vuelo Carmesí transformamos el cacao en experiencias memorables. Cada visita nace en nuestra finca, donde el respeto por la tierra, la biodiversidad y las personas guía todas nuestras decisiones.</p>
+      <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:28px;line-height:1.65;color:rgba(135,43,19,.78);margin:0;">Abrimos nuestros cultivos, senderos y saberes a quienes quieren entender de dónde viene el chocolate y descubrir la biodiversidad que lo rodea.</p>
+      <div style="margin-top:auto;padding:34px 38px;background:#FFF6E4;border-left:6px solid #FDC300;border-radius:0 12px 12px 0;">
+        <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:500;font-size:34px;line-height:1.4;color:#872B13;margin:0;">"Abrimos las puertas de la finca para compartir una experiencia auténtica que une tradición, innovación y compromiso ambiental."</p>
+      </div>
+    </div>
+    <div style="flex:0 0 40%;border-radius:14px;background:repeating-linear-gradient(135deg,#F0D6A8 0 16px,#E9CB97 16px 32px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:19px;letter-spacing:2px;color:rgba(135,43,19,.5);text-transform:uppercase;text-align:center;line-height:1.6;">foto<br/>manos con grano</span></div>
+  </div>
+</section>
+
+<section data-label="Nuestra historia" data-screen-label="03" data-speaker-notes="Creada en 2023 en Cubarral, Meta. Datos productivos y de impacto verificados." style="position:relative;width:100%;height:100%;background:#FFF6E4;display:flex;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#872B13;"></div>
+  <div style="flex:0 0 38%;background:repeating-linear-gradient(135deg,#F0D6A8 0 18px,#E9CB97 18px 36px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:25px;letter-spacing:2px;color:rgba(135,43,19,.5);text-transform:uppercase;text-align:center;line-height:1.6;">foto<br/>familia / finca</span></div>
+  <div style="flex:1 1 auto;padding:80px 90px;display:flex;flex-direction:column;justify-content:center;min-width:0;">
+    <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:16px;">02 · Nuestra historia</div>
+    <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:68px;line-height:1.05;color:#D51312;margin:0 0 12px;">Un proyecto familiar<br/>en Cubarral, Meta</h2>
+    <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:500;font-size:32px;line-height:1.3;color:#EA5B0C;margin:0 0 24px;">Creada en 2023.</p>
+    <p style="font-family:'Bellota',sans-serif;font-weight:700;font-size:28px;line-height:1.55;color:rgba(135,43,19,.85);margin:0 0 18px;">Finca Agroturística Vuelo Carmesí nace como un emprendimiento familiar que busca fortalecer la economía campesina mediante la producción sostenible de cacao y el turismo rural.</p>
+    <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:27px;line-height:1.55;color:rgba(135,43,19,.75);margin:0 0 36px;">Hoy ofrecemos experiencias de agroturismo, avistamiento de aves y educación ambiental, promoviendo prácticas agroecológicas, la conservación de la biodiversidad y el desarrollo sostenible de la comunidad.</p>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:22px;">
+      <div style="padding:22px 20px;background:#872B13;border-radius:12px;"><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:46px;color:#FDC300;line-height:1;">1,3</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:rgba(255,234,202,.85);margin-top:8px;line-height:1.25;">hectáreas<br/>de cultivo</div></div>
+      <div style="padding:22px 20px;background:#872B13;border-radius:12px;"><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:46px;color:#FDC300;line-height:1;">1.300</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:rgba(255,234,202,.85);margin-top:8px;line-height:1.25;">plantas<br/>aprox.</div></div>
+      <div style="padding:22px 20px;background:#872B13;border-radius:12px;"><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:46px;color:#FDC300;line-height:1;">900</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:rgba(255,234,202,.85);margin-top:8px;line-height:1.25;">kilos<br/>por año</div></div>
+      <div style="padding:22px 20px;background:#872B13;border-radius:12px;"><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:46px;color:#FDC300;line-height:1;">12</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:rgba(255,234,202,.85);margin-top:8px;line-height:1.25;">variedades<br/>de cacao</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:18px 24px;background:#872B13;border-left:5px solid #FDC300;border-radius:0 10px 10px 0;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#FFEACA;">Predominan las variedades <span style="color:#FDC300;">FEAR5</span> y <span style="color:#FDC300;">FSV41</span></div>
+  </div>
+</section>
+
+<section data-label="Misión y visión" data-screen-label="04" data-speaker-notes="Esencia de la marca: misión, visión y valores." style="position:relative;width:100%;height:100%;background:#FFEACA;padding:96px 110px;display:flex;flex-direction:column;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#872B13;"></div>
+  <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:20px;">03 · Nuestra esencia</div>
+  <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:82px;line-height:1.06;color:#D51312;margin:0 0 52px;">Hacia dónde vamos</h2>
+  <div style="display:flex;gap:36px;flex:1;">
+    <div style="flex:1;background:#FFF6E4;border:1px solid rgba(135,43,19,.15);border-radius:14px;padding:52px 46px;display:flex;flex-direction:column;">
+      <div style="width:64px;height:64px;flex:none;border-radius:50%;background:#D51312;display:flex;align-items:center;justify-content:center;font-size:30px;color:#FFEACA;margin-bottom:30px;">◆</div>
+      <h3 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:50px;color:#872B13;margin:0 0 22px;">Misión</h3>
+      <p style="font-family:'Bellota',sans-serif;font-weight:700;font-size:27px;line-height:1.5;color:rgba(135,43,19,.85);margin:0;">Ser reconocidos como un referente en agroturismo sostenible, donde la observación de aves y el cultivo de cacao orgánico se integren en experiencias únicas que inspiran respeto por la naturaleza y valoración de los saberes ancestrales. En Vuelo Carmesí aspiramos a consolidarnos como un modelo de agricultura familiar que promueve la innovación, la conservación de la biodiversidad y el desarrollo comunitario con identidad cultural.</p>
+    </div>
+    <div style="flex:1;background:#872B13;border-radius:14px;padding:52px 46px;display:flex;flex-direction:column;">
+      <div style="width:64px;height:64px;border-radius:50%;background:#FDC300;display:flex;align-items:center;justify-content:center;font-size:30px;color:#872B13;margin-bottom:30px;">◇</div>
+      <h3 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:50px;color:#FFEACA;margin:0 0 22px;">Visión</h3>
+      <p style="font-family:'Bellota',sans-serif;font-weight:700;font-size:27px;line-height:1.5;color:rgba(255,234,202,.9);margin:0;">Para el año 2030, aspiramos a consolidarnos como un referente nacional en agroturismo sostenible, con reconocimiento por la calidad de nuestras experiencias agroecológicas, el impacto positivo en la conservación de aves y cacao, y el fortalecimiento de la economía local mediante prácticas orgánicas.</p>
+    </div>
+  </div>
+</section>
+
+<section data-label="Por qué elegirnos" data-screen-label="05" data-speaker-notes="Seis diferenciales. Es la lámina que más se usa en reuniones comerciales." style="position:relative;width:100%;height:100%;background:#FFEACA;padding:88px 110px;display:flex;flex-direction:column;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#872B13;"></div>
+  <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:18px;">04 · Diferenciales</div>
+  <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:78px;line-height:1.05;color:#D51312;margin:0 0 46px;">¿Por qué elegir Vuelo Carmesí?</h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px 40px;flex:1;">
+    <div style="display:flex;flex-direction:column;gap:14px;"><div style="display:flex;align-items:center;gap:16px;"><span style="width:44px;height:44px;flex:none;border-radius:50%;background:#FDC300;color:#872B13;font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;display:flex;align-items:center;justify-content:center;">01</span><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:32px;color:#872B13;margin:0;">Cacao de origen</h3></div><p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.55;color:rgba(135,43,19,.75);margin:0;">Cultivado en condiciones naturales excepcionales, con trazabilidad desde el árbol.</p></div>
+    <div style="display:flex;flex-direction:column;gap:14px;"><div style="display:flex;align-items:center;gap:16px;"><span style="width:44px;height:44px;flex:none;border-radius:50%;background:#FDC300;color:#872B13;font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;display:flex;align-items:center;justify-content:center;">02</span><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:32px;color:#872B13;margin:0;">Producción sostenible</h3></div><p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.55;color:rgba(135,43,19,.75);margin:0;">Manejo agroecológico, Buenas Prácticas Agrícolas y uso responsable de los recursos.</p></div>
+    <div style="display:flex;flex-direction:column;gap:14px;"><div style="display:flex;align-items:center;gap:16px;"><span style="width:44px;height:44px;flex:none;border-radius:50%;background:#FDC300;color:#872B13;font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;display:flex;align-items:center;justify-content:center;">03</span><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:32px;color:#872B13;margin:0;">Proceso artesanal en vivo</h3></div><p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.55;color:rgba(135,43,19,.75);margin:0;">Mostramos en vivo el proceso que convierte el grano en chocolate.</p></div>
+    <div style="display:flex;flex-direction:column;gap:14px;"><div style="display:flex;align-items:center;gap:16px;"><span style="width:44px;height:44px;flex:none;border-radius:50%;background:#FDC300;color:#872B13;font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;display:flex;align-items:center;justify-content:center;">04</span><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:32px;color:#872B13;margin:0;">Biodiversidad protegida</h3></div><p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.55;color:rgba(135,43,19,.75);margin:0;">Cuidamos la flora y fauna del ecosistema de la finca como parte del negocio.</p></div>
+    <div style="display:flex;flex-direction:column;gap:14px;"><div style="display:flex;align-items:center;gap:16px;"><span style="width:44px;height:44px;flex:none;border-radius:50%;background:#FDC300;color:#872B13;font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;display:flex;align-items:center;justify-content:center;">05</span><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:32px;color:#872B13;margin:0;">Experiencias auténticas</h3></div><p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.55;color:rgba(135,43,19,.75);margin:0;">Integramos producción agrícola, educación ambiental y turismo vivencial.</p></div>
+    <div style="display:flex;flex-direction:column;gap:14px;"><div style="display:flex;align-items:center;gap:16px;"><span style="width:44px;height:44px;flex:none;border-radius:50%;background:#FDC300;color:#872B13;font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;display:flex;align-items:center;justify-content:center;">06</span><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:32px;color:#872B13;margin:0;">Servicio seguro y cuidado</h3></div><p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.55;color:rgba(135,43,19,.75);margin:0;">Guianza especializada, póliza de asistencia y grupos reducidos en cada salida.</p></div>
+  </div>
+</section>
+
+<section data-label="Nuestros públicos" data-screen-label="06" data-speaker-notes="Doble público: cliente final (instituciones educativas y familias) y canal (agencias y emprendedores de la región)." style="position:relative;width:100%;height:100%;background:#FFF6E4;padding:88px 110px;display:flex;flex-direction:column;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#872B13;"></div>
+  <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:18px;">05 · Nuestros públicos</div>
+  <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:78px;line-height:1.05;color:#D51312;margin:0 0 16px;">Para quién trabajamos</h2>
+  <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:28px;line-height:1.55;color:rgba(135,43,19,.75);margin:0 0 28px;max-width:78ch;">Atendemos directamente al visitante y, a la vez, trabajamos con aliados que llevan nuestras experiencias a nuevos públicos.</p>
+  <div style="display:flex;gap:36px;flex:1;min-height:0;">
+    <div style="flex:1;background:#FFEACA;border:1px solid rgba(135,43,19,.15);border-radius:14px;padding:34px 40px;display:flex;flex-direction:column;min-height:0;">
+      <div style="display:flex;align-items:center;gap:18px;margin-bottom:16px;">
+        <span style="width:60px;height:60px;flex:none;border-radius:50%;background:#D51312;display:flex;align-items:center;justify-content:center;font-size:28px;color:#FFEACA;">◆</span>
+        <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;">Cliente directo</div><h3 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:42px;color:#872B13;margin:2px 0 0;">Visita al detal</h3></div>
+      </div>
+      <p style="font-family:'Bellota',sans-serif;font-weight:700;font-size:28px;line-height:1.5;color:#872B13;margin:0 0 20px;">Quienes reservan directamente con nosotros y viven la experiencia en grupo.</p>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px;">
+        <div style="padding:18px 24px;background:#FFEACA;border-radius:12px;"><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:30px;color:#872B13;margin-bottom:6px;">Instituciones educativas</div><div style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.5;color:rgba(135,43,19,.75);">Salidas pedagógicas de colegios y universidades: educación ambiental, cultura campesina y biodiversidad en terreno.</div></div>
+        <div style="padding:18px 24px;background:#FFEACA;border-radius:12px;"><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:30px;color:#872B13;margin-bottom:6px;">Familias de la ciudad</div><div style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.5;color:rgba(135,43,19,.75);">Escapadas de fin de semana cerca de casa: naturaleza, aprendizaje y una actividad que disfrutan grandes y chicos.</div></div>
+      </div>
+      <div style="margin-top:auto;padding-top:18px;border-top:2px solid rgba(253,195,0,.6);font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:rgba(135,43,19,.7);">Reserva directa · grupos de 2 a 12 personas</div>
+    </div>
+    <div style="flex:1;background:#FFEACA;border-radius:14px;padding:34px 40px;display:flex;flex-direction:column;min-height:0;">
+      <div style="display:flex;align-items:center;gap:18px;margin-bottom:16px;">
+        <span style="width:60px;height:60px;flex:none;border-radius:50%;background:#FDC300;display:flex;align-items:center;justify-content:center;font-size:28px;color:#872B13;">◇</span>
+        <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;">Canal aliado</div><h3 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:42px;color:#872B13;margin:2px 0 0;">Alianzas</h3></div>
+      </div>
+      <p style="font-family:'Bellota',sans-serif;font-weight:700;font-size:28px;line-height:1.5;color:rgba(135,43,19,.85);margin:0 0 20px;">Quienes comercializan o integran nuestras experiencias en su propia oferta.</p>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px;">
+        <div style="padding:18px 24px;background:#FFF6E4;border:1px solid rgba(135,43,19,.15);border-radius:12px;"><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:30px;color:#872B13;margin-bottom:6px;">Agencias de viajes</div><div style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.5;color:rgba(135,43,19,.75);">Incorporan nuestros planes a sus paquetes con tarifa neta y disponibilidad coordinada.</div></div>
+        <div style="padding:18px 24px;background:#FFF6E4;border:1px solid rgba(135,43,19,.15);border-radius:12px;"><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:30px;color:#872B13;margin-bottom:6px;">Emprendedores de la región</div><div style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.5;color:rgba(135,43,19,.75);">Alojamientos, gastronomía y guías locales con quienes armamos circuitos conjuntos.</div></div>
+      </div>
+      <div style="margin-top:auto;padding-top:18px;border-top:1px solid rgba(135,43,19,.15);font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:rgba(135,43,19,.7);">Tarifa neta · comisión por volumen · agenda compartida</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Divisor · Experiencias" data-screen-label="07" data-speaker-notes="Transición al bloque de experiencias agroturísticas." style="width:100%;height:100%;background:#D51312;display:flex;align-items:center;padding:0 110px;position:relative;overflow:hidden;">
+  <div style="flex:1 1 auto;">
+    <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;letter-spacing:8px;text-transform:uppercase;color:rgba(255,234,202,.9);margin-bottom:28px;">Bloque uno</div>
+    <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:150px;line-height:.95;color:#FFEACA;margin:0;">Experiencias<br/><span style="font-style:italic;font-weight:500;color:#FDC300;">agroturísticas</span></h2>
+    <p style="font-family:'Bellota',sans-serif;font-weight:700;font-size:32px;line-height:1.55;color:rgba(255,234,202,.85);margin:44px 0 0;max-width:44ch;">Recorridos vivenciales que integran cultura campesina, cacao, biodiversidad y sostenibilidad.</p>
+  </div>
+  <div style="flex:0 0 32%;height:74%;border-radius:14px;background:repeating-linear-gradient(135deg,#c01110 0 18px,#ad0f0e 18px 36px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:19px;letter-spacing:2px;color:rgba(255,234,202,.6);text-transform:uppercase;text-align:center;line-height:1.6;">foto<br/>sendero / visitantes</span></div>
+</section>
+
+<section data-label="Catálogo experiencias" data-screen-label="08" data-speaker-notes="Las tres experiencias base. Duración y capacidad son placeholders a completar." style="position:relative;width:100%;height:100%;background:#FFEACA;padding:88px 110px;display:flex;flex-direction:column;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#EA5B0C;"></div>
+  <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:18px;">06 · Catálogo</div>
+  <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:78px;line-height:1.05;color:#D51312;margin:0 0 16px;">Nuestras experiencias</h2>
+  <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:28px;line-height:1.55;color:rgba(135,43,19,.75);margin:0 0 44px;max-width:70ch;">Tres servicios base, adaptables a grupos familiares, escolares, corporativos y agencias de viaje.</p>
+  <div style="display:flex;gap:34px;flex:1;">
+    <div style="flex:1;background:#FFF6E4;border:1px solid rgba(135,43,19,.15);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:230px;background:repeating-linear-gradient(135deg,#F0D6A8 0 14px,#E9CB97 14px 28px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:17px;letter-spacing:2px;color:rgba(135,43,19,.5);text-transform:uppercase;">foto · cacaotal</span></div>
+      <div style="padding:38px 34px;display:flex;flex-direction:column;flex:1;">
+        <h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:36px;line-height:1.15;color:#872B13;margin:0 0 16px;">Experiencia cacaotera</h3>
+        <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.55;color:rgba(135,43,19,.75);margin:0 0 26px;">Recorrido inmersivo por el mundo del cacao: cultivo, cosecha, transformación artesanal y chocoterapia.</p>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:12px;font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;color:#872B13;">
+          <div style="display:flex;justify-content:space-between;"><span style="color:rgba(135,43,19,.6);">Duración</span><span>3 horas</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:rgba(135,43,19,.6);">Grupo</span><span>2 a 12 personas</span></div>
+          <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(135,43,19,.15);"><span style="color:rgba(135,43,19,.6);">Por persona</span><span style="color:#D51312;font-size:28px;">$70.000</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;background:#FFF6E4;border:1px solid rgba(135,43,19,.15);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:230px;background:repeating-linear-gradient(135deg,#F0D6A8 0 14px,#E9CB97 14px 28px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:17px;letter-spacing:2px;color:rgba(135,43,19,.5);text-transform:uppercase;">foto · aves</span></div>
+      <div style="padding:38px 34px;display:flex;flex-direction:column;flex:1;">
+        <h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:36px;line-height:1.15;color:#872B13;margin:0 0 16px;">Avistamiento de aves</h3>
+        <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.55;color:rgba(135,43,19,.75);margin:0 0 26px;">Aviturismo guiado entre 600 y 850 msnm, en corredores biológicos y sistemas agroforestales de cacao.</p>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:12px;font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;color:#872B13;">
+          <div style="display:flex;justify-content:space-between;"><span style="color:rgba(135,43,19,.6);">Nivel</span><span>Básico a intermedio</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:rgba(135,43,19,.6);">Grupo</span><span>2 a 8 personas</span></div>
+          <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(135,43,19,.15);"><span style="color:rgba(135,43,19,.6);">Por persona</span><span style="color:#D51312;font-size:28px;">$80.000</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;background:#FFF6E4;border:2px solid #D51312;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 10px 30px rgba(135,43,19,.14);">
+      <div style="height:230px;background:repeating-linear-gradient(135deg,#F0D6A8 0 14px,#E9CB97 14px 28px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:17px;letter-spacing:2px;color:rgba(135,43,19,.5);text-transform:uppercase;">foto · plan completo</span></div>
+      <div style="padding:38px 34px;display:flex;flex-direction:column;flex:1;">
+        <span style="align-self:flex-start;font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;background:#FDC300;color:#872B13;border-radius:100px;padding:6px 16px;margin-bottom:14px;">Plan combinado</span>
+        <h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:36px;line-height:1.15;color:#872B13;margin:0 0 16px;">Aves + cacao</h3>
+        <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.55;color:rgba(135,43,19,.75);margin:0 0 26px;">Jornada completa: avistamiento de aves al amanecer y experiencia cacaotera durante la mañana.</p>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:12px;font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;color:#872B13;">
+          <div style="display:flex;justify-content:space-between;"><span style="color:rgba(135,43,19,.6);">Formato</span><span>Jornada completa</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:rgba(135,43,19,.6);">Grupo</span><span>2 a 8 personas</span></div>
+          <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(135,43,19,.15);"><span style="color:rgba(135,43,19,.6);">Por persona</span><span style="color:#D51312;font-size:28px;">$150.000</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+<section data-label="Experiencia cacaotera" data-screen-label="09" data-speaker-notes="Ficha completa de la experiencia cacaotera: 3 horas, 70.000 COP por persona, de 2 a 12 personas." style="position:relative;width:100%;height:100%;background:#FFEACA;display:flex;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#EA5B0C;"></div>
+  <div style="flex:0 0 40%;background:repeating-linear-gradient(135deg,#F0D6A8 0 18px,#E9CB97 18px 36px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:25px;letter-spacing:2px;color:rgba(135,43,19,.5);text-transform:uppercase;text-align:center;line-height:1.6;">foto full-bleed<br/>mazorca / chocoterapia</span></div>
+  <div style="flex:1 1 auto;padding:76px 80px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+      <span style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;background:#D51312;color:#FFEACA;border-radius:100px;padding:7px 18px;">Servicio 01</span>
+      <span style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:4px;text-transform:uppercase;color:rgba(135,43,19,.55);">Experiencia inmersiva</span>
+    </div>
+    <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:70px;line-height:1.04;color:#D51312;margin:0 0 22px;">Experiencia cacaotera</h2>
+    <p style="font-family:'Bellota',sans-serif;font-weight:700;font-size:28px;line-height:1.55;color:#872B13;margin:0 0 16px;">Dejate envolver por los aromas, sabores y tradiciones del mejor cacao del mundo en una experiencia agroecológica única que despertará todos tus sentidos.</p>
+    <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:26px;line-height:1.55;color:rgba(135,43,19,.78);margin:0 0 34px;">Conocé de cerca todo el proceso del cacao: desde el cultivo y la cosecha hasta la transformación artesanal que da vida a deliciosos productos de chocolate. Conectá con la cultura campesina, descubrí saberes ancestrales y disfrutá de una experiencia sensorial inolvidable en medio de la naturaleza.</p>
+    <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;margin-bottom:18px;">¿Qué vivirás en esta experiencia?</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 40px;margin-bottom:38px;">
+      <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Recorrido guiado por cultivos de cacao</div>
+      <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Proceso artesanal de transformación</div>
+      <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Chocoterapia y mascarilla natural de cacao</div>
+      <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Refrigerio tradicional</div>
+      <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Póliza de asistencia y riesgos</div>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:52px;padding-top:30px;border-top:2px solid rgba(253,195,0,.6);">
+      <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:rgba(135,43,19,.55);margin-bottom:6px;">Duración</div><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:42px;color:#872B13;">3 horas</div></div>
+      <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:rgba(135,43,19,.55);margin-bottom:6px;">Capacidad</div><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:42px;color:#872B13;">2 a 12 pers.</div></div>
+      <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:rgba(135,43,19,.55);margin-bottom:6px;">Valor por persona</div><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:42px;color:#D51312;">$70.000 COP</div></div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Avistamiento de aves" data-screen-label="10" data-speaker-notes="Ficha de aviturismo: 600-850 msnm, nivel básico a intermedio, de 2 a 8 personas." style="position:relative;width:100%;height:100%;background:#FFF6E4;display:flex;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#D51312;"></div>
+  <div style="flex:1 1 auto;padding:76px 80px 76px 110px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+      <span style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;background:#FDC300;color:#872B13;border-radius:100px;padding:7px 18px;">Servicio 02</span>
+      <span style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:4px;text-transform:uppercase;color:rgba(135,43,19,.55);">Aviturismo guiado</span>
+    </div>
+    <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:70px;line-height:1.04;color:#D51312;margin:0 0 10px;">Avistamiento de aves</h2>
+    <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:500;font-size:34px;line-height:1.3;color:#D51312;margin:0 0 20px;">Conectá con la naturaleza: observá, aprendé y conservá.</p>
+    <p style="font-family:'Bellota',sans-serif;font-weight:700;font-size:28px;line-height:1.55;color:rgba(135,43,19,.85);margin:0 0 16px;">Descubrí la riqueza natural de nuestro territorio a través de una experiencia de aviturismo diseñada para conectar a los visitantes con la biodiversidad local y los paisajes agroforestales de cacao.</p>
+    <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:26px;line-height:1.55;color:rgba(135,43,19,.72);margin:0 0 32px;">El recorrido permite observar aves acuáticas y especies representativas del entorno rural comunitario, en escenarios naturales que conservan la armonía entre producción sostenible y naturaleza. Una experiencia de aprendizaje y conservación entre paisajes llenos de vida, sonidos y colores únicos del territorio.</p>
+    <div style="display:flex;gap:26px;margin-bottom:34px;">
+      <div style="flex:1;padding:24px 28px;background:#FFF6E4;border:1px solid rgba(135,43,19,.15);border-radius:12px;"><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:#EA5B0C;margin-bottom:8px;">Altitud</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;">600 a 850 msnm</div></div>
+      <div style="flex:1;padding:24px 28px;background:#FFF6E4;border:1px solid rgba(135,43,19,.15);border-radius:12px;"><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:#EA5B0C;margin-bottom:8px;">Nivel</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;">Básico a intermedio</div></div>
+      <div style="flex:1;padding:24px 28px;background:#FFF6E4;border:1px solid rgba(135,43,19,.15);border-radius:12px;"><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:#EA5B0C;margin-bottom:8px;">Grupo</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;">2 a 8 personas</div></div>
+      <div style="flex:1;padding:24px 28px;background:#FDC300;border-radius:12px;"><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:#872B13;margin-bottom:8px;">Por persona</div><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:34px;color:#872B13;">$80.000</div></div>
+    </div>
+    <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;margin-bottom:16px;">Incluye</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 40px;">
+      <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Binoculares para la actividad</div>
+      <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Guía especializado en aviturismo del sector</div>
+      <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Desayuno incluido</div>
+      <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Acompañamiento durante todo el recorrido</div>
+      <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Póliza de asistencia y riesgos</div>
+    </div>
+  </div>
+  <div style="flex:0 0 36%;background:repeating-linear-gradient(135deg,#F0D6A8 0 18px,#E9CB97 18px 36px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:25px;letter-spacing:2px;color:rgba(135,43,19,.5);text-transform:uppercase;text-align:center;line-height:1.6;">foto vertical<br/>ave / binoculares</span></div>
+</section>
+
+<section data-label="Plan combinado" data-screen-label="11" data-speaker-notes="Plan combinado aves + cacao y complementos. Confirmar valor del plan combinado." style="position:relative;width:100%;height:100%;background:#FFEACA;padding:88px 110px;display:flex;flex-direction:column;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#D51312;"></div>
+  <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:18px;">07 · Plan combinado y complementos</div>
+  <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:78px;line-height:1.05;color:#D51312;margin:0 0 16px;">Una jornada, dos mundos</h2>
+  <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:28px;line-height:1.55;color:rgba(135,43,19,.75);margin:0 0 44px;max-width:74ch;">El plan más completo combina el avistamiento de aves al amanecer con la experiencia cacaotera, y puede ampliarse con servicios complementarios.</p>
+  <div style="display:flex;gap:34px;flex:1;">
+    <div style="flex:1.35;background:#FFF6E4;border:2px solid #D51312;border-radius:14px;padding:52px 48px;display:flex;flex-direction:column;position:relative;box-shadow:0 10px 30px rgba(135,43,19,.14);">
+      <span style="position:absolute;top:-16px;left:48px;font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;background:#FDC300;color:#872B13;border-radius:100px;padding:8px 20px;">Plan estrella</span>
+      <h3 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:52px;line-height:1.08;color:#872B13;margin:0 0 20px;">Avistamiento de aves<br/>+ experiencia cacaotera</h3>
+      <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:26px;line-height:1.55;color:rgba(135,43,19,.75);margin:0 0 32px;">Jornada completa que une la observación de aves en corredores biológicos con el recorrido inmersivo por el mundo del cacao.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 36px;margin-bottom:auto;">
+        <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Guía especializado en aviturismo</div>
+        <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Binoculares incluidos</div>
+        <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Desayuno y refrigerio tradicional</div>
+        <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Recorrido guiado por los cultivos</div>
+        <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Proceso artesanal del cacao</div>
+        <div style="display:flex;align-items:center;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:#872B13;"><span style="color:#D51312;">✓</span>Póliza de asistencia y riesgos</div>
+      </div>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;padding-top:30px;margin-top:32px;border-top:1px solid rgba(135,43,19,.15);">
+        <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:rgba(135,43,19,.55);margin-bottom:6px;">Capacidad</div><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:40px;color:#872B13;">2 a 8 personas</div></div>
+        <div style="text-align:right;"><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:rgba(135,43,19,.55);margin-bottom:6px;">Valor por persona</div><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:48px;color:#D51312;">$150.000</div></div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:26px;">
+      <div style="flex:1;background:#FFF6E4;border:1px solid rgba(135,43,19,.15);border-radius:14px;padding:44px 40px;display:flex;flex-direction:column;">
+        <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;margin-bottom:16px;">Complemento</div>
+        <h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:38px;line-height:1.15;color:#872B13;margin:0 0 14px;">Mascarilla + refrigerio</h3>
+        <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.5;color:rgba(135,43,19,.75);margin:0 0 24px;">Chocoterapia con mascarilla natural de cacao y refrigerio tradicional, para sumar a cualquier plan.</p>
+        <div style="margin-top:auto;display:flex;align-items:baseline;gap:12px;"><span style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:52px;color:#D51312;">$30.000</span><span style="font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;color:rgba(135,43,19,.6);">por persona</span></div>
+      </div>
+      <div style="background:#FFF6E4;border:1px dashed rgba(135,43,19,.3);border-radius:14px;padding:32px 36px;">
+        <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;margin-bottom:12px;">A medida</div>
+        <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.5;color:rgba(135,43,19,.8);margin:0;">Grupos corporativos, escolares y agencias: armamos jornadas personalizadas según tamaño del grupo, duración y temporada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Grupos y jornadas" data-screen-label="12" data-speaker-notes="Oferta operativa para instituciones educativas, familias y grupos. Confirmar cupo máximo ampliado y valor por grupo." style="position:relative;width:100%;height:100%;background:#FFF6E4;padding:80px 110px;display:flex;flex-direction:column;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#D51312;"></div>
+  <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:16px;">08 · Grupos y jornadas a medida</div>
+  <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:74px;line-height:1.04;color:#D51312;margin:0 0 14px;">Diseñamos la visita según el grupo</h2>
+  <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:27px;line-height:1.5;color:rgba(135,43,19,.75);margin:0 0 34px;max-width:80ch;">Adaptamos duración, ritmo y contenidos según la edad y el objetivo del grupo, manteniendo siempre la guianza especializada y la póliza de asistencia.</p>
+  <div style="display:flex;gap:32px;flex:1;min-height:0;">
+    <div style="flex:1;background:#FFEACA;border:1px solid rgba(135,43,19,.15);border-radius:14px;padding:34px 36px;display:flex;flex-direction:column;min-height:0;">
+      <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;margin-bottom:10px;">Salidas pedagógicas</div>
+      <h3 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:42px;color:#872B13;margin:0 0 18px;">Instituciones educativas</h3>
+      <div style="display:flex;flex-direction:column;gap:11px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.4;color:rgba(135,43,19,.85);">
+        <div>✦&nbsp;&nbsp;Educación ambiental y biodiversidad en terreno</div>
+        <div>✦&nbsp;&nbsp;Cadena productiva del cacao de principio a fin</div>
+        <div>✦&nbsp;&nbsp;Cultura campesina y saberes ancestrales</div>
+        <div>✦&nbsp;&nbsp;Guías por subgrupos y docentes acompañantes</div>
+        <div>✦&nbsp;&nbsp;Refrigerio y póliza incluidos</div>
+      </div>
+      <div style="margin-top:auto;padding-top:18px;border-top:1px solid rgba(135,43,19,.15);font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:rgba(135,43,19,.7);">Cupos ampliados por rotación de subgrupos</div>
+    </div>
+    <div style="flex:1;background:#FFEACA;border:1px solid rgba(135,43,19,.15);border-radius:14px;padding:34px 36px;display:flex;flex-direction:column;min-height:0;">
+      <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;margin-bottom:10px;">Escapada cercana</div>
+      <h3 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:42px;color:#872B13;margin:0 0 18px;">Familias de la ciudad</h3>
+      <div style="display:flex;flex-direction:column;gap:11px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.4;color:rgba(135,43,19,.85);">
+        <div>✦&nbsp;&nbsp;Plan de un día, sin pernocte, cerca de casa</div>
+        <div>✦&nbsp;&nbsp;Actividad sensorial que disfrutan grandes y chicos</div>
+        <div>✦&nbsp;&nbsp;Chocoterapia y mascarilla de cacao</div>
+        <div>✦&nbsp;&nbsp;Ritmo tranquilo y recorridos de baja exigencia</div>
+        <div>✦&nbsp;&nbsp;Refrigerio tradicional incluido</div>
+      </div>
+      <div style="margin-top:auto;padding-top:18px;border-top:1px solid rgba(135,43,19,.15);font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:rgba(135,43,19,.7);">Reserva directa desde 2 personas</div>
+    </div>
+    <div style="flex:1;background:#FDC300;border-radius:14px;padding:34px 36px;display:flex;flex-direction:column;min-height:0;">
+      <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:3px;text-transform:uppercase;color:rgba(135,43,19,.7);margin-bottom:10px;">A medida</div>
+      <h3 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:42px;color:#872B13;margin:0 0 18px;">Corporativos y grupos</h3>
+      <div style="display:flex;flex-direction:column;gap:11px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.4;color:#872B13;">
+        <div>✦&nbsp;&nbsp;Jornadas de bienestar e integración de equipos</div>
+        <div>✦&nbsp;&nbsp;Combinables con avistamiento de aves</div>
+        <div>✦&nbsp;&nbsp;Almuerzo de campo opcional</div>
+        <div>✦&nbsp;&nbsp;Facturación empresarial</div>
+        <div>✦&nbsp;&nbsp;Fechas exclusivas para el grupo</div>
+      </div>
+      <div style="margin-top:auto;padding-top:18px;border-top:1px solid rgba(135,43,19,.25);font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:rgba(135,43,19,.75);">Cotización según grupo y temporada</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Testimonios" data-screen-label="13" data-speaker-notes="Prueba social. Reemplazar por testimonios reales con nombre y rol." style="position:relative;width:100%;height:100%;background:#FFEACA;padding:96px 110px;display:flex;flex-direction:column;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#FDC300;"></div>
+  <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:18px;">09 · Testimonios</div>
+  <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:78px;line-height:1.05;color:#D51312;margin:0 0 56px;">Lo que dicen quienes nos visitan</h2>
+  <div style="display:flex;gap:36px;flex:1;">
+    <div style="flex:1;background:#FFEACA;border-top:6px solid #FDC300;border-radius:4px 4px 14px 14px;padding:40px 40px 46px;box-shadow:0 3px 14px rgba(135,43,19,.1);display:flex;flex-direction:column;">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:80px;line-height:.6;color:#D51312;margin-bottom:24px;">"</div>
+      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:500;font-size:34px;line-height:1.45;color:#872B13;margin:0 0 32px;">Vivimos una experiencia especial de conocimiento y encuentro con la vida y su diversidad.</p>
+      <div style="margin-top:auto;display:flex;align-items:center;gap:16px;"><span style="width:52px;height:52px;border-radius:50%;background:repeating-linear-gradient(135deg,#F0D6A8 0 8px,#E9CB97 8px 16px);"></span><div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:#872B13;">[ Nombre ]</div><div style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:rgba(135,43,19,.65);">[ Rol / organización ]</div></div></div>
+    </div>
+    <div style="flex:1;background:#FFEACA;border-top:6px solid #FDC300;border-radius:4px 4px 14px 14px;padding:40px 40px 46px;box-shadow:0 3px 14px rgba(135,43,19,.1);display:flex;flex-direction:column;">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:80px;line-height:.6;color:#D51312;margin-bottom:24px;">"</div>
+      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:500;font-size:34px;line-height:1.45;color:#872B13;margin:0 0 32px;">Aprendí de la diversidad de nuestro territorio y de los procesos que realizan para mantener el cultivo.</p>
+      <div style="margin-top:auto;display:flex;align-items:center;gap:16px;"><span style="width:52px;height:52px;border-radius:50%;background:repeating-linear-gradient(135deg,#F0D6A8 0 8px,#E9CB97 8px 16px);"></span><div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:#872B13;">[ Nombre ]</div><div style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:rgba(135,43,19,.65);">[ Rol / organización ]</div></div></div>
+    </div>
+    <div style="flex:1;background:#FFEACA;border-top:6px solid #FDC300;border-radius:4px 4px 14px 14px;padding:40px 40px 46px;box-shadow:0 3px 14px rgba(135,43,19,.1);display:flex;flex-direction:column;">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:80px;line-height:.6;color:#D51312;margin-bottom:24px;">"</div>
+      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:500;font-size:34px;line-height:1.45;color:#872B13;margin:0 0 32px;">Un lugar acogedor y lleno de biodiversidad. Los invito a conocerlo.</p>
+      <div style="margin-top:auto;display:flex;align-items:center;gap:16px;"><span style="width:52px;height:52px;border-radius:50%;background:repeating-linear-gradient(135deg,#F0D6A8 0 8px,#E9CB97 8px 16px);"></span><div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:#872B13;">[ Nombre ]</div><div style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:rgba(135,43,19,.65);">[ Rol / organización ]</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Certificaciones" data-screen-label="14" data-speaker-notes="Avales oficiales. Reemplazar los círculos por los logos oficiales de cada entidad." style="position:relative;width:100%;height:100%;background:#FFEACA;padding:96px 110px;display:flex;flex-direction:column;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#FDC300;"></div>
+  <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:18px;">10 · Calidad y confianza</div>
+  <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:78px;line-height:1.05;color:#D51312;margin:0 0 20px;">Avales y certificaciones</h2>
+  <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:28px;line-height:1.55;color:rgba(135,43,19,.75);margin:0 0 52px;max-width:78ch;">Nuestro compromiso con la calidad se refleja en cada etapa del proceso, desde el cultivo hasta la entrega del producto final.</p>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:32px;flex:1;">
+    <div style="background:#FFEACA;border:1px solid rgba(135,43,19,.15);border-top:6px solid #EA5B0C;border-radius:4px 4px 14px 14px;padding:38px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="width:132px;height:132px;border-radius:50%;background:repeating-linear-gradient(135deg,#F0D6A8 0 10px,#E9CB97 10px 20px);border:2px solid rgba(135,43,19,.14);display:flex;align-items:center;justify-content:center;margin-bottom:26px;"><span style="font-family:monospace;font-size:14px;color:rgba(135,43,19,.5);text-transform:uppercase;">logo ICA</span></div><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;line-height:1.2;color:#872B13;margin:0 0 8px;">Buenas Prácticas Agrícolas</h3><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:1px;text-transform:uppercase;color:#EA5B0C;margin-bottom:14px;">ICA</div><p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:24px;line-height:1.45;color:rgba(135,43,19,.72);margin:0;">Manejo responsable del cultivo de cacao.</p></div>
+    <div style="background:#FFEACA;border:1px solid rgba(135,43,19,.15);border-top:6px solid #EA5B0C;border-radius:4px 4px 14px 14px;padding:38px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="width:132px;height:132px;border-radius:50%;background:repeating-linear-gradient(135deg,#F0D6A8 0 10px,#E9CB97 10px 20px);border:2px solid rgba(135,43,19,.14);display:flex;align-items:center;justify-content:center;margin-bottom:26px;"><span style="font-family:monospace;font-size:14px;color:rgba(135,43,19,.5);text-transform:uppercase;">logo turismo</span></div><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;line-height:1.2;color:#872B13;margin:0 0 8px;">Turismo Sostenible</h3><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:1px;text-transform:uppercase;color:#EA5B0C;margin-bottom:14px;">Norma NTS-TS</div><p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:24px;line-height:1.45;color:rgba(135,43,19,.72);margin:0;">Prácticas turísticas responsables con el entorno.</p></div>
+    <div style="background:#FFEACA;border:1px solid rgba(135,43,19,.15);border-top:6px solid #EA5B0C;border-radius:4px 4px 14px 14px;padding:38px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="width:132px;height:132px;border-radius:50%;background:repeating-linear-gradient(135deg,#F0D6A8 0 10px,#E9CB97 10px 20px);border:2px solid rgba(135,43,19,.14);display:flex;align-items:center;justify-content:center;margin-bottom:26px;"><span style="font-family:monospace;font-size:14px;color:rgba(135,43,19,.5);text-transform:uppercase;">logo sanitario</span></div><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;line-height:1.2;color:#872B13;margin:0 0 8px;">Notificación sanitaria</h3><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:1px;text-transform:uppercase;color:#EA5B0C;margin-bottom:14px;">[ Entidad ]</div><p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:24px;line-height:1.45;color:rgba(135,43,19,.72);margin:0;">Manipulación segura de alimentos en cada servicio.</p></div>
+    <div style="background:#FFEACA;border:1px solid rgba(135,43,19,.15);border-top:6px solid #EA5B0C;border-radius:4px 4px 14px 14px;padding:38px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="width:132px;height:132px;border-radius:50%;background:repeating-linear-gradient(135deg,#F0D6A8 0 10px,#E9CB97 10px 20px);border:2px solid rgba(135,43,19,.14);display:flex;align-items:center;justify-content:center;margin-bottom:26px;"><span style="font-family:monospace;font-size:14px;color:rgba(135,43,19,.5);text-transform:uppercase;">logo verde</span></div><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;line-height:1.2;color:#872B13;margin:0 0 8px;">Negocios Verdes</h3><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:1px;text-transform:uppercase;color:#EA5B0C;margin-bottom:14px;">[ Entidad ]</div><p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:24px;line-height:1.45;color:rgba(135,43,19,.72);margin:0;">Producción con impacto ambiental positivo.</p></div>
+  </div>
+</section>
+
+<section data-label="Sostenibilidad" data-screen-label="15" data-speaker-notes="Compromiso ambiental: seis acciones concretas." style="position:relative;width:100%;height:100%;background:#FFF6E4;display:flex;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#FDC300;"></div>
+  <div style="flex:1 1 auto;padding:96px 90px 96px 110px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:18px;">11 · Sostenibilidad</div>
+    <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:76px;line-height:1.05;color:#D51312;margin:0 0 28px;">Producir cuidando<br/>el entorno</h2>
+    <p style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;line-height:1.6;color:rgba(135,43,19,.8);margin:0 0 46px;max-width:48ch;">Creemos que producir alimentos de calidad implica proteger el entorno que los hace posibles. Implementamos prácticas que conservan el agua, el suelo y la biodiversidad.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px 44px;">
+      <div style="display:flex;align-items:center;gap:16px;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;"><span style="color:#D51312;font-size:24px;">✦</span>Conservación de especies nativas</div>
+      <div style="display:flex;align-items:center;gap:16px;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;"><span style="color:#D51312;font-size:24px;">✦</span>Protección de fuentes hídricas</div>
+      <div style="display:flex;align-items:center;gap:16px;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;"><span style="color:#D51312;font-size:24px;">✦</span>Producción responsable</div>
+      <div style="display:flex;align-items:center;gap:16px;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;"><span style="color:#D51312;font-size:24px;">✦</span>Uso eficiente de recursos</div>
+      <div style="display:flex;align-items:center;gap:16px;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;"><span style="color:#D51312;font-size:24px;">✦</span>Educación ambiental</div>
+      <div style="display:flex;align-items:center;gap:16px;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#872B13;"><span style="color:#D51312;font-size:24px;">✦</span>Promoción del turismo sostenible</div>
+    </div>
+    <div style="display:flex;gap:20px;margin-top:34px;">
+      <div style="flex:1;padding:20px 24px;background:#872B13;border-radius:12px;"><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:42px;color:#FDC300;line-height:1;">2</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:rgba(255,234,202,.85);margin-top:6px;line-height:1.25;">familias beneficiadas<br/>directamente</div></div>
+      <div style="flex:1;padding:20px 24px;background:#872B13;border-radius:12px;"><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:42px;color:#FDC300;line-height:1;">8</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:rgba(255,234,202,.85);margin-top:6px;line-height:1.25;">familias beneficiadas<br/>indirectamente</div></div>
+      <div style="flex:1;padding:20px 24px;background:#872B13;border-radius:12px;"><div style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:42px;color:#FDC300;line-height:1;">6</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;color:rgba(255,234,202,.85);margin-top:6px;line-height:1.25;">empleos por<br/>obra realizada</div></div>
+    </div>
+  </div>
+  <div style="flex:0 0 38%;background:repeating-linear-gradient(135deg,#F0D6A8 0 18px,#E9CB97 18px 36px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:19px;letter-spacing:2px;color:rgba(135,43,19,.5);text-transform:uppercase;text-align:center;line-height:1.6;">foto vertical<br/>selva / fuente hídrica</span></div>
+</section>
+
+<section data-label="Resumen comercial" data-screen-label="16" data-speaker-notes="Tabla resumen de servicios y valores. Completar los valores pendientes." style="position:relative;width:100%;height:100%;background:#FFEACA;padding:88px 110px;display:flex;flex-direction:column;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#FDC300;"></div>
+  <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:18px;">12 · Resumen comercial</div>
+  <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:78px;line-height:1.05;color:#D51312;margin:0 0 16px;">Servicios y valores</h2>
+  <p style="font-family:'Bellota',sans-serif;font-weight:400;font-size:28px;line-height:1.55;color:rgba(135,43,19,.75);margin:0 0 40px;max-width:74ch;">Todos los servicios incluyen guianza y póliza de asistencia y riesgos. Tarifas sujetas a temporada y tamaño del grupo.</p>
+  <div style="border:1px solid rgba(135,43,19,.15);border-radius:14px;overflow:hidden;">
+    <div style="display:flex;background:#872B13;font-family:'Bellota',sans-serif;font-weight:700;font-size:23px;letter-spacing:.5px;text-transform:uppercase;color:#FDC300;">
+      <div style="flex:2.2;padding:24px 32px;">Servicio</div>
+      <div style="flex:1;padding:24px 20px;">Duración</div>
+      <div style="flex:1;padding:24px 20px;">Grupo</div>
+      <div style="flex:1.1;padding:24px 32px;text-align:right;">Por persona</div>
+    </div>
+    <div style="display:flex;align-items:center;background:#FFF6E4;font-family:'Bellota',sans-serif;font-size:27px;color:#872B13;">
+      <div style="flex:2.2;padding:26px 32px;font-weight:700;">Experiencia cacaotera</div>
+      <div style="flex:1;padding:26px 20px;font-weight:400;">3 horas</div>
+      <div style="flex:1;padding:26px 20px;font-weight:400;">2 a 12</div>
+      <div style="flex:1.1;padding:26px 32px;text-align:right;font-weight:700;color:#D51312;font-size:31px;">$70.000</div>
+    </div>
+    <div style="display:flex;align-items:center;background:#FFEACA;border-top:1px solid rgba(135,43,19,.12);font-family:'Bellota',sans-serif;font-size:27px;color:#872B13;">
+      <div style="flex:2.2;padding:26px 32px;font-weight:700;">Avistamiento de aves</div>
+      <div style="flex:1;padding:26px 20px;font-weight:400;">Media jornada</div>
+      <div style="flex:1;padding:26px 20px;font-weight:400;">2 a 8</div>
+      <div style="flex:1.1;padding:26px 32px;text-align:right;font-weight:700;color:#D51312;font-size:31px;">$80.000</div>
+    </div>
+    <div style="display:flex;align-items:center;background:#FFF6E4;border-top:1px solid rgba(135,43,19,.12);font-family:'Bellota',sans-serif;font-size:27px;color:#872B13;">
+      <div style="flex:2.2;padding:26px 32px;font-weight:700;">Aves + experiencia cacaotera<span style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;background:#FDC300;color:#872B13;border-radius:100px;padding:5px 14px;margin-left:16px;">Plan estrella</span></div>
+      <div style="flex:1;padding:26px 20px;font-weight:400;">Jornada</div>
+      <div style="flex:1;padding:26px 20px;font-weight:400;">2 a 8</div>
+      <div style="flex:1.1;padding:26px 32px;text-align:right;font-weight:700;color:#D51312;font-size:31px;">$150.000</div>
+    </div>
+    <div style="display:flex;align-items:center;background:#FFEACA;border-top:1px solid rgba(135,43,19,.12);font-family:'Bellota',sans-serif;font-size:27px;color:#872B13;">
+      <div style="flex:2.2;padding:26px 32px;font-weight:700;">Mascarilla + refrigerio<span style="font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;color:rgba(135,43,19,.6);margin-left:16px;">complemento</span></div>
+      <div style="flex:1;padding:26px 20px;font-weight:400;">—</div>
+      <div style="flex:1;padding:26px 20px;font-weight:400;">—</div>
+      <div style="flex:1.1;padding:26px 32px;text-align:right;font-weight:700;color:#D51312;font-size:31px;">$30.000</div>
+    </div>
+    <div style="display:flex;align-items:center;background:#FFF6E4;border-top:1px solid rgba(135,43,19,.12);font-family:'Bellota',sans-serif;font-size:27px;color:#872B13;">
+      <div style="flex:2.2;padding:26px 32px;font-weight:700;">Jornadas corporativas y escolares</div>
+      <div style="flex:1;padding:26px 20px;font-weight:400;">A medida</div>
+      <div style="flex:1;padding:26px 20px;font-weight:400;">A convenir</div>
+      <div style="flex:1.1;padding:26px 32px;text-align:right;font-weight:700;color:#D51312;font-size:31px;">Cotización</div>
+    </div>
+  </div>
+  <div style="margin-top:auto;padding-top:30px;font-family:'Bellota',sans-serif;font-weight:400;font-size:24px;color:rgba(135,43,19,.65);">Tarifas al público en pesos colombianos (COP). Agencias y aliados cuentan con tarifa neta y descuentos por volumen; grupos escolares e institucionales se cotizan a medida.</div>
+</section>
+
+<section data-label="Condiciones" data-screen-label="17" data-speaker-notes="Reservas, pagos, cancelación y normas. Ajustar según política real." style="position:relative;width:100%;height:100%;background:#FFF6E4;padding:88px 110px;display:flex;flex-direction:column;">
+  <div style="position:absolute;top:0;left:0;width:14px;height:100%;background:#FDC300;"></div>
+  <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:18px;">13 · Condiciones</div>
+  <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:78px;line-height:1.05;color:#D51312;margin:0 0 46px;">Reservas y políticas</h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;flex:1;">
+    <div style="display:flex;flex-direction:column;background:#FFEACA;border-radius:14px;padding:34px 32px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;"><span style="width:44px;height:44px;flex:none;border-radius:50%;background:#D51312;color:#FFEACA;font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;display:flex;align-items:center;justify-content:center;">1</span><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:32px;color:#872B13;margin:0;">Pago y depósito</h3></div>
+      <div style="display:flex;flex-direction:column;gap:18px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.55;color:rgba(135,43,19,.8);">
+        <p style="margin:0;"><strong style="color:#872B13;">Anticipo:</strong> se solicita el [ 50% ] del valor del servicio para confirmar la reserva.</p>
+        <p style="margin:0;"><strong style="color:#872B13;">Saldo:</strong> se abona al momento del check-in por los medios de pago autorizados.</p>
+        <p style="margin:0;padding:18px 22px;background:#FFF6E4;border-radius:10px;border:1px dashed rgba(135,43,19,.3);">Medios autorizados: [ cuenta bancaria / billetera digital / transferencia ]</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;background:#FFEACA;border-radius:14px;padding:34px 32px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;"><span style="width:44px;height:44px;flex:none;border-radius:50%;background:#D51312;color:#FFEACA;font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;display:flex;align-items:center;justify-content:center;">2</span><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:32px;color:#872B13;margin:0;">Cancelación</h3></div>
+      <div style="display:flex;flex-direction:column;gap:18px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.55;color:rgba(135,43,19,.8);">
+        <p style="margin:0;"><strong style="color:#872B13;">Anticipada:</strong> con más de [ 15 ] días, se retiene el [ 5% ] por gastos administrativos.</p>
+        <p style="margin:0;"><strong style="color:#872B13;">Tardía:</strong> dentro de los [ 5 ] días previos implica la retención del anticipo.</p>
+        <p style="margin:0;"><strong style="color:#872B13;">Reprogramación:</strong> sin penalidad avisando entre [ 6 y 14 ] días antes.</p>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;background:#FFEACA;border-radius:14px;padding:34px 32px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;"><span style="width:44px;height:44px;flex:none;border-radius:50%;background:#D51312;color:#FFEACA;font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;display:flex;align-items:center;justify-content:center;">3</span><h3 style="font-family:'Bellota',sans-serif;font-weight:700;font-size:32px;color:#872B13;margin:0;">Normas de la finca</h3></div>
+      <div style="display:flex;flex-direction:column;gap:18px;font-family:'Bellota',sans-serif;font-weight:400;font-size:25px;line-height:1.55;color:rgba(135,43,19,.8);">
+        <p style="margin:0;"><strong style="color:#872B13;">Horarios:</strong> ingreso desde [ 00:00 ] y salida antes de [ 00:00 ].</p>
+        <p style="margin:0;"><strong style="color:#872B13;">Sostenibilidad:</strong> uso racional de agua y energía, manejo adecuado de residuos y respeto por los cultivos.</p>
+        <p style="margin:0;"><strong style="color:#872B13;">Registro:</strong> se solicitan datos personales para el registro turístico obligatorio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Alianzas" data-screen-label="18" data-speaker-notes="Cierre B2B: con quién nos aliamos y bajo qué condiciones operativas." style="width:100%;height:100%;background:#872B13;padding:80px 110px;display:flex;flex-direction:column;justify-content:center;">
+  <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:6px;text-transform:uppercase;color:#FDC300;margin-bottom:16px;">14 · Alianzas comerciales</div>
+  <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:88px;line-height:1.02;color:#FFEACA;margin:0 0 20px;max-width:24ch;">Construyamos algo juntos</h2>
+  <p style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;line-height:1.5;color:rgba(255,234,202,.88);margin:0 0 40px;max-width:70ch;">Creemos en relaciones comerciales basadas en la confianza, la transparencia y el crecimiento conjunto.</p>
+  <div style="display:flex;gap:44px;">
+    <div style="flex:1.1;">
+      <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:3px;text-transform:uppercase;color:#FDC300;margin-bottom:20px;">Trabajamos con</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;">
+        <div style="padding:20px 24px;background:rgba(255,234,202,.1);border:1px solid rgba(255,234,202,.32);border-radius:12px;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#FFEACA;">Agencias de viaje</div>
+        <div style="padding:20px 24px;background:rgba(255,234,202,.1);border:1px solid rgba(255,234,202,.32);border-radius:12px;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#FFEACA;">Operadores de aviturismo</div>
+        <div style="padding:20px 24px;background:rgba(255,234,202,.1);border:1px solid rgba(255,234,202,.32);border-radius:12px;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#FFEACA;">Emprendedores de la región</div>
+        <div style="padding:20px 24px;background:rgba(255,234,202,.1);border:1px solid rgba(255,234,202,.32);border-radius:12px;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#FFEACA;">Hoteles y alojamientos rurales</div>
+        <div style="padding:20px 24px;background:rgba(255,234,202,.1);border:1px solid rgba(255,234,202,.32);border-radius:12px;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#FFEACA;">Instituciones educativas</div>
+        <div style="padding:20px 24px;background:rgba(255,234,202,.1);border:1px solid rgba(255,234,202,.32);border-radius:12px;font-family:'Bellota',sans-serif;font-weight:700;font-size:26px;color:#FFEACA;">Programas corporativos</div>
+      </div>
+    </div>
+    <div style="flex:1;background:#FFEACA;border-radius:14px;padding:34px 38px;">
+      <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:3px;text-transform:uppercase;color:#EA5B0C;margin-bottom:20px;">Cómo trabajamos</div>
+      <div style="display:flex;flex-direction:column;gap:14px;font-family:'Bellota',sans-serif;font-weight:400;font-size:26px;line-height:1.4;color:#872B13;">
+        <div><strong style="font-weight:700;">Tarifa neta</strong> para aliados, con margen libre de reventa.</div>
+        <div><strong style="font-weight:700;">Descuentos por volumen</strong> según cupos y frecuencia.</div>
+        <div><strong style="font-weight:700;">Agenda compartida</strong> y confirmación de disponibilidad ágil.</div>
+        <div><strong style="font-weight:700;">Material de apoyo:</strong> fotos, textos y fichas de cada plan.</div>
+        <div><strong style="font-weight:700;">Guianza y póliza</strong> siempre a cargo nuestro.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Contacto" data-screen-label="19" data-speaker-notes="Cierre con datos de contacto. Completar todos los campos entre corchetes." style="width:100%;height:100%;background:#FFF6E4;display:flex;">
+  <div style="flex:1 1 auto;padding:96px 90px 96px 110px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:24px;letter-spacing:6px;text-transform:uppercase;color:#EA5B0C;margin-bottom:20px;">Hablemos</div>
+    <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:96px;line-height:1.02;color:#D51312;margin:0 0 20px;">Vuelo Carmesí</h2>
+    <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:500;font-size:36px;line-height:1.4;color:#D51312;margin:0 0 52px;max-width:34ch;">Donde el cacao, la naturaleza y la hospitalidad crean experiencias inolvidables.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px 50px;">
+      <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:#EA5B0C;margin-bottom:8px;">Reservas · familias y colegios</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;color:#872B13;">[ +00 000 000 0000 ]</div></div>
+      <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:#EA5B0C;margin-bottom:8px;">Alianzas comerciales</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;color:#872B13;">[ +00 000 000 0000 ]</div></div>
+      <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:rgba(135,43,19,.55);margin-bottom:8px;">Responsable</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;color:#872B13;">[ Nombre y apellido ]</div></div>
+      <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:rgba(135,43,19,.55);margin-bottom:8px;">Teléfono / WhatsApp</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;color:#872B13;">[ +00 000 000 0000 ]</div></div>
+      <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:rgba(135,43,19,.55);margin-bottom:8px;">Correo</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;color:#872B13;">[ hola@vuelocarmesi.com ]</div></div>
+      <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:rgba(135,43,19,.55);margin-bottom:8px;">Redes</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;color:#872B13;">[ @vuelocarmesi ]</div></div>
+      <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:rgba(135,43,19,.55);margin-bottom:8px;">Página web</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;color:#D51312;">[ www.vuelocarmesi.com ]</div></div>
+      <div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:25px;letter-spacing:2px;text-transform:uppercase;color:rgba(135,43,19,.55);margin-bottom:8px;">Ubicación</div><div style="font-family:'Bellota',sans-serif;font-weight:700;font-size:29px;color:#872B13;">Cubarral, Meta · Colombia</div></div>
+    </div>
+    <div style="margin-top:56px;padding-top:32px;border-top:1px solid rgba(135,43,19,.15);font-family:'Bellota',sans-serif;font-weight:400;font-size:24px;color:rgba(135,43,19,.6);">Cada experiencia Vuelo Carmesí es el resultado del trabajo de la tierra, el respeto por la naturaleza y la pasión por compartir el auténtico sabor del cacao.</div>
+  </div>
+  <div style="flex:0 0 36%;background:repeating-linear-gradient(135deg,#F0D6A8 0 18px,#E9CB97 18px 36px);display:flex;align-items:center;justify-content:center;"><span style="font-family:monospace;font-size:19px;letter-spacing:2px;color:rgba(135,43,19,.5);text-transform:uppercase;text-align:center;line-height:1.6;">foto vertical<br/>equipo / cierre</span></div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

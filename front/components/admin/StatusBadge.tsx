@@ -19,7 +19,7 @@ export default function StatusBadge({ estado }: { estado: Estado }) {
       borderRadius: 100,
       background: cfg.bg,
       color: cfg.txt,
-      fontSize: 11,
+      fontSize: 12,
       fontWeight: 700,
       textTransform: 'capitalize',
       whiteSpace: 'nowrap',

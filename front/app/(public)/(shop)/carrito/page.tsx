@@ -11,8 +11,8 @@ export default function CarritoPage() {
     return (
       <section className="page-shell" style={{ maxWidth: '600px', textAlign: 'center' }}>
         <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🛍️</div>
-        <h1 style={{ marginBottom: '0.5rem', color: 'var(--color-brown)' }}>Tu carrito está vacío</h1>
-        <p style={{ marginBottom: '1.5rem', opacity: 0.7 }}>Descubrí nuestros chocolates y cacao artesanal.</p>
+        <h1 style={{ marginBottom: '0.5rem', color: 'var(--color-brown)', fontSize: 'var(--fs-h1)' }}>Tu carrito está vacío</h1>
+        <p style={{ marginBottom: '1.5rem', opacity: 0.7 }}>Descubre nuestros chocolates y cacao artesanal.</p>
         <Button href="/tienda">Ver tienda</Button>
       </section>
     )
@@ -21,7 +21,7 @@ export default function CarritoPage() {
   return (
     <section className="page-shell shop-columns" style={{ maxWidth: '1000px' }}>
       <div className="shop-main">
-        <h1 style={{ marginBottom: '2rem', color: 'var(--color-brown)' }}>Carrito</h1>
+        <h1 style={{ marginBottom: '2rem', color: 'var(--color-brown)', fontSize: 'var(--fs-h1)' }}>Carrito</h1>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {items.map(item => (
             <div key={item.productoId} className="cart-row">
@@ -73,7 +73,7 @@ export default function CarritoPage() {
         background: 'var(--color-cream)', border: '1px solid rgba(135,43,19,0.15)',
         borderRadius: '12px', padding: '2rem', boxShadow: '0 4px 16px rgba(135,43,19,0.16)',
       }}>
-        <h3 style={{ marginBottom: '1.25rem', color: 'var(--color-brown)' }}>Resumen del pedido</h3>
+        <h3 style={{ marginBottom: '1.25rem', color: 'var(--color-brown)', fontSize: 'var(--fs-h3)' }}>Resumen del pedido</h3>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, color: 'var(--color-brown)', marginBottom: '0.6rem' }}>
           <span>Subtotal ({cartCount} art.)</span>
           <span>{formatPrecio(cartTotal)}</span>

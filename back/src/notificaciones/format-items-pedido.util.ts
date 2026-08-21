@@ -6,8 +6,18 @@ export type ItemPedido = {
   producto: { nombre: string }
 }
 
-function money(n: number): string {
-  return `$ ${n.toLocaleString('es-CO')}`
+/**
+ * Formato de moneda del proyecto: `$160.000`. Uno solo, en todas partes.
+ *
+ * Sin espacio tras el `$`, sin sufijo `COP`, sin `Co$`, y siempre con
+ * `es-CO` para que el separador de miles sea el punto. Iba con espacio y con
+ * `COP` detrás en los correos y por Telegram, y el mismo pedido se leía de dos
+ * formas distintas según dónde lo miraras — en la web `$55.000` y en el correo
+ * `$ 55.000 COP`. Es el gemelo de `formatPrecio` del front (front/lib/format.ts):
+ * si cambia uno, cambia el otro.
+ */
+export function formatPrecio(n: number): string {
+  return `$${n.toLocaleString('es-CO')}`
 }
 
 function filaItemHtml(item: ItemPedido, variant: 'cliente' | 'admin'): string {
@@ -18,8 +28,8 @@ function filaItemHtml(item: ItemPedido, variant: 'cliente' | 'admin'): string {
   return `<tr>
     <td style="padding:8px 0;border-bottom:1px solid ${borderColor};${textColor}">${nombre}</td>
     <td style="padding:8px 0;border-bottom:1px solid ${borderColor};${textColor}text-align:center">${item.cantidad}</td>
-    <td style="padding:8px 0;border-bottom:1px solid ${borderColor};${textColor}text-align:right">${money(item.precio)}</td>
-    <td style="padding:8px 0;border-bottom:1px solid ${borderColor};${textColor}text-align:right">${money(subtotal)}</td>
+    <td style="padding:8px 0;border-bottom:1px solid ${borderColor};${textColor}text-align:right">${formatPrecio(item.precio)}</td>
+    <td style="padding:8px 0;border-bottom:1px solid ${borderColor};${textColor}text-align:right">${formatPrecio(subtotal)}</td>
   </tr>`
 }
 
@@ -46,7 +56,7 @@ export function tablaItemsHtml(items: ItemPedido[], variant: 'cliente' | 'admin'
     <tbody>${filas}</tbody>
     <tfoot><tr>
       <td colspan="3" style="padding:12px 0 0;text-align:right;font-weight:bold;${totalLabelColor}">Total</td>
-      <td style="padding:12px 0 0;text-align:right;font-weight:bold;${totalValueColor}">${money(total)}</td>
+      <td style="padding:12px 0 0;text-align:right;font-weight:bold;${totalValueColor}">${formatPrecio(total)}</td>
     </tr></tfoot>
   </table>`
 }
@@ -55,7 +65,7 @@ export function lineasItemsTexto(items: ItemPedido[]): string {
   return items
     .map(item => {
       const subtotal = item.precio * item.cantidad
-      return `${item.producto.nombre} × ${item.cantidad} — ${money(item.precio)} c/u — ${money(subtotal)}`
+      return `${item.producto.nombre} × ${item.cantidad} — ${formatPrecio(item.precio)} c/u — ${formatPrecio(subtotal)}`
     })
     .join('\n')
 }

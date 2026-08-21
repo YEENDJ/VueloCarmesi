@@ -143,3 +143,15 @@ vite.config.ts.timestamp-*
 .vite/
 
 .superpowers/
+
+# Descripciones de PR generadas localmente
+pr-descriptions/
+
+# Portafolio: fuente, generador y salida quedan fuera del repo por ahora.
+# OJO: la fuente existe unicamente en el disco local — no hay copia en git.
+# Y /portafolio responde 404 en produccion mientras la salida no se versione.
+/portafolio/
+front/public/portafolio/
+
+# Originales de fotografia y material sin procesar (ver docs/catalogo-fotos.md)
+assets/originales/

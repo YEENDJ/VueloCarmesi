@@ -1,5 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { v2 as cloudinary } from 'cloudinary'
+import { publicIdDeCloudinary } from '../common/portada'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -30,5 +31,27 @@ export class UploadsService {
       )
       stream.end(file.buffer)
     })
+  }
+
+  /**
+   * Borra la imagen que hay detrás de una URL. Se llama cuando el panel quita
+   * una foto de una galería: sin esto el archivo quedaba en Cloudinary para
+   * siempre, y con varias fotos por ficha eso se acumula rápido.
+   *
+   * No lanza si la URL no es de Cloudinary (una foto de la biblioteca local, por
+   * ejemplo) ni si el archivo ya no existe: el objetivo es que deje de estar, y
+   * en ambos casos ya no está. Fallar ahí solo rompería el guardado del panel.
+   */
+  async deleteImage(url: string): Promise<{ borrada: boolean }> {
+    const publicId = publicIdDeCloudinary(url)
+    if (!publicId) return { borrada: false }
+
+    try {
+      const { result } = await cloudinary.uploader.destroy(publicId)
+      return { borrada: result === 'ok' }
+    } catch (err) {
+      Logger.warn(`No se pudo borrar '${publicId}' de Cloudinary: ${String(err)}`, 'UploadsService')
+      return { borrada: false }
+    }
   }
 }
