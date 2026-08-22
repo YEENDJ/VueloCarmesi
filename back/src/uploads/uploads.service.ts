@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { v2 as cloudinary } from 'cloudinary'
 import { publicIdDeCloudinary } from '../common/portada'
+import { formatoDeBuffer } from './tipo-imagen'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -8,17 +9,38 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const MAX_BYTES = 5 * 1024 * 1024 // 5 MB
 
 @Injectable()
 export class UploadsService {
   async uploadImage(file: Express.Multer.File): Promise<{ url: string; publicId: string }> {
-    if (!ALLOWED_TYPES.includes(file.mimetype)) {
-      throw new BadRequestException('Solo se aceptan imágenes JPG, PNG o WebP')
-    }
+    // El peso primero: es la comprobación barata y no depende de leer nada.
     if (file.size > MAX_BYTES) {
       throw new BadRequestException('El archivo supera el límite de 5 MB')
+    }
+
+    // Y el formato por los bytes, no por `file.mimetype`. Ver tipo-imagen.ts:
+    // el mimetype es lo que declara el navegador y llegaba mal —`image/jpg`,
+    // `application/octet-stream`, vacío— con la foto perfectamente sana.
+    const formato = formatoDeBuffer(file.buffer)
+
+    if (formato === 'heic') {
+      throw new BadRequestException(
+        'Esa foto está en formato HEIC, el que usa el iPhone por defecto. ' +
+        'Abre Ajustes › Cámara › Formatos y elige "Más compatible", o comparte ' +
+        'la foto por WhatsApp y sube la que llega.',
+      )
+    }
+
+    if (!formato) {
+      // El mimetype declarado va al registro: si vuelve a rechazarse una foto
+      // buena, aquí queda con qué llegó y con qué nombre.
+      Logger.warn(
+        `Archivo rechazado: no es JPG, PNG ni WebP. ` +
+        `Declarado '${file.mimetype || '(vacío)'}', nombre '${file.originalname}'.`,
+        'UploadsService',
+      )
+      throw new BadRequestException('Solo se aceptan imágenes JPG, PNG o WebP')
     }
 
     return new Promise((resolve, reject) => {
