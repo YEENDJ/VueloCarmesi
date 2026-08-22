@@ -85,11 +85,29 @@ export function updateEstadoPedido(id: string, estado: EstadoPedido): Promise<Ad
 }
 
 // ── Uploads ────────────────────────────────────────────────
+/**
+ * El backend explica por qué rechaza una foto —el peso, el formato, el caso del
+ * HEIC de iPhone— y ese texto es lo único que quien sube puede accionar. Antes
+ * se descartaba y el panel decía "revisa formato y tamaño" para todo, así que
+ * una foto en HEIC y una de 20 MB daban el mismo aviso inútil.
+ */
 export async function uploadImage(file: File): Promise<{ url: string; publicId: string }> {
   const form = new FormData()
   form.append('file', file)
   const res = await fetch(`${BASE}/uploads/image`, { method: 'POST', body: form, credentials: 'include' })
-  if (!res.ok) throw new Error(`Upload error ${res.status}`)
+
+  if (!res.ok) {
+    // Si la respuesta no trae cuerpo JSON —un 502 del proxy, por ejemplo— se
+    // cae al código de estado, que al menos distingue un fallo de red de un
+    // archivo rechazado.
+    const motivo = await res.json().then(
+      (d: { message?: string | string[] }) =>
+        Array.isArray(d.message) ? d.message.join('. ') : d.message,
+      () => undefined,
+    )
+    throw new Error(motivo || `Upload error ${res.status}`)
+  }
+
   return res.json()
 }
 
