@@ -49,8 +49,13 @@ export default function ImagesUploader({
       try {
         const { url } = await uploadImage(aSubir[i])
         subidas.push(url)
-      } catch {
-        setError(`No se pudo subir "${aSubir[i].name}". Revisa formato y tamaño (máx. 5 MB).`)
+      } catch (err) {
+        // Con el motivo que da el backend: en una tanda de fotos, saber cuál
+        // falló no sirve de nada si no se dice por qué.
+        const motivo = err instanceof Error && err.message
+          ? err.message
+          : 'Revisa el formato y el tamaño (máx. 5 MB).'
+        setError(`No se pudo subir "${aSubir[i].name}". ${motivo}`)
       }
     }
 
