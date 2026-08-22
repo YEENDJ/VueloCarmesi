@@ -78,8 +78,12 @@ export default function HeroImageEditor({
       onChange(url)
       await onSave?.(url)
       setSrcLocal(null)
-    } catch {
-      setError('Error al guardar. Inténtalo de nuevo.')
+    } catch (err) {
+      // Mismo criterio que los otros dos uploaders: el motivo real —el peso,
+      // el formato, la sesión caída— es lo único accionable.
+      setError(err instanceof Error && err.message
+        ? err.message
+        : 'No se pudo guardar la imagen. Inténtalo de nuevo.')
     } finally {
       setSaving(false)
     }
@@ -224,7 +228,7 @@ export default function HeroImageEditor({
       </div>
 
       <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginTop: 6 }}>
-        JPG, PNG o WebP · máx. 5 MB
+        JPG, PNG o WebP · máx. 4 MB
       </div>
     </div>
   )
