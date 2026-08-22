@@ -27,7 +27,7 @@ export default function ImageUploader({ value, onChange, label = 'Imagen' }: Pro
       // queda solo para cuando no llega respuesta.
       setError(err instanceof Error && err.message
         ? err.message
-        : 'No se pudo subir la imagen. Revisa el formato y el tamaño (máx. 5 MB).')
+        : 'No se pudo subir la imagen. Revisa el formato y el tamaño (máx. 4 MB).')
     } finally {
       setLoading(false)
       if (inputRef.current) inputRef.current.value = ''
@@ -83,7 +83,7 @@ export default function ImageUploader({ value, onChange, label = 'Imagen' }: Pro
             {loading ? 'Subiendo…' : value ? 'Cambiar imagen' : 'Subir imagen'}
           </label>
           <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginTop: 4 }}>
-            JPG, PNG o WebP · máx. 5 MB
+            JPG, PNG o WebP · máx. 4 MB
           </div>
           {error && <div style={{ color: 'var(--color-crimson)', fontSize: 12, marginTop: 4 }}>{error}</div>}
         </div>

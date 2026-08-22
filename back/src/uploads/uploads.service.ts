@@ -9,14 +9,25 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-const MAX_BYTES = 5 * 1024 * 1024 // 5 MB
+/**
+ * Tope de subida. Son 4 MB y no 5 por el camino que hace el archivo: el panel
+ * sube contra el propio front (ver front/app/api/admin/proxy.ts) y esa capa
+ * corta el cuerpo de la petición en torno a 4,5 MB en la mayoría de los
+ * alojamientos. Con el tope en 5 MB había una franja de archivos que el
+ * backend habría aceptado pero que nunca le llegaban, y el error salía del
+ * intermediario en vez de decir lo que pasaba.
+ *
+ * Su gemelo está en `MAX_SUBIDA_BYTES` de front/lib/admin/api.ts, que corta
+ * antes de gastar la subida. Si cambia uno, cambia el otro.
+ */
+const MAX_BYTES = 4 * 1024 * 1024 // 4 MB
 
 @Injectable()
 export class UploadsService {
   async uploadImage(file: Express.Multer.File): Promise<{ url: string; publicId: string }> {
     // El peso primero: es la comprobación barata y no depende de leer nada.
     if (file.size > MAX_BYTES) {
-      throw new BadRequestException('El archivo supera el límite de 5 MB')
+      throw new BadRequestException('La foto pesa más de 4 MB, que es el máximo.')
     }
 
     // Y el formato por los bytes, no por `file.mimetype`. Ver tipo-imagen.ts:

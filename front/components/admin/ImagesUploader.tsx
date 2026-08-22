@@ -54,7 +54,7 @@ export default function ImagesUploader({
         // falló no sirve de nada si no se dice por qué.
         const motivo = err instanceof Error && err.message
           ? err.message
-          : 'Revisa el formato y el tamaño (máx. 5 MB).'
+          : 'Revisa el formato y el tamaño (máx. 4 MB).'
         setError(`No se pudo subir "${aSubir[i].name}". ${motivo}`)
       }
     }
@@ -176,7 +176,7 @@ export default function ImagesUploader({
       </label>
 
       <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginTop: 4 }}>
-        {lleno ? `Alcanzaste el máximo de ${max} fotos.` : 'JPG, PNG o WebP · máx. 5 MB cada una'}
+        {lleno ? `Alcanzaste el máximo de ${max} fotos.` : 'JPG, PNG o WebP · máx. 4 MB cada una'}
       </div>
       {error && (
         <div style={{ color: 'var(--color-crimson)', fontSize: 12, marginTop: 4 }}>{error}</div>
