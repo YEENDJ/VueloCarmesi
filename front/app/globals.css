@@ -308,18 +308,23 @@ footer :focus-visible {
    Hero
    ───────────────────────────────────────────────────────── */
 .hero {
-  min-height: 86dvh;
+  /* Menos alto que el viewport para que botón y foto quepan en la primera
+     pantalla junto al navbar sticky, sin scroll. */
+  min-height: 78dvh;
   background-color: var(--color-cream);
   display: flex;
   flex-direction: column;
   justify-content: center;
   /* Vertical propio; el lateral lo aporta .contenido del hijo. */
-  padding-block: clamp(40px, 7vw, 90px);
+  padding-block: clamp(24px, 4vw, 48px);
 }
 
 .hero-media {
   flex: 1 1 300px;
-  height: 280px;
+  /* La altura sale de la proporción, no de un alto fijo: sin el container
+     no distorsiona ni corta la foto en altura. 16:9 = el recorte del admin. */
+  aspect-ratio: 16 / 9;
+  width: 100%;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(135, 43, 19, 0.16);
@@ -328,13 +333,23 @@ footer :focus-visible {
 /* ─────────────────────────────────────────────────────────
    Footer
    ───────────────────────────────────────────────────────── */
+.footer-social {
+  display: flex;
+  /* 24px = los 12px de margen negativo de cada enlace, por dos. Con menos, las
+     áreas táctiles de dos logos contiguos se solapan y el toque cae en el que
+     quede encima. */
+  gap: 24px;
+}
+
 .footer-social a {
   color: rgba(255, 234, 202, 0.75);
   transition: color 150ms ease;
   display: flex;
-  /* Área táctil cómoda alrededor del ícono de 20px */
-  padding: 6px;
-  margin: -6px;
+  /* 20px de glifo + 12px por lado = 44px de área táctil. El margen negativo la
+     saca del flujo, así que los logos se siguen viendo a 16px de separación
+     como antes: crece la zona que responde al dedo, no el hueco. */
+  padding: 12px;
+  margin: -12px;
 }
 .footer-social a:hover {
   color: var(--color-amber);
@@ -683,16 +698,490 @@ footer :focus-visible {
   gap: 24px;
 }
 
-.proceso-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
+/* ── Nuestro proceso ──────────────────────────────────────
+   Franja horizontal, y a propósito nada parecida a la línea
+   de tiempo de la historia: aquí el riel va de izquierda a
+   derecha, los números hacen de nodos —sin círculos ni
+   iconos encima— y no hay tarjetas ni alternancia.
+
+   Las cuatro columnas comparten filas por `subgrid`: es lo
+   que mantiene alineados los títulos cuando uno ocupa dos
+   líneas y los otros una, y lo que hace que las cuatro fotos
+   arranquen a la misma altura aunque los textos no midan
+   exactamente lo mismo. Sin subgrid la sección no se rompe,
+   solo pierde esa alineación entre columnas.
+
+   Base móvil: una columna, sin riel —un riel horizontal solo
+   significa algo cuando los cuatro números caen en la misma
+   línea. */
+.proceso-linea {
+  position: relative;
 }
 
-.equipo-grid {
+.proceso-riel {
+  display: none;
+}
+
+.proceso-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
+  grid-template-columns: 1fr;
+  column-gap: 32px;
+  row-gap: clamp(32px, 5vw, 44px);
+}
+
+.proceso-paso {
+  display: grid;
+  /* Sin esto el texto largo del paso 01 se niega a encoger
+     y desborda la columna */
+  min-width: 0;
+}
+
+.proceso-numero {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(34px, 7vw, 44px);
+  line-height: 1;
+  color: var(--color-amber);
+  /* El número ES el nodo: tapa el riel con el fondo de la
+     sección en lugar de dibujar un círculo encima */
+  background-color: var(--color-brown);
+  padding-right: 18px;
+  justify-self: start;
+  margin-bottom: clamp(16px, 3vw, 26px);
+}
+
+.proceso-titulo {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(18px, 2.2vw, 20px);
+  line-height: 1.3;
+  color: var(--color-cream);
+  margin: 0 0 12px;
+  min-width: 0;
+}
+
+.proceso-texto {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255, 234, 202, 0.8);
+  margin: 0 0 24px;
+  min-width: 0;
+}
+
+.proceso-foto {
+  align-self: start;
+  /* Las cuatro fotos originales son verticales de ~4:5 (1024×1280 y
+     similares). Con un marco apaisado `cover` se comía media foto; a 4/5
+     entran enteras y el recorte es de menos del 2 %. */
+  aspect-ratio: 4 / 5;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: rgba(255, 234, 202, 0.06);
+}
+
+.proceso-foto img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 560px) {
+  .proceso-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* A dos columnas la columna llega a ~480px y una foto 4:5 se iría a 600px
+     de alto. El tope la deja en un recorte razonable sin romper la retícula. */
+  .proceso-foto {
+    max-height: 420px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .proceso-riel {
+    display: block;
+    position: absolute;
+    /* 22px = la mitad del número, que a este ancho ya mide 44px */
+    top: 22px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-gold), var(--color-amber));
+    opacity: 0.38;
+    transform-origin: left center;
+  }
+
+  .proceso-grid {
+    position: relative;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, auto);
+    row-gap: 0;
+  }
+
+  .proceso-paso {
+    grid-row: 1 / -1;
+    grid-template-rows: subgrid;
+  }
+
+  /* Con cuatro columnas la foto ya cae en ~345px: no hace falta el tope */
+  .proceso-foto {
+    max-height: none;
+  }
+}
+
+/* Carrusel del equipo: 1 tarjeta en movil, 2 en tablet, 3 en escritorio.
+   Los breakpoints van en sincronia con el matchMedia de EquipoCarrusel.tsx.
+   La tarjeta solo muestra el primer parrafo recortado; la bio completa vive
+   en el modal, que es lo que mantiene parejas las alturas de la fila. */
+.equipo-carrusel {
+  min-width: 0;
+}
+
+.equipo-track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+.equipo-track::-webkit-scrollbar {
+  display: none;
+}
+
+.equipo-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  background-color: #fff6e4;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(135, 43, 19, 0.08);
+}
+
+/* Caja de la foto: relacion fija para que la fila no salte mientras carga,
+   y color de fondo por si la imagen tarda. Contiene un <Image fill>. */
+/* Ficha sin foto: el rayado de siempre, centrado sobre la caja */
+.equipo-foto-pendiente {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    135deg,
+    #f0d6a8 0 14px,
+    #e9cb97 14px 28px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 12px;
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(135, 43, 19, 0.35);
+}
+
+.equipo-slide-foto {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background-color: #f0d6a8;
+  overflow: hidden;
+}
+
+.equipo-controles {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+.equipo-flecha {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(135, 43, 19, 0.25);
+  background-color: #fff6e4;
+  color: var(--color-crimson);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.equipo-flecha:hover:not(:disabled) {
+  background-color: var(--color-crimson);
+  border-color: var(--color-crimson);
+  color: var(--color-cream);
+}
+
+.equipo-flecha:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.equipo-puntos {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.equipo-punto {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.equipo-punto-marca {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(135, 43, 19, 0.25);
+  transition: width 0.2s ease, background-color 0.2s ease;
+}
+
+.equipo-punto-marca[data-activo='true'] {
+  width: 22px;
+  border-radius: 999px;
+  background-color: var(--color-crimson);
+}
+
+.equipo-slide-cuerpo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  padding: 24px;
+}
+
+.equipo-nombre {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 24px);
+  color: var(--color-crimson);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.equipo-cargo {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--color-amber);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+/* Recorte a 4 lineas: es lo que empareja las tarjetas de una misma vista
+   aunque las bios tengan 2 o 4 parrafos. */
+.equipo-bio-corta {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-brown);
+  line-height: 1.7;
+  opacity: 0.85;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.equipo-ver-mas {
+  margin-top: auto;
+  align-self: flex-start;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-crimson);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
+.equipo-ver-mas:hover {
+  color: var(--color-orange);
+}
+
+/* ── Modal de la ficha completa ── */
+.equipo-modal-fondo {
+  position: fixed;
+  inset: 0;
+  /* Mismo nivel que .ficha-lightbox: por encima del navbar sticky (100). */
+  z-index: 200;
+  background-color: rgba(74, 26, 10, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  overflow: hidden;
+  overscroll-behavior: contain;
+  animation: equipo-fundido 0.2s ease;
+}
+
+.equipo-modal {
+  position: relative;
+  width: 100%;
+  max-width: 820px;
+  /* Cabe entero en una pantalla: nada de scroll de pagina detras del modal */
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff6e4;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 18px 48px rgba(74, 26, 10, 0.35);
+  overflow: hidden;
+}
+
+.equipo-modal-cerrar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 246, 228, 0.9);
+  color: var(--color-crimson);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.equipo-modal-cerrar:hover {
+  background-color: var(--color-crimson);
+  color: var(--color-cream);
+}
+
+/* Banda de la foto: la centra en vez de estirarla de borde a borde. Un panel
+   ancho con la foto a todo lo ancho obliga a una franja panoramica que corta
+   a la persona; centrada mantiene el mismo 4/3 de la tarjeta. */
+.equipo-modal-media {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  padding: clamp(22px, 3vw, 30px) clamp(20px, 4vw, 32px) 0;
+}
+
+/* El alto manda —se encoge en pantallas bajas— y el ancho sale de la
+   proporcion, asi la foto nunca se deforma ni empuja el texto fuera. */
+.equipo-modal-foto {
+  position: relative;
+  height: clamp(160px, 26dvh, 260px);
+  aspect-ratio: 4 / 3;
+  max-width: 100%;
+  border-radius: 12px;
+  background-color: #f0d6a8;
+  overflow: hidden;
+}
+
+.equipo-modal-cuerpo {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(16px, 2.5vw, 22px) clamp(20px, 4vw, 32px)
+    clamp(22px, 3vw, 30px);
+}
+
+/* Nombre y cargo centrados bajo la foto; la bio se lee alineada a izquierda */
+.equipo-modal-cuerpo .equipo-modal-nombre,
+.equipo-modal-cuerpo .equipo-cargo {
+  text-align: center;
+}
+
+.equipo-modal-nombre {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 32px);
+  color: var(--color-crimson);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.equipo-modal-parrafo {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--color-brown);
+  line-height: 1.7;
+  opacity: 0.88;
+}
+
+.equipo-modal-parrafo + .equipo-modal-parrafo {
+  margin-top: 12px;
+}
+
+@keyframes equipo-fundido {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 720px) {
+  .equipo-slide {
+    flex: 0 0 calc((100% - 24px) / 2);
+  }
+
+  .equipo-modal-fondo {
+    padding: 40px 24px;
+  }
+
+}
+
+@media (min-width: 1000px) {
+  .equipo-slide {
+    flex: 0 0 calc((100% - 48px) / 3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .equipo-track {
+    scroll-behavior: auto;
+  }
+
+  .equipo-modal-fondo {
+    animation: none;
+  }
 }
 
 .galeria-sobre {
@@ -701,10 +1190,288 @@ footer :focus-visible {
   gap: 16px;
 }
 
+/* auto-fit y no «1fr 1fr» corregido a una columna en un max-width: la base era
+   la de escritorio y la pantalla chica era el parche, que es al reves. Asi la
+   rejilla arranca en una columna y va sumando conforme cabe —dos a partir de
+   ~370px de contenedor, tres en la columna ancha de escritorio—, que con las
+   seis tarjetas de la finca cae en dos filas de tres en vez de tres de dos.
+   min(160px, 100%): a 320px el interior de la seccion no llega a 160 y una
+   columna que los exija desbordaria; con min() el minimo cede. */
 .finca-stats {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
   gap: 16px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Donde estamos — mapa + datos
+   Base movil: mapa arriba, datos debajo.
+   ───────────────────────────────────────────────────────── */
+.ubicacion-grid {
+  display: grid;
+  gap: clamp(24px, 3.5vw, 36px);
+}
+
+/* La relacion fija reserva el sitio del mapa antes de que cargue el iframe:
+   sin ella la pagina pega un salto cuando entra. */
+.ubicacion-mapa {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  min-width: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  background-color: #f0d6a8;
+  box-shadow: 0 2px 10px rgba(135, 43, 19, 0.08);
+}
+
+.ubicacion-mapa iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.ubicacion-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.ubicacion-dato {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(135, 43, 19, 0.12);
+}
+
+.ubicacion-dato-titulo {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-amber);
+}
+
+.ubicacion-dato-valor {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(15px, 1.6vw, 17px);
+  color: var(--color-brown);
+  line-height: 1.5;
+}
+
+.ubicacion-dato-nota {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-brown);
+  opacity: 0.65;
+  line-height: 1.6;
+}
+
+.ubicacion-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 24px;
+  margin-top: 4px;
+  border-radius: 999px;
+  background-color: var(--color-crimson);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.ubicacion-boton:hover {
+  background-color: var(--color-orange);
+}
+
+.ubicacion-enlace {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-crimson);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (min-width: 900px) {
+  .ubicacion-grid {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    /* El mapa estira a la altura de la columna de datos, que ahora incluye
+       la tarjeta de cómo llegar. Con align-items: start quedaba un hueco. */
+    align-items: stretch;
+  }
+
+  .ubicacion-mapa {
+    aspect-ratio: auto;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Contacto — formulario + canales
+   Base movil: una columna, los canales debajo del formulario.
+   ───────────────────────────────────────────────────────── */
+.contacto-shell {
+  max-width: 1040px;
+}
+
+.contacto-encabezado {
+  margin-bottom: clamp(28px, 4vw, 40px);
+}
+
+.contacto-intro {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(15px, 1.6vw, 17px);
+  color: var(--color-brown);
+  opacity: 0.85;
+  line-height: 1.7;
+  max-width: 62ch;
+}
+
+.contacto-grid {
+  display: grid;
+  gap: clamp(28px, 4vw, 40px);
+}
+
+.contacto-formulario,
+.contacto-canales {
+  min-width: 0;
+}
+
+.contacto-subtitulo {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.4vw, 24px);
+  color: var(--color-crimson);
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.contacto-canal {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  /* 44px de alto util aunque el canal tenga una sola linea */
+  min-height: 44px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  border-radius: 12px;
+  background-color: #fff6e4;
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+a.contacto-canal:hover {
+  border-color: var(--color-crimson);
+  transform: translateY(-1px);
+}
+
+.contacto-canal-destacado {
+  border-color: rgba(135, 43, 19, 0.3);
+  box-shadow: 0 2px 10px rgba(135, 43, 19, 0.1);
+}
+
+.contacto-canal-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+  color: var(--color-crimson);
+}
+
+.contacto-canal-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  /* Sin esto, un correo largo desborda la tarjeta en pantallas de 320px */
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.contacto-canal-titulo {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-amber);
+}
+
+.contacto-canal-dato {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--color-brown);
+  line-height: 1.5;
+}
+
+.contacto-canal-nota {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--color-brown);
+  opacity: 0.6;
+}
+
+/* Las redes cierran la seccion como una fila propia, centrada bajo las dos
+   columnas: no pertenecen ni al formulario ni a los canales. */
+.contacto-redes-lista {
+  /* Aire con la rejilla de canales de arriba */
+  margin-top: clamp(28px, 5vw, 48px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.contacto-red {
+  display: inline-flex;
+  align-items: center;
+  /* Hueco entre el logotipo y el nombre de la red */
+  gap: 9px;
+  min-height: 44px;
+  /* 16px en vez de 18: el logotipo ya aporta peso visual por el lado izquierdo
+     y con 18 la píldora quedaba desbalanceada */
+  padding: 0 16px;
+  border: 1px solid rgba(135, 43, 19, 0.2);
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-crimson);
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.contacto-red:hover {
+  background-color: var(--color-crimson);
+  color: var(--color-cream);
+}
+
+@media (min-width: 900px) {
+  .contacto-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+    align-items: start;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -826,10 +1593,6 @@ footer :focus-visible {
     min-height: 340px;
   }
 
-  .proceso-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   /* El formulario de reserva necesita ancho para sus filas de dos campos:
      apilamos las columnas y subimos el resumen */
   .reserva-grid {
@@ -851,10 +1614,6 @@ footer :focus-visible {
     /* 86vh es poco fiable en móvil por la barra de direcciones,
        y el contenido ya define una altura suficiente */
     min-height: 0;
-  }
-
-  .hero-media {
-    height: clamp(200px, 52vw, 280px);
   }
 
   .footer-legal {
@@ -891,8 +1650,7 @@ footer :focus-visible {
     min-height: 260px;
   }
 
-  .valores-grid,
-  .equipo-grid {
+  .valores-grid {
     grid-template-columns: 1fr;
   }
 
@@ -919,10 +1677,6 @@ footer :focus-visible {
    MÓVIL ANGOSTO — hasta 559px
    ═════════════════════════════════════════════════════════ */
 @media (max-width: 559px) {
-  .proceso-grid {
-    grid-template-columns: 1fr;
-  }
-
   /* Cada ítem del carrito pasa a dos filas: la foto ocupa ambas,
      cantidad y subtotal bajan a la segunda */
   .cart-row {
@@ -965,9 +1719,8 @@ footer :focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .finca-stats {
-    grid-template-columns: 1fr;
-  }
+  /* .finca-stats ya no necesita su parche aqui: su auto-fit cae solo a una
+     columna cuando el contenedor no da para dos. */
 }
 
 /* ═════════════════════════════════════════════════════════
@@ -2268,4 +3021,1371 @@ footer :focus-visible {
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Línea de tiempo · Nuestra historia (sobre-nosotros)
+   ───────────────────────────────────────────────────────── */
+.historia-timeline {
+  position: relative;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.historia-linea {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(180deg, transparent, rgba(135, 43, 19, 0.18) 6%, rgba(135, 43, 19, 0.18) 94%, transparent);
+}
+
+.historia-linea::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, var(--color-gold), var(--color-orange));
+  animation: historia-crecer linear both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 100%;
+}
+
+@keyframes historia-crecer {
+  from {
+    height: 0;
+  }
+  to {
+    height: 100%;
+  }
+}
+
+.historia-item {
+  position: relative;
+  padding: clamp(24px, 4vw, 48px) 0;
+}
+
+.historia-nodo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 52px;
+  height: 52px;
+  margin-left: -26px;
+  margin-top: -26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-crimson), var(--color-orange));
+  box-shadow: 0 6px 18px rgba(135, 43, 19, 0.3);
+  border: 3px solid var(--color-cream);
+  z-index: 2;
+}
+
+.historia-nodo span {
+  font-size: 22px;
+}
+
+.historia-bloque {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 3vw, 40px);
+  align-items: center;
+}
+
+.historia-bloque > * {
+  min-width: 0;
+}
+
+.historia-bloque .historia-carta {
+  order: 1;
+  padding-right: clamp(24px, 4vw, 56px);
+}
+
+.historia-bloque .historia-imagen {
+  order: 2;
+}
+
+.historia-bloque-invertido .historia-carta {
+  order: 2;
+  padding-left: clamp(12px, 2vw, 24px);
+  padding-right: clamp(22px, 3vw, 32px);
+}
+
+.historia-bloque-invertido .historia-imagen {
+  order: 1;
+}
+
+.historia-carta {
+  background: #fffdf7;
+  border: 1px solid rgba(135, 43, 19, 0.1);
+  border-radius: 16px;
+  padding: clamp(22px, 3vw, 30px);
+  box-shadow: 0 10px 30px rgba(135, 43, 19, 0.08);
+}
+
+.historia-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.historia-anyo {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-orange);
+  letter-spacing: 0.5px;
+}
+
+.historia-etiqueta {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-crimson);
+  background: rgba(135, 43, 19, 0.08);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.historia-carta h3 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 28px);
+  color: var(--color-crimson);
+  line-height: 1.25;
+  margin-bottom: 14px;
+}
+
+.historia-carta p {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(15px, 1.3vw, 16px);
+  line-height: 1.75;
+  color: var(--color-brown);
+  opacity: 0.92;
+  margin-bottom: 12px;
+}
+
+.historia-carta p:last-child {
+  margin-bottom: 0;
+}
+
+.historia-media {
+  height: clamp(240px, 30vw, 360px);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(135, 43, 19, 0.16);
+}
+
+.historia-media-sin-foto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background:
+    repeating-linear-gradient(135deg, #f0d6a8 0 14px, #e9cb97 14px 28px);
+  border: 1px solid rgba(135, 43, 19, 0.12);
+}
+
+.historia-sin-foto-icono {
+  font-size: 40px;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.historia-sin-foto-texto {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(135, 43, 19, 0.45);
+}
+
+@media (max-width: 900px) {
+  .historia-linea {
+    left: 22px;
+  }
+
+  .historia-nodo {
+    left: 22px;
+    top: 50%;
+    width: 44px;
+    height: 44px;
+    margin-left: -22px;
+    margin-top: -22px;
+  }
+
+  .historia-bloque,
+  .historia-bloque-invertido {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .historia-bloque .historia-carta,
+  .historia-bloque-invertido .historia-carta {
+    order: 2;
+    padding: clamp(18px, 3vw, 24px);
+    margin-left: clamp(36px, 8vw, 60px);
+  }
+
+  .historia-bloque .historia-imagen,
+  .historia-bloque-invertido .historia-imagen {
+    order: 1;
+    margin-left: clamp(36px, 8vw, 60px);
+  }
+
+  .historia-media {
+    height: 220px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Políticas · página de cancelación
+   Cinco apartados en tarjetas con icono, no cinco titulares
+   seguidos de prosa: quien entra viene por UNO de los cinco
+   —casi siempre por la escala de plazos— y en lista corrida
+   hay que leerse la página entera para localizarlo.
+   ───────────────────────────────────────────────────────── */
+.politica-fecha {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  margin-bottom: clamp(24px, 4vw, 36px);
+  font-size: 0.9rem;
+  opacity: 0.65;
+}
+
+/* ── Banda de resumen ──
+   Los tres datos de la hoja 21 que resuelven la consulta más frecuente.
+   En blanco sobre el crema del sitio, medio tono por encima de las tarjetas
+   de abajo: es lo primero que hay que ver, y la letra fina viene después. */
+.politica-resumen {
+  display: grid;
+  /* El min() es lo que evita que la celda exija 250px cuando la pantalla no
+     los tiene: sin él, a 320px la rejilla desborda. */
+  grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+  gap: clamp(12px, 2vw, 18px);
+  margin-bottom: clamp(24px, 4vw, 34px);
+}
+.politica-resumen-dato {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 14px;
+  padding: clamp(14px, 3vw, 18px);
+  font-size: clamp(0.9rem, 2.2vw, 0.97rem);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.politica-cifra {
+  color: var(--color-crimson);
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.6vw, 1.2rem);
+  white-space: nowrap;
+}
+
+/* El disco es lo que convierte el icono en marca del dato en vez de adorno.
+   44px son además el área táctil de referencia del sitio, así que ninguna
+   fila que lo lleve queda por debajo de esa altura. */
+.politica-icono {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(234, 91, 12, 0.12);
+}
+
+/* ── Índice ──
+   Anclas, no acordeones: esta página se lee justo antes de pagar y esconder
+   una condición detrás de un clic es exactamente lo que no puede pasar. El
+   índice lleva al apartado sin quitar nada de la vista, funciona sin JS y
+   deja compartir el enlace apuntando a la cláusula exacta. */
+.politica-indice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: clamp(24px, 4vw, 34px);
+}
+.politica-chip {
+  min-width: 0;
+  /* 44px de alto de área táctil: el chip mide 13px de letra y sin esto queda
+     en unos 30px, por debajo de lo que un dedo acierta. */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 16px;
+  border: 1px solid rgba(135, 43, 19, 0.18);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-brown);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.politica-chip:hover,
+.politica-chip:focus-visible {
+  background: var(--color-crimson);
+  border-color: var(--color-crimson);
+  color: var(--color-cream);
+}
+
+/* ── Los cinco apartados ──
+   La rejilla reparte a dos columnas en escritorio. No es solo densidad: a
+   1200px de ancho un párrafo corrido pasa de 130 caracteres por línea, y en
+   texto legal eso es justo donde el ojo pierde el renglón. */
+.politica-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+  gap: clamp(16px, 3vw, 24px);
+  align-items: start;
+}
+.politica-card {
+  min-width: 0;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 16px;
+  padding: clamp(20px, 4vw, 26px);
+  /* La navbar es sticky: sin esto el enlace del índice deja el título del
+     apartado justo debajo de la franja crimson. */
+  scroll-margin-top: clamp(80px, 10vw, 100px);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+/* Solo sombra y borde al pasar por encima. Nada de elevarla: la tarjeta no es
+   clicable y un desplazamiento promete un clic que no existe. */
+.politica-card:hover {
+  border-color: rgba(135, 43, 19, 0.28);
+  box-shadow: 0 6px 18px rgba(135, 43, 19, 0.07);
+}
+.politica-card--ancha {
+  grid-column: 1 / -1;
+}
+.politica-card-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  margin-bottom: clamp(14px, 2.5vw, 18px);
+}
+.politica-card-titulo {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3.5vw, 1.4rem);
+  line-height: 1.25;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.politica-parrafos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.politica-parrafos p {
+  min-width: 0;
+  font-size: clamp(0.95rem, 2.5vw, 1.03rem);
+  line-height: 1.75;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}
+
+/* ── Escala de plazos ──
+   Cada fila es una condición y su consecuencia, con el color del semáforo en
+   el filete y en el icono. La pregunta real que trae a alguien aquí es «a
+   cuántos días estoy», y en prosa hay que leerse las tres cláusulas enteras
+   para contestarla. */
+.politica-escala {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 clamp(16px, 3vw, 20px);
+  padding: 0;
+}
+.politica-escala-fila {
+  min-width: 0;
+  display: flex;
+  /* Envuelve en vez de encoger: a 320px el efecto no cabe al lado del plazo y
+     baja a su propia línea en lugar de estrujar los dos textos. */
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  background: #fff;
+  border: 1px solid rgba(135, 43, 19, 0.1);
+  border-left-width: 4px;
+  border-radius: 10px;
+  padding: clamp(12px, 2.5vw, 15px) clamp(13px, 3vw, 17px);
+}
+.politica-escala-plazo {
+  /* Base flexible, no ancho fijo: puede crecer con el hueco que sobre y
+     encogerse por debajo de los 220px cuando no los hay. */
+  flex: 1 1 220px;
+  min-width: 0;
+  font-size: clamp(0.9rem, 2.3vw, 0.98rem);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.politica-escala-efecto {
+  flex: 0 1 auto;
+  min-width: 0;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: clamp(0.8rem, 2.1vw, 0.86rem);
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.politica-escala-fila--bien {
+  border-left-color: var(--status-confirmada-txt);
+  color: var(--color-brown);
+}
+.politica-escala-fila--bien svg { color: var(--status-confirmada-txt); }
+.politica-escala-fila--bien .politica-escala-efecto {
+  background: var(--status-confirmada-bg);
+  color: var(--status-confirmada-txt);
+}
+.politica-escala-fila--medio {
+  border-left-color: var(--status-pendiente-txt);
+}
+.politica-escala-fila--medio svg { color: var(--status-pendiente-txt); }
+.politica-escala-fila--medio .politica-escala-efecto {
+  background: var(--status-pendiente-bg);
+  color: var(--status-pendiente-txt);
+}
+.politica-escala-fila--alto {
+  border-left-color: var(--color-crimson);
+}
+.politica-escala-fila--alto svg { color: var(--color-crimson); }
+.politica-escala-fila--alto .politica-escala-efecto {
+  background: rgba(213, 19, 18, 0.1);
+  color: var(--color-crimson);
+}
+
+.politica-cierre {
+  min-width: 0;
+  margin-top: clamp(28px, 5vw, 40px);
+  font-size: 0.95rem;
+}
+
+/* ── Políticas · protección de la niñez ──
+   El callout ESCNNA, las listas de requisitos y la nota de la autorización:
+   la hoja 16 trae los controles como pasos numerados y el documento como
+   ingredientes con viñetas, y el estilo tiene que respetar esa diferencia. */
+
+/* El código de conducta frente a la ESCNNA abre la página antes que las
+   tarjetas, igual que en el portafolio: recuadro crema con filete dorado y su
+   disco dorado, no un párrafo corrido más. */
+.politica-callout {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-left: 4px solid var(--color-gold);
+  border-radius: 16px;
+  padding: clamp(16px, 3vw, 22px);
+  margin-bottom: clamp(24px, 4vw, 34px);
+}
+.politica-callout-icono {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(253, 195, 0, 0.18);
+}
+.politica-callout p {
+  min-width: 0;
+  font-size: clamp(0.95rem, 2.5vw, 1.03rem);
+  line-height: 1.75;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+
+/* Los requisitos de ingreso y los controles de admisión son pasos que hay que
+   cumplir, en ese orden: numerados. Lo que debe traer la autorización son
+   ingredientes de un documento: viñetas. */
+.politica-lista {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0 0 0 22px;
+}
+.politica-lista li {
+  min-width: 0;
+  padding-left: 2px;
+  font-size: clamp(0.95rem, 2.5vw, 1.03rem);
+  line-height: 1.75;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}
+.politica-lista--vinetas {
+  list-style: none;
+  padding-left: 0;
+}
+.politica-lista--vinetas li {
+  position: relative;
+  padding-left: 26px;
+}
+.politica-lista--vinetas li::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 0.72em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-orange);
+}
+
+/* El «Además» sobre la notaría va aparte, para que no se lea como una viñeta
+   más de los ingredientes de la autorización. */
+.politica-nota {
+  min-width: 0;
+  margin: clamp(14px, 2.5vw, 18px) 0 0;
+  padding: 12px 14px;
+  background: rgba(253, 195, 0, 0.12);
+  border-radius: 10px;
+  font-size: clamp(0.9rem, 2.3vw, 0.97rem);
+  line-height: 1.65;
+  opacity: 0.9;
+  overflow-wrap: anywhere;
+}
+.politica-nota-etiqueta {
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-brown);
+}
+
+/* El aviso «Nuestro compromiso» cierra la hoja 16 volviendo a lo esencial:
+   con su disco crimson para que no se confunda con la letra fina del cierre
+   de la página de cancelación. */
+.politica-cierre--compromiso {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.politica-cierre--compromiso strong {
+  color: var(--color-brown);
+}
+.politica-compromiso-icono {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(213, 19, 18, 0.1);
+}
+
+/* ── Políticas · índice ──
+   Una tarjeta por política. A diferencia de las tarjetas de los apartados de
+   una política, estas SÍ son enlaces: la flecha avanza y el encabezado cambia
+   de color, que es el lenguaje del sitio para lo que se puede pulsar. */
+.politicas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: clamp(16px, 3vw, 24px);
+}
+.politicas-tarjeta {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(20px, 4vw, 26px);
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.politicas-tarjeta:hover,
+.politicas-tarjeta:focus-visible {
+  border-color: rgba(213, 19, 18, 0.4);
+  box-shadow: 0 6px 18px rgba(135, 43, 19, 0.08);
+}
+.politicas-tarjeta-encabezado {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.politicas-tarjeta-titulo {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3.5vw, 1.4rem);
+  line-height: 1.25;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.politicas-tarjeta-flecha {
+  flex-shrink: 0;
+  color: var(--color-crimson);
+  transition: transform 160ms ease;
+}
+.politicas-tarjeta:hover .politicas-tarjeta-flecha,
+.politicas-tarjeta:focus-visible .politicas-tarjeta-flecha {
+  transform: translateX(3px);
+}
+.politicas-tarjeta-resumen {
+  min-width: 0;
+  font-size: clamp(0.95rem, 2.5vw, 1.03rem);
+  line-height: 1.75;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}
+.politicas-tarjeta-fuente {
+  align-self: flex-start;
+  max-width: 100%;
+  border-radius: 999px;
+  padding: 4px 12px;
+  background: rgba(234, 91, 12, 0.12);
+  color: var(--color-brown);
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Aviturismo · página propia
+   ─────────────────────────────────────────────────────────
+   Mismo idioma que las políticas —disco de 44 px, tarjeta con
+   recinto, índice de anclas— porque es el patrón que el sitio
+   ya tiene para una página larga que se consulta a saltos. Lo
+   propio de acá es la rejilla de especies: siete fichas con
+   foto y tres nombres cada una, que en prosa serían siete
+   párrafos ilegibles y que el birder recorre con la vista.
+   ───────────────────────────────────────────────────────── */
+
+.avi-kicker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+}
+.avi-titulo {
+  min-width: 0;
+  margin-bottom: 14px;
+  font-size: var(--fs-h1);
+  line-height: 1.12;
+  color: var(--color-brown);
+}
+.avi-lead {
+  min-width: 0;
+  max-width: 68ch;
+  margin-bottom: clamp(24px, 4vw, 34px);
+  font-size: clamp(1rem, 2.6vw, 1.12rem);
+  line-height: 1.75;
+  opacity: 0.85;
+}
+
+/* ── Banda de resumen ──
+   Los cuatro datos que un birder mira antes de leer nada más. En blanco sobre
+   el crema del sitio, medio tono por encima de las tarjetas de abajo. */
+.avi-resumen {
+  display: grid;
+  /* El min() evita que la celda exija 240 px cuando la pantalla no los tiene:
+     sin él, a 320 px la rejilla desborda. */
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: clamp(12px, 2vw, 18px);
+  margin-bottom: clamp(20px, 3vw, 28px);
+}
+.avi-resumen-dato {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 14px;
+  padding: clamp(14px, 3vw, 18px);
+  font-size: clamp(0.88rem, 2.2vw, 0.95rem);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.avi-cifra {
+  display: block;
+  color: var(--color-crimson);
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.6vw, 1.2rem);
+}
+
+/* El disco convierte el icono en marca del apartado en vez de adorno, y sus
+   44 px son el área táctil de referencia del sitio: ninguna fila que lo lleve
+   queda por debajo de esa altura. */
+.avi-icono {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(234, 91, 12, 0.12);
+}
+
+/* ── eBird ──
+   El único dato de la página que verifica un tercero. Filete dorado y enlace a
+   la vista: si alguien solo lee un recuadro, que sea este. */
+.avi-ebird {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-left: 4px solid var(--color-gold);
+  border-radius: 16px;
+  padding: clamp(16px, 3vw, 22px);
+  margin-bottom: clamp(24px, 4vw, 34px);
+}
+.avi-ebird-icono {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(253, 195, 0, 0.18);
+}
+.avi-ebird p {
+  min-width: 0;
+  font-size: clamp(0.95rem, 2.5vw, 1.03rem);
+  line-height: 1.75;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.avi-ebird-enlace {
+  min-width: 0;
+  /* 44 px de alto: el enlace mide 14 px de letra y sin esto queda en unos 24,
+     por debajo de lo que un dedo acierta. */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--color-crimson);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.avi-ebird-enlace svg { flex-shrink: 0; }
+
+/* ── Índice ──
+   Anclas, no acordeones: la lista de especies es justo lo que este visitante
+   vino a leer y esconderla detrás de un clic es lo que no puede pasar. El
+   índice lleva al apartado sin quitar nada de la vista, funciona sin JS y deja
+   compartir el enlace apuntando a la sección exacta. */
+.avi-indice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: clamp(24px, 4vw, 34px);
+}
+.avi-chip {
+  min-width: 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 16px;
+  border: 1px solid rgba(135, 43, 19, 0.18);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-brown);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.avi-chip:hover,
+.avi-chip:focus-visible {
+  background: var(--color-crimson);
+  border-color: var(--color-crimson);
+  color: var(--color-cream);
+}
+
+/* ── Apartados ──
+   Dos columnas cuando hay sitio, una cuando no, sin un solo breakpoint. No es
+   densidad: a 1200 px un párrafo a una columna pasa de 130 caracteres por
+   línea y ahí el ojo pierde el renglón. */
+.avi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+  gap: clamp(16px, 3vw, 24px);
+  align-items: start;
+}
+.avi-card {
+  min-width: 0;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 16px;
+  padding: clamp(20px, 4vw, 26px);
+  /* La navbar es sticky: sin esto el enlace del índice deja el título del
+     apartado justo debajo de la franja crimson. */
+  scroll-margin-top: clamp(80px, 10vw, 100px);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+/* Solo borde y sombra al pasar por encima: la tarjeta no es clicable y un
+   desplazamiento prometería un clic que no existe. */
+.avi-card:hover {
+  border-color: rgba(135, 43, 19, 0.28);
+  box-shadow: 0 6px 18px rgba(135, 43, 19, 0.07);
+}
+.avi-card--ancha {
+  grid-column: 1 / -1;
+}
+.avi-card-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  margin-bottom: clamp(14px, 2.5vw, 18px);
+}
+.avi-card-titulo {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3.5vw, 1.4rem);
+  line-height: 1.25;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.avi-card-texto {
+  min-width: 0;
+  margin-bottom: 14px;
+  font-size: clamp(0.95rem, 2.5vw, 1.03rem);
+  line-height: 1.75;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}
+.avi-card-texto:last-child { margin-bottom: 0; }
+.avi-card-nota {
+  min-width: 0;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(135, 43, 19, 0.1);
+  font-size: clamp(0.85rem, 2.2vw, 0.92rem);
+  line-height: 1.7;
+  opacity: 0.75;
+  overflow-wrap: anywhere;
+}
+.avi-card-nota a,
+.avi-card-texto a {
+  color: var(--color-crimson);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.avi-subtitulo {
+  min-width: 0;
+  margin: clamp(16px, 3vw, 20px) 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+}
+
+/* ── Rejilla de especies ──
+   Cada ficha es foto + nombre científico + nombre en inglés + nombre local. El
+   orden no es decorativo: el científico y el inglés son por los que llega
+   buscando este visitante, y el local es el que usa quien vive acá.
+   El min() del minmax es lo que da una columna a 320 px en vez de desbordar. */
+.avi-especies {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: clamp(14px, 2.5vw, 20px);
+  margin: 0;
+  padding: 0;
+}
+.avi-especie {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+/* aspect-ratio reserva el hueco antes de que baje la foto: sin él la lista
+   entera salta cuando cargan las siete. */
+.avi-especie-foto {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(135, 43, 19, 0.06);
+}
+.avi-especie-cientifico {
+  min-width: 0;
+  font-size: clamp(0.86rem, 2.2vw, 0.92rem);
+  line-height: 1.35;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.avi-especie-ingles {
+  min-width: 0;
+  font-size: clamp(0.82rem, 2.1vw, 0.88rem);
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--color-crimson);
+  overflow-wrap: anywhere;
+}
+.avi-especie-local {
+  min-width: 0;
+  font-size: clamp(0.78rem, 2vw, 0.83rem);
+  line-height: 1.35;
+  opacity: 0.6;
+  overflow-wrap: anywhere;
+}
+
+/* ── Migratorias ──
+   Sin foto: no hay archivo propio de las dos y una imagen prestada rompería la
+   regla que sostiene la lista de arriba. Se resuelven como fichas de texto. */
+.avi-pills {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+}
+.avi-pill {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 12px;
+  font-size: clamp(0.86rem, 2.2vw, 0.92rem);
+  overflow-wrap: anywhere;
+}
+.avi-pill-ingles {
+  min-width: 0;
+  font-weight: 700;
+  color: var(--color-crimson);
+  font-size: clamp(0.82rem, 2.1vw, 0.88rem);
+}
+.avi-pill-local {
+  min-width: 0;
+  opacity: 0.6;
+  font-size: clamp(0.78rem, 2vw, 0.83rem);
+}
+
+/* ── Ventana de visita ──
+   Una fila por tramo, con la condición a un lado y la consecuencia en píldora
+   de color: la pregunta real es «en cuál caigo yo», y en párrafo hay que
+   leerse los tres casos para contestarla. */
+.avi-ventana {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+.avi-ventana-fila {
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-left: 4px solid rgba(135, 43, 19, 0.25);
+  border-radius: 12px;
+  background: #fff;
+}
+.avi-ventana-cabeza {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 6px;
+}
+.avi-ventana-cuando {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.6vw, 1.1rem);
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.avi-ventana-que {
+  max-width: 100%;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.avi-ventana-nota {
+  min-width: 0;
+  font-size: clamp(0.85rem, 2.2vw, 0.93rem);
+  line-height: 1.7;
+  opacity: 0.8;
+  overflow-wrap: anywhere;
+}
+.avi-ventana-fila--alto {
+  border-left-color: var(--color-crimson);
+}
+.avi-ventana-fila--alto .avi-ventana-que {
+  background: rgba(213, 19, 18, 0.1);
+  color: var(--color-crimson);
+}
+.avi-ventana-fila--medio {
+  border-left-color: var(--status-pendiente-txt);
+}
+.avi-ventana-fila--medio .avi-ventana-que {
+  background: var(--status-pendiente-bg);
+  color: var(--status-pendiente-txt);
+}
+
+/* ── Itinerario ──
+   La hora manda sobre lo que pasa, así que va primero y en display. En pantalla
+   angosta pasa a apilarse porque «Media mañana» junto al texto deja una columna
+   de tres palabras por línea. */
+.avi-timeline {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+}
+.avi-paso {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  padding-left: 16px;
+  border-left: 2px solid rgba(234, 91, 12, 0.35);
+}
+.avi-paso-hora {
+  flex: 0 0 auto;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 2.4vw, 1.02rem);
+  color: var(--color-crimson);
+}
+.avi-paso-texto {
+  flex: 1 1 200px;
+  min-width: 0;
+  font-size: clamp(0.9rem, 2.3vw, 0.97rem);
+  line-height: 1.6;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}
+
+.avi-incluye {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+.avi-incluye li {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: clamp(0.9rem, 2.3vw, 0.97rem);
+  line-height: 1.6;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}
+.avi-incluye svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--status-confirmada-txt);
+}
+
+/* ── Guía ──
+   Un retrato pequeño y el cargo: el birder elige por el guía tanto como por la
+   lista, y un nombre con años encima pesa más que el adjetivo «especializado». */
+.avi-guia {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.avi-guia-foto {
+  position: relative;
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(135, 43, 19, 0.06);
+}
+.avi-guia-nombre {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.8vw, 1.2rem);
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.avi-guia-cargo {
+  min-width: 0;
+  font-size: clamp(0.82rem, 2.1vw, 0.88rem);
+  line-height: 1.5;
+  opacity: 0.7;
+  overflow-wrap: anywhere;
+}
+
+/* ── Bloque en inglés ──
+   Marcado en dorado para que se lea como lo que es: la misma información, en
+   otro idioma, no un apartado más de la página en español. */
+.avi-en {
+  border-left: 4px solid var(--color-gold);
+}
+.avi-en-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: 0 clamp(20px, 3vw, 32px);
+  align-items: start;
+}
+.avi-en-grid .avi-card-nota {
+  grid-column: 1 / -1;
+}
+
+/* ── Acciones ──
+   Botones de bloque, a 44 px de alto y con wrap: dos botones en línea a 320 px
+   desbordan sin él. */
+.avi-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.avi-acciones--centrada {
+  justify-content: center;
+}
+.avi-boton {
+  min-width: 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 20px;
+  border: 1px solid var(--color-crimson);
+  border-radius: 999px;
+  background: var(--color-crimson);
+  color: var(--color-cream);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.avi-boton svg { flex-shrink: 0; }
+.avi-boton:hover,
+.avi-boton:focus-visible {
+  background: var(--color-brown);
+  border-color: var(--color-brown);
+}
+.avi-boton--fantasma {
+  background: transparent;
+  color: var(--color-crimson);
+}
+.avi-boton--fantasma:hover,
+.avi-boton--fantasma:focus-visible {
+  background: var(--color-crimson);
+  color: var(--color-cream);
+}
+
+/* ── Cierre ── */
+.avi-cta {
+  min-width: 0;
+  margin-top: clamp(28px, 5vw, 44px);
+  padding: clamp(24px, 5vw, 40px) clamp(20px, 4vw, 32px);
+  background: var(--color-crimson);
+  border-radius: 16px;
+  text-align: center;
+}
+.avi-cta-titulo {
+  min-width: 0;
+  margin-bottom: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4.5vw, 2rem);
+  line-height: 1.15;
+  color: var(--color-cream);
+  overflow-wrap: anywhere;
+}
+.avi-cta-texto {
+  min-width: 0;
+  max-width: 52ch;
+  margin: 0 auto clamp(20px, 3vw, 26px);
+  font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+  line-height: 1.7;
+  color: rgba(255, 234, 202, 0.85);
+  overflow-wrap: anywhere;
+}
+/* Sobre el crimson del cierre los botones se invierten: el relleno pasa a
+   crema y el fantasma lleva borde crema. */
+.avi-cta .avi-boton {
+  background: var(--color-cream);
+  border-color: var(--color-cream);
+  color: var(--color-crimson);
+}
+.avi-cta .avi-boton:hover,
+.avi-cta .avi-boton:focus-visible {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-brown);
+}
+.avi-cta .avi-boton--fantasma {
+  background: transparent;
+  border-color: rgba(255, 234, 202, 0.6);
+  color: var(--color-cream);
+}
+.avi-cta .avi-boton--fantasma:hover,
+.avi-cta .avi-boton--fantasma:focus-visible {
+  background: var(--color-cream);
+  border-color: var(--color-cream);
+  color: var(--color-crimson);
+}
+.avi-cta :focus-visible {
+  outline-color: var(--color-gold);
+}
+
+/* ─────────────────────────────────────────────────────────
+   AVISO HACIA /AVITURISMO
+   Vive en el listado de experiencias y en las fichas que llevan avistamiento.
+   Toma prestada la forma de las tarjetas de /aviturismo —crema, filete tenue,
+   icono en disco de 44px— para que se lea como una puerta a esa página y no
+   como un banner metido en medio del embudo de reserva.
+   ───────────────────────────────────────────────────────── */
+.aviso-avi {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(12px, 3vw, 20px);
+  padding: clamp(16px, 3.5vw, 22px) clamp(16px, 3.5vw, 24px);
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  border-radius: 16px;
+  text-decoration: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+/* La caja sí es clicable, así que puede moverse; aun así se queda en borde y
+   sombra. Un desplazamiento acá competiría con el hover de las tarjetas de
+   experiencia, que son las que tienen que llamar en el listado. */
+.aviso-avi:hover,
+.aviso-avi:focus-visible {
+  border-color: var(--color-crimson);
+  box-shadow: 0 2px 10px rgba(135, 43, 19, 0.08);
+}
+.aviso-avi-icono {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(234, 91, 12, 0.12);
+}
+/* `flex: 1 1 260px` es lo que reparte la fila sin un solo breakpoint: mientras
+   quepan 260px el texto va al lado del icono y la llamada a la derecha; por
+   debajo, la llamada baja sola a la línea siguiente. El min-width: 0 es lo que
+   deja que el bloque encoja de verdad — sin él un texto largo desborda la caja
+   en 320px por el min-width:auto que traen los hijos de flex. */
+.aviso-avi-texto {
+  min-width: 0;
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.aviso-avi-titulo {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 3vw, 1.25rem);
+  line-height: 1.25;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.aviso-avi-linea {
+  min-width: 0;
+  font-size: clamp(0.88rem, 2.3vw, 0.97rem);
+  line-height: 1.65;
+  color: rgba(135, 43, 19, 0.78);
+  overflow-wrap: anywhere;
+}
+/* Es un <span> y no un <a> —la caja entera ya es el enlace—, así que se le
+   ponen a mano el alto táctil y el centrado que un botón traería de fábrica. */
+.aviso-avi-cta {
+  flex-shrink: 0;
+  min-width: 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  border: 1px solid var(--color-crimson);
+  border-radius: 999px;
+  color: var(--color-crimson);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+.aviso-avi:hover .aviso-avi-cta,
+.aviso-avi:focus-visible .aviso-avi-cta {
+  background: var(--color-crimson);
+  color: var(--color-cream);
+}
+
+/* En el listado se separa de la rejilla de tarjetas; en la ficha trae además
+   el margen lateral y el ancho del sitio, porque ahí no cuelga de ningún
+   contenedor con márgenes propios. */
+.aviso-avi-marco--listado {
+  margin-top: clamp(1.5rem, 4vw, 2.25rem);
+}
+.aviso-avi-marco--ficha {
+  max-width: var(--contenido-ancho);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 2.75rem) var(--contenido-margen) 0;
 }
