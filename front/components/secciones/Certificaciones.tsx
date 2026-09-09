@@ -48,8 +48,8 @@ export default function Certificaciones() {
               margin: '0 auto',
             }}
           >
-            Nuestras prácticas agroecológicas y turísticas están respaldadas por
-            organismos oficiales. Trabajamos con transparencia, del monte a tu mesa.
+            Nuestras prácticas agroecológicas y turísticas están respaldadas por organismos oficiales.
+             Trabajamos con transparencia, haciendo de cada proceso una experiencia.
           </p>
         </div>
 

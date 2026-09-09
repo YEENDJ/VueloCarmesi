@@ -28,7 +28,7 @@ export default function SobreNosotros({ imagen }: Props) {
               <img
                 src={imagen}
                 alt="Finca agroecológica Vuelo Carmesí"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', borderRadius: '12px' }}
               />
             ) : (
               <span
@@ -87,10 +87,12 @@ export default function SobreNosotros({ imagen }: Props) {
                 marginBottom: '16px',
               }}
             >
-              Somos un proyecto agroecológico ubicado en el corazón cacaotero de
-              Colombia. Rescatamos variedades nativas, cultivamos sin agroquímicos y
-              convertimos cada cosecha en una experiencia que conecta a las personas
-              con la tierra.
+              Somos un proyecto agroecológico dedicado al cultivo y transformación del cacao,
+               donde promovemos prácticas responsables con el entorno y convertimos cada cosecha
+                en una experiencia que conecta a las personas con la tierra.
+
+                Cada visita es un vuelo a los sentidos: el aroma del cacao en proceso de transformación,
+                 el sonido de la finca al amanecer y el sabor de un chocolate elaborado en el mismo lugar donde nace el cacao.
             </p>
 
             <p
