@@ -225,8 +225,19 @@ export default function ExperienciaFormModal({
                 <input className="admin-input" type="number" min={1} value={form.capacidad} onChange={e => set('capacidad', e.target.value)} placeholder="12" />
               </FormRow>
             </div>
-            <FormRow label="Cuándo se realiza" ayuda="Días y horas">
-              <input className="admin-input" value={form.horarios} onChange={e => set('horarios', e.target.value)} placeholder="Martes a domingo, 8:00 a. m. y 2:00 p. m." />
+            {/* Textarea y no input de una línea: en las fichas reales esto no es
+                "martes a domingo", es el itinerario —5:30 salida, 8:00 desayuno,
+                media mañana observación—, y la ficha ya lo pinta con saltos de
+                línea (white-space: pre-line). En un input esos saltos no se
+                pueden escribir y la primera edición desde el panel los aplasta
+                todos en un renglón. */}
+            <FormRow label="Cuándo se realiza" ayuda="Días, horas o el itinerario, una línea por tramo">
+              <textarea
+                className="admin-input" rows={3} style={{ resize: 'vertical' }}
+                value={form.horarios}
+                onChange={e => set('horarios', e.target.value)}
+                placeholder={'5:30 a. m. — salida con binoculares\n8:00 a. m. — desayuno en la finca'}
+              />
             </FormRow>
             <FormRow
               label="Punto de encuentro"

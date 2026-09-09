@@ -1,4 +1,5 @@
 import ExperienciaCard from '@/components/booking/ExperienciaCard'
+import AvisoAviturismo from '@/components/booking/AvisoAviturismo'
 import { getExperiencias } from '@/lib/api/experiencias'
 
 export const revalidate = 60
@@ -30,6 +31,13 @@ export default async function ExperienciasPage() {
           {experiencias.map(exp => <ExperienciaCard key={exp.id} experiencia={exp} />)}
         </div>
       )}
+
+      {/* Debajo de la rejilla y no encima: quien entra al listado viene a ver
+          qué se puede hacer en la finca, y un aviso antes de la primera tarjeta
+          se lleva por delante justo eso. Abajo lo encuentra el que ya miró la
+          oferta y sigue buscando aves — y se pinta también con el listado
+          vacío, que es cuando más falta hace tener algo a dónde ir. */}
+      <AvisoAviturismo variante="listado" />
     </section>
   )
 }

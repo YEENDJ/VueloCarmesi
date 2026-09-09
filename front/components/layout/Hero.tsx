@@ -12,26 +12,22 @@ export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: H
   return (
     <section className="hero">
       <div className="contenido">
-      <div style={{
-        fontFamily: 'var(--font-body)',
-        fontWeight: 700,
-        fontSize: '13px',
-        letterSpacing: '3px',
-        textTransform: 'uppercase' as const,
-        color: 'var(--color-orange)',
-        marginBottom: '16px',
-      }}>
-        Experiencias agroecológicas
-      </div>
-
+      {/* pre-line para que el salto de línea del título se vea. El eslogan de
+          marca se lee en dos renglones —«Experiencias agroecológicas / con
+          sabor a cacao.»— y así va en el portafolio, con un <br> explícito.
+          Sin esto el navegador colapsa el salto en un espacio y el título
+          rompe donde caiga, que a según qué ancho parte el eslogan por la
+          mitad. El salto se respeta pero no se fuerza: `maxWidth` en ch sigue
+          partiendo los renglones largos si no caben. */}
       <h1 style={{
         fontFamily: 'var(--font-display)',
-        fontSize: 'clamp(44px, 8vw, 96px)',
+        fontSize: 'clamp(32px, 5.5vw, 68px)',
         lineHeight: 1.05,
         letterSpacing: '-0.01em',
         color: 'var(--color-crimson)',
         margin: 0,
-        maxWidth: '18ch',
+        maxWidth: '20ch',
+        whiteSpace: 'pre-line',
       }}>
         {titulo}
       </h1>
@@ -40,8 +36,8 @@ export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: H
         display: 'flex',
         flexWrap: 'wrap' as const,
         alignItems: 'flex-end',
-        gap: '32px',
-        marginTop: '40px',
+        gap: '24px',
+        marginTop: '24px',
       }}>
         <div style={{ flex: '1 1 300px' }}>
           <p style={{
@@ -55,7 +51,7 @@ export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: H
           }}>
             {subtitulo}
           </p>
-          <div style={{ marginTop: '28px' }}>
+          <div style={{ marginTop: '20px' }}>
             <Button href={ctaHref}>{ctaTexto}</Button>
           </div>
         </div>

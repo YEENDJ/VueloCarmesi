@@ -3,6 +3,7 @@ import Button from '@/components/ui/Button'
 import PortadaExperiencia from '@/components/booking/PortadaExperiencia'
 import DatosPracticos from '@/components/booking/DatosPracticos'
 import ListaFicha from '@/components/booking/ListaFicha'
+import AvisoAviturismo, { tieneAvistamiento } from '@/components/booking/AvisoAviturismo'
 import { getSiteConfig } from '@/lib/api/site-config'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { SLUGS_EXPERIENCIAS_LEGADOS, destinoLegado } from '@/lib/slugs-legados'
@@ -165,6 +166,14 @@ export default async function ExperienciaDetallePage({
           <ListaFicha titulo="No incluye" items={noIncluye} variante="noIncluye" />
         </div>
       )}
+
+      {/* Sólo en las dos fichas que llevan avistamiento, y aquí abajo a
+          propósito: el visitante ya leyó el relato, los horarios y lo que
+          incluye, y si a estas alturas sigue dudando es por lo que la ficha no
+          cuenta —qué especies hay, cuándo pasan las migratorias, quién guía—.
+          Eso vive en /aviturismo. Más arriba habría interrumpido la lectura de
+          la ficha, que es la que cierra la reserva. */}
+      {tieneAvistamiento(exp.slug) && <AvisoAviturismo variante="ficha" />}
 
       {/* El precio sale dos veces y es a propósito: la tarjeta lo presenta en
           el momento del antojo y la barra lo mantiene a mano durante el scroll.
