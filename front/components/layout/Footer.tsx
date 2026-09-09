@@ -2,45 +2,17 @@ import Link from 'next/link'
 import Image from 'next/image'
 import TiraConfianza from '@/components/layout/TiraConfianza'
 import IconoWhatsapp from '@/components/ui/IconoWhatsapp'
+import { IconoInstagram, IconoFacebook, IconoTiktok } from '@/components/ui/IconosRedes'
+import { CONTACTO, MENSAJE_WHATSAPP, REDES, whatsappCon } from '@/lib/contacto'
 
 // Crédito de desarrollo mostrado en la barra legal del footer
 const AGENCIA = { nombre: 'XyraCode', url: 'https://Xyracode.com' }
 
 const SOCIAL = [
-  {
-    label: 'Instagram',
-    href: 'https://www.instagram.com/vuelo_carmesi?igsh=MWUxdjc1djRyc2Y2OQ==',
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Facebook',
-    href: 'https://www.facebook.com/share/1D4zy8b9HB/',
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'WhatsApp',
-    href: 'https://wa.me/+573115800975',
-    icon: <IconoWhatsapp />,
-  },
-  {
-    label: 'TikTok',
-    href: 'https://www.tiktok.com/@vuelo_carmesi?_r=1&_t=ZS-97S50KhhcwC',
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.2 8.2 0 0 0 4.79 1.52V6.78a4.86 4.86 0 0 1-1.02-.09z" />
-      </svg>
-    ),
-  },
+  { label: 'Instagram', href: REDES.instagram, icon: <IconoInstagram /> },
+  { label: 'Facebook', href: REDES.facebook, icon: <IconoFacebook /> },
+  { label: 'WhatsApp', href: whatsappCon(MENSAJE_WHATSAPP.general), icon: <IconoWhatsapp /> },
+  { label: 'TikTok', href: REDES.tiktok, icon: <IconoTiktok /> },
 ]
 
 export default function Footer() {
@@ -78,7 +50,13 @@ export default function Footer() {
             Navegación
           </div>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {([['Experiencias', '/experiencias'], ['Tienda', '/tienda'], ['Sobre nosotros', '/sobre-nosotros'], ['Contacto', '/contacto'], ['Cancelaciones', '/politicas/cancelacion']] as [string, string][]).map(([label, href]) => (
+            {/* Aviturismo va en el pie y no en la navbar porque no es una sexta
+                pestaña del sitio: es la puerta de entrada de un público que
+                llega buscando «birding Meta Colombia», no navegando desde la
+                home. Lo que necesita es existir como enlace en todas las
+                páginas para que el buscador la alcance sin depender de una
+                sola ruta. */}
+            {([['Experiencias', '/experiencias'], ['Aviturismo', '/aviturismo'], ['Tienda', '/tienda'], ['Nosotros', '/sobre-nosotros'], ['Contacto', '/contacto'], ['Políticas', '/politicas']] as [string, string][]).map(([label, href]) => (
               <li key={href}>
                 <Link href={href} style={{ fontWeight: 700, fontSize: '14px', color: 'rgba(255, 234, 202, 0.85)', textDecoration: 'none' }}>
                   {label}
@@ -93,15 +71,15 @@ export default function Footer() {
             Contacto
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontWeight: 700, fontSize: '14px', color: 'rgba(255, 234, 202, 0.85)' }}>
-            <span>carmesivuelo@gmail.com</span>
-            <span>+57 311 580 0975</span>
-            <span>Finca La Fortuna, Vereda Brisas del Tonoa, Cubarral, Meta, Colombia</span>
+            <span>{CONTACTO.email}</span>
+            <span>{CONTACTO.telefono}</span>
+            <span>{CONTACTO.direccionCompleta}</span>
           </div>
 
           <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--color-gold)', margin: '24px 0 14px' }}>
             Redes
           </div>
-          <div className="footer-social" style={{ display: 'flex', gap: '16px' }}>
+          <div className="footer-social">
             {SOCIAL.map(({ label, href, icon }) => (
               <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
                 {icon}
