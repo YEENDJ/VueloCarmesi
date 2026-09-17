@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslations, useLocale } from 'next-intl'
 import Link from 'next/link'
 import { Check, ChevronLeft, ChevronRight, Clock, Users } from 'lucide-react'
 import IconoWhatsapp from '@/components/ui/IconoWhatsapp'
@@ -46,6 +47,12 @@ export default function PortadaExperiencia({
   nombre, imagenes, duracion, capacidad, precio, slug,
   bajada, incluye = [], avisoCancelacion, whatsapp,
 }: Props) {
+  const idioma = useLocale()
+
+  const tg = useTranslations('galeria')
+
+  const t = useTranslations('reserva')
+
   const [indice, setIndice] = useState(0)
   const total = imagenes.length
   // El índice se acota en vez de confiarse: si la experiencia cambia de fotos
@@ -104,7 +111,7 @@ export default function PortadaExperiencia({
         <div className="ficha-exp-foto">
           {total > 0 && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={imagenes[activa]} alt={`${nombre} — foto ${activa + 1} de ${total}`} />
+            <img src={imagenes[activa]} alt={tg('fotoDe', { nombre, n: activa + 1, total })} />
           )}
           {total > 1 && (
             <span className="ficha-exp-contador">{activa + 1} / {total}</span>
@@ -130,7 +137,7 @@ export default function PortadaExperiencia({
                   type="button"
                   className="ficha-exp-tira-flecha ficha-exp-tira-flecha--prev"
                   onClick={() => desplazar(-1)}
-                  aria-label="Ver fotos anteriores"
+                  aria-label={t('verFotosAnteriores')}
                 >
                   <ChevronLeft size={20} strokeWidth={2.2} aria-hidden="true" />
                 </button>
@@ -140,14 +147,14 @@ export default function PortadaExperiencia({
                 className="ficha-exp-miniaturas"
                 ref={tira}
                 role="group"
-                aria-label={`Fotos de ${nombre}`}
+                aria-label={tg('fotosDe', { nombre })}
               >
                 {imagenes.map((src, i) => (
                   <button
                     key={src}
                     type="button"
                     onClick={() => setIndice(i)}
-                    aria-label={`Ver foto ${i + 1} de ${total}`}
+                    aria-label={tg('verFoto', { n: i + 1, total })}
                     aria-current={i === activa}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -161,7 +168,7 @@ export default function PortadaExperiencia({
                   type="button"
                   className="ficha-exp-tira-flecha ficha-exp-tira-flecha--next"
                   onClick={() => desplazar(1)}
-                  aria-label="Ver más fotos"
+                  aria-label={t('verMasFotos')}
                 >
                   <ChevronRight size={20} strokeWidth={2.2} aria-hidden="true" />
                 </button>
@@ -173,8 +180,8 @@ export default function PortadaExperiencia({
                 es el único sitio donde eso se puede contar. */}
             <p className="ficha-exp-aviso-fotos">
               {despl.desborda
-                ? 'Desliza la tira y toca una foto para verla en grande'
-                : 'Toca una foto para verla en grande'}
+                ? t('deslizaTira')
+                : t('tocaFoto')}
             </p>
           </>
         )}
@@ -196,18 +203,18 @@ export default function PortadaExperiencia({
           </span>
           <span className="ficha-exp-pill">
             <Users size={18} strokeWidth={1.85} color="var(--color-orange)" aria-hidden="true" style={{ flexShrink: 0 }} />
-            Hasta {capacidad} personas
+            {t('hastaPersonas', { n: capacidad })}
           </span>
         </div>
 
         <div className="ficha-exp-precio-card">
           <span className="ficha-eyebrow" style={{ fontSize: '12px', letterSpacing: '2px', color: 'rgba(135,43,19,0.6)' }}>
-            Desde
+            {t('desde')}
           </span>
           <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '8px', minWidth: 0 }}>
-            <span className="ficha-exp-precio">{formatPrecio(precio)}</span>
+            <span className="ficha-exp-precio">{formatPrecio(precio, idioma)}</span>
             <span style={{ fontSize: '14px', fontWeight: 700, color: 'rgba(135,43,19,0.65)', minWidth: 0 }}>
-              por persona
+              {t('porPersona')}
             </span>
           </div>
 
@@ -227,7 +234,7 @@ export default function PortadaExperiencia({
               ))}
               {incluyeResto > 0 && (
                 <li className="ficha-exp-incluye-resto">
-                  y {incluyeResto} {incluyeResto === 1 ? 'cosa más' : 'cosas más'}
+                  {t('masFotos', { n: incluyeResto })}
                 </li>
               )}
             </ul>
@@ -240,7 +247,7 @@ export default function PortadaExperiencia({
               padding: '15px', fontSize: '17px', minHeight: '44px',
             }}
           >
-            Reservar ahora
+            {t('reservarAhora')}
           </Button>
 
           {/* La duda sobre cancelar aparece justo aquí, en el momento de
@@ -253,7 +260,7 @@ export default function PortadaExperiencia({
                 href="/politicas/cancelacion"
                 style={{ color: 'var(--color-crimson)', fontWeight: 700, textDecoration: 'underline' }}
               >
-                Ver política
+                {t('verPolitica')}
               </Link>
             </p>
           )}
@@ -264,7 +271,7 @@ export default function PortadaExperiencia({
             Esta línea es la salida de esa persona, y va donde se decide. */}
         {enlaceWhatsapp && (
           <div className="ficha-exp-contacto">
-            <p>¿Dudas antes de reservar?</p>
+            <p>{t('dudas')}</p>
             {/* Hermano del párrafo, no hijo: los dos van en la misma línea
                 porque el contenedor es flex, y así el enlace conserva sus 44px
                 de alto sin deformar el interlineado de la pregunta. Cuando la
@@ -274,7 +281,7 @@ export default function PortadaExperiencia({
                 texto— es lo que se pulsa, y no solo las letras. */}
             <a href={enlaceWhatsapp} target="_blank" rel="noopener noreferrer">
               <IconoWhatsapp size={18} />
-              <span>Escríbenos por WhatsApp</span>
+              <span>{t('escribenosWhatsapp')}</span>
             </a>
           </div>
         )}

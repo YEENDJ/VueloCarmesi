@@ -1,4 +1,5 @@
 import Button from '@/components/ui/Button'
+import { useTranslations } from 'next-intl'
 
 interface HeroProps {
   titulo: string
@@ -9,6 +10,8 @@ interface HeroProps {
 }
 
 export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: HeroProps) {
+  const t = useTranslations('portada')
+
   return (
     <section className="hero">
       <div className="contenido">
@@ -70,7 +73,7 @@ export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: H
               fontFamily: 'monospace', fontSize: '12px', letterSpacing: '1px',
               color: 'rgba(135, 43, 19, 0.5)', textTransform: 'uppercase' as const,
             }}>
-              FOTO · MAZORCA ABIERTA
+              {t('heroPlaceholder')}
             </span>
           </div>
         )}

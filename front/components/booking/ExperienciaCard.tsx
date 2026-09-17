@@ -1,4 +1,5 @@
 import type { Experiencia } from '@/lib/types'
+import { useTranslations, useLocale } from 'next-intl'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import { formatPrecio } from '@/lib/format'
@@ -17,6 +18,10 @@ export default function ExperienciaCard({
   experiencia,
   mostrarBadgeDestacada = true,
 }: ExperienciaCardProps) {
+  const idioma = useLocale()
+
+  const t = useTranslations('reserva')
+
   return (
     <Card>
       {/* aspect-ratio en vez de alto fijo: el marco crece con la columna del grid
@@ -81,9 +86,9 @@ export default function ExperienciaCard({
             fontWeight: 700, color: 'var(--color-crimson)', minWidth: 0,
             fontSize: 'clamp(1rem, 2.5vw, 1.12rem)',
           }}>
-            {formatPrecio(experiencia.precio)}
+            {formatPrecio(experiencia.precio, idioma)}
           </span>
-          <Button href={`/experiencias/${experiencia.slug}`} variant="outline" className="btn-card">Ver más</Button>
+          <Button href={`/experiencias/${experiencia.slug}`} variant="outline" className="btn-card">{t('verMas')}</Button>
         </div>
       </div>
     </Card>

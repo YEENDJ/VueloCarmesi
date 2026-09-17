@@ -1,4 +1,5 @@
 import { MAPA, whatsappCon, MENSAJE_WHATSAPP } from '@/lib/contacto'
+import { useTranslations } from 'next-intl'
 
 /**
  * Los tres tramos de la hoja 18 del portafolio.
@@ -12,12 +13,14 @@ import { MAPA, whatsappCon, MENSAJE_WHATSAPP } from '@/lib/contacto'
  * deciden si pueden traer el bus, y en «terciaria» la respuesta es que no.
  */
 const TRAMOS = [
-  { rango: '86 km', tramo: 'Bogotá – Villavicencio (Vía al Llano)' },
-  { rango: '60 km', tramo: 'Villavicencio – Cubarral (pavimentada, por Acacías y Guamal)' },
-  { rango: '7 km', tramo: 'Cubarral – Finca La Fortuna (pavimentada)' },
-]
+  { rango: '86 km', clave: 'tramo1' },
+  { rango: '60 km', clave: 'tramo2' },
+  { rango: '7 km', clave: 'tramo3' },
+] as const
 
 export default function ComoLlegar() {
+  const t = useTranslations('nosotros.comoLlegar')
+
   return (
     <div
       style={{
@@ -45,7 +48,7 @@ export default function ComoLlegar() {
             marginBottom: '12px',
           }}
         >
-          Cómo llegar · Desde Bogotá
+          {t('rotulo')}
         </p>
         <div
           style={{
@@ -81,9 +84,9 @@ export default function ComoLlegar() {
 
       {/* Tramos */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {TRAMOS.map((t) => (
+        {TRAMOS.map((tramo) => (
           <div
-            key={t.rango}
+            key={tramo.rango}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -103,7 +106,7 @@ export default function ComoLlegar() {
                 minWidth: '52px',
               }}
             >
-              {t.rango}
+              {tramo.rango}
             </span>
             <span
               style={{
@@ -118,7 +121,7 @@ export default function ComoLlegar() {
                 opacity: 0.8,
               }}
             >
-              {t.tramo}
+              {t(tramo.clave)}
             </span>
           </div>
         ))}
@@ -142,7 +145,7 @@ export default function ComoLlegar() {
             marginBottom: '4px',
           }}
         >
-          Entra autos, motos y buses · vía pavimentada
+          {t('acceso')}
         </p>
         <p
           style={{
@@ -152,7 +155,7 @@ export default function ComoLlegar() {
             color: 'rgba(135,43,19,.6)',
           }}
         >
-          Parqueadero para 4 autos + 1 bus
+          {t('parqueadero')}
         </p>
       </div>
 
@@ -163,7 +166,7 @@ export default function ComoLlegar() {
         rel="noopener noreferrer"
         className="ubicacion-boton"
       >
-        Trazar mi ruta
+        {t('trazarRuta')}
         <span aria-hidden="true"> ↗</span>
       </a>
 
@@ -174,7 +177,7 @@ export default function ComoLlegar() {
         className="ubicacion-enlace"
         style={{ fontSize: '13px' }}
       >
-        ¿Dudas para llegar? Escríbenos por WhatsApp
+        {t('dudas')}
       </a>
     </div>
   )

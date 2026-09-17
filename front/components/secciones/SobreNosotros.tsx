@@ -1,8 +1,11 @@
+import { useTranslations } from 'next-intl'
 interface Props {
   imagen?: string
 }
 
 export default function SobreNosotros({ imagen }: Props) {
+  const t = useTranslations('sobreNosotros')
+
   return (
     <section
       id="sobre-nosotros"
@@ -27,7 +30,7 @@ export default function SobreNosotros({ imagen }: Props) {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={imagen}
-                alt="Finca agroecológica Vuelo Carmesí"
+                alt={t('fotoAlt')}
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', borderRadius: '12px' }}
               />
             ) : (
@@ -40,7 +43,7 @@ export default function SobreNosotros({ imagen }: Props) {
                   textTransform: 'uppercase',
                 }}
               >
-                FOTO · FINCA AGROECOLÓGICA
+                {t('fotoPlaceholder')}
               </span>
             )}
           </div>
@@ -60,7 +63,7 @@ export default function SobreNosotros({ imagen }: Props) {
                 marginBottom: '16px',
               }}
             >
-              Quiénes somos
+              {t('kicker')}
             </p>
 
             {/* H2 */}
@@ -73,7 +76,7 @@ export default function SobreNosotros({ imagen }: Props) {
                 marginBottom: '20px',
               }}
             >
-              Un proyecto que nació de la tierra
+              {t('titulo')}
             </h2>
 
             {/* Body */}
@@ -87,12 +90,7 @@ export default function SobreNosotros({ imagen }: Props) {
                 marginBottom: '16px',
               }}
             >
-              Somos un proyecto agroecológico dedicado al cultivo y transformación del cacao,
-               donde promovemos prácticas responsables con el entorno y convertimos cada cosecha
-                en una experiencia que conecta a las personas con la tierra.
-
-                Cada visita es un vuelo a los sentidos: el aroma del cacao en proceso de transformación,
-                 el sonido de la finca al amanecer y el sabor de un chocolate elaborado en el mismo lugar donde nace el cacao.
+              {t('texto')}
             </p>
 
             <p
@@ -105,15 +103,17 @@ export default function SobreNosotros({ imagen }: Props) {
                 marginBottom: '32px',
               }}
             >
-              Cada visita es un vuelo a los sentidos: el olor del cacao maduro, el
-              sonido de la finca al amanecer y el sabor de un chocolate hecho
-              exactamente donde nació el cacao.
+              {/* OJO: este párrafo repite la idea con la que ya cierra
+                  t('texto') —«Cada visita es un vuelo a los sentidos…»—.
+                  Se migró tal cual para no cambiar el copy por cuenta
+                  propia, pero probablemente sobre uno de los dos. */}
+              {t('texto2')}
             </p>
 
             {/* CTA ghost */}
             <div>
               <a href="/sobre-nosotros" className="btn-ghost-cream">
-                Conoce más
+                {t('cta')}
               </a>
             </div>
 

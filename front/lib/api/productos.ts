@@ -3,6 +3,10 @@ import type { Producto } from '@/lib/types'
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 const CACHE: RequestInit = { next: { revalidate: 60, tags: ['productos'] } }
 
+/** Ver lib/api/experiencias.ts: el español es el original y no lleva parámetro. */
+const conIdioma = (url: string, idioma: string) =>
+  idioma === 'es' ? url : `${url}${url.includes('?') ? '&' : '?'}idioma=${idioma}`
+
 // Los mocks son andamio de desarrollo: permiten levantar el front sin backend.
 // En producción no se usan nunca — servir catálogo inventado, o un 404 porque el
 // slug real no figura en esta lista, es lo que dejaba productos inaccesibles.
@@ -57,9 +61,9 @@ export const MOCK_PRODUCTOS: Producto[] = [
   },
 ]
 
-export async function getProductos(): Promise<Producto[]> {
+export async function getProductos(idioma = 'es'): Promise<Producto[]> {
   try {
-    const res = await fetch(`${BASE}/productos`, CACHE)
+    const res = await fetch(conIdioma(`${BASE}/productos`, idioma), CACHE)
     if (!res.ok) throw new Error(`GET /productos respondió ${res.status}`)
     return res.json()
   } catch (err) {
@@ -69,13 +73,16 @@ export async function getProductos(): Promise<Producto[]> {
   }
 }
 
-export async function getProductoBySlug(slug: string): Promise<Producto | null> {
+export async function getProductoBySlug(
+  slug: string,
+  idioma = 'es',
+): Promise<Producto | null> {
   let res: Response
   try {
     // El slug NO se codifica: Next entrega params.slug tal cual viene en la ruta,
     // es decir ya percent-encoded. Aplicarle encodeURIComponent lo codifica dos
     // veces y el backend no encuentra nada (los slugs con espacios daban 404).
-    res = await fetch(`${BASE}/productos/slug/${slug}`, CACHE)
+    res = await fetch(conIdioma(`${BASE}/productos/slug/${slug}`, idioma), CACHE)
   } catch (err) {
     // Sin backend alcanzable: en desarrollo caemos a los mocks, pero en producción
     // propagamos. Devolver null aquí haría que la página llame a notFound() y Next

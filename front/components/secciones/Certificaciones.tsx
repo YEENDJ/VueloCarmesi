@@ -1,7 +1,11 @@
+import { useTranslations } from 'next-intl'
 import CertBadge from '@/components/secciones/CertBadge'
 import { CERTIFICACIONES } from '@/lib/certificaciones'
 
 export default function Certificaciones() {
+  const t = useTranslations('certificaciones')
+  const ta = useTranslations('avales')
+
   return (
     <section
       id="certificaciones"
@@ -24,7 +28,7 @@ export default function Certificaciones() {
               marginBottom: '16px',
             }}
           >
-            Avales y certificaciones
+            {t('kicker')}
           </p>
           <h2
             style={{
@@ -35,7 +39,7 @@ export default function Certificaciones() {
               marginBottom: '16px',
             }}
           >
-            Respaldados por quienes cuidan la tierra
+            {t('titulo')}
           </h2>
           <p
             style={{
@@ -48,8 +52,7 @@ export default function Certificaciones() {
               margin: '0 auto',
             }}
           >
-            Nuestras prácticas agroecológicas y turísticas están respaldadas por organismos oficiales.
-             Trabajamos con transparencia, haciendo de cada proceso una experiencia.
+            {t('bajada')}
           </p>
         </div>
 
@@ -62,7 +65,7 @@ export default function Certificaciones() {
         >
           {CERTIFICACIONES.map((cert) => (
             <div
-              key={cert.nombre}
+              key={cert.clave}
               style={{
                 minWidth: 0,
                 backgroundColor: '#FFF6E4',
@@ -90,7 +93,7 @@ export default function Certificaciones() {
                   marginTop: '20px',
                 }}
               >
-                {cert.nombre}
+                {ta(`${cert.clave}.nombre`)}
               </p>
               <p
                 style={{
@@ -103,9 +106,9 @@ export default function Certificaciones() {
                   margin: '6px 0 12px',
                 }}
               >
-                {cert.entidad}
+                {ta(`${cert.clave}.entidad`)}
               </p>
-              {cert.referencia && (
+              {cert.conReferencia && (
                 <p
                   style={{
                     fontFamily: 'var(--font-display)',
@@ -114,7 +117,7 @@ export default function Certificaciones() {
                     margin: '-6px 0 12px',
                   }}
                 >
-                  {cert.referencia}
+                  {ta(`${cert.clave}.referencia`)}
                 </p>
               )}
               <p
@@ -126,7 +129,7 @@ export default function Certificaciones() {
                   color: 'rgba(135,43,19,.7)',
                 }}
               >
-                {cert.detalle}
+                {ta(`${cert.clave}.detalle`)}
               </p>
             </div>
           ))}

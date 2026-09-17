@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { Binoculars } from 'lucide-react'
 
 /**
@@ -35,6 +36,8 @@ export default function AvisoAviturismo({
   /** Dónde se está pintando: sólo cambia el margen, no la caja. */
   variante: 'listado' | 'ficha'
 }) {
+  const t = useTranslations('aviturismoAviso')
+
   return (
     /* El marco existe porque los dos sitios lo colocan distinto: en el listado
        basta con separarlo de la rejilla, que ya vive dentro del margen lateral
@@ -51,13 +54,12 @@ export default function AvisoAviturismo({
           <Binoculars size={22} strokeWidth={1.85} color="var(--color-orange)" />
         </span>
         <span className="aviso-avi-texto">
-          <span className="aviso-avi-titulo">Guía de aviturismo en la finca</span>
+          <span className="aviso-avi-titulo">{t('titulo')}</span>
           <span className="aviso-avi-linea">
-            180 especies registradas en un hotspot público de eBird, la ventana de migratorias
-            —de octubre a abril— y quién guía la salida.
+            {t('texto')}
           </span>
         </span>
-        <span className="aviso-avi-cta">Ver la guía</span>
+        <span className="aviso-avi-cta">{t('cta')}</span>
       </Link>
     </div>
   )

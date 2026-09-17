@@ -41,14 +41,23 @@ describe('addToCart', () => {
     expect(getCartItems()[0].q).toBe(3)
   })
 
+  // El toast guarda la CLAVE y sus datos, no la frase montada: el store no es
+  // un componente y no puede traducir. Lo hace components/shop/Toast.tsx.
   it('dispara un toast singular', () => {
     addToCart(makeProducto({ nombre: 'Tableta 72% intenso' }), 1)
-    expect(getToast()).toBe('Tableta 72% intenso agregado al carrito')
+    expect(getToast()).toEqual({ clave: 'agregado', nombre: 'Tableta 72% intenso', n: 1 })
   })
 
   it('dispara un toast plural cuando qty > 1', () => {
     addToCart(makeProducto({ nombre: 'Tableta 72% intenso' }), 3)
-    expect(getToast()).toBe('3 × Tableta 72% intenso agregados')
+    expect(getToast()).toEqual({ clave: 'agregados', nombre: 'Tableta 72% intenso', n: 3 })
+  })
+
+  it('el toast no contiene texto en ningún idioma: solo la clave', () => {
+    // Si alguien vuelve a montar la frase en el store, esto lo caza: sería
+    // español fijo para todo el mundo, que es justo el bug que hubo.
+    addToCart(makeProducto({ nombre: 'Tableta' }), 1)
+    expect(JSON.stringify(getToast())).not.toMatch(/agregado al carrito|added to cart/)
   })
 })
 

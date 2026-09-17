@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl'
 interface Props {
   /**
    * Las claves de SiteConfig con las cifras. Se pasan enteras y cada tarjeta
@@ -19,11 +20,11 @@ interface Props {
  * Son editables desde el panel: Configuración → Cifras de impacto.
  */
 const STATS = [
-  { clave: 'impacto_personas', respaldo: '692', etiqueta: 'personas atendidas', detalle: 'desde 2023' },
-  { clave: 'impacto_instituciones', respaldo: '8', etiqueta: 'instituciones educativas', detalle: 'y contando' },
-  { clave: 'impacto_organizaciones', respaldo: '7', etiqueta: 'organizaciones', detalle: 'que confiaron en nosotros' },
-  { clave: 'impacto_familias', respaldo: '28', etiqueta: 'familias', detalle: 'cacaoteras acompañadas' },
-  { clave: 'impacto_extranjeros', respaldo: '15', etiqueta: 'extranjeros', detalle: 'que conocieron nuestra finca' },
+  { clave: 'impacto_personas', respaldo: '692', t: 'personas' },
+  { clave: 'impacto_instituciones', respaldo: '8', t: 'instituciones' },
+  { clave: 'impacto_organizaciones', respaldo: '7', t: 'organizacionesCifra' },
+  { clave: 'impacto_familias', respaldo: '28', t: 'familias' },
+  { clave: 'impacto_extranjeros', respaldo: '15', t: 'extranjeros' },
 ]
 
 const ORGANIZACIONES = [
@@ -39,6 +40,8 @@ const ORGANIZACIONES = [
 ]
 
 export default function PruebaSocial({ cifras }: Props) {
+  const t = useTranslations('pruebaSocial')
+
   return (
     <section
       style={{
@@ -59,7 +62,7 @@ export default function PruebaSocial({ cifras }: Props) {
               marginBottom: '16px',
             }}
           >
-            Nuestro impacto
+            {t('kicker')}
           </p>
           <h2
             style={{
@@ -74,7 +77,7 @@ export default function PruebaSocial({ cifras }: Props) {
                 692 y desmentía al titular a diez centímetros. Una cifra que
                 contradice al texto que tiene al lado no resta credibilidad al
                 titular, se la resta al número, que es lo que de verdad vende. */}
-            Cientos de personas ya confiaron en nosotros
+            {t('titulo')}
           </h2>
           <p
             style={{
@@ -87,7 +90,7 @@ export default function PruebaSocial({ cifras }: Props) {
               margin: '0 auto',
             }}
           >
-            Desde 2023, instituciones, organizaciones y familias han elegido Vuelo Carmesí para vivir el cacao desde su raíz.
+            {t('bajada')}
           </p>
         </div>
 
@@ -133,7 +136,7 @@ export default function PruebaSocial({ cifras }: Props) {
                   marginBottom: '4px',
                 }}
               >
-                {s.etiqueta}
+                {t(`${s.t}.etiqueta`)}
               </p>
               <p
                 style={{
@@ -143,7 +146,7 @@ export default function PruebaSocial({ cifras }: Props) {
                   color: 'rgba(255,234,202,.55)',
                 }}
               >
-                {s.detalle}
+                {t(`${s.t}.detalle`)}
               </p>
             </div>
           ))}
@@ -161,7 +164,7 @@ export default function PruebaSocial({ cifras }: Props) {
               marginBottom: '20px',
             }}
           >
-            Organizaciones que han visitado nuestra finca
+            {t('organizaciones')}
           </p>
           <div
             style={{

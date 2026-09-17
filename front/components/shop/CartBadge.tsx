@@ -1,15 +1,18 @@
 'use client'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { ShoppingCart } from 'lucide-react'
 import { useCart } from '@/lib/cart/store'
 
 export default function CartBadge() {
+  const tg = useTranslations('galeria')
+
   const { cartCount } = useCart()
   if (cartCount < 1) return null
   return (
     <Link
       href="/carrito"
-      aria-label={`Carrito de compras, ${cartCount} items`}
+      aria-label={tg('carrito', { n: cartCount })}
       style={{
         position: 'relative', display: 'flex', alignItems: 'center',
         color: 'var(--color-cream)', textDecoration: 'none',

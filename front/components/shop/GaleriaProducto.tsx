@@ -1,5 +1,6 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react'
 
 /**
@@ -12,6 +13,10 @@ import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react'
  * borde en vez de con opacidad, que sobre fondo claro apenas se distinguía.
  */
 export default function GaleriaProducto({ imagenes, alt }: { imagenes: string[]; alt: string }) {
+  const tg = useTranslations('galeria')
+
+  const t = useTranslations('tienda')
+
   const [activa, setActiva] = useState(0)
   const [ampliada, setAmpliada] = useState(false)
   const botonZoomRef = useRef<HTMLButtonElement>(null)
@@ -52,7 +57,7 @@ export default function GaleriaProducto({ imagenes, alt }: { imagenes: string[];
 
   if (total === 0) {
     return (
-      <div className="ficha-galeria-vacia">Sin fotografía</div>
+      <div className="ficha-galeria-vacia">{t('sinFotografia')}</div>
     )
   }
 
@@ -67,18 +72,18 @@ export default function GaleriaProducto({ imagenes, alt }: { imagenes: string[];
             type="button"
             className="ficha-galeria-zoom"
             onClick={() => setAmpliada(true)}
-            aria-label={`Ampliar ${alt} — foto ${activa + 1} de ${total}`}
+            aria-label={tg('ampliarFoto', { alt, n: activa + 1, total })}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={imagenes[activa]} alt={`${alt} — foto ${activa + 1}`} />
+            <img src={imagenes[activa]} alt={tg('fotoSimple', { alt, n: activa + 1 })} />
           </button>
 
           {varias && (
             <>
-              <button type="button" className="ficha-galeria-flecha ficha-galeria-flecha--prev" onClick={() => mover(-1)} aria-label="Foto anterior">
+              <button type="button" className="ficha-galeria-flecha ficha-galeria-flecha--prev" onClick={() => mover(-1)} aria-label={t('fotoAnterior')}>
                 <ChevronLeft size={20} aria-hidden="true" />
               </button>
-              <button type="button" className="ficha-galeria-flecha ficha-galeria-flecha--next" onClick={() => mover(1)} aria-label="Foto siguiente">
+              <button type="button" className="ficha-galeria-flecha ficha-galeria-flecha--next" onClick={() => mover(1)} aria-label={t('fotoSiguiente')}>
                 <ChevronRight size={20} aria-hidden="true" />
               </button>
             </>
@@ -91,7 +96,7 @@ export default function GaleriaProducto({ imagenes, alt }: { imagenes: string[];
         </div>
 
         {varias && (
-          <div className="ficha-galeria-rail" role="group" aria-label="Miniaturas del producto">
+          <div className="ficha-galeria-rail" role="group" aria-label={t('miniaturas')}>
             {imagenes.map((src, i) => (
               <button
                 key={src}
@@ -100,7 +105,7 @@ export default function GaleriaProducto({ imagenes, alt }: { imagenes: string[];
                 onClick={() => setActiva(i)}
                 onMouseEnter={() => setActiva(i)}
                 onFocus={() => setActiva(i)}
-                aria-label={`Ver foto ${i + 1} de ${total}`}
+                aria-label={tg('verFoto', { n: i + 1, total })}
                 aria-current={i === activa}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -112,13 +117,13 @@ export default function GaleriaProducto({ imagenes, alt }: { imagenes: string[];
       </div>
 
       {ampliada && (
-        <div className="ficha-lightbox" role="dialog" aria-modal="true" aria-label={`${alt} — foto ${activa + 1} de ${total}`}>
+        <div className="ficha-lightbox" role="dialog" aria-modal="true" aria-label={tg('fotoDe', { nombre: alt, n: activa + 1, total })}>
           {/* Botón de verdad y no un div con onClick: pulsar el fondo para
               cerrar tiene que existir también para lector de pantalla. */}
-          <button type="button" className="ficha-lightbox-fondo" onClick={cerrar} aria-label="Cerrar la vista ampliada" />
+          <button type="button" className="ficha-lightbox-fondo" onClick={cerrar} aria-label={t('cerrarAmpliada')} />
 
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={imagenes[activa]} alt={`${alt} — foto ${activa + 1}`} className="ficha-lightbox-foto" />
+          <img src={imagenes[activa]} alt={tg('fotoSimple', { alt, n: activa + 1 })} className="ficha-lightbox-foto" />
 
           <button ref={botonCerrarRef} type="button" className="ficha-lightbox-btn ficha-lightbox-btn--cerrar" onClick={cerrar} aria-label="Cerrar">
             <X size={22} aria-hidden="true" />
@@ -126,10 +131,10 @@ export default function GaleriaProducto({ imagenes, alt }: { imagenes: string[];
 
           {varias && (
             <>
-              <button type="button" className="ficha-lightbox-btn ficha-lightbox-btn--prev" onClick={() => mover(-1)} aria-label="Foto anterior">
+              <button type="button" className="ficha-lightbox-btn ficha-lightbox-btn--prev" onClick={() => mover(-1)} aria-label={t('fotoAnterior')}>
                 <ChevronLeft size={24} aria-hidden="true" />
               </button>
-              <button type="button" className="ficha-lightbox-btn ficha-lightbox-btn--next" onClick={() => mover(1)} aria-label="Foto siguiente">
+              <button type="button" className="ficha-lightbox-btn ficha-lightbox-btn--next" onClick={() => mover(1)} aria-label={t('fotoSiguiente')}>
                 <ChevronRight size={24} aria-hidden="true" />
               </button>
               <span className="ficha-lightbox-contador">{activa + 1} / {total}</span>

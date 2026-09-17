@@ -1,49 +1,26 @@
-const DIFERENCIALES = [
-  {
-    numero: '01',
-    titulo: 'Cacao de origen',
-    // Las cifras van aquí y no en un texto genérico: es el primer bloque
-    // después del hero y «variedades nativas» a secas es una promesa que no
-    // se puede comprobar. «1.300 plantas» y «12 variedades» dicen lo mismo con
-    // algo que el visitante puede contrastar cuando llega a la finca. Están
-    // escritas y no vienen de SiteConfig porque este componente no recibe la
-    // config; si cambian, se cambian aquí y en el panel a la vez.
-    descripcion:
-      'Conoces el cacao desde que nace en el árbol. 1.300 plantas con trazabilidad, 12 variedades nativas y un proceso que puedes seguir con tus propios ojos.',
-  },
-  {
-    numero: '02',
-    titulo: 'Producción sostenible',
-    descripcion:
-      'Ves en cada rincón un manejo agroecológico y Buenas Prácticas Agrícolas. Cada cosecha respeta el suelo, el agua y los ciclos naturales de la finca.',
-  },
-  {
-    numero: '03',
-    titulo: 'Proceso artesanal en vivo',
-    descripcion:
-      'No lees sobre el proceso: lo ves. Desde la fermentación en cajones hasta la molienda, cada etapa del grano al chocolate sucede frente a ti.',
-  },
-  {
-    numero: '04',
-    titulo: 'Biodiversidad protegida',
-    descripcion:
-      'Recorres un ecosistema vivo donde la flora y la fauna se cuidan como parte central del negocio, no como un complemento decorativo.',
-  },
-  {
-    numero: '05',
-    titulo: 'Experiencias auténticas',
-    descripcion:
-      'Vives la combinación de producción agrícola, educación ambiental y turismo vivencial en una sola visita que te conecta de verdad con el territorio.',
-  },
-  {
-    numero: '06',
-    titulo: 'Servicio seguro y cuidado',
-    descripcion:
-      'Cuentas con guianza especializada en cada salida, póliza de asistencia y grupos reducidos para disfrutar sin prisas ni aglomeraciones.',
-  },
-]
+import { useTranslations } from 'next-intl'
+
+/**
+ * Las seis claves del bloque, en orden. El texto vive en messages/*.json.
+ *
+ * Las cifras del primero —«1.300 plantas», «12 variedades»— están escritas en
+ * el catálogo y no vienen de SiteConfig porque este componente no recibe la
+ * config; si cambian, se cambian en los DOS idiomas a la vez. Ojo con el
+ * formato: 1.300 en español es 1,300 en inglés.
+ */
+const CLAVES = [
+  'origen',
+  'sostenible',
+  'artesanal',
+  'biodiversidad',
+  'autenticas',
+  'seguro',
+] as const
+
 
 export default function Diferenciales() {
+  const t = useTranslations('diferenciales')
+
   return (
     <section
       style={{
@@ -64,7 +41,7 @@ export default function Diferenciales() {
               marginBottom: '16px',
             }}
           >
-            ¿Por qué Vuelo Carmesí?
+            {t('kicker')}
           </p>
           <h2
             style={{
@@ -75,7 +52,7 @@ export default function Diferenciales() {
               marginBottom: '16px',
             }}
           >
-            Seis razones para conocernos
+            {t('titulo')}
           </h2>
           
         </div>
@@ -92,9 +69,9 @@ export default function Diferenciales() {
             gap: '24px',
           }}
         >
-          {DIFERENCIALES.map((d) => (
+          {CLAVES.map((clave, i) => (
             <div
-              key={d.numero}
+              key={clave}
               style={{
                 // Hijo de grid con texto dentro: sin esto su min-width es auto
                 // y la celda se niega a bajar del ancho de su palabra más larga.
@@ -125,7 +102,7 @@ export default function Diferenciales() {
                     justifyContent: 'center',
                   }}
                 >
-                  {d.numero}
+                  {String(i + 1).padStart(2, '0')}
                 </span>
                 <h3
                   style={{
@@ -140,7 +117,7 @@ export default function Diferenciales() {
                     margin: 0,
                   }}
                 >
-                  {d.titulo}
+                  {t(`${clave}.titulo`)}
                 </h3>
               </div>
               <p
@@ -153,7 +130,7 @@ export default function Diferenciales() {
                   margin: 0,
                 }}
               >
-                {d.descripcion}
+                {t(`${clave}.texto`)}
               </p>
             </div>
           ))}

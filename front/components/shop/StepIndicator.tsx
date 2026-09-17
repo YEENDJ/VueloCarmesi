@@ -1,7 +1,8 @@
 'use client'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
-const STEPS = ['Tienda', 'Carrito', 'Checkout', 'Confirmación'] as const
+const STEPS = ['tienda', 'carrito', 'checkout', 'confirmacion'] as const
 
 function stepForPath(pathname: string): number {
   if (pathname.startsWith('/checkout/confirmacion')) return 3
@@ -11,6 +12,8 @@ function stepForPath(pathname: string): number {
 }
 
 export default function StepIndicator() {
+  const t = useTranslations('tienda')
+
   const pathname = usePathname()
 
   // La tienda no es un paso del checkout, es el catálogo: ahí la barra sólo
@@ -29,8 +32,8 @@ export default function StepIndicator() {
             ? 'var(--color-crimson)'
             : 'rgba(135,43,19,0.4)'
         return (
-          <span key={step} style={{ fontWeight: 700, fontSize: '0.85rem', color }}>
-            {index + 1}. {step}
+          <span key={t(`pasos.${step}`)} style={{ fontWeight: 700, fontSize: '0.85rem', color }}>
+            {index + 1}. {t(`pasos.${step}`)}
           </span>
         )
       })}

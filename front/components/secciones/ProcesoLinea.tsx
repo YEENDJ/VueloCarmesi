@@ -1,13 +1,12 @@
 'use client'
 
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 
 interface Paso {
   numero: string
-  titulo: string
-  descripcion: string
+  clave: string
   imagen: string
-  alt: string
 }
 
 /* Las fotos de `experiencias/paso-*.jpg` documentan exactamente estas etapas y
@@ -17,43 +16,33 @@ interface Paso {
 const PROCESO: Paso[] = [
   {
     numero: '01',
-    titulo: 'Conservación del material genético',
+    clave: 'genetico',
     // FEAR5 y FSV41 se nombran aquí y en ningún otro sitio de la web: en la
     // portada no le dicen nada a nadie, pero en este paso el contexto ya es
     // técnico y son lo que separa «conservamos variedades» de una afirmación
     // que un cacaocultor puede verificar.
-    descripcion:
-      'Conservamos 12 variedades de cacao de la región —entre ellas FEAR5 y FSV41—, parte de la historia productiva de nuestro territorio.',
     imagen: '/images/cacao/mazorcas-en-arbol.jpg',
-    alt: 'Mazorcas de cacao madurando en el árbol',
   },
   {
     numero: '02',
-    titulo: 'Cosecha',
-    descripcion:
-      'Recolectamos a mano los frutos maduros y seleccionamos el cacao que va a nuestros procesos y experiencias.',
+    clave: 'cosecha',
     imagen: '/images/experiencias/paso-1.jpg',
-    alt: 'Visitantes cortando mazorcas maduras en el cultivo',
   },
   {
     numero: '03',
-    titulo: 'Fermentación',
-    descripcion:
-      'Fermentamos el grano en cajones de madera, donde se desarrollan los aromas y sabores propios del cacao.',
+    clave: 'fermentacion',
     imagen: '/images/experiencias/paso-3.jpg',
-    alt: 'Grano de cacao secándose en la marquesina',
   },
   {
     numero: '04',
-    titulo: 'Transformación artesanal',
-    descripcion:
-      'Tostamos y molemos el grano para hacer chocolate artesanal, y los visitantes lo viven de cerca.',
+    clave: 'transformacion',
     imagen: '/images/experiencias/paso-4.jpg',
-    alt: 'Tostión del grano de cacao en paila sobre fogón de leña',
   },
 ]
 
 export default function ProcesoLinea() {
+  const t = useTranslations('nosotros.proceso')
+
   const reducir = useReducedMotion()
 
   /* El riel se dibuja de izquierda a derecha y los pasos van cayendo detrás,
@@ -99,11 +88,11 @@ export default function ProcesoLinea() {
             {/* El número es el nodo del riel: lo tapa con el fondo marrón en vez
                 de dibujar un círculo encima. */}
             <div className="proceso-numero">{p.numero}</div>
-            <h3 className="proceso-titulo">{p.titulo}</h3>
-            <p className="proceso-texto">{p.descripcion}</p>
+            <h3 className="proceso-titulo">{t(`${p.clave}.titulo`)}</h3>
+            <p className="proceso-texto">{t(`${p.clave}.texto`)}</p>
             <div className="proceso-foto">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={p.imagen} alt={p.alt} loading="lazy" decoding="async" />
+              <img src={p.imagen} alt={t(`${p.clave}.alt`)} loading="lazy" decoding="async" />
             </div>
           </motion.div>
         ))}
