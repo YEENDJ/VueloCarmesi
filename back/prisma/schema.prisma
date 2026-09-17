@@ -10,37 +10,38 @@ datasource db {
 }
 
 model Experiencia {
-  id          String    @id @default(cuid())
-  slug        String    @unique
-  nombre      String
+  id               String                  @id @default(cuid())
+  slug             String                  @unique
+  nombre           String
   // Ya no va en la tarjeta: su único trabajo es la meta description de Google,
   // donde el recorte cae en ~160 caracteres. Es opcional; si está vacía se
   // derivan las primeras líneas de descripcionLarga.
-  descripcion String    @default("")
+  descripcion      String                  @default("")
   // El relato. Es el texto principal de la ficha y se escribe en párrafos.
-  descripcionLarga String @default("")
-  duracion    String
-  precio      Float
-  capacidad   Int
+  descripcionLarga String                  @default("")
+  duracion         String
+  precio           Float
+  capacidad        Int
   // Prácticos: opcionales, la ficha absorbe su ausencia sin verse incompleta.
-  horarios        String @default("")
+  horarios         String                  @default("")
   // Edad mínima, condición física, advertencias.
-  recomendaciones String @default("")
+  recomendaciones  String                  @default("")
   // Vacío = se usa el punto de encuentro por defecto de SiteConfig. Solo se
   // llena cuando esta experiencia sale de otro lado.
-  puntoEncuentro  String @default("")
+  puntoEncuentro   String                  @default("")
   // `imagenes` es la fuente de verdad y su primer elemento es la portada.
   // `imagen` se conserva porque lo consumen tarjetas, carrito y correos; el
   // service lo mantiene sincronizado con imagenes[0] para que no se separen.
-  imagen      String    @default("")
-  imagenes    String[]  @default([])
-  incluye     String[]  @default([])
-  queTraer    String[]  @default([])
-  noIncluye   String[]  @default([])
-  destacada   Boolean   @default(false)
-  archivada   Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  reservas    Reserva[]
+  imagen           String                  @default("")
+  imagenes         String[]                @default([])
+  incluye          String[]                @default([])
+  queTraer         String[]                @default([])
+  noIncluye        String[]                @default([])
+  destacada        Boolean                 @default(false)
+  archivada        Boolean                 @default(false)
+  createdAt        DateTime                @default(now())
+  reservas         Reserva[]
+  traducciones     ExperienciaTraduccion[]
 }
 
 model Reserva {
@@ -58,22 +59,23 @@ model Reserva {
 }
 
 model Producto {
-  id          String       @id @default(cuid())
-  slug        String       @unique
-  nombre      String
+  id               String               @id @default(cuid())
+  slug             String               @unique
+  nombre           String
   // Igual que en Experiencia: la corta sale de la tarjeta y queda como meta
   // description, opcional y con respaldo desde la larga.
-  descripcion String       @default("")
-  descripcionLarga String  @default("")
-  precio      Float
-  stock       Int
+  descripcion      String               @default("")
+  descripcionLarga String               @default("")
+  precio           Float
+  stock            Int
   // imagenes[0] es la portada; `imagen` queda sincronizada por el service.
-  imagen      String       @default("")
-  imagenes    String[]     @default([])
-  categoria   String
-  badge       String?
-  createdAt   DateTime     @default(now())
-  itemsPedido ItemPedido[]
+  imagen           String               @default("")
+  imagenes         String[]             @default([])
+  categoria        String
+  badge            String?
+  createdAt        DateTime             @default(now())
+  itemsPedido      ItemPedido[]
+  traducciones     ProductoTraduccion[]
 }
 
 model Pedido {
@@ -112,4 +114,79 @@ model SiteConfig {
   key       String   @id
   value     String
   updatedAt DateTime @updatedAt
+}
+
+/// Traducción de una Experiencia a un idioma distinto del español.
+///
+/// El español vive en `Experiencia` y es la fuente de verdad: esto es una capa
+/// encima, nunca al revés. Se crea sola al guardar en el panel —el service
+/// llama a DeepL antes de responder— y el admin puede pulirla después.
+///
+/// Tabla por modelo y no una genérica `traduccion(entidad, campo, valor)`
+/// porque tres de los campos traducibles son `String[]` de Postgres: en una
+/// tabla genérica habría que serializarlos a JSON y perder el tipo justo en
+/// los tres que el panel edita como listas.
+model ExperienciaTraduccion {
+  id            String      @id @default(cuid())
+  experienciaId String
+  experiencia   Experiencia @relation(fields: [experienciaId], references: [id], onDelete: Cascade)
+  /// Código del idioma: 'en'. El español no tiene fila; es el original.
+  idioma        String
+
+  /// El slug de esta versión: /en/experiences/cacao-trail. Si va vacío se cae
+  /// al español y la URL inglesa usa el slug original, que funciona igual pero
+  /// no posiciona.
+  slug             String   @default("")
+  nombre           String   @default("")
+  descripcion      String   @default("")
+  descripcionLarga String   @default("")
+  duracion         String   @default("")
+  horarios         String   @default("")
+  recomendaciones  String   @default("")
+  puntoEncuentro   String   @default("")
+  incluye          String[] @default([])
+  queTraer         String[] @default([])
+  noIncluye        String[] @default([])
+
+  /// Hash del español que se tradujo, campo a campo: { "nombre": "ab12", ... }.
+  /// Cuando el admin edita el español, el hash deja de coincidir y el panel
+  /// marca exactamente qué campo quedó viejo. Sin esto, una traducción se
+  /// queda describiendo algo que ya no es cierto y nada avisa.
+  origenHash Json @default("{}")
+
+  /// Campos que tocó un humano: { "nombre": true }. La traducción automática
+  /// nunca los reescribe, solo los marca como desactualizados. Sin esto,
+  /// alguien pule un texto, cambia una coma en español y pierde el trabajo.
+  revisados Json @default("{}")
+
+  creadoEn      DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+
+  @@unique([experienciaId, idioma])
+  @@unique([idioma, slug])
+  @@index([idioma])
+}
+
+/// Traducción de un Producto. Mismas reglas que ExperienciaTraduccion.
+model ProductoTraduccion {
+  id         String   @id @default(cuid())
+  productoId String
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  idioma     String
+
+  slug             String @default("")
+  nombre           String @default("")
+  descripcion      String @default("")
+  descripcionLarga String @default("")
+  /// La categoría se muestra como etiqueta en la tienda, así que se traduce.
+  categoria        String @default("")
+
+  origenHash    Json     @default("{}")
+  revisados     Json     @default("{}")
+  creadoEn      DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+
+  @@unique([productoId, idioma])
+  @@unique([idioma, slug])
+  @@index([idioma])
 }
