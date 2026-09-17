@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing'
 import { ExperienciasService } from './experiencias.service'
 import { PrismaService } from '../prisma.service'
+import { SincronizadorTraduccion } from '../traduccion/sincronizador.service'
 
 const mockPrisma = {
   experiencia: {
@@ -12,6 +13,14 @@ const mockPrisma = {
   },
 }
 
+// El servicio espera la traduccion antes de responder, asi que en los tests
+// hay que darle un doble. No se comprueba acá: la traduccion tiene su propia
+// verificacion contra la API real en scripts/verificar-traduccion.ts.
+const mockTraduccion = {
+  experiencia: jest.fn().mockResolvedValue(undefined),
+  producto: jest.fn().mockResolvedValue(undefined),
+}
+
 describe('ExperienciasService.findAll', () => {
   let service: ExperienciasService
 
@@ -20,6 +29,7 @@ describe('ExperienciasService.findAll', () => {
       providers: [
         ExperienciasService,
         { provide: PrismaService, useValue: mockPrisma },
+        { provide: SincronizadorTraduccion, useValue: mockTraduccion },
       ],
     }).compile()
     service = module.get(ExperienciasService)
@@ -31,6 +41,9 @@ describe('ExperienciasService.findAll', () => {
     await service.findAll()
     expect(mockPrisma.experiencia.findMany).toHaveBeenCalledWith({
       orderBy: [{ destacada: 'desc' }, { createdAt: 'desc' }],
+      // Las traducciones viajan con la consulta: sin el include, la lectura
+      // en inglés no tendría con qué fundir y devolvería todo en español.
+      include: { traducciones: true },
     })
   })
 
@@ -40,6 +53,7 @@ describe('ExperienciasService.findAll', () => {
     expect(mockPrisma.experiencia.findMany).toHaveBeenCalledWith({
       where: { destacada: true },
       orderBy: [{ destacada: 'desc' }, { createdAt: 'desc' }],
+      include: { traducciones: true },
     })
   })
 })

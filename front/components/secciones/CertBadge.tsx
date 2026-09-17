@@ -1,4 +1,5 @@
 import type { Certificacion } from '@/lib/certificaciones'
+import { useTranslations } from 'next-intl'
 
 interface Props {
   cert: Certificacion
@@ -29,6 +30,8 @@ function SimboloRegistrado({ className, size }: { className?: string; size?: num
 }
 
 export default function CertBadge({ cert, variant = 'card' }: Props) {
+  const ta = useTranslations('avales')
+
   const isCard = variant === 'card'
   const logo = !isCard && cert.logoOscuro ? cert.logoOscuro : cert.logo
 
@@ -50,8 +53,8 @@ export default function CertBadge({ cert, variant = 'card' }: Props) {
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={logo}
-        alt={`Sello ${cert.nombre}`}
-        title={cert.nombre}
+        alt={ta('selloAlt', { nombre: ta(`${cert.clave}.nombre`) })}
+        title={ta(`${cert.clave}.nombre`)}
         className={isCard ? undefined : 'cert-sello-footer'}
         style={{
           maxWidth: '100%',
@@ -67,7 +70,7 @@ export default function CertBadge({ cert, variant = 'card' }: Props) {
   return (
     <div
       className={isCard ? undefined : 'cert-badge-footer'}
-      title={cert.nombre}
+      title={ta(`${cert.clave}.nombre`)}
       style={{
         borderRadius: '50%',
         display: 'flex',
@@ -83,7 +86,7 @@ export default function CertBadge({ cert, variant = 'card' }: Props) {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={logo}
-        alt={`Logo ${cert.entidad}`}
+        alt={ta('logoAlt', { entidad: ta(`${cert.clave}.entidad`) })}
         style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
       />
     </div>

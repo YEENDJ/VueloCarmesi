@@ -1,22 +1,45 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
+import { SincronizadorTraduccion } from '../traduccion/sincronizador.service'
+import { aplicarTraduccion } from '../traduccion/aplicar-traduccion'
+import { IDIOMA_ORIGEN, TEXTO_PRODUCTO, LISTA_PRODUCTO } from '../traduccion/campos'
 import { toSlug, slugUnico } from '../common/slug'
 import { portadaDe } from '../common/portada'
 import { CreateProductoDto } from './dto/create-producto.dto'
 import { UpdateProductoDto } from './dto/update-producto.dto'
 
+const CAMPOS_PRODUCTO = [...TEXTO_PRODUCTO, ...LISTA_PRODUCTO]
+
 @Injectable()
 export class ProductosService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private traduccion: SincronizadorTraduccion,
+  ) {}
 
-  findAll() {
-    return this.prisma.producto.findMany({ orderBy: { createdAt: 'desc' } })
+  async findAll(idioma = IDIOMA_ORIGEN) {
+    const filas = await this.prisma.producto.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: { traducciones: true },
+    })
+    return filas.map(f => aplicarTraduccion(f, idioma, CAMPOS_PRODUCTO))
   }
 
-  async findBySlug(slug: string) {
-    const producto = await this.prisma.producto.findUnique({ where: { slug } })
-    if (!producto) throw new NotFoundException(`Producto '${slug}' no encontrado`)
-    return producto
+  /** Ver experiencias.service: resuelve el slug en cualquiera de los idiomas. */
+  async findBySlug(slug: string, idioma = IDIOMA_ORIGEN) {
+    const porOriginal = await this.prisma.producto.findUnique({
+      where: { slug },
+      include: { traducciones: true },
+    })
+    if (porOriginal) return aplicarTraduccion(porOriginal, idioma, CAMPOS_PRODUCTO)
+
+    const traduccion = await this.prisma.productoTraduccion.findFirst({
+      where: { slug },
+      include: { producto: { include: { traducciones: true } } },
+    })
+    if (traduccion) return aplicarTraduccion(traduccion.producto, idioma, CAMPOS_PRODUCTO)
+
+    throw new NotFoundException(`Producto '${slug}' no encontrado`)
   }
 
   async findById(id: string) {
@@ -27,7 +50,7 @@ export class ProductosService {
 
   async create(dto: CreateProductoDto) {
     const nombre = dto.nombre.trim()
-    return this.prisma.producto.create({
+    const creado = await this.prisma.producto.create({
       data: {
         ...dto,
         nombre,
@@ -36,6 +59,10 @@ export class ProductosService {
         imagen: portadaDe(dto.imagenes),
       },
     })
+    // Ver experiencias.service: se espera la traducción para que la purga de
+    // caché del panel encuentre los dos idiomas ya guardados.
+    await this.traduccion.producto(creado.id)
+    return creado
   }
 
   async update(id: string, dto: UpdateProductoDto) {
@@ -54,7 +81,11 @@ export class ProductosService {
     if (dto.imagenes !== undefined) {
       (data as { imagen?: string }).imagen = portadaDe(dto.imagenes)
     }
-    return this.prisma.producto.update({ where: { id }, data })
+    const actualizado = await this.prisma.producto.update({ where: { id }, data })
+
+    // Un PATCH de solo stock no gasta ni una llamada: no cambió ningún texto.
+    await this.traduccion.producto(id)
+    return actualizado
   }
 
   async remove(id: string) {

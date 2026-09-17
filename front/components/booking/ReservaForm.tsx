@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import type { Experiencia } from '@/lib/types'
 
@@ -44,6 +45,8 @@ function Field({
 }
 
 export default function ReservaForm({ experiencia }: { experiencia: Experiencia }) {
+  const t = useTranslations('reserva')
+
   const router = useRouter()
   const [form, setForm] = useState({
     nombre: '',
@@ -79,7 +82,7 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
       if (!res.ok) throw new Error()
       router.push('/reservar/confirmacion')
     } catch {
-      setError('Hubo un problema al enviar tu reserva. Por favor inténtalo de nuevo o escríbenos directamente.')
+      setError(t('campos.error'))
       setLoading(false)
     }
   }
@@ -93,18 +96,18 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
 
       {/* Fila 1: Nombre | Teléfono */}
       <div className="form-row-2">
-        <Field label="Nombre completo" required>
+        <Field label={t('campos.nombre')} required>
           <input
             name="nombre"
             type="text"
             required
-            placeholder="Tu nombre"
+            placeholder={t('campos.nombrePlaceholder')}
             value={form.nombre}
             onChange={handleChange}
             style={inputStyle}
           />
         </Field>
-        <Field label="Teléfono" required>
+        <Field label={t('campos.telefono')} required>
           <input
             name="telefono"
             type="tel"
@@ -118,12 +121,12 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
       </div>
 
       {/* Fila 2: Email */}
-      <Field label="Email" required>
+      <Field label={t('campos.email')} required>
         <input
           name="email"
           type="email"
           required
-          placeholder="tu@email.com"
+          placeholder={t('campos.emailPlaceholder')}
           value={form.email}
           onChange={handleChange}
           style={inputStyle}
@@ -132,7 +135,7 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
 
       {/* Fila 3: Fecha | Personas */}
       <div className="form-row-2">
-        <Field label="Fecha deseada" required>
+        <Field label={t('campos.fecha')} required>
           <input
             name="fecha"
             type="date"
@@ -142,7 +145,7 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
             style={inputStyle}
           />
         </Field>
-        <Field label="Cantidad de personas" required>
+        <Field label={t('campos.personas')} required>
           <select
             name="cantidadPersonas"
             required
@@ -169,10 +172,10 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
       </div>
 
       {/* Comentarios */}
-      <Field label="Comentarios adicionales">
+      <Field label={t('campos.notas')}>
         <textarea
           name="notas"
-          placeholder="¿Alguna consulta o necesidad especial?"
+          placeholder={t('campos.notasPlaceholder')}
           value={form.notas}
           onChange={handleChange}
           rows={4}
@@ -215,7 +218,7 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
             transition: 'background-color 0.2s',
           }}
         >
-          {loading ? 'Procesando...' : 'Confirmar reserva'}
+          {loading ? t('campos.enviando') : t('campos.enviar')}
         </button>
         <p
           style={{
@@ -226,7 +229,7 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
             opacity: 0.6,
           }}
         >
-          Te contactaremos para confirmar disponibilidad
+          {t('contactaremos')}
         </p>
       </div>
 

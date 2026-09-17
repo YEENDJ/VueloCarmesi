@@ -1,4 +1,5 @@
 import { Clock, MapPin, TriangleAlert } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface Props {
   horarios?: string
@@ -20,10 +21,12 @@ interface Props {
  * Con uno o dos, la rejilla los reparte y sigue viéndose deliberada.
  */
 export default function DatosPracticos({ horarios, puntoEncuentro, recomendaciones }: Props) {
+  const t = useTranslations('reserva')
+
   const datos = [
-    { Icono: Clock, titulo: 'Cuándo', texto: horarios?.trim() },
-    { Icono: MapPin, titulo: 'Punto de encuentro', texto: puntoEncuentro?.trim() },
-    { Icono: TriangleAlert, titulo: 'Ten en cuenta', texto: recomendaciones?.trim() },
+    { Icono: Clock, titulo: t('cuando'), texto: horarios?.trim() },
+    { Icono: MapPin, titulo: t('puntoEncuentro'), texto: puntoEncuentro?.trim() },
+    { Icono: TriangleAlert, titulo: t('tenEnCuenta'), texto: recomendaciones?.trim() },
   ].filter(d => d.texto)
 
   if (datos.length === 0) return null
@@ -36,7 +39,7 @@ export default function DatosPracticos({ horarios, puntoEncuentro, recomendacion
       <div className="ficha-exp-practicos-cabecera">
         <span className="ficha-exp-regla" aria-hidden="true" />
         <h2 className="ficha-eyebrow" style={{ color: 'var(--color-crimson)', fontFamily: 'var(--font-body)', textAlign: 'center' }}>
-          Antes de reservar
+          {t('antesDeReservar')}
         </h2>
         <span className="ficha-exp-regla" aria-hidden="true" />
       </div>

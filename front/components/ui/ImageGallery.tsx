@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 
 interface ImageGalleryProps {
   images: string[]
@@ -8,6 +9,8 @@ interface ImageGalleryProps {
 }
 
 export default function ImageGallery({ images, alt, aspectRatio = '1/1' }: ImageGalleryProps) {
+  const tg = useTranslations('galeria')
+
   const [activeIndex, setActiveIndex] = useState(0)
 
   if (images.length === 0) {
@@ -48,7 +51,7 @@ export default function ImageGallery({ images, alt, aspectRatio = '1/1' }: Image
             <button
               key={i}
               type="button"
-              aria-label={`Ver foto ${i + 1} de ${displayed.length}`}
+              aria-label={tg('verFotoSimple', { n: i + 1, total: displayed.length })}
               aria-pressed={i === activeIndex}
               onClick={() => setActiveIndex(i)}
               style={{

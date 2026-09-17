@@ -1,116 +1,37 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 
 interface Bloque {
-  anyo: string
-  etiqueta: string
-  titulo: string
-  texto: string[]
+  /** Clave dentro de `historia`: año, etiqueta, título, alt y párrafos. */
+  clave: string
   imagen: string
-  alt: string
   icono: string
+  /** Cuántos párrafos tiene: t1, t2, … en el catálogo. */
+  parrafos: number
 }
 
+// La foto y el icono no son idioma; el resto sale del catálogo.
 const HISTORIA: Bloque[] = [
-  {
-    anyo: 'Hace 40 años',
-    etiqueta: 'El origen',
-    titulo: 'Todo comenzó con el cacao',
-    texto: [
-      'Nuestra historia comenzó mucho antes de que llegaran los primeros visitantes. Comenzó con el cacao.',
-      'Desde hace cerca de 40 años, en estas tierras se cultiva cacao. Durante buena parte de ese tiempo eran cultivos tradicionales, con árboles híbridos, poco tecnificados y mezclados con café. Era una forma de producción aprendida con el tiempo, basada principalmente en el conocimiento y la experiencia de la familia.',
-    ],
-    imagen: '/images/cacao/cacaotal.jpg',
-    alt: 'El cultivo de cacao, origen de todo',
-    icono: '🌱',
-  },
-  {
-    anyo: '2006',
-    etiqueta: 'La transformación',
-    titulo: 'Tecnificar el cultivo',
-    texto: [
-      'En 2006, comenzó una nueva etapa. Decidimos transformar la manera de producir: se eliminó el café que compartía espacio con el cacao y se inició un proceso de tecnificación del cultivo, incorporando variedades de cacao con mejores características productivas.',
-    ],
-    imagen: '/images/cacao/cacaotal-mazorcas-rojas.jpg',
-    alt: 'Mazorcas rojas del cultivo de cacao tecnificado',
-    icono: '🔧',
-  },
-  {
-    anyo: 'Años de aprendizaje',
-    etiqueta: 'La vida rural',
-    titulo: 'El campo nos enseñaba',
-    texto: [
-      'Fueron años de aprendizaje, de trabajo y de entender cada vez mejor el cultivo. Pero la finca no solo nos enseñaba sobre cacao. También nos mostraba todo aquello que hacía especial la vida rural: los animales, los paisajes, los sonidos de la naturaleza, las labores del campo y las historias que forman parte de nuestra tradición campesina.',
-    ],
-    imagen: '/images/aves/tangara-azul.jpg',
-    alt: 'La naturaleza que acompaña la finca',
-    icono: '🦜',
-  },
-  {
-    anyo: '2020',
-    etiqueta: 'La pausa',
-    titulo: 'Detenernos a mirar',
-    texto: [
-      'Y entonces llegó 2020. La pandemia nos obligó a detenernos y mirar nuestro entorno de una manera diferente. Nos hizo pensar que todo aquello que durante años habíamos considerado parte de nuestra vida cotidiana podía convertirse también en una experiencia para compartir con otras personas.',
-    ],
-    imagen: '',
-    alt: '',
-    icono: '🕰️',
-  },
-  {
-    anyo: 'Desde 2012',
-    etiqueta: 'Un nuevo camino',
-    titulo: 'La experiencia que encontró su lugar',
-    texto: [
-      'Cristian, uno de los fundadores, ya tenía experiencia en turismo desde 2012, principalmente en el turismo de aventura. Después de la pandemia, esa experiencia encontró un nuevo camino: llevar el turismo a la finca y convertir el campo, el cacao y la naturaleza en una experiencia cercana, auténtica y familiar.',
-    ],
-    imagen: '/images/personas/equipo-cacao.jpg',
-    alt: 'Cristian y el equipo en el cultivo de cacao',
-    icono: '🥾',
-  },
-  {
-    anyo: 'El proyecto',
-    etiqueta: 'La idea que tomó forma',
-    titulo: 'Nace una idea sencilla',
-    texto: [
-      'Así nació la idea de crear un proyecto turístico que permitiera mostrar las bondades del campo, acercar a los visitantes a la tradición campesina y contar la historia del cacao desde su cultivo hasta su transformación artesanal.',
-    ],
-    imagen: '/images/personas/familia.jpg',
-    alt: 'La familia que dio origen al proyecto',
-    icono: '💡',
-  },
-  {
-    anyo: '2021',
-    etiqueta: 'Abrimos las puertas',
-    titulo: 'Nace Vuelo Carmesí',
-    texto: [
-      'En 2021 abrimos las puertas de Vuelo Carmesí. Lo que comenzó como una finca familiar productora de cacao empezó a convertirse también en un espacio para recibir, enseñar, compartir y conectar.',
-    ],
-    imagen: '/images/personas/grupo-mural.jpg',
-    alt: 'Visitantes compartiendo en la finca',
-    icono: '🚪',
-  },
-  {
-    anyo: 'Hoy',
-    etiqueta: 'Nuestro presente',
-    titulo: 'Una historia abierta al mundo',
-    texto: [
-      'Desde entonces, hemos ido construyendo una propuesta que une cacao, agroecología, naturaleza, cultura campesina y turismo, sin dejar de lado aquello que nos dio origen: la tierra y el trabajo de nuestra familia.',
-      'Vuelo Carmesí no nació de la idea de crear una experiencia turística. Nació de una historia que ya existía y que decidimos abrirle las puertas al mundo. Hoy queremos que cada persona que nos visita pueda conocer esa historia, caminarla, sentirla y llevarse consigo un pedacito de la vida del campo.',
-    ],
-    imagen: '',
-    alt: '',
-    icono: '❤️',
-  },
+  { clave: 'origen', imagen: '/images/cacao/cacaotal.jpg', icono: '🌱', parrafos: 2 },
+  { clave: 'tecnificacion', imagen: '/images/cacao/cacaotal-mazorcas-rojas.jpg', icono: '🔧', parrafos: 1 },
+  { clave: 'aprendizaje', imagen: '/images/aves/tangara-azul.jpg', icono: '🦜', parrafos: 1 },
+  { clave: 'pausa', imagen: '', icono: '🕰️', parrafos: 1 },
+  { clave: 'camino', imagen: '/images/personas/equipo-cacao.jpg', icono: '🥾', parrafos: 1 },
+  { clave: 'idea', imagen: '/images/personas/familia.jpg', icono: '💡', parrafos: 1 },
+  { clave: 'apertura', imagen: '/images/personas/grupo-mural.jpg', icono: '🚪', parrafos: 1 },
+  { clave: 'hoy', imagen: '', icono: '❤️', parrafos: 2 },
 ]
 
 function BloqueImagen({ bloque }: { bloque: Bloque }) {
+  const t = useTranslations('historia')
+
   if (!bloque.imagen) {
     return (
       <div className="historia-media historia-media-sin-foto">
         <span className="historia-sin-foto-icono">{bloque.icono}</span>
-        <span className="historia-sin-foto-texto">{bloque.etiqueta}</span>
+        <span className="historia-sin-foto-texto">{t(`${bloque.clave}.etiqueta`)}</span>
       </div>
     )
   }
@@ -158,19 +79,21 @@ function BloqueImagen({ bloque }: { bloque: Bloque }) {
           backdropFilter: 'blur(2px)',
         }}
       >
-        {bloque.alt}
+        {t(`${bloque.clave}.alt`)}
       </span>
     </div>
   )
 }
 
 export default function HistoriaTimeline() {
+  const t = useTranslations('historia')
+
   return (
     <div className="historia-timeline">
       {HISTORIA.map((bloque, i) => {
         const invertido = i % 2 === 1
         return (
-          <div key={`${bloque.anyo}-${i}`} className="historia-item">
+          <div key={`${t(`${bloque.clave}.anyo`)}-${i}`} className="historia-item">
             <div className="historia-linea" />
 
             <motion.div
@@ -192,12 +115,12 @@ export default function HistoriaTimeline() {
                 transition={{ duration: 0.7, ease: 'easeOut' }}
               >
                 <div className="historia-cabecera">
-                  <span className="historia-anyo">{bloque.anyo}</span>
-                  <span className="historia-etiqueta">{bloque.etiqueta}</span>
+                  <span className="historia-anyo">{t(`${bloque.clave}.anyo`)}</span>
+                  <span className="historia-etiqueta">{t(`${bloque.clave}.etiqueta`)}</span>
                 </div>
-                <h3>{bloque.titulo}</h3>
-                {bloque.texto.map((t, j) => (
-                  <p key={j}>{t}</p>
+                <h3>{t(`${bloque.clave}.titulo`)}</h3>
+                {Array.from({ length: bloque.parrafos }, (_, j) => (
+                  <p key={j}>{t(`${bloque.clave}.t${j + 1}`)}</p>
                 ))}
               </motion.div>
 

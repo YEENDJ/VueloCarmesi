@@ -237,6 +237,65 @@ footer :focus-visible {
   cursor: pointer;
 }
 
+
+/* ─────────────────────────────────────────────────────────
+   Selector de idioma
+   ─────────────────────────────────────────────────────────
+   Un solo botón, con el idioma al que se VA. Mostrar los dos obligaba a marcar
+   cuál estaba activo y ocupaba el doble de ancho para decir algo que la página
+   ya dice sola: quien la está leyendo en español no necesita que se lo
+   recuerden, necesita la salida. */
+.selector-idioma {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* flex: none para que no lo encojan el logo y los enlaces cuando aprietan;
+     min-width: 0 porque el contenido son dos letras y un icono. */
+  flex: none;
+  min-width: 0;
+  gap: 6px;
+  /* Con ratón, compacto: la franja crimson no debe engordar por esto. El área
+     táctil de 44px la da el bloque pointer: coarse de más abajo, igual que
+     hacen los demás controles del sitio. */
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 234, 202, 0.35);
+  border-radius: 999px;
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+
+.selector-idioma:hover {
+  color: var(--color-brown);
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+}
+
+/* El icono no se estira ni se encoge con el flex del contenedor. */
+.selector-idioma svg {
+  flex-shrink: 0;
+}
+
+@media (pointer: coarse) {
+  .selector-idioma {
+    min-height: 44px;
+    padding-inline: 14px;
+  }
+}
+
+/* En el panel móvil va a lo ancho y separado de los enlaces, no colgando del
+   final de la lista como si fuera una página más. */
+.selector-idioma--panel {
+  display: flex;
+  min-height: 44px;
+  margin: 12px var(--contenido-margen) 4px;
+  font-size: 0.9375rem;
+}
+
 /* Panel desplegable — sólo existe en móvil */
 .navbar-panel {
   display: none;
@@ -4388,4 +4447,19 @@ a.contacto-canal:hover {
   max-width: var(--contenido-ancho);
   margin: 0 auto;
   padding: clamp(2rem, 4vw, 2.75rem) var(--contenido-margen) 0;
+}
+
+/* Aviso de que la política en inglés es una traducción informativa. Solo se
+   pinta en inglés: en español la clave está vacía y el nodo no existe. */
+.politica-aviso-traduccion {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-left: 3px solid var(--color-amber);
+  border-radius: 0 8px 8px 0;
+  background-color: rgba(245, 156, 0, 0.09);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-brown);
+  min-width: 0;
 }

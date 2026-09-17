@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   // El portafolio comercial es un único HTML estático en public/portafolio: 21 hojas
@@ -12,4 +13,8 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// El plugin necesita saber dónde está la config de mensajes: este proyecto no
+// usa src/, así que la ruta por defecto (./i18n/request.ts) no la encontraría.
+const withNextIntl = createNextIntlPlugin("./lib/i18n/request.ts");
+
+export default withNextIntl(nextConfig);

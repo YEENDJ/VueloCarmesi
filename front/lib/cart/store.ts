@@ -28,7 +28,17 @@ const ORDER_KEY = 'vuelo-carmesi:ultimo-pedido'
 const TOAST_DURATION_MS = 2000
 
 let items: CartItem[] = []
-let toast = ''
+/**
+ * El aviso que se muestra al agregar al carrito.
+ *
+ * Guarda la CLAVE de traducción y sus datos, no la frase ya montada: este
+ * módulo no es un componente y no puede llamar a `useTranslations`, así que si
+ * armara el texto aquí saldría siempre en español —y así salía—. El componente
+ * Toast, que sí está dentro del proveedor de i18n, lo traduce al pintarlo.
+ */
+export type AvisoCarrito = { clave: 'agregado' | 'agregados'; nombre: string; n: number }
+
+let toast: AvisoCarrito | null = null
 let lastOrder: LastOrder | null = null
 let toastTimer: ReturnType<typeof setTimeout> | null = null
 const listeners = new Set<() => void>()
@@ -93,12 +103,12 @@ if (typeof window !== 'undefined') {
   })
 }
 
-function showToast(message: string) {
-  toast = message
+function showToast(aviso: AvisoCarrito) {
+  toast = aviso
   emit()
   if (toastTimer) clearTimeout(toastTimer)
   toastTimer = setTimeout(() => {
-    toast = ''
+    toast = null
     emit()
   }, TOAST_DURATION_MS)
 }
@@ -121,7 +131,11 @@ export function addToCart(producto: Producto, qty = 1): void {
     }]
   }
   persistCart()
-  showToast(qty > 1 ? `${qty} × ${producto.nombre} agregados` : `${producto.nombre} agregado al carrito`)
+  showToast({
+    clave: qty > 1 ? 'agregados' : 'agregado',
+    nombre: producto.nombre,
+    n: qty,
+  })
   emit()
 }
 
@@ -162,7 +176,7 @@ export function setLastOrder(order: LastOrder | null): void {
 export function getCartItems(): CartItem[] { return items }
 export function getCartCount(): number { return items.reduce((sum, item) => sum + item.q, 0) }
 export function getCartTotal(): number { return items.reduce((sum, item) => sum + item.precio * item.q, 0) }
-export function getToast(): string { return toast }
+export function getToast(): AvisoCarrito | null { return toast }
 export function getLastOrder(): LastOrder | null { return lastOrder }
 
 function subscribe(listener: () => void): () => void {
@@ -172,7 +186,9 @@ function subscribe(listener: () => void): () => void {
 
 const EMPTY_ITEMS: CartItem[] = []
 function getServerItems() { return EMPTY_ITEMS }
-function getServerToast() { return '' }
+function getServerToast(): AvisoCarrito | null {
+  return null
+}
 function getServerLastOrder() { return null }
 
 export function useCart() {
@@ -182,7 +198,7 @@ export function useCart() {
   return { items: snapshot, cartCount, cartTotal, addToCart, inc, dec, remove, clearCart }
 }
 
-export function useToast(): string {
+export function useToast(): AvisoCarrito | null {
   return useSyncExternalStore(subscribe, getToast, getServerToast)
 }
 

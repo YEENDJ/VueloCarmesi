@@ -26,6 +26,12 @@ Es el gemelo de `formatPrecio` en `front/lib/format.ts`. Están duplicados a
 propósito —el backend no puede importar del front— pero tienen que dar
 exactamente la misma salida: **si cambias uno, cambia el otro**.
 
+> Desde el i18n, el del front admite un segundo argumento con el idioma y en
+> inglés devuelve `COP 160,000` (ver `front/AGENTS.md`). El del backend **no**
+> lo tiene y sigue solo en español, porque los correos y los avisos de Telegram
+> todavía no se envían traducidos. El día que se traduzcan, este gemelo necesita
+> la misma excepción.
+
 ## Idioma
 
 Español de Colombia, en tuteo. Teléfonos con `+57`.

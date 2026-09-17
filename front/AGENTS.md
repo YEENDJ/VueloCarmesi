@@ -19,6 +19,37 @@ parezca dos precios diferentes según la pantalla en la que caiga.
 |---|---|
 | `$160.000` | `$ 160.000` · `COP 160.000` · `$160.000 COP` · `$160,000` · `Co$160.000` |
 
+### La excepción: el sitio en inglés
+
+En `/en` el precio se escribe **`COP 160,000`**, con la moneda delante y coma
+de millares.
+
+No es una incoherencia con lo de arriba: esa regla se escribió cuando el sitio
+vendía en un solo país a un solo público, y ahí el `$` no es ambiguo porque
+todos saben de qué moneda se habla. Para un visitante estadounidense —que es el
+público de `/en`— `$160.000` se lee como ciento sesenta dólares con una
+puntuación rara, y son cuarenta. Es el único dato del sitio cuyo **significado**
+cambia con el idioma, no su redacción.
+
+El separador cambia por el mismo motivo: en inglés el punto es el decimal, así
+que `160.000` se leería como «ciento sesenta».
+
+**No se convierte a dólares.** El cobro es en pesos, y una cifra en USD sería un
+importe que el visitante no va a pagar: la tasa se mueve a diario y su banco
+añade su spread. Aclarar la moneda resuelve la confusión sin prometer un precio
+que no controlamos.
+
+Lo resuelve la misma función, que recibe el idioma:
+
+```ts
+formatPrecio(160000)        // $160.000
+formatPrecio(160000, 'en')  // COP 160,000
+```
+
+En componentes cliente el idioma sale de `useLocale()`; en páginas de servidor,
+del `locale` de `params`. El panel de administración no pasa nada: está en
+español y el valor por defecto ya es el correcto.
+
 **Nunca formatees un precio a mano.** Hay una sola función y se usa siempre:
 
 ```ts

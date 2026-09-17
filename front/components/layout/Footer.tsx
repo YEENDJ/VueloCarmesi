@@ -1,5 +1,6 @@
-import Link from 'next/link'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/lib/i18n/navigation'
 import TiraConfianza from '@/components/layout/TiraConfianza'
 import IconoWhatsapp from '@/components/ui/IconoWhatsapp'
 import { IconoInstagram, IconoFacebook, IconoTiktok } from '@/components/ui/IconosRedes'
@@ -16,6 +17,9 @@ const SOCIAL = [
 ]
 
 export default function Footer() {
+  const t = useTranslations('footer')
+  const tNav = useTranslations('nav')
+
   return (
     <footer style={{
       backgroundColor: 'var(--color-brown)',
@@ -41,13 +45,13 @@ export default function Footer() {
             style={{ width: 'min(220px, 100%)', height: 'auto', display: 'block', marginBottom: '12px' }}
           />
           <p style={{ fontSize: '14px', lineHeight: 1.6, color: 'rgba(255, 234, 202, 0.8)', maxWidth: '30ch' }}>
-            Experiencias agroecológicas con sabor a cacao.
+            {t('lema')}
           </p>
         </div>
 
         <div>
           <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--color-gold)', marginBottom: '14px' }}>
-            Navegación
+            {t('navegacion')}
           </div>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {/* Aviturismo va en el pie y no en la navbar porque no es una sexta
@@ -56,10 +60,10 @@ export default function Footer() {
                 home. Lo que necesita es existir como enlace en todas las
                 páginas para que el buscador la alcance sin depender de una
                 sola ruta. */}
-            {([['Experiencias', '/experiencias'], ['Aviturismo', '/aviturismo'], ['Tienda', '/tienda'], ['Nosotros', '/sobre-nosotros'], ['Contacto', '/contacto'], ['Políticas', '/politicas']] as [string, string][]).map(([label, href]) => (
+            {([['experiencias', '/experiencias'], ['aviturismo', '/aviturismo'], ['tienda', '/tienda'], ['nosotros', '/sobre-nosotros'], ['contacto', '/contacto'], ['politicas', '/politicas']] as const).map(([clave, href]) => (
               <li key={href}>
                 <Link href={href} style={{ fontWeight: 700, fontSize: '14px', color: 'rgba(255, 234, 202, 0.85)', textDecoration: 'none' }}>
-                  {label}
+                  {tNav(clave)}
                 </Link>
               </li>
             ))}
@@ -68,7 +72,7 @@ export default function Footer() {
 
         <div>
           <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--color-gold)', marginBottom: '14px' }}>
-            Contacto
+            {t('contacto')}
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontWeight: 700, fontSize: '14px', color: 'rgba(255, 234, 202, 0.85)' }}>
             <span>{CONTACTO.email}</span>
@@ -77,7 +81,7 @@ export default function Footer() {
           </div>
 
           <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--color-gold)', margin: '24px 0 14px' }}>
-            Redes
+            {t('redes')}
           </div>
           <div className="footer-social">
             {SOCIAL.map(({ label, href, icon }) => (
@@ -95,9 +99,9 @@ export default function Footer() {
       <TiraConfianza />
 
       <div className="footer-legal" style={{ marginTop: '24px', paddingTop: '20px', fontWeight: 700, fontSize: '12px', color: 'rgba(255, 234, 202, 0.6)' }}>
-        <span>© {new Date().getFullYear()} Vuelo Carmesí. Todos los derechos reservados.</span>
+        <span>{t('derechos', { anio: new Date().getFullYear() })}</span>
         <span>
-          Desarrollado por{' '}
+          {t('desarrolladoPor')}{' '}
           <a href={AGENCIA.url} target="_blank" rel="noopener noreferrer" className="footer-credito">
             {AGENCIA.nombre}
           </a>

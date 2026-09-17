@@ -22,6 +22,17 @@ export interface Experiencia {
   incluye?: string[]
   queTraer?: string[]
   noIncluye?: string[]
+
+  /**
+   * El slug en cada idioma: { es: 'ruta-del-cacao', en: 'cacao-trail' }.
+   *
+   * Lo necesita el selector de idioma. Quien esta en /en/experiences/cacao-trail
+   * y pulsa «Español» tiene que aterrizar en /experiencias/ruta-del-cacao, y ese
+   * dato no se puede deducir del slug que trae la URL: hay que traerlo cargado.
+   *
+   * Opcional porque los mocks de desarrollo no lo traen.
+   */
+  slugs?: Record<string, string>
 }
 
 export interface Producto {
@@ -40,6 +51,17 @@ export interface Producto {
   imagenes?: string[]
   categoria: string
   badge?: 'Nuevo' | 'Destacado' | null
+
+  /**
+   * El slug en cada idioma: { es: 'ruta-del-cacao', en: 'cacao-trail' }.
+   *
+   * Lo necesita el selector de idioma. Quien esta en /en/experiences/cacao-trail
+   * y pulsa «Español» tiene que aterrizar en /experiencias/ruta-del-cacao, y ese
+   * dato no se puede deducir del slug que trae la URL: hay que traerlo cargado.
+   *
+   * Opcional porque los mocks de desarrollo no lo traen.
+   */
+  slugs?: Record<string, string>
 }
 
 export interface Reserva {

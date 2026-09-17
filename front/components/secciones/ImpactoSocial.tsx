@@ -1,11 +1,8 @@
+import { useTranslations } from 'next-intl'
+// Claves del catálogo, no texto: se traducen al pintarlas.
 const PRACTICAS = [
-  'Conservación de especies nativas',
-  'Protección de fuentes hídricas',
-  'Producción responsable',
-  'Uso eficiente de recursos',
-  'Educación ambiental',
-  'Promoción del turismo sostenible',
-]
+  'especies', 'hidricas', 'responsable', 'recursos', 'educacion', 'turismo',
+] as const
 
 interface Props {
   /** Las claves de SiteConfig con las cifras. Ver PruebaSocial: mismo trato. */
@@ -23,21 +20,23 @@ const IMPACTO = [
   {
     clave: 'impacto_familias_directas',
     respaldo: '2',
-    etiqueta: 'familias beneficiadas directamente',
+    etiqueta: 'directas',
   },
   {
     clave: 'impacto_familias_indirectas',
     respaldo: '8',
-    etiqueta: 'familias beneficiadas indirectamente',
+    etiqueta: 'indirectas',
   },
   {
     clave: 'impacto_empleos',
     respaldo: '6',
-    etiqueta: 'empleos por obra realizada',
+    etiqueta: 'empleos',
   },
 ]
 
 export default function ImpactoSocial({ cifras }: Props) {
+  const t = useTranslations('nosotros.impacto')
+
   return (
     <section
       style={{
@@ -58,7 +57,7 @@ export default function ImpactoSocial({ cifras }: Props) {
               marginBottom: '16px',
             }}
           >
-            Nuestro compromiso
+            {t('kicker')}
           </p>
           <h2
             style={{
@@ -69,7 +68,7 @@ export default function ImpactoSocial({ cifras }: Props) {
               marginBottom: '16px',
             }}
           >
-            Producir cuidando el entorno
+            {t('titulo')}
           </h2>
           <p
             style={{
@@ -82,7 +81,7 @@ export default function ImpactoSocial({ cifras }: Props) {
               margin: '0 auto',
             }}
           >
-            Creemos que producir alimentos de calidad implica proteger el entorno que los hace posibles.
+            {t('bajada')}
           </p>
         </div>
 
@@ -96,7 +95,7 @@ export default function ImpactoSocial({ cifras }: Props) {
         >
           {PRACTICAS.map((p) => (
             <div
-              key={p}
+              key={t(`practicas.${p}`)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -110,7 +109,7 @@ export default function ImpactoSocial({ cifras }: Props) {
               <span style={{ color: 'var(--color-crimson)', fontSize: '18px', flex: 'none' }}>
                 ✦
               </span>
-              {p}
+              {t(`practicas.${p}`)}
             </div>
           ))}
         </div>
@@ -155,7 +154,7 @@ export default function ImpactoSocial({ cifras }: Props) {
                   lineHeight: 1.3,
                 }}
               >
-                {i.etiqueta}
+                {t(i.etiqueta)}
               </p>
             </div>
           ))}

@@ -1,22 +1,34 @@
 'use client'
 import { useMemo, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import type { Producto } from '@/lib/types'
 import ProductoCard from '@/components/shop/ProductoCard'
+
+/**
+ * El valor interno del filtro «todas las categorías».
+ *
+ * Es una constante y no la etiqueta traducida a propósito: la etiqueta cambia
+ * con el idioma y la comparación no puede depender de ella, o en inglés el
+ * filtro dejaría de reconocer su propio estado inicial.
+ */
+const TODOS = '__todos__'
 
 function toTitleCase(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
 export default function TiendaGrid({ productos }: { productos: Producto[] }) {
+  const t = useTranslations('tienda')
+
   const categorias = useMemo(() => {
     const unicas = Array.from(new Set(productos.map(p => p.categoria)))
-    return ['Todos', ...unicas]
+    return [TODOS, ...unicas]
   }, [productos])
 
-  const [filtro, setFiltro] = useState('Todos')
+  const [filtro, setFiltro] = useState(TODOS)
 
   const filtrados = useMemo(() => {
-    if (filtro === 'Todos') return productos
+    if (filtro === TODOS) return productos
     return productos.filter(p => p.categoria === filtro)
   }, [productos, filtro])
 
@@ -37,7 +49,7 @@ export default function TiendaGrid({ productos }: { productos: Producto[] }) {
           minWidth: 0,
         }}
       >
-        Aún no hay productos disponibles. Vuelve pronto.
+        {t('catalogoVacio')}
       </p>
     )
   }
@@ -61,7 +73,7 @@ export default function TiendaGrid({ productos }: { productos: Producto[] }) {
                 color: activo ? 'var(--color-cream)' : 'var(--color-brown)',
               }}
             >
-              {cat === 'Todos' ? cat : toTitleCase(cat)}
+              {cat === TODOS ? t('todos') : toTitleCase(cat)}
             </button>
           )
         })}

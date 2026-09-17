@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl'
 interface QuantitySelectorProps {
   value: number
   onChange: (n: number) => void
@@ -11,6 +12,8 @@ export default function QuantitySelector({
   min = 1,
   max = Infinity,
 }: QuantitySelectorProps) {
+  const t = useTranslations('tienda')
+
   return (
     <div className="qty">
       <button
@@ -18,7 +21,7 @@ export default function QuantitySelector({
         className="qty-btn"
         onClick={() => onChange(value - 1)}
         disabled={value <= min}
-        aria-label="Quitar uno"
+        aria-label={t('quitarUno')}
       >
         −
       </button>
@@ -28,7 +31,7 @@ export default function QuantitySelector({
         className="qty-btn"
         onClick={() => onChange(value + 1)}
         disabled={value >= max}
-        aria-label="Agregar uno"
+        aria-label={t('agregarUno')}
       >
         +
       </button>

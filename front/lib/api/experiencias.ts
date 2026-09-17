@@ -3,6 +3,16 @@ import type { Experiencia } from '@/lib/types'
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 const CACHE: RequestInit = { next: { revalidate: 60, tags: ['experiencias'] } }
 
+/**
+ * `?idioma=` para el backend, que devuelve la ficha ya traducida.
+ *
+ * El español es el original y no necesita parámetro: omitirlo deja las URLs de
+ * caché idénticas a las de antes de existir el i18n, así que el sitio en
+ * español no pierde ninguna entrada cacheada por este cambio.
+ */
+const conIdioma = (url: string, idioma: string) =>
+  idioma === 'es' ? url : `${url}${url.includes('?') ? '&' : '?'}idioma=${idioma}`
+
 // Los mocks son andamio de desarrollo: permiten levantar el front sin backend.
 // En producción no se usan nunca — servir catálogo inventado, o un 404 porque el
 // slug real no figura en esta lista, es lo que dejaba experiencias inaccesibles.
@@ -62,9 +72,9 @@ export const MOCK_EXPERIENCIAS: Experiencia[] = [
   },
 ]
 
-export async function getExperiencias(): Promise<Experiencia[]> {
+export async function getExperiencias(idioma = 'es'): Promise<Experiencia[]> {
   try {
-    const res = await fetch(`${BASE}/experiencias`, CACHE)
+    const res = await fetch(conIdioma(`${BASE}/experiencias`, idioma), CACHE)
     if (!res.ok) throw new Error(`GET /experiencias respondió ${res.status}`)
     return res.json()
   } catch (err) {
@@ -74,9 +84,9 @@ export async function getExperiencias(): Promise<Experiencia[]> {
   }
 }
 
-export async function getExperienciasDestacadas(): Promise<Experiencia[]> {
+export async function getExperienciasDestacadas(idioma = 'es'): Promise<Experiencia[]> {
   try {
-    const res = await fetch(`${BASE}/experiencias?destacadas=true`, CACHE)
+    const res = await fetch(conIdioma(`${BASE}/experiencias?destacadas=true`, idioma), CACHE)
     if (!res.ok) throw new Error(`GET /experiencias?destacadas respondió ${res.status}`)
     return res.json()
   } catch (err) {
@@ -86,13 +96,16 @@ export async function getExperienciasDestacadas(): Promise<Experiencia[]> {
   }
 }
 
-export async function getExperienciaBySlug(slug: string): Promise<Experiencia | null> {
+export async function getExperienciaBySlug(
+  slug: string,
+  idioma = 'es',
+): Promise<Experiencia | null> {
   let res: Response
   try {
     // El slug NO se codifica: Next entrega params.slug tal cual viene en la ruta,
     // es decir ya percent-encoded. Aplicarle encodeURIComponent lo codifica dos
     // veces y el backend no encuentra nada (los slugs con espacios daban 404).
-    res = await fetch(`${BASE}/experiencias/slug/${slug}`, CACHE)
+    res = await fetch(conIdioma(`${BASE}/experiencias/slug/${slug}`, idioma), CACHE)
   } catch (err) {
     // Sin backend alcanzable: en desarrollo caemos a los mocks, pero en producción
     // propagamos. Devolver null aquí haría que la página llame a notFound() y Next

@@ -1,5 +1,6 @@
 'use client'
 import { useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 
 interface Props {
   /** Pares etiqueta/valor: contenido, categoría, disponibilidad… */
@@ -7,7 +8,7 @@ interface Props {
   descripcion: string
 }
 
-const TITULOS = ['Características', 'Descripción']
+const CLAVES = ['pestanaCaracteristicas', 'pestanaDescripcion'] as const
 
 /**
  * Pestañas de la ficha de producto. Separan el dato duro de la prosa: hoy casi
@@ -17,6 +18,8 @@ const TITULOS = ['Características', 'Descripción']
  * vistazo mucho mejor que tres tarjetas sueltas.
  */
 export default function FichaPestanas({ especificaciones, descripcion }: Props) {
+  const t = useTranslations('tienda')
+
   const [abierta, setAbierta] = useState(0)
   const pestanasRef = useRef<(HTMLButtonElement | null)[]>([])
 
@@ -26,17 +29,17 @@ export default function FichaPestanas({ especificaciones, descripcion }: Props) 
     const paso = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
     if (paso === 0) return
     e.preventDefault()
-    const siguiente = (abierta + paso + TITULOS.length) % TITULOS.length
+    const siguiente = (abierta + paso + CLAVES.length) % CLAVES.length
     setAbierta(siguiente)
     pestanasRef.current[siguiente]?.focus()
   }
 
   return (
     <div className="ficha-pestanas">
-      <div role="tablist" aria-label="Información del producto" className="ficha-pestanas-tira" onKeyDown={alPulsarTecla}>
-        {TITULOS.map((titulo, i) => (
+      <div role="tablist" aria-label={t('infoProducto')} className="ficha-pestanas-tira" onKeyDown={alPulsarTecla}>
+        {CLAVES.map((clave, i) => (
           <button
-            key={titulo}
+            key={clave}
             ref={nodo => { pestanasRef.current[i] = nodo }}
             type="button"
             role="tab"
@@ -47,7 +50,7 @@ export default function FichaPestanas({ especificaciones, descripcion }: Props) 
             onClick={() => setAbierta(i)}
             className={`ficha-pestana${i === abierta ? ' ficha-pestana--activa' : ''}`}
           >
-            {titulo}
+            {t(clave)}
           </button>
         ))}
       </div>
