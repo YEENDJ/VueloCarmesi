@@ -94,3 +94,20 @@ en el correo de confirmación.
 
 Español de Colombia, en tuteo: «reserva», «descubre», «escríbenos». Nada de
 voseo rioplatense («reservá», «descubrí»). Teléfonos con `+57`.
+
+## Dónde corre esto
+
+El front está en **Vercel** (`www.vuelocarmesi.com`) y el backend en **Render**
+(`vuelocarmesi.onrender.com`). Detalle y variables en el README de la raíz.
+
+- **Se despliegan por separado.** Al mergear a `main`, Vercel publica en
+  segundos y Render puede tardar más o fallar. En esa ventana el sitio corre con
+  front nuevo y backend viejo, y se ve así: textos fijos traducidos y contenido
+  de la base en español, porque el backend viejo ignora `?idioma`. Antes de
+  buscar el fallo en el i18n, mirar cuál de los dos falta.
+- **`NEXT_PUBLIC_*` no es secreto.** Next lo incrusta en el JavaScript que
+  descarga cada visitante. Marcarlo *Secret* en Vercel no protege nada y solo
+  impide leerlo desde el panel.
+- **Un cambio correcto puede tardar en verse:** 60 s las experiencias y
+  productos, 300 s la configuración. Guardar Configuración desde el panel ya
+  invalida su caché al momento; experiencias y productos todavía no.

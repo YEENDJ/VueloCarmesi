@@ -35,3 +35,21 @@ exactamente la misma salida: **si cambias uno, cambia el otro**.
 ## Idioma
 
 Español de Colombia, en tuteo. Teléfonos con `+57`.
+
+## Dónde corre esto
+
+El backend está en **Render** (`vuelocarmesi.onrender.com`), el front en
+**Vercel**, y la base es **Neon**. Detalle y variables en el README de la raíz.
+
+Tres cosas que muerden:
+
+- **Hay una sola base de datos.** No hay entorno de pruebas: `DATABASE_URL` en
+  local apunta a producción. Las migraciones van con `prisma migrate deploy`,
+  nunca con `migrate dev`, que puede ofrecer resetear.
+- **Un `.ts` nuevo fuera de `src/` hay que excluirlo en `tsconfig.build.json`.**
+  Si no, el `rootDir` se corre a la raíz del paquete, la salida pasa de
+  `dist/main.js` a `dist/src/main.js` y Render arranca con «Cannot find module
+  dist/main». No da error al compilar. Ya pasó con `scripts/`.
+- **`DEEPL_API_KEY` vive en Render.** Si falta, esto arranca igual y guarda solo
+  en español dejando un `WARN`: nadie se entera hasta que un visitante ve la
+  ficha en inglés a medias.

@@ -135,6 +135,59 @@ npm run dev:back
 
 ---
 
+## Despliegue
+
+**Son dos plataformas distintas, y esto importa más de lo que parece:** mergear
+a `main` despliega el front en segundos y el backend puede tardar bastante más,
+o fallar por su cuenta. Durante esa ventana el sitio corre con front nuevo y
+backend viejo, y el síntoma es siempre el mismo — textos fijos en el idioma
+nuevo y contenido de la base en español, porque el backend viejo ignora
+`?idioma`. Antes de dar por roto el i18n, comprobar cuál de los dos falta.
+
+| Pieza | Plataforma | URL | Se despliega |
+|---|---|---|---|
+| Front | **Vercel** | https://www.vuelocarmesi.com | Automático al mergear a `main` |
+| Backend | **Render** | https://vuelocarmesi.onrender.com | Al mergear a `main` (verificar en Events si falló) |
+| Base de datos | **Neon** (Postgres) | — | No se despliega |
+
+> ⚠️ **Hay UNA sola base de datos.** No existe entorno de pruebas separado: lo
+> que corras en local contra `DATABASE_URL` toca producción. Por eso las
+> migraciones van siempre con `prisma migrate deploy`, nunca con `migrate dev`,
+> que puede ofrecer resetear.
+
+### Variables de entorno
+
+No están en el repo: viven en el panel de cada plataforma. `.env.example` de
+cada paquete lista cuáles hacen falta.
+
+| Variable | Dónde | Si falta |
+|---|---|---|
+| `DEEPL_API_KEY` | Render | El backend arranca igual y guarda solo en español. Solo deja un `WARN`: **el fallo es silencioso**. Copiar la clave con el sufijo `:fx`, que es lo que hace que `deepl-node` hable con el servidor del plan gratuito. |
+| `NEXT_PUBLIC_SITE_URL` | Vercel | Los `hreflang` y `canonical` salen con URLs relativas y la indexación bilingüe no sirve. |
+| `NEXT_PUBLIC_API_URL` | Vercel | El front no encuentra el backend. |
+| `DATABASE_URL` | Render | — |
+
+> `NEXT_PUBLIC_*` **no es secreto**: Next incrusta esas variables en el
+> JavaScript que descarga cada visitante, así que cualquiera puede leerlas del
+> sitio publicado. Marcarlas como *Secret* en Vercel no protege de nada y solo
+> impide consultarlas desde el panel. Lo que protege los endpoints de admin es
+> el `AdminGuard` y el CORS, no que la URL sea difícil de encontrar.
+
+### Cachés al desplegar
+
+Un cambio correcto puede tardar en verse, y no es un fallo:
+
+| Dato | Caduca en |
+|---|---|
+| Experiencias y productos | 60 s |
+| Configuración del sitio | 300 s |
+
+Guardar Configuración desde el panel invalida su caché al momento
+(`revalidateTag` en `front/app/api/admin/site-config/route.ts`). Experiencias y
+productos todavía no: ahí hay que esperar el minuto.
+
+---
+
 ## Branches
 
 | Rama | Propósito |
@@ -147,7 +200,5 @@ npm run dev:back
 
 ## Fuera de scope (por ahora)
 
-- Panel de administración
 - Pasarela de pago real
-- Autenticación de usuarios
-- Internacionalización
+- Autenticación de usuarios (el panel usa una cookie de sesión, no cuentas)
