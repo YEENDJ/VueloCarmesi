@@ -26,7 +26,18 @@ describe('ExperienciasController', () => {
 
   it('findBySlug delegates to service', async () => {
     const result = await controller.findBySlug('test')
-    expect(mockService.findBySlug).toHaveBeenCalledWith('test')
+    // Sin `?idioma=` se pide el español, que es el original.
+    expect(mockService.findBySlug).toHaveBeenCalledWith('test', 'es')
     expect(result).toEqual({ id: '1', slug: 'test' })
+  })
+
+  it('pasa el idioma pedido al service', async () => {
+    await controller.findBySlug('test', 'en')
+    expect(mockService.findBySlug).toHaveBeenCalledWith('test', 'en')
+  })
+
+  it('un idioma inventado cae al español en vez de propagarse', async () => {
+    await controller.findBySlug('test', 'klingon')
+    expect(mockService.findBySlug).toHaveBeenCalledWith('test', 'es')
   })
 })
