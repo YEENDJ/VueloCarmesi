@@ -1,0 +1,772 @@
+{
+  "nav": {
+    "inicio": "Inicio",
+    "experiencias": "Experiencias",
+    "aviturismo": "Aviturismo",
+    "tienda": "Tienda",
+    "nosotros": "Nosotros",
+    "contacto": "Contacto",
+    "politicas": "Políticas",
+    "irAlInicio": "Vuelo Carmesí — ir al inicio",
+    "abrirMenu": "Abrir menú",
+    "cerrarMenu": "Cerrar menú",
+    "cambiarIdioma": "Cambiar idioma"
+  },
+  "footer": {
+    "lema": "Experiencias agroecológicas con sabor a cacao.",
+    "navegacion": "Navegación",
+    "contacto": "Contacto",
+    "redes": "Redes",
+    "derechos": "© {anio} Vuelo Carmesí. Todos los derechos reservados.",
+    "desarrolladoPor": "Desarrollado por"
+  },
+  "sitio": {
+    "titulo": "Vuelo Carmesí",
+    "descripcion": "Experiencias agroecológicas con sabor a cacao"
+  },
+  "experiencias": {
+    "tituloListado": "Nuestras Experiencias"
+  },
+  "diferenciales": {
+    "kicker": "¿Por qué Vuelo Carmesí?",
+    "titulo": "Seis razones para conocernos",
+    "origen": {
+      "titulo": "Cacao de origen",
+      "texto": "Conoces el cacao desde que nace en el árbol. 1.300 plantas con trazabilidad, 12 variedades nativas y un proceso que puedes seguir con tus propios ojos."
+    },
+    "sostenible": {
+      "titulo": "Producción sostenible",
+      "texto": "Ves en cada rincón un manejo agroecológico y Buenas Prácticas Agrícolas. Cada cosecha respeta el suelo, el agua y los ciclos naturales de la finca."
+    },
+    "artesanal": {
+      "titulo": "Proceso artesanal en vivo",
+      "texto": "No lees sobre el proceso: lo ves. Desde la fermentación en cajones hasta la molienda, cada etapa del grano al chocolate sucede frente a ti."
+    },
+    "biodiversidad": {
+      "titulo": "Biodiversidad protegida",
+      "texto": "Recorres un ecosistema vivo donde la flora y la fauna se cuidan como parte central del negocio, no como un complemento decorativo."
+    },
+    "autenticas": {
+      "titulo": "Experiencias auténticas",
+      "texto": "Vives la combinación de producción agrícola, educación ambiental y turismo vivencial en una sola visita que te conecta de verdad con el territorio."
+    },
+    "seguro": {
+      "titulo": "Servicio seguro y cuidado",
+      "texto": "Cuentas con guianza especializada en cada salida, póliza de asistencia y grupos reducidos para disfrutar sin prisas ni aglomeraciones."
+    }
+  },
+  "pruebaSocial": {
+    "kicker": "Nuestro impacto",
+    "titulo": "Cientos de personas ya confiaron en nosotros",
+    "bajada": "Desde 2023, instituciones, organizaciones y familias han elegido Vuelo Carmesí para vivir el cacao desde su raíz.",
+    "organizaciones": "Organizaciones que han visitado nuestra finca",
+    "personas": {
+      "etiqueta": "personas atendidas",
+      "detalle": "desde 2023"
+    },
+    "instituciones": {
+      "etiqueta": "instituciones educativas",
+      "detalle": "y contando"
+    },
+    "organizacionesCifra": {
+      "etiqueta": "organizaciones",
+      "detalle": "que confiaron en nosotros"
+    },
+    "familias": {
+      "etiqueta": "familias",
+      "detalle": "cacaoteras acompañadas"
+    },
+    "extranjeros": {
+      "etiqueta": "extranjeros",
+      "detalle": "que conocieron nuestra finca"
+    }
+  },
+  "sobreNosotros": {
+    "kicker": "Quiénes somos",
+    "titulo": "Un proyecto que nació de la tierra",
+    "texto": "Somos un proyecto agroecológico dedicado al cultivo y transformación del cacao, donde promovemos prácticas responsables con el entorno y convertimos cada cosecha en una experiencia que conecta a las personas con la tierra. Cada visita es un vuelo a los sentidos: el aroma del cacao en proceso de transformación, el sonido de la finca al amanecer y el sabor de un chocolate elaborado en el mismo lugar donde nace el cacao.",
+    "cta": "Conoce más",
+    "fotoAlt": "Finca agroecológica Vuelo Carmesí",
+    "fotoPlaceholder": "FOTO · FINCA AGROECOLÓGICA",
+    "texto2": "Cada visita es un vuelo a los sentidos: el olor del cacao maduro, el sonido de la finca al amanecer y el sabor de un chocolate hecho exactamente donde nació el cacao."
+  },
+  "certificaciones": {
+    "kicker": "Avales y certificaciones",
+    "titulo": "Respaldados por quienes cuidan la tierra",
+    "bajada": "Nuestras prácticas agroecológicas y turísticas están respaldadas por organismos oficiales. Trabajamos con transparencia, haciendo de cada proceso una experiencia."
+  },
+  "reserva": {
+    "verMas": "Ver más",
+    "porPersona": "por persona",
+    "reservarAhora": "Reservar ahora",
+    "verPolitica": "Ver política",
+    "dudas": "¿Dudas antes de reservar?",
+    "escribenosWhatsapp": "Escríbenos por WhatsApp",
+    "verFotosAnteriores": "Ver fotos anteriores",
+    "verMasFotos": "Ver más fotos",
+    "deslizaTira": "Desliza la tira y toca una foto para verla en grande",
+    "tocaFoto": "Toca una foto para verla en grande",
+    "masFotos": "{n, plural, one {# cosa más} other {# cosas más}}",
+    "laExperiencia": "La experiencia",
+    "reservaTuCupo": "Reserva tu cupo",
+    "incluidoEnTuCupo": "Incluido en tu cupo",
+    "queTraer": "Qué traer",
+    "noIncluye": "No incluye",
+    "antesDeReservar": "Antes de reservar",
+    "puntoEncuentro": "Punto de encuentro",
+    "tenEnCuenta": "Ten en cuenta",
+    "catalogoVacio": "Aún no hay experiencias disponibles. Vuelve pronto.",
+    "tituloFormulario": "Reserva tu experiencia",
+    "bajadaFormulario": "Completa el formulario y nos comunicamos para confirmar tu lugar.",
+    "estasReservando": "Estás reservando",
+    "sinCompromiso": "Te contactaremos para confirmar disponibilidad. Sin compromiso de pago hasta la confirmación.",
+    "contactaremos": "Te contactaremos para confirmar disponibilidad",
+    "recibida": "¡Reserva recibida!",
+    "recibidaTexto": "Recibimos tu solicitud. En breve nos comunicamos para confirmar disponibilidad y los detalles de tu experiencia.",
+    "enProceso": "Reserva en proceso",
+    "enProcesoTexto": "Te enviaremos un email con el código de reserva una vez que confirmemos tu lugar. Sin compromiso de pago hasta la confirmación.",
+    "volverInicio": "Volver al inicio",
+    "verTienda": "Ver tienda",
+    "campos": {
+      "nombre": "Nombre completo",
+      "nombrePlaceholder": "Tu nombre",
+      "telefono": "Teléfono",
+      "email": "Email",
+      "fecha": "Fecha deseada",
+      "personas": "Cantidad de personas",
+      "notas": "Comentarios adicionales",
+      "notasPlaceholder": "¿Alguna consulta o necesidad especial?",
+      "enviar": "Confirmar reserva",
+      "enviando": "Enviando…",
+      "error": "Hubo un problema al enviar tu reserva. Por favor inténtalo de nuevo o escríbenos directamente.",
+      "emailPlaceholder": "tu@email.com"
+    },
+    "porPersonaDuracion": "por persona · {duracion}",
+    "cierreTexto": "No pierdas la oportunidad de vivir una experiencia agroecológica inolvidable. Desde {precio} por persona · {duracion}",
+    "hastaPersonas": "Hasta {n} personas",
+    "cuando": "Cuándo",
+    "desde": "Desde"
+  },
+  "aviturismoAviso": {
+    "titulo": "Guía de aviturismo en la finca",
+    "texto": "180 especies registradas en un hotspot público de eBird, la ventana de migratorias —de octubre a abril— y quién guía la salida.",
+    "cta": "Ver la guía"
+  },
+  "aviturismo": {
+    "kicker": "Cubarral, Meta · Piedemonte llanero",
+    "h1": "Aviturismo en Cubarral, Meta: 180 especies entre cacao en sombrío",
+    "lead": "180 especies registradas en un hotspot público de <b>eBird</b>, en 1,2 hectáreas de cultivo agroecológico entre los 600 y los 850 m s. n. m. La lista no hay que creérnosla: está publicada y cualquiera puede contrastarla antes de escribirnos.",
+    "ebirdTexto": "El hotspot está publicado en eBird como <b>Vuelo Carmesí</b>. Es la lista completa, mantenida por la plataforma del Cornell Lab of Ornithology, y se puede consultar y contrastar sin pedirnos permiso.",
+    "ebirdEnlace": "Ver la lista en eBird",
+    "indiceAria": "Apartados de la página",
+    "resumen": {
+      "cifraEspecies": "180 especies",
+      "especies": "registradas en el hotspot, con lista pública en eBird",
+      "cifraAltura": "600–850 m",
+      "altura": "s. n. m., piedemonte entre los Llanos y el Sumapaz",
+      "cifraFranja": "5:30–8:00 a. m.",
+      "franja": "la franja de mayor actividad, todos los días del año",
+      "cifraVentana": "Oct – abril",
+      "ventana": "ventana de las migratorias boreales"
+    },
+    "apartados": {
+      "especies": "Especies residentes",
+      "migratorias": "Migratorias",
+      "cuando": "Cuándo venir",
+      "recorrido": "El recorrido",
+      "guia": "El guía",
+      "international": "For birders",
+      "donde": "Dónde queda"
+    },
+    "residentes": {
+      "titulo": "Residentes · se observan todo el año",
+      "texto": "Las siete que están fotografiadas en la finca. Ninguna es endémica de Colombia: lo que ofrecen es fiabilidad, no rareza. El resto de las 180 está en la lista de eBird."
+    },
+    "migratoriasCard": {
+      "titulo": "Migratorias boreales · octubre a abril",
+      "texto": "Bajan del hemisferio norte a pasar el invierno y se suman a la lista durante esos siete meses. Es la razón por la que la fecha de la visita no da igual."
+    },
+    "cuando": {
+      "titulo": "Cuándo venir",
+      "alta": {
+        "cuando": "Octubre a abril",
+        "que": "Temporada alta",
+        "nota": "Las residentes más las migratorias boreales que bajan del norte. Es la ventana que buscan los birders internacionales."
+      },
+      "baja": {
+        "cuando": "Mayo a septiembre",
+        "que": "Solo residentes",
+        "nota": "Las especies de la lista de arriba se observan igual: están todo el año y no dependen de la temporada."
+      },
+      "franja": {
+        "cuando": "Cada día, 5:30–8:00 a. m.",
+        "que": "Mejor franja",
+        "nota": "La actividad cae con el sol alto. La salida arranca antes del amanecer para aprovecharla completa."
+      }
+    },
+    "recorrido": {
+      "titulo": "El recorrido",
+      "incluyeRotulo": "Incluye",
+      "salida": {
+        "hora": "5:30 a. m.",
+        "que": "Salida con binoculares desde el punto de encuentro"
+      },
+      "amanecer": {
+        "hora": "Amanecer",
+        "que": "Recorrido por corredores biológicos y cacao en sombrío"
+      },
+      "manana": {
+        "hora": "Media mañana",
+        "que": "Observación en el sistema agroforestal"
+      },
+      "desayuno": {
+        "hora": "8:00 a. m.",
+        "que": "Desayuno campesino en la finca"
+      },
+      "incluye": {
+        "binoculares": "Binoculares para la actividad",
+        "guia": "Guía local especializado en aviturismo",
+        "desayuno": "Desayuno campesino",
+        "acompanamiento": "Acompañamiento durante todo el recorrido",
+        "poliza": "Póliza de asistencia y riesgos"
+      },
+      "nota": "Grupos de 2 a 8 personas, nivel de observación básico a intermedio. La reserva y la tarifa vigente están en la <ficha>ficha de la experiencia</ficha>."
+    },
+    "guia": {
+      "titulo": "Quién guía la salida",
+      "nombre": "Cristian Enciso",
+      "cargo": "Guía Profesional de Turismo · 14 años en turismo de naturaleza",
+      "fotoAlt": "Cristian Enciso con binoculares durante una salida de avistamiento de aves",
+      "texto": "Especializado en avistamiento de aves, Administrador Ambiental y especialista en Agroecología y Desarrollo Agroecoturístico. María Umaña acompaña a quienes se están iniciando en el aviturismo.",
+      "nota": "Prestador inscrito en el Registro Nacional de Turismo, <b>RNT 179868</b>. Más sobre el equipo en <equipo>sobre nosotros</equipo>."
+    },
+    "donde": {
+      "titulo": "Dónde queda el hotspot",
+      "comoLlegar": "Cómo llegar",
+      "verMapa": "Ver el mapa y la ruta",
+      "texto": "{direccion}. Coordenadas {coordenadas}. Se llega por la vía a Cubarral y el punto de encuentro se confirma al reservar; conviene llegar 15 minutos antes de la hora de salida."
+    },
+    "cta": {
+      "titulo": "¿Armamos tu salida?",
+      "texto": "Escríbenos con las fechas y el tamaño del grupo. Si vienes por las migratorias, la ventana es de octubre a abril.",
+      "reservar": "Reservar la experiencia",
+      "whatsapp": "Escribir por WhatsApp"
+    },
+    "meta": {
+      "titulo": "Aviturismo en Cubarral, Meta · 180 especies registradas",
+      "descripcion": "Birdwatching en el piedemonte llanero: 180 especies en un hotspot público de eBird, entre 600 y 850 m s. n. m., con cacao en sombrío y corredores biológicos. Salidas guiadas de 5:30 a 8:00 a. m.",
+      "ogAlt": "Pichí de collar (Pteroglossus castanotis) posado en una rama en la finca"
+    },
+    "alts": {
+      "aracari": "Pichí de collar posado en una rama, con el pecho amarillo y la banda roja",
+      "carpintero": "Carpintero real de cresta carmesí trepado en el tronco de un árbol",
+      "currucutu": "Currucutú de ojos amarillos mirando de frente a la cámara",
+      "tigana": "Tigana caminando entre la hierba a la orilla del agua",
+      "carriqui": "Carriquí violáceo posado entre el follaje",
+      "azulejo": "Azulejo palmero sobre una rama con el plumaje verde oliva",
+      "tangara": "Tángara urraca en blanco y negro posada en una rama"
+    },
+    "jsonld": {
+      "nombre": "Aviturismo en Vuelo Carmesí"
+    }
+  },
+  "tienda": {
+    "catalogoVacio": "Aún no hay productos disponibles. Vuelve pronto.",
+    "sinFotografia": "Sin fotografía",
+    "fotoAnterior": "Foto anterior",
+    "fotoSiguiente": "Foto siguiente",
+    "miniaturas": "Miniaturas del producto",
+    "cerrarAmpliada": "Cerrar la vista ampliada",
+    "infoProducto": "Información del producto",
+    "pestanaCaracteristicas": "Características",
+    "pestanaDescripcion": "Descripción",
+    "agotado": "Agotado",
+    "nuevo": "Nuevo",
+    "destacado": "Destacado",
+    "agregar": "Agregar",
+    "pasos": {
+      "tienda": "Tienda",
+      "carrito": "Carrito",
+      "checkout": "Checkout",
+      "confirmacion": "Confirmación"
+    },
+    "ficha": {
+      "ivaIncluido": "IVA incluido",
+      "vendidoPor": "Vendido por Vuelo Carmesí",
+      "coordinamosPago": "Coordinamos el pago al confirmar el pedido",
+      "relacionados": "Productos relacionados",
+      "contenido": "Contenido",
+      "categoria": "Categoría",
+      "disponibles": "Disponibles",
+      "unidades": "{n} unidades",
+      "avalBpa": "Buenas Prácticas Agrícolas · ICA",
+      "avalMarca": "Marca registrada ante la SIC"
+    },
+    "panel": {
+      "sinStock": "Sin stock por ahora",
+      "sinStockTexto": "Escríbenos por el formulario de contacto y te avisamos cuando vuelva.",
+      "stockDisponible": "Stock disponible",
+      "agregarCarrito": "Agregar al carrito",
+      "comprarAhora": "Comprar ahora",
+      "quedanSolo": "Quedan solo {n, plural, one {# unidad} other {# unidades}}",
+      "cantidad": "Cantidad",
+      "subtotalUnidades": "Subtotal {n, plural, one {# unidad} other {# unidades}} · ",
+      "unidades": "{n, plural, one {# unidad} other {# unidades}}",
+      "disponiblesParen": "({n} disponibles)"
+    },
+    "carrito": {
+      "vacio": "Tu carrito está vacío",
+      "vacioTexto": "Descubre nuestros chocolates y cacao artesanal.",
+      "verTienda": "Ver tienda",
+      "resumen": "Resumen del pedido",
+      "subtotal": "Subtotal ({n} art.)",
+      "envio": "Envío",
+      "aCoordinar": "A coordinar",
+      "total": "Total",
+      "irCheckout": "Ir al checkout",
+      "titulo": "Carrito",
+      "vaciar": "🗑 Vaciar carrito",
+      "quitar": "Quitar {nombre} del carrito"
+    },
+    "checkout": {
+      "vacio": "No hay productos en tu carrito",
+      "irTienda": "Ir a la tienda",
+      "datosContacto": "Datos de contacto",
+      "datosEntrega": "Datos de entrega",
+      "condiciones": "Al confirmar aceptas nuestras condiciones de venta",
+      "resumenPedido": "Resumen de tu pedido",
+      "coordinamosMetodo": "Coordinamos el método de pago al confirmar el pedido.",
+      "errorPedido": "No se pudo procesar el pedido",
+      "total": "Total",
+      "nombre": "Nombre completo",
+      "email": "Email",
+      "telefono": "Teléfono",
+      "direccion": "Dirección",
+      "ciudad": "Ciudad",
+      "codigoPostal": "Código postal",
+      "procesando": "Procesando…",
+      "confirmar": "Confirmar pedido · {total}",
+      "recibido": "¡Pedido recibido!",
+      "recibidoTexto": "Te enviamos un correo con los detalles. Coordinaremos el pago y el envío lo antes posible.",
+      "volverTienda": "Volver a la tienda",
+      "errorNombre": "Ingresa tu nombre completo",
+      "errorEmail": "Ingresa un email válido",
+      "errorTelefono": "Ingresa un teléfono válido",
+      "errorDireccion": "Ingresa tu dirección",
+      "errorCiudad": "Ingresa tu ciudad",
+      "errorCodigoPostal": "Ingresa tu código postal"
+    },
+    "quitarUno": "Quitar uno",
+    "agregarUno": "Agregar uno",
+    "toast": {
+      "agregado": "{nombre} agregado al carrito",
+      "agregados": "{n} × {nombre} agregados"
+    },
+    "todos": "Todos"
+  },
+  "contacto": {
+    "escribenos": "Escríbenos un mensaje",
+    "gracias": "¡Gracias! Te respondemos lo antes posible. Revisa tu correo.",
+    "error": "Hubo un error al enviar. Inténtalo de nuevo o escríbenos directamente a {email}.",
+    "nombre": "Nombre",
+    "email": "Email",
+    "mensaje": "Mensaje",
+    "enviando": "Enviando…",
+    "enviar": "Enviar mensaje",
+    "otrasFormas": "Otras formas de contactarnos",
+    "otrasFormasAria": "Otras formas de contacto",
+    "whatsappNota": "Lo más rápido para reservar",
+    "llamanos": "Llámanos",
+    "correo": "Correo",
+    "dondeEstamos": "Dónde estamos"
+  },
+  "politicas": {
+    "indiceAria": "Apartados de la política",
+    "avisoTraduccion": "",
+    "indice": {
+      "titulo": "Políticas",
+      "bajada": "Los textos oficiales que rigen la relación entre Vuelo Carmesí y sus visitantes.",
+      "metaTitulo": "Políticas · Vuelo Carmesí",
+      "metaDescripcion": "Políticas oficiales de la Finca Agroturística Vuelo Carmesí: protección de la niñez frente a la ESCNNA y condiciones de reserva y cancelación.",
+      "ninez": {
+        "titulo": "Protección de la niñez",
+        "resumen": "Compromiso contra la Explotación Sexual Comercial de Niños, Niñas y Adolescentes (ESCNNA): requisitos de ingreso de menores, contenido de la autorización y derecho de admisión.",
+        "fuente": "Ley 679 de 2001 · Ley 1336 de 2009"
+      },
+      "cancelacion": {
+        "titulo": "Cancelación de reservas",
+        "resumen": "Condiciones de reserva, pago y cancelación de las experiencias, con la escala de plazos y penalidades según la anticipación con la que canceles.",
+        "fuente": "Reservas, cancelación y pagos"
+      }
+    },
+    "ninez": {
+      "metaTitulo": "Protección de la niñez · Vuelo Carmesí",
+      "metaDescripcion": "Compromiso de Vuelo Carmesí con la protección de niños, niñas y adolescentes y contra la ESCNNA, en cumplimiento de la Ley 679 de 2001 y la Ley 1336 de 2009.",
+      "titulo": "Compromiso con niños, niñas y adolescentes",
+      "ley": "Ley 1336 de 2009",
+      "intro": "La Finca Agroturística Vuelo Carmesí está comprometida con la protección integral de los niños, niñas y adolescentes y rechaza cualquier forma de Explotación Sexual Comercial de Niños, Niñas y Adolescentes (ESCNNA). En cumplimiento de la Ley 679 de 2001 y la Ley 1336 de 2009, el establecimiento adopta medidas de prevención, control y protección frente a cualquier situación que vulnere los derechos de los menores de edad en el contexto de los servicios turísticos.",
+      "ingresoTitulo": "Ingreso de menores · requisitos",
+      "ingreso1": "No se permite el ingreso ni la permanencia de menores de edad sin el cumplimiento de los requisitos legales establecidos por la legislación colombiana.",
+      "ingreso2": "Todo menor deberá estar acompañado por sus padres, representante legal o un adulto debidamente autorizado, presentando la documentación requerida al momento del registro (check-in).",
+      "ingreso3": "Cuando un menor participe en actividades, eventos, recorridos o servicios sin la compañía de sus padres o representantes legales, deberá presentar una autorización escrita firmada por estos.",
+      "autorizacionTitulo": "Qué debe contener la autorización",
+      "autorizacionRotulo": "La autorización",
+      "autorizacionEscrita": "Autorización escrita",
+      "auto1": "Nombre completo e identificación del menor de edad.",
+      "auto2": "Nombre e identificación del adulto responsable que lo acompañará.",
+      "auto3": "Fechas de la actividad o del servicio contratado.",
+      "auto4": "Datos de contacto de los padres o representantes legales.",
+      "autoNota": "El establecimiento podrá solicitar copia de los documentos de identidad y, cuando lo considere necesario, una autorización autenticada ante notaría.",
+      "controlesTitulo": "Controles · derecho de admisión",
+      "derechoAdmision": "Derecho de admisión",
+      "toleranciaCero": "Tolerancia cero",
+      "control1": "La finca se reserva el derecho de negar el ingreso o la prestación del servicio cuando no se acredite adecuadamente la autorización o existan indicios que puedan comprometer la seguridad, bienestar o protección del menor.",
+      "control2": "Se reserva el derecho de admisión y pondrá en conocimiento de las autoridades competentes cualquier conducta sospechosa relacionada con la explotación, abuso o vulneración de los derechos de niños, niñas y adolescentes.",
+      "ademas": "Además",
+      "nuestroCompromiso": "Nuestro compromiso.",
+      "compromisoTexto": "La Finca Agroturística Vuelo Carmesí promueve un turismo responsable, seguro y comprometido con la protección integral de la niñez y la adolescencia."
+    },
+    "cancelacion": {
+      "metaTitulo": "Política de cancelación · Vuelo Carmesí",
+      "metaDescripcion": "Condiciones de reserva, cancelación y pago de las experiencias de Vuelo Carmesí.",
+      "titulo": "Política de cancelación",
+      "escribenos": "Escríbenos",
+      "escala": {
+        "completo": {
+          "cuando": "Cancelación dentro de las 24 horas siguientes a la reserva y con más de 15 días de anticipación",
+          "que": "Reembolso del 100 % del valor pagado"
+        },
+        "medio": {
+          "cuando": "Entre 15 y 7 días antes de la actividad",
+          "que": "Penalidad del 30 % del valor total abonado"
+        },
+        "nada": {
+          "cuando": "Entre 7 días y 24 horas antes, o el mismo día del servicio",
+          "que": "Penalidad del 100 % del valor abonado"
+        }
+      },
+      "reserva1": "Todas las actividades deben reservarse con anticipación y estar pagadas en su totalidad antes de su realización.",
+      "reserva2": "Las reservas virtuales deben confirmarse con un mínimo de 48 horas de anticipación, enviando el comprobante de pago por los medios autorizados por la finca.",
+      "reserva3": "Las cotizaciones tienen carácter informativo y no constituyen una confirmación de reserva. Todas las reservas están sujetas a disponibilidad.",
+      "reserva4": "Una vez confirmada la reserva, cualquier cambio de fecha, actividad o itinerario queda sujeto a disponibilidad y a las condiciones del servicio contratado.",
+      "reserva5": "El visitante debe suministrar información veraz y completa, incluyendo nombres, documento de identificación y demás datos requeridos para el cumplimiento de la normatividad vigente.",
+      "pago1": "Al reservar se cancela el 30 % del valor del servicio; el 70 % restante se paga en efectivo el día de la actividad.",
+      "pago2": "El pago se realiza por transferencia bancaria a la cuenta autorizada de la finca, o por NEQUI y BreB. Escríbenos y te indicamos los datos.",
+      "visitanteTitulo": "Cancelación por parte del visitante",
+      "visitante1": "Las penalidades por cambios o cancelaciones se aplican únicamente una vez confirmada la reserva.",
+      "visitante2": "Para cancelar, escríbenos por WhatsApp o al correo de contacto indicando el nombre con el que reservaste y la fecha.",
+      "reprogramacionTitulo": "Reprogramación y no presentación",
+      "repro1": "Quien no se presente o llegue después de la hora establecida pierde su cupo y la reserva se cancela.",
+      "repro2": "La reprogramación procede solo si hay disponibilidad y previo acuerdo entre las partes. Todo cambio de fecha, actividad, itinerario o devolución queda sujeto a las condiciones del servicio contratado y a la disponibilidad existente.",
+      "fincaTitulo": "Cambios por parte de Vuelo Carmesí",
+      "cambiosFinca": "Cambios de la finca",
+      "finca1": "La Finca Agroturística Vuelo Carmesí realizará todos los esfuerzos razonables para cumplir con los horarios establecidos. Podrán modificarse por causas de fuerza mayor, razones de seguridad o circunstancias extraordinarias ajenas a su control, sin que ello genere responsabilidad para la empresa.",
+      "finca2": "Si tenemos que mover tu experiencia por alguno de esos motivos, nos comunicamos contigo para acordar una nueva fecha según disponibilidad.",
+      "finca3": "El avistamiento de aves no se cancela por ausencia de avistamientos: la observación de fauna silvestre nunca puede garantizarse, y el recorrido guiado se realiza igual.",
+      "dudasReserva": "¿Dudas sobre tu reserva?"
+    },
+    "actualizado": "Última actualización: {fecha}",
+    "fecha": "9 de septiembre de 2026",
+    "ninezResumen": {
+      "ley": "y la Ley 679 de 2001: prevención, control y protección",
+      "autorizacion": "para menores sin sus padres o representante legal",
+      "tolerancia": "frente a cualquier forma de explotación o abuso"
+    },
+    "ninezIndice": {
+      "requisitos": "Requisitos",
+      "autorizacion": "La autorización",
+      "admision": "Derecho de admisión"
+    },
+    "cancelResumen": {
+      "cifraHoras": "48 horas",
+      "horas": "de anticipación para confirmar la reserva",
+      "cifraPago": "30 % + 70 %",
+      "pago": "al reservar y en efectivo el día de la actividad",
+      "cifraReembolso": "100 %",
+      "reembolso": "de reembolso cancelando dentro de las 24 h y a más de 15 días"
+    },
+    "cancelIndice": {
+      "reserva": "Reserva",
+      "pago": "Pago",
+      "cancelacion": "Cancelación",
+      "reprogramacion": "Reprogramación",
+      "cambios": "Cambios de la finca"
+    },
+    "cancelTitulos": {
+      "reserva": "Reserva",
+      "pago": "Pago"
+    }
+  },
+  "nosotros": {
+    "metaTitulo": "Sobre nosotros · Vuelo Carmesí",
+    "metaDescripcion": "La historia de Vuelo Carmesí: 40 años de cacao en Cubarral, Meta, y el paso de un cultivo tradicional a una finca agroecológica abierta a visitantes.",
+    "secciones": {
+      "origen": "El origen",
+      "historia": "Nuestra historia",
+      "historiaBajada": "Una historia que ya existía y que decidimos abrirle las puertas al mundo.",
+      "guia": "Lo que nos guía",
+      "mision": "Misión y valores",
+      "misionBajada": "Cultivar cacao con respeto, transformarlo con pasión y compartirlo con honestidad.",
+      "hogar": "Nuestro hogar",
+      "finca": "Finca La Fortuna",
+      "donde": "Dónde estamos",
+      "delaMata": "De la mata al chocolate",
+      "proceso": "Nuestro proceso",
+      "personas": "Las personas detrás",
+      "equipo": "El equipo",
+      "galeria": "La finca en imágenes"
+    },
+    "valores": {
+      "agroecologia": {
+        "titulo": "Agroecología",
+        "texto": "Cultivamos sin agroquímicos, promoviendo prácticas responsables con el suelo, el agua, la biodiversidad y los ciclos naturales de la finca."
+      },
+      "comunidad": {
+        "titulo": "Comunidad",
+        "texto": "Trabajamos junto a familias cacaoteras de la región, fortaleciendo la economía local y el saber ancestral."
+      },
+      "experiencia": {
+        "titulo": "Del cultivo a la experiencia",
+        "texto": "Conectamos el cultivo, la transformación y el turismo para compartir con nuestros visitantes una experiencia auténtica alrededor del cacao."
+      }
+    },
+    "cta": {
+      "titulo": "¿Quieres vivir el cacao en persona?",
+      "texto": "Reserva tu lugar en alguna de nuestras experiencias y descubre la finca de primera mano.",
+      "boton": "Ver experiencias"
+    },
+    "galeriaAlt": {
+      "mazorca": "MAZORCA EN EL ÁRBOL",
+      "fermentacion": "FERMENTACIÓN EN CAJONES",
+      "paisaje": "PAISAJE DE LA FINCA",
+      "cosecha": "COSECHA A MANO",
+      "taller": "TALLER DE CHOCOLATE",
+      "degustacion": "DEGUSTACIÓN GUIADA",
+      "vista": "FOTO · VISTA DE LA FINCA"
+    },
+    "comoLlegar": {
+      "rotulo": "Cómo llegar · Desde Bogotá",
+      "tramo1": "Bogotá – Villavicencio (Vía al Llano)",
+      "tramo2": "Villavicencio – Cubarral (pavimentada, por Acacías y Guamal)",
+      "tramo3": "Cubarral – Finca La Fortuna (pavimentada)",
+      "acceso": "Entra autos, motos y buses · vía pavimentada",
+      "parqueadero": "Parqueadero para 4 autos + 1 bus",
+      "trazarRuta": "Trazar mi ruta",
+      "dudas": "¿Dudas para llegar? Escríbenos por WhatsApp"
+    },
+    "impacto": {
+      "kicker": "Nuestro compromiso",
+      "titulo": "Producir cuidando el entorno",
+      "bajada": "Creemos que producir alimentos de calidad implica proteger el entorno que los hace posibles.",
+      "practicas": {
+        "especies": "Conservación de especies nativas",
+        "hidricas": "Protección de fuentes hídricas",
+        "responsable": "Producción responsable",
+        "recursos": "Uso eficiente de recursos",
+        "educacion": "Educación ambiental",
+        "turismo": "Promoción del turismo sostenible"
+      },
+      "directas": "familias beneficiadas directamente",
+      "indirectas": "familias beneficiadas indirectamente",
+      "empleos": "empleos por obra realizada"
+    },
+    "proceso": {
+      "genetico": {
+        "titulo": "Conservación del material genético",
+        "texto": "Conservamos 12 variedades de cacao de la región —entre ellas FEAR5 y FSV41—, parte de la historia productiva de nuestro territorio.",
+        "alt": "Mazorcas de cacao madurando en el árbol"
+      },
+      "cosecha": {
+        "titulo": "Cosecha",
+        "texto": "Recolectamos a mano los frutos maduros y seleccionamos el cacao que va a nuestros procesos y experiencias.",
+        "alt": "Visitantes cortando mazorcas maduras en el cultivo"
+      },
+      "fermentacion": {
+        "titulo": "Fermentación",
+        "texto": "Fermentamos el grano en cajones de madera, donde se desarrollan los aromas y sabores propios del cacao.",
+        "alt": "Grano de cacao secándose en la marquesina"
+      },
+      "transformacion": {
+        "titulo": "Transformación artesanal",
+        "texto": "Tostamos y molemos el grano para hacer chocolate artesanal, y los visitantes lo viven de cerca.",
+        "alt": "Tostión del grano de cacao en paila sobre fogón de leña"
+      }
+    },
+    "finca": {
+      "ubicacion": {
+        "titulo": "Cubarral, Meta",
+        "sub": "Colombia"
+      },
+      "hectareas": {
+        "titulo": "1,2 hectáreas",
+        "sub": "de cultivo agroecológico"
+      },
+      "plantas": {
+        "titulo": "{n} plantas",
+        "sub": "de cacao en producción"
+      },
+      "variedades": {
+        "titulo": "{n} variedades",
+        "sub": "de cacao fino de sabor y aroma"
+      },
+      "produccion": {
+        "titulo": "{n} kg al año",
+        "sub": "de grano seco"
+      },
+      "manejo": {
+        "titulo": "Manejo agroecológico",
+        "sub": "desde el primer día"
+      },
+      "mapaTitle": "Mapa de la ubicación de Vuelo Carmesí en Cubarral, Meta",
+      "descripcion": "Ubicada en la vereda Brisas del Tonoa, Cubarral, Meta, a 800 metros sobre el nivel del mar, Vuelo Carmesí se encuentra en un lugar donde el calor de los Llanos se encuentra con la frescura de las montañas del Sumapaz. Aquí, el cacao, la naturaleza y la vida campesina se encuentran en un paisaje que invita a detenerse, explorar y sentir el territorio. En sus 1,2 hectáreas crecen {plantas} plantas de cacao de {variedades} variedades, todas con trazabilidad, de las que sale una cosecha cercana a los {kilos} kilos de grano seco al año."
+    }
+  },
+  "equipo": {
+    "rotulo": "Miembros del equipo",
+    "verMas": "Ver más",
+    "anterior": "Ver equipo anterior",
+    "siguiente": "Ver equipo siguiente",
+    "cofundador": "Cofundador",
+    "cofundadora": "Cofundadora",
+    "desarrollador": "Desarrollador Web",
+    "cristian": {
+      "alt": "Cristian Enciso con binoculares durante una salida de avistamiento de aves",
+      "b1": "Guía Profesional de Turismo con 14 años de experiencia en turismo de naturaleza y especializado en avistamiento de aves. Administrador Ambiental y especialista en Agroecología y Desarrollo Agroecoturístico.",
+      "b2": "Como coordinador operativo y comercial, lidera la planificación y articulación de las experiencias turísticas, así como el desarrollo comercial de Vuelo Carmesí.",
+      "b3": "Su experiencia en turismo, conservación y desarrollo rural aporta a la construcción de experiencias que conectan la naturaleza, el cacao y la vida campesina con un turismo responsable y sostenible."
+    },
+    "maria": {
+      "alt": "María Umaña con el uniforme de Vuelo Carmesí junto a mazorcas y granos de cacao",
+      "b1": "Técnica en Producción Agropecuaria y gerente general de Vuelo Carmesí. Lidera la operación del proyecto y aporta su amplia experiencia en el cultivo de cacao, especialmente en productividad, cosecha y procesos de poscosecha.",
+      "b2": "Su conocimiento del campo y del cacao se complementa con su pasión por el avistamiento de aves, actividad en la que también acompaña a visitantes que desean iniciarse en el mundo del aviturismo."
+    },
+    "orlando": {
+      "alt": "Orlando Enciso en el cultivo, entre árboles cargados de mazorcas de cacao",
+      "b1": "Agricultor de toda la vida y campesino de corazón. Aporta a Vuelo Carmesí su amplio conocimiento del cultivo de cacao y su experiencia construida durante años de trabajo en el campo.",
+      "b2": "Es el encargado de coordinar y desarrollar las labores operativas relacionadas con el cultivo, participando en las diferentes actividades de manejo, mantenimiento y producción de la finca.",
+      "b3": "Es también el creador de Limonática, una bebida especial elaborada con siete plantas aromáticas cultivadas en la propia finca, que se ha convertido en una de las preparaciones que hacen parte de la identidad de nuestras experiencias.",
+      "b4": "Su sencillez, humildad y profundo conocimiento de la vida campesina representan una parte esencial de lo que somos: una iniciativa familiar que nace de la tierra, del trabajo y de las historias de quienes la han cultivado durante generaciones."
+    },
+    "yuri": {
+      "alt": "Yuri Enciso revisando las plantas de la huerta de la finca",
+      "b1": "Hija de la historia de Vuelo Carmesí y parte esencial de la familia. Yuri se caracteriza por su sencillez, calidez y una sensibilidad especial para conectar con quienes visitan la finca.",
+      "b2": "Hace parte del equipo operativo en los procesos de transformación artesanal del cacao, donde participa con dedicación y entusiasmo en las diferentes experiencias.",
+      "b3": "Su forma particular de percibir y relacionarse con el mundo aporta una mirada única al proyecto y refleja el compromiso de Vuelo Carmesí con la inclusión, la empatía y el reconocimiento de las capacidades de cada persona.",
+      "b4": "Su alegría, autenticidad y cercanía con los visitantes hacen de Yuri una integrante muy especial del equipo y de la historia de Vuelo Carmesí."
+    },
+    "yeison": {
+      "alt": "",
+      "b1": "Desarrolla y mantiene el sitio web de Vuelo Carmesí, encargándose de su implementación, actualización y evolución técnica. Realiza ajustes y mejoras en la interfaz, estructura y funcionalidades del sitio, además de solucionar errores y mantenerlo en óptimas condiciones de funcionamiento.",
+      "b2": "También se encarga de incorporar nuevos requerimientos y realizar las actualizaciones necesarias para garantizar una experiencia web funcional, estable y adecuada a las necesidades del proyecto."
+    },
+    "irAlGrupo": "Ir al grupo {n}"
+  },
+  "historia": {
+    "origen": {
+      "anyo": "Hace 40 años",
+      "etiqueta": "El origen",
+      "titulo": "Todo comenzó con el cacao",
+      "t1": "Nuestra historia comenzó mucho antes de que llegaran los primeros visitantes. Comenzó con el cacao.",
+      "t2": "Desde hace cerca de 40 años, en estas tierras se cultiva cacao. Durante buena parte de ese tiempo eran cultivos tradicionales, con árboles híbridos, poco tecnificados y mezclados con café. Era una forma de producción aprendida con el tiempo, basada principalmente en el conocimiento y la experiencia de la familia.",
+      "alt": "El cultivo de cacao, origen de todo"
+    },
+    "tecnificacion": {
+      "anyo": "2006",
+      "etiqueta": "La transformación",
+      "titulo": "Tecnificar el cultivo",
+      "t1": "En 2006, comenzó una nueva etapa. Decidimos transformar la manera de producir: se eliminó el café que compartía espacio con el cacao y se inició un proceso de tecnificación del cultivo, incorporando variedades de cacao con mejores características productivas.",
+      "alt": "Mazorcas rojas del cultivo de cacao tecnificado"
+    },
+    "aprendizaje": {
+      "anyo": "Años de aprendizaje",
+      "etiqueta": "La vida rural",
+      "titulo": "El campo nos enseñaba",
+      "t1": "Fueron años de aprendizaje, de trabajo y de entender cada vez mejor el cultivo. Pero la finca no solo nos enseñaba sobre cacao. También nos mostraba todo aquello que hacía especial la vida rural: los animales, los paisajes, los sonidos de la naturaleza, las labores del campo y las historias que forman parte de nuestra tradición campesina.",
+      "alt": "La naturaleza que acompaña la finca"
+    },
+    "pausa": {
+      "anyo": "2020",
+      "etiqueta": "La pausa",
+      "titulo": "Detenernos a mirar",
+      "t1": "Y entonces llegó 2020. La pandemia nos obligó a detenernos y mirar nuestro entorno de una manera diferente. Nos hizo pensar que todo aquello que durante años habíamos considerado parte de nuestra vida cotidiana podía convertirse también en una experiencia para compartir con otras personas.",
+      "alt": ""
+    },
+    "camino": {
+      "anyo": "Desde 2012",
+      "etiqueta": "Un nuevo camino",
+      "titulo": "La experiencia que encontró su lugar",
+      "t1": "Cristian, uno de los fundadores, ya tenía experiencia en turismo desde 2012, principalmente en el turismo de aventura. Después de la pandemia, esa experiencia encontró un nuevo camino: llevar el turismo a la finca y convertir el campo, el cacao y la naturaleza en una experiencia cercana, auténtica y familiar.",
+      "alt": "Cristian y el equipo en el cultivo de cacao"
+    },
+    "idea": {
+      "anyo": "El proyecto",
+      "etiqueta": "La idea que tomó forma",
+      "titulo": "Nace una idea sencilla",
+      "t1": "Así nació la idea de crear un proyecto turístico que permitiera mostrar las bondades del campo, acercar a los visitantes a la tradición campesina y contar la historia del cacao desde su cultivo hasta su transformación artesanal.",
+      "alt": "La familia que dio origen al proyecto"
+    },
+    "apertura": {
+      "anyo": "2021",
+      "etiqueta": "Abrimos las puertas",
+      "titulo": "Nace Vuelo Carmesí",
+      "t1": "En 2021 abrimos las puertas de Vuelo Carmesí. Lo que comenzó como una finca familiar productora de cacao empezó a convertirse también en un espacio para recibir, enseñar, compartir y conectar.",
+      "alt": "Visitantes compartiendo en la finca"
+    },
+    "hoy": {
+      "anyo": "Hoy",
+      "etiqueta": "Nuestro presente",
+      "titulo": "Una historia abierta al mundo",
+      "t1": "Desde entonces, hemos ido construyendo una propuesta que une cacao, agroecología, naturaleza, cultura campesina y turismo, sin dejar de lado aquello que nos dio origen: la tierra y el trabajo de nuestra familia.",
+      "t2": "Vuelo Carmesí no nació de la idea de crear una experiencia turística. Nació de una historia que ya existía y que decidimos abrirle las puertas al mundo. Hoy queremos que cada persona que nos visita pueda conocer esa historia, caminarla, sentirla y llevarse consigo un pedacito de la vida del campo.",
+      "alt": ""
+    }
+  },
+  "portada": {
+    "heroTitulo": "Experiencias agroecológicas\ncon sabor a cacao.",
+    "heroSubtitulo": "Cosechamos, fermentamos y degustamos junto a ti. Conoce el cacao desde su raíz, en una finca llena de vida y tradición.",
+    "heroCta": "Reserva tu experiencia",
+    "heroPlaceholder": "FOTO · MAZORCA ABIERTA",
+    "experiencias": "Nuestras Experiencias",
+    "verTodas": "Ver todas las experiencias",
+    "ctaTitulo": "¿Listo para vivir la experiencia?",
+    "ctaBoton": "Reservar ahora"
+  },
+  "avales": {
+    "legal": "RNT No. 179868 · Marca mixta registrada ante la SIC, clase 39 de Niza",
+    "selloAlt": "Sello {nombre}",
+    "logoAlt": "Logo {entidad}",
+    "bpa": {
+      "nombre": "Buenas Prácticas Agrícolas",
+      "entidad": "ICA",
+      "detalle": "Manejo responsable y trazable del cultivo de cacao."
+    },
+    "ctc": {
+      "nombre": "Calidad Turística Colombia",
+      "entidad": "MinCIT · NTS-TS",
+      "detalle": "Distintivo de buenas prácticas en servicio turístico."
+    },
+    "rnt": {
+      "nombre": "Registro Nacional de Turismo",
+      "entidad": "Vigente",
+      "detalle": "Prestador de servicios turísticos formalmente inscrito.",
+      "referencia": "No. 179868"
+    },
+    "marca": {
+      "nombre": "Marca registrada",
+      "entidad": "SIC · Clase 39 de Niza",
+      "detalle": "Marca mixta registrada para servicios de organización de viajes."
+    },
+    "rotulo": "Avales y certificaciones"
+  },
+  "galeria": {
+    "fotoDe": "{nombre} — foto {n} de {total}",
+    "fotoSimple": "{alt} — foto {n}",
+    "fotosDe": "Fotos de {nombre}",
+    "verFoto": "Ver foto {n} de {total}",
+    "ampliarFoto": "Ampliar {alt} — foto {n} de {total}",
+    "fotoPendiente": "FOTO · {nombre}",
+    "carrito": "Carrito de compras, {n} artículos",
+    "seguirComprando": "← Seguir comprando",
+    "verFotoSimple": "Ver foto {n} de {total}"
+  }
+}

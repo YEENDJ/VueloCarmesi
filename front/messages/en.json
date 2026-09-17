@@ -1,0 +1,772 @@
+{
+  "nav": {
+    "inicio": "Home",
+    "experiencias": "Experiences",
+    "aviturismo": "Birding",
+    "tienda": "Shop",
+    "nosotros": "About",
+    "contacto": "Contact",
+    "politicas": "Policies",
+    "irAlInicio": "Vuelo Carmesí — go to homepage",
+    "abrirMenu": "Open menu",
+    "cerrarMenu": "Close menu",
+    "cambiarIdioma": "Change language"
+  },
+  "footer": {
+    "lema": "Agroecological experiences with a taste of cacao.",
+    "navegacion": "Navigation",
+    "contacto": "Contact",
+    "redes": "Social",
+    "derechos": "© {anio} Vuelo Carmesí. All rights reserved.",
+    "desarrolladoPor": "Built by"
+  },
+  "sitio": {
+    "titulo": "Vuelo Carmesí",
+    "descripcion": "Agroecological experiences with a taste of cacao"
+  },
+  "experiencias": {
+    "tituloListado": "Our Experiences"
+  },
+  "diferenciales": {
+    "kicker": "Why Vuelo Carmesí?",
+    "titulo": "Six reasons to visit",
+    "origen": {
+      "titulo": "Single-origin cacao",
+      "texto": "You meet the cacao from the moment it is born on the tree. 1,300 traceable plants, 12 native varieties, and a process you can follow with your own eyes."
+    },
+    "sostenible": {
+      "titulo": "Sustainable farming",
+      "texto": "Agroecological management and Good Agricultural Practices in every corner. Every harvest respects the soil, the water and the farm's natural cycles."
+    },
+    "artesanal": {
+      "titulo": "The craft, live",
+      "texto": "You don't read about the process: you watch it. From box fermentation to grinding, every step from bean to bar happens in front of you."
+    },
+    "biodiversidad": {
+      "titulo": "Protected biodiversity",
+      "texto": "You walk through a living ecosystem where plants and wildlife are cared for as the heart of the business, not as decoration."
+    },
+    "autenticas": {
+      "titulo": "Genuine experiences",
+      "texto": "Farming, environmental education and hands-on tourism in a single visit that truly connects you to this land."
+    },
+    "seguro": {
+      "titulo": "Looked after, start to finish",
+      "texto": "A specialist guide on every outing, assistance insurance, and small groups so you can enjoy it without crowds or rushing."
+    }
+  },
+  "pruebaSocial": {
+    "kicker": "Our impact",
+    "titulo": "Hundreds of people have already trusted us",
+    "bajada": "Since 2023, institutions, organizations and families have chosen Vuelo Carmesí to experience cacao from the root up.",
+    "organizaciones": "Organizations that have visited our farm",
+    "personas": {
+      "etiqueta": "people hosted",
+      "detalle": "since 2023"
+    },
+    "instituciones": {
+      "etiqueta": "educational institutions",
+      "detalle": "and counting"
+    },
+    "organizacionesCifra": {
+      "etiqueta": "organizations",
+      "detalle": "that trusted us"
+    },
+    "familias": {
+      "etiqueta": "families",
+      "detalle": "of cacao growers supported"
+    },
+    "extranjeros": {
+      "etiqueta": "international visitors",
+      "detalle": "who came to the farm"
+    }
+  },
+  "sobreNosotros": {
+    "kicker": "Who we are",
+    "titulo": "A project born from the land",
+    "texto": "We are an agroecological project devoted to growing and transforming cacao, where we champion practices that respect the land and turn every harvest into an experience that connects people to it. Every visit is a flight for the senses: the aroma of cacao mid-transformation, the sound of the farm at dawn, and the taste of chocolate made in the very place the cacao grows.",
+    "cta": "Learn more",
+    "fotoAlt": "Vuelo Carmesí agroecological farm",
+    "fotoPlaceholder": "PHOTO · AGROECOLOGICAL FARM",
+    "texto2": "Every visit is a flight for the senses: the smell of ripe cacao, the sound of the farm at dawn, and the taste of chocolate made exactly where the cacao grew."
+  },
+  "certificaciones": {
+    "kicker": "Accreditations",
+    "titulo": "Backed by those who look after the land",
+    "bajada": "Our agroecological and tourism practices are backed by official bodies. We work transparently, making every process part of the experience."
+  },
+  "reserva": {
+    "verMas": "View details",
+    "porPersona": "per person",
+    "reservarAhora": "Book now",
+    "verPolitica": "Read the policy",
+    "dudas": "Questions before booking?",
+    "escribenosWhatsapp": "Message us on WhatsApp",
+    "verFotosAnteriores": "See previous photos",
+    "verMasFotos": "See more photos",
+    "deslizaTira": "Swipe the strip and tap a photo to enlarge it",
+    "tocaFoto": "Tap a photo to enlarge it",
+    "masFotos": "{n, plural, one {# more} other {# more}}",
+    "laExperiencia": "The experience",
+    "reservaTuCupo": "Book your place",
+    "incluidoEnTuCupo": "Included in your booking",
+    "queTraer": "What to bring",
+    "noIncluye": "Not included",
+    "antesDeReservar": "Before you book",
+    "puntoEncuentro": "Meeting point",
+    "tenEnCuenta": "Good to know",
+    "catalogoVacio": "No experiences available yet. Check back soon.",
+    "tituloFormulario": "Book your experience",
+    "bajadaFormulario": "Fill in the form and we will get in touch to confirm your place.",
+    "estasReservando": "You are booking",
+    "sinCompromiso": "We will contact you to confirm availability. No payment is due until we confirm.",
+    "contactaremos": "We will contact you to confirm availability",
+    "recibida": "Booking received!",
+    "recibidaTexto": "We have your request. We will be in touch shortly to confirm availability and the details of your experience.",
+    "enProceso": "Booking in progress",
+    "enProcesoTexto": "We will email you a booking reference once we confirm your place. No payment is due until we confirm.",
+    "volverInicio": "Back to home",
+    "verTienda": "Visit the shop",
+    "campos": {
+      "nombre": "Full name",
+      "nombrePlaceholder": "Your name",
+      "telefono": "Phone",
+      "email": "Email",
+      "fecha": "Preferred date",
+      "personas": "Number of people",
+      "notas": "Additional comments",
+      "notasPlaceholder": "Any questions or special requirements?",
+      "enviar": "Confirm booking",
+      "enviando": "Sending…",
+      "error": "Something went wrong sending your booking. Please try again or message us directly.",
+      "emailPlaceholder": "you@email.com"
+    },
+    "porPersonaDuracion": "per person · {duracion}",
+    "cierreTexto": "Don't miss the chance to live an unforgettable agroecological experience. From {precio} per person · {duracion}",
+    "hastaPersonas": "Up to {n} people",
+    "cuando": "When",
+    "desde": "From"
+  },
+  "aviturismoAviso": {
+    "titulo": "Birding guide to the farm",
+    "texto": "180 species recorded on a public eBird hotspot, the migration window — October to April — and who leads the outing.",
+    "cta": "Read the guide"
+  },
+  "aviturismo": {
+    "kicker": "Cubarral, Meta · Llanos foothills",
+    "h1": "Birding in Cubarral, Meta: 180 species among shade-grown cacao",
+    "lead": "180 species recorded at a public <b>eBird</b> hotspot, on 1.2 hectares of agroecological farmland between 600 and 850 m above sea level. You do not have to take our word for it: the list is published and anyone can check it before writing to us.",
+    "ebirdTexto": "The hotspot is published on eBird as <b>Vuelo Carmesí</b>. It is the complete list, maintained by the Cornell Lab of Ornithology platform, and you can consult and verify it without asking us.",
+    "ebirdEnlace": "See the list on eBird",
+    "indiceAria": "Page sections",
+    "resumen": {
+      "cifraEspecies": "180 species",
+      "especies": "recorded at the hotspot, with a public eBird list",
+      "cifraAltura": "600–850 m",
+      "altura": "above sea level, foothills between the Llanos and Sumapaz",
+      "cifraFranja": "5:30–8:00 a.m.",
+      "franja": "the peak activity window, every day of the year",
+      "cifraVentana": "Oct – April",
+      "ventana": "the boreal migrant window"
+    },
+    "apartados": {
+      "especies": "Resident species",
+      "migratorias": "Migrants",
+      "cuando": "When to come",
+      "recorrido": "The walk",
+      "guia": "Your guide",
+      "international": "For birders",
+      "donde": "Where it is"
+    },
+    "residentes": {
+      "titulo": "Residents · seen year-round",
+      "texto": "The seven photographed on the farm. None is endemic to Colombia: what they offer is reliability, not rarity. The rest of the 180 are on the eBird list."
+    },
+    "migratoriasCard": {
+      "titulo": "Boreal migrants · October to April",
+      "texto": "They come down from the northern hemisphere to winter here and join the list for those seven months. That is why the date of your visit matters."
+    },
+    "cuando": {
+      "titulo": "When to come",
+      "alta": {
+        "cuando": "October to April",
+        "que": "High season",
+        "nota": "The residents plus the boreal migrants that come down from the north. This is the window international birders look for."
+      },
+      "baja": {
+        "cuando": "May to September",
+        "que": "Residents only",
+        "nota": "The species listed above are just as visible: they are here year-round and do not depend on the season."
+      },
+      "franja": {
+        "cuando": "Every day, 5:30–8:00 a.m.",
+        "que": "Best window",
+        "nota": "Activity drops once the sun is high. The walk starts before dawn to make the most of it."
+      }
+    },
+    "recorrido": {
+      "titulo": "The walk",
+      "incluyeRotulo": "Included",
+      "salida": {
+        "hora": "5:30 a.m.",
+        "que": "Departure with binoculars from the meeting point"
+      },
+      "amanecer": {
+        "hora": "Dawn",
+        "que": "Walk through wildlife corridors and shade-grown cacao"
+      },
+      "manana": {
+        "hora": "Mid-morning",
+        "que": "Birding in the agroforestry system"
+      },
+      "desayuno": {
+        "hora": "8:00 a.m.",
+        "que": "Farm breakfast on site"
+      },
+      "incluye": {
+        "binoculares": "Binoculars for the outing",
+        "guia": "Specialist local birding guide",
+        "desayuno": "Farm breakfast",
+        "acompanamiento": "Accompaniment throughout the walk",
+        "poliza": "Assistance and liability insurance"
+      },
+      "nota": "Groups of 2 to 8, basic to intermediate birding level. Booking and current rates are on the <ficha>experience page</ficha>."
+    },
+    "guia": {
+      "titulo": "Who leads the walk",
+      "nombre": "Cristian Enciso",
+      "cargo": "Professional Tourism Guide · 14 years in nature tourism",
+      "fotoAlt": "Cristian Enciso with binoculars during a birding outing",
+      "texto": "Specialised in birdwatching, Environmental Manager and specialist in Agroecology and Agro-ecotourism Development. María Umaña accompanies those just starting out in birding.",
+      "nota": "Provider registered on Colombia National Tourism Registry, <b>RNT 179868</b>. More about the team on <equipo>about us</equipo>."
+    },
+    "donde": {
+      "titulo": "Where the hotspot is",
+      "comoLlegar": "Getting here",
+      "verMapa": "See the map and route",
+      "texto": "{direccion}. Coordinates {coordenadas}. You get here on the Cubarral road and the meeting point is confirmed when you book; plan to arrive 15 minutes before departure."
+    },
+    "cta": {
+      "titulo": "Shall we plan your outing?",
+      "texto": "Write to us with your dates and group size. If you are coming for the migrants, the window is October to April.",
+      "reservar": "Book the experience",
+      "whatsapp": "Message us on WhatsApp"
+    },
+    "meta": {
+      "titulo": "Birding in Cubarral, Meta · 180 species recorded",
+      "descripcion": "Birdwatching in the Llanos foothills: 180 species at a public eBird hotspot, between 600 and 850 m above sea level, among shade-grown cacao and wildlife corridors. Guided walks 5:30 to 8:00 a.m.",
+      "ogAlt": "Chestnut-eared Aracari (Pteroglossus castanotis) perched on a branch at the farm"
+    },
+    "alts": {
+      "aracari": "Chestnut-eared Aracari perched on a branch, yellow breast and red band visible",
+      "carpintero": "Crimson-crested Woodpecker climbing a tree trunk",
+      "currucutu": "Ferruginous Pygmy-Owl looking straight at the camera with yellow eyes",
+      "tigana": "Sunbittern walking through grass at the water's edge",
+      "carriqui": "Violaceous Jay perched among the foliage",
+      "azulejo": "Palm Tanager on a branch with olive-green plumage",
+      "tangara": "Magpie Tanager, black and white, perched on a branch"
+    },
+    "jsonld": {
+      "nombre": "Birdwatching at Vuelo Carmesí"
+    }
+  },
+  "tienda": {
+    "catalogoVacio": "No products available yet. Check back soon.",
+    "sinFotografia": "No photograph",
+    "fotoAnterior": "Previous photo",
+    "fotoSiguiente": "Next photo",
+    "miniaturas": "Product thumbnails",
+    "cerrarAmpliada": "Close the enlarged view",
+    "infoProducto": "Product information",
+    "pestanaCaracteristicas": "Specifications",
+    "pestanaDescripcion": "Description",
+    "agotado": "Sold out",
+    "nuevo": "New",
+    "destacado": "Featured",
+    "agregar": "Add",
+    "pasos": {
+      "tienda": "Shop",
+      "carrito": "Cart",
+      "checkout": "Checkout",
+      "confirmacion": "Confirmation"
+    },
+    "ficha": {
+      "ivaIncluido": "VAT included",
+      "vendidoPor": "Sold by Vuelo Carmesí",
+      "coordinamosPago": "We arrange payment when we confirm your order",
+      "relacionados": "Related products",
+      "contenido": "Size",
+      "categoria": "Category",
+      "disponibles": "In stock",
+      "unidades": "{n} units",
+      "avalBpa": "Good Agricultural Practices · ICA",
+      "avalMarca": "Trademark registered with SIC"
+    },
+    "panel": {
+      "sinStock": "Out of stock for now",
+      "sinStockTexto": "Message us through the contact form and we will let you know when it is back.",
+      "stockDisponible": "In stock",
+      "agregarCarrito": "Add to cart",
+      "comprarAhora": "Buy now",
+      "quedanSolo": "Only {n, plural, one {# unit} other {# units}} left",
+      "cantidad": "Quantity",
+      "subtotalUnidades": "Subtotal {n, plural, one {# unit} other {# units}} · ",
+      "unidades": "{n, plural, one {# unit} other {# units}}",
+      "disponiblesParen": "({n} in stock)"
+    },
+    "carrito": {
+      "vacio": "Your cart is empty",
+      "vacioTexto": "Discover our chocolates and artisanal cacao.",
+      "verTienda": "Visit the shop",
+      "resumen": "Order summary",
+      "subtotal": "Subtotal ({n} items)",
+      "envio": "Shipping",
+      "aCoordinar": "To be arranged",
+      "total": "Total",
+      "irCheckout": "Go to checkout",
+      "titulo": "Cart",
+      "vaciar": "🗑 Empty cart",
+      "quitar": "Remove {nombre} from cart"
+    },
+    "checkout": {
+      "vacio": "There are no products in your cart",
+      "irTienda": "Go to the shop",
+      "datosContacto": "Contact details",
+      "datosEntrega": "Delivery details",
+      "condiciones": "By confirming you accept our terms of sale",
+      "resumenPedido": "Your order summary",
+      "coordinamosMetodo": "We arrange the payment method when we confirm your order.",
+      "errorPedido": "The order could not be processed",
+      "total": "Total",
+      "nombre": "Full name",
+      "email": "Email",
+      "telefono": "Phone",
+      "direccion": "Address",
+      "ciudad": "City",
+      "codigoPostal": "Postal code",
+      "procesando": "Processing…",
+      "confirmar": "Confirm order · {total}",
+      "recibido": "Order received!",
+      "recibidoTexto": "We have emailed you the details. We will arrange payment and shipping as soon as possible.",
+      "volverTienda": "Back to the shop",
+      "errorNombre": "Enter your full name",
+      "errorEmail": "Enter a valid email",
+      "errorTelefono": "Enter a valid phone number",
+      "errorDireccion": "Enter your address",
+      "errorCiudad": "Enter your city",
+      "errorCodigoPostal": "Enter your postal code"
+    },
+    "quitarUno": "Remove one",
+    "agregarUno": "Add one",
+    "toast": {
+      "agregado": "{nombre} added to cart",
+      "agregados": "{n} × {nombre} added"
+    },
+    "todos": "All"
+  },
+  "contacto": {
+    "escribenos": "Send us a message",
+    "gracias": "Thank you! We will reply as soon as we can. Check your inbox.",
+    "error": "Something went wrong sending your message. Please try again or write to us directly at {email}.",
+    "nombre": "Name",
+    "email": "Email",
+    "mensaje": "Message",
+    "enviando": "Sending…",
+    "enviar": "Send message",
+    "otrasFormas": "Other ways to reach us",
+    "otrasFormasAria": "Other ways to get in touch",
+    "whatsappNota": "The fastest way to book",
+    "llamanos": "Call us",
+    "correo": "Email",
+    "dondeEstamos": "Where we are"
+  },
+  "politicas": {
+    "indiceAria": "Policy sections",
+    "avisoTraduccion": "This is an informational translation. Vuelo Carmesí operates under Colombian law and the Spanish version of this policy is the one that prevails.",
+    "indice": {
+      "titulo": "Policies",
+      "bajada": "The official texts governing the relationship between Vuelo Carmesí and its visitors.",
+      "metaTitulo": "Policies · Vuelo Carmesí",
+      "metaDescripcion": "Official policies of Finca Agroturística Vuelo Carmesí: child protection against ESCNNA and booking and cancellation terms.",
+      "ninez": {
+        "titulo": "Child protection",
+        "resumen": "Our commitment against the Commercial Sexual Exploitation of Children and Adolescents (ESCNNA): entry requirements for minors, what the authorisation must contain, and right of admission.",
+        "fuente": "Law 679 of 2001 · Law 1336 of 2009"
+      },
+      "cancelacion": {
+        "titulo": "Booking cancellation",
+        "resumen": "Booking, payment and cancellation terms for the experiences, with the scale of deadlines and penalties according to how far in advance you cancel.",
+        "fuente": "Bookings, cancellation and payment"
+      }
+    },
+    "ninez": {
+      "metaTitulo": "Child protection · Vuelo Carmesí",
+      "metaDescripcion": "Vuelo Carmesí commitment to protecting children and adolescents and against ESCNNA, in compliance with Law 679 of 2001 and Law 1336 of 2009.",
+      "titulo": "Our commitment to children and adolescents",
+      "ley": "Law 1336 of 2009",
+      "intro": "Finca Agroturística Vuelo Carmesí is committed to the full protection of children and adolescents and rejects any form of Commercial Sexual Exploitation of Children and Adolescents (ESCNNA). In compliance with Law 679 of 2001 and Law 1336 of 2009, the establishment adopts preventive, control and protective measures against any situation that violates the rights of minors in the context of tourism services.",
+      "ingresoTitulo": "Entry of minors · requirements",
+      "ingreso1": "Minors may not enter or remain on the premises without meeting the legal requirements established by Colombian law.",
+      "ingreso2": "Every minor must be accompanied by a parent, legal guardian or duly authorised adult, presenting the required documentation at check-in.",
+      "ingreso3": "When a minor takes part in activities, events, tours or services without a parent or legal guardian present, they must provide written authorisation signed by them.",
+      "autorizacionTitulo": "What the authorisation must contain",
+      "autorizacionRotulo": "The authorisation",
+      "autorizacionEscrita": "Written authorisation",
+      "auto1": "Full name and identification of the minor.",
+      "auto2": "Name and identification of the responsible adult accompanying them.",
+      "auto3": "Dates of the activity or contracted service.",
+      "auto4": "Contact details of the parents or legal guardians.",
+      "autoNota": "The establishment may request copies of identity documents and, where it deems necessary, an authorisation notarised before a notary public.",
+      "controlesTitulo": "Checks · right of admission",
+      "derechoAdmision": "Right of admission",
+      "toleranciaCero": "Zero tolerance",
+      "control1": "The farm reserves the right to refuse entry or service when the authorisation is not adequately proven or where there are indications that could compromise the safety, wellbeing or protection of the minor.",
+      "control2": "It reserves the right of admission and will report to the competent authorities any suspicious conduct related to the exploitation, abuse or violation of the rights of children and adolescents.",
+      "ademas": "Also",
+      "nuestroCompromiso": "Our commitment.",
+      "compromisoTexto": "Finca Agroturística Vuelo Carmesí promotes responsible, safe tourism committed to the full protection of children and adolescents."
+    },
+    "cancelacion": {
+      "metaTitulo": "Cancellation policy · Vuelo Carmesí",
+      "metaDescripcion": "Booking, cancellation and payment terms for Vuelo Carmesí experiences.",
+      "titulo": "Cancellation policy",
+      "escribenos": "Write to us",
+      "escala": {
+        "completo": {
+          "cuando": "Cancellation within 24 hours of booking and more than 15 days in advance",
+          "que": "100% refund of the amount paid"
+        },
+        "medio": {
+          "cuando": "Between 15 and 7 days before the activity",
+          "que": "30% penalty on the total amount paid"
+        },
+        "nada": {
+          "cuando": "Between 7 days and 24 hours before, or on the day of the service",
+          "que": "100% penalty on the amount paid"
+        }
+      },
+      "reserva1": "All activities must be booked in advance and paid in full before they take place.",
+      "reserva2": "Online bookings must be confirmed at least 48 hours in advance by sending proof of payment through the channels authorised by the farm.",
+      "reserva3": "Quotes are for information only and do not constitute a booking confirmation. All bookings are subject to availability.",
+      "reserva4": "Once a booking is confirmed, any change of date, activity or itinerary is subject to availability and to the terms of the contracted service.",
+      "reserva5": "Visitors must provide truthful and complete information, including names, identification documents and any other data required to comply with current regulations.",
+      "pago1": "On booking, 30% of the service value is paid; the remaining 70% is paid in cash on the day of the activity.",
+      "pago2": "Payment is made by bank transfer to the farm's authorised account, or via NEQUI and BreB. Write to us and we will send you the details.",
+      "visitanteTitulo": "Cancellation by the visitor",
+      "visitante1": "Penalties for changes or cancellations apply only once the booking has been confirmed.",
+      "visitante2": "To cancel, message us on WhatsApp or at the contact email, stating the name the booking was made under and the date.",
+      "reprogramacionTitulo": "Rescheduling and no-shows",
+      "repro1": "Anyone who does not show up or arrives after the set time forfeits their place and the booking is cancelled.",
+      "repro2": "Rescheduling is possible only if there is availability and by prior agreement between the parties. Any change of date, activity, itinerary or refund is subject to the terms of the contracted service and to existing availability.",
+      "fincaTitulo": "Changes by Vuelo Carmesí",
+      "cambiosFinca": "Changes by the farm",
+      "finca1": "Finca Agroturística Vuelo Carmesí will make every reasonable effort to keep to the established schedule. Times may be changed for reasons of force majeure, safety or extraordinary circumstances beyond its control, without this giving rise to liability for the company.",
+      "finca2": "If we have to move your experience for any of those reasons, we will contact you to agree a new date subject to availability.",
+      "finca3": "Birdwatching is not cancelled for lack of sightings: observing wildlife can never be guaranteed, and the guided walk goes ahead regardless.",
+      "dudasReserva": "Questions about your booking?"
+    },
+    "actualizado": "Last updated: {fecha}",
+    "fecha": "9 September 2026",
+    "ninezResumen": {
+      "ley": "and Law 679 of 2001: prevention, control and protection",
+      "autorizacion": "for minors without a parent or legal guardian",
+      "tolerancia": "towards any form of exploitation or abuse"
+    },
+    "ninezIndice": {
+      "requisitos": "Requirements",
+      "autorizacion": "The authorisation",
+      "admision": "Right of admission"
+    },
+    "cancelResumen": {
+      "cifraHoras": "48 hours",
+      "horas": "in advance to confirm the booking",
+      "cifraPago": "30% + 70%",
+      "pago": "on booking and in cash on the day of the activity",
+      "cifraReembolso": "100%",
+      "reembolso": "refund when cancelling within 24 h and more than 15 days ahead"
+    },
+    "cancelIndice": {
+      "reserva": "Booking",
+      "pago": "Payment",
+      "cancelacion": "Cancellation",
+      "reprogramacion": "Rescheduling",
+      "cambios": "Changes by the farm"
+    },
+    "cancelTitulos": {
+      "reserva": "Booking",
+      "pago": "Payment"
+    }
+  },
+  "nosotros": {
+    "metaTitulo": "About us · Vuelo Carmesí",
+    "metaDescripcion": "The story of Vuelo Carmesí: 40 years of cacao in Cubarral, Meta, and the shift from a traditional crop to an agroecological farm open to visitors.",
+    "secciones": {
+      "origen": "The origin",
+      "historia": "Our story",
+      "historiaBajada": "A story that already existed, and that we decided to open up to the world.",
+      "guia": "What guides us",
+      "mision": "Mission and values",
+      "misionBajada": "Grow cacao with respect, transform it with passion and share it honestly.",
+      "hogar": "Our home",
+      "finca": "Finca La Fortuna",
+      "donde": "Where we are",
+      "delaMata": "From tree to chocolate",
+      "proceso": "Our process",
+      "personas": "The people behind it",
+      "equipo": "The team",
+      "galeria": "The farm in pictures"
+    },
+    "valores": {
+      "agroecologia": {
+        "titulo": "Agroecology",
+        "texto": "We grow without agrochemicals, promoting practices that respect the soil, the water, biodiversity and the farm's natural cycles."
+      },
+      "comunidad": {
+        "titulo": "Community",
+        "texto": "We work alongside cacao-growing families in the region, strengthening the local economy and ancestral know-how."
+      },
+      "experiencia": {
+        "titulo": "From crop to experience",
+        "texto": "We connect growing, processing and tourism to share a genuine cacao experience with our visitors."
+      }
+    },
+    "cta": {
+      "titulo": "Want to experience cacao in person?",
+      "texto": "Book your place on one of our experiences and discover the farm first-hand.",
+      "boton": "See experiences"
+    },
+    "galeriaAlt": {
+      "mazorca": "CACAO POD ON THE TREE",
+      "fermentacion": "FERMENTATION IN WOODEN BOXES",
+      "paisaje": "FARM LANDSCAPE",
+      "cosecha": "HAND HARVESTING",
+      "taller": "CHOCOLATE WORKSHOP",
+      "degustacion": "GUIDED TASTING",
+      "vista": "PHOTO · VIEW OF THE FARM"
+    },
+    "comoLlegar": {
+      "rotulo": "Getting here · From Bogotá",
+      "tramo1": "Bogotá – Villavicencio (the Vía al Llano highway)",
+      "tramo2": "Villavicencio – Cubarral (paved, via Acacías and Guamal)",
+      "tramo3": "Cubarral – Finca La Fortuna (paved)",
+      "acceso": "Cars, motorbikes and coaches · paved road",
+      "parqueadero": "Parking for 4 cars + 1 coach",
+      "trazarRuta": "Get directions",
+      "dudas": "Unsure how to get here? Message us on WhatsApp"
+    },
+    "impacto": {
+      "kicker": "Our commitment",
+      "titulo": "Producing while caring for the land",
+      "bajada": "We believe producing quality food means protecting the environment that makes it possible.",
+      "practicas": {
+        "especies": "Conservation of native species",
+        "hidricas": "Protection of water sources",
+        "responsable": "Responsible production",
+        "recursos": "Efficient use of resources",
+        "educacion": "Environmental education",
+        "turismo": "Promoting sustainable tourism"
+      },
+      "directas": "families benefited directly",
+      "indirectas": "families benefited indirectly",
+      "empleos": "jobs per project carried out"
+    },
+    "proceso": {
+      "genetico": {
+        "titulo": "Conserving the genetic material",
+        "texto": "We conserve 12 cacao varieties from the region — among them FEAR5 and FSV41 — part of the productive history of this land.",
+        "alt": "Cacao pods ripening on the tree"
+      },
+      "cosecha": {
+        "titulo": "Harvest",
+        "texto": "We pick the ripe pods by hand and select the cacao that goes into our processes and experiences.",
+        "alt": "Visitors cutting ripe pods in the grove"
+      },
+      "fermentacion": {
+        "titulo": "Fermentation",
+        "texto": "We ferment the beans in wooden boxes, where the aromas and flavours of the cacao develop.",
+        "alt": "Cacao beans drying under the canopy"
+      },
+      "transformacion": {
+        "titulo": "Artisanal transformation",
+        "texto": "We roast and grind the beans to make artisanal chocolate, and visitors see it up close.",
+        "alt": "Roasting cacao beans in a pan over a wood fire"
+      }
+    },
+    "finca": {
+      "ubicacion": {
+        "titulo": "Cubarral, Meta",
+        "sub": "Colombia"
+      },
+      "hectareas": {
+        "titulo": "1.2 hectares",
+        "sub": "of agroecological farmland"
+      },
+      "plantas": {
+        "titulo": "{n} plants",
+        "sub": "of cacao in production"
+      },
+      "variedades": {
+        "titulo": "{n} varieties",
+        "sub": "of fine flavour cacao"
+      },
+      "produccion": {
+        "titulo": "{n} kg a year",
+        "sub": "of dry beans"
+      },
+      "manejo": {
+        "titulo": "Agroecological management",
+        "sub": "from day one"
+      },
+      "mapaTitle": "Map showing the location of Vuelo Carmesí in Cubarral, Meta",
+      "descripcion": "Set in the Brisas del Tonoa district of Cubarral, Meta, at 800 metres above sea level, Vuelo Carmesí sits where the heat of the Llanos meets the cool of the Sumapaz mountains. Here, cacao, nature and country life come together in a landscape that invites you to stop, explore and take in the land. Across its 1.2 hectares grow {plantas} cacao plants of {variedades} varieties, all fully traceable, yielding a harvest of around {kilos} kilos of dry beans a year."
+    }
+  },
+  "equipo": {
+    "rotulo": "Team members",
+    "verMas": "Read more",
+    "anterior": "See previous team members",
+    "siguiente": "See next team members",
+    "cofundador": "Co-founder",
+    "cofundadora": "Co-founder",
+    "desarrollador": "Web Developer",
+    "cristian": {
+      "alt": "Cristian Enciso with binoculars during a birding outing",
+      "b1": "Professional Tourism Guide with 14 years of experience in nature tourism, specialised in birdwatching. Environmental Manager and specialist in Agroecology and Agro-ecotourism Development.",
+      "b2": "As operations and commercial coordinator, he leads the planning and delivery of the tourism experiences, as well as the commercial development of Vuelo Carmesí.",
+      "b3": "His experience in tourism, conservation and rural development shapes experiences that connect nature, cacao and country life with responsible, sustainable tourism."
+    },
+    "maria": {
+      "alt": "María Umaña in her Vuelo Carmesí uniform beside cacao pods and beans",
+      "b1": "Agricultural Production Technician and general manager of Vuelo Carmesí. She leads the project's operations and brings extensive experience in cacao growing, particularly in productivity, harvesting and post-harvest processing.",
+      "b2": "Her knowledge of the land and of cacao is matched by her passion for birdwatching, and she also accompanies visitors who want to get started in birding."
+    },
+    "orlando": {
+      "alt": "Orlando Enciso in the grove, among trees laden with cacao pods",
+      "b1": "A farmer all his life and a countryman at heart. He brings Vuelo Carmesí his deep knowledge of cacao growing and the experience built over years of work on the land.",
+      "b2": "He coordinates and carries out the operational work around the crop, taking part in the different management, maintenance and production activities on the farm.",
+      "b3": "He is also the creator of Limonática, a special drink made with seven aromatic plants grown on the farm itself, which has become one of the preparations that define our experiences.",
+      "b4": "His simplicity, humility and deep understanding of country life are an essential part of who we are: a family initiative born of the land, of hard work, and of the stories of those who have farmed it for generations."
+    },
+    "yuri": {
+      "alt": "Yuri Enciso checking the plants in the farm's vegetable garden",
+      "b1": "A daughter of the Vuelo Carmesí story and an essential part of the family. Yuri is known for her simplicity, warmth and a special sensitivity for connecting with those who visit the farm.",
+      "b2": "She is part of the operations team in the artisanal cacao transformation processes, taking part in the different experiences with dedication and enthusiasm.",
+      "b3": "Her particular way of perceiving and relating to the world brings a unique perspective to the project and reflects Vuelo Carmesí's commitment to inclusion, empathy and recognising what each person brings.",
+      "b4": "Her joy, authenticity and warmth with visitors make Yuri a very special member of the team and of the Vuelo Carmesí story."
+    },
+    "yeison": {
+      "alt": "",
+      "b1": "He develops and maintains the Vuelo Carmesí website, handling its implementation, updates and technical evolution. He makes adjustments and improvements to the interface, structure and functionality of the site, as well as fixing bugs and keeping it running smoothly.",
+      "b2": "He is also responsible for adding new requirements and carrying out the updates needed to keep the site functional, stable and suited to the project's needs."
+    },
+    "irAlGrupo": "Go to group {n}"
+  },
+  "historia": {
+    "origen": {
+      "anyo": "40 years ago",
+      "etiqueta": "The origin",
+      "titulo": "It all began with cacao",
+      "t1": "Our story began long before the first visitors arrived. It began with cacao.",
+      "t2": "Cacao has been grown on this land for close to 40 years. For much of that time they were traditional plots, with hybrid trees, little mechanisation and interplanted with coffee. It was a way of farming learned over time, built mainly on the family's knowledge and experience.",
+      "alt": "The cacao grove, where it all started"
+    },
+    "tecnificacion": {
+      "anyo": "2006",
+      "etiqueta": "The change",
+      "titulo": "Modernising the crop",
+      "t1": "In 2006 a new stage began. We decided to transform the way we farmed: the coffee sharing space with the cacao was removed and we started modernising the crop, bringing in cacao varieties with better yields.",
+      "alt": "Red pods from the modernised cacao crop"
+    },
+    "aprendizaje": {
+      "anyo": "Years of learning",
+      "etiqueta": "Country life",
+      "titulo": "The land was teaching us",
+      "t1": "They were years of learning, of work, and of understanding the crop better and better. But the farm did not only teach us about cacao. It also showed us everything that makes country life special: the animals, the landscapes, the sounds of nature, the work of the land and the stories that are part of our rural tradition.",
+      "alt": "The wildlife that surrounds the farm"
+    },
+    "pausa": {
+      "anyo": "2020",
+      "etiqueta": "The pause",
+      "titulo": "Stopping to look",
+      "t1": "And then came 2020. The pandemic forced us to stop and look at our surroundings differently. It made us realise that everything we had considered part of our everyday life for years could also become an experience to share with other people.",
+      "alt": ""
+    },
+    "camino": {
+      "anyo": "Since 2012",
+      "etiqueta": "A new path",
+      "titulo": "The experience that found its place",
+      "t1": "Cristian, one of the founders, had worked in tourism since 2012, mainly in adventure tourism. After the pandemic, that experience found a new path: bringing tourism to the farm and turning the countryside, the cacao and the nature around us into a close, genuine, family experience.",
+      "alt": "Cristian and the team in the cacao grove"
+    },
+    "idea": {
+      "anyo": "The project",
+      "etiqueta": "The idea takes shape",
+      "titulo": "A simple idea is born",
+      "t1": "That is how the idea came about: a tourism project that would show what the countryside has to offer, bring visitors closer to rural tradition, and tell the story of cacao from the crop through to its artisanal transformation.",
+      "alt": "The family behind the project"
+    },
+    "apertura": {
+      "anyo": "2021",
+      "etiqueta": "We open the gates",
+      "titulo": "Vuelo Carmesí is born",
+      "t1": "In 2021 we opened the gates of Vuelo Carmesí. What began as a family cacao farm started to become a place to welcome, teach, share and connect.",
+      "alt": "Visitors sharing a moment at the farm"
+    },
+    "hoy": {
+      "anyo": "Today",
+      "etiqueta": "Our present",
+      "titulo": "A story open to the world",
+      "t1": "Since then we have been building something that brings together cacao, agroecology, nature, rural culture and tourism, without losing sight of what gave rise to it all: the land and our family's work.",
+      "t2": "Vuelo Carmesí was not born from the idea of creating a tourist experience. It was born from a story that already existed, and that we decided to open up to the world. Today we want everyone who visits to get to know that story, to walk it, to feel it, and to take a small piece of country life away with them.",
+      "alt": ""
+    }
+  },
+  "portada": {
+    "heroTitulo": "Agroecological experiences\nwith the taste of cacao.",
+    "heroSubtitulo": "We harvest, ferment and taste alongside you. Get to know cacao from its roots, on a farm full of life and tradition.",
+    "heroCta": "Book your experience",
+    "heroPlaceholder": "PHOTO · OPEN CACAO POD",
+    "experiencias": "Our Experiences",
+    "verTodas": "See all experiences",
+    "ctaTitulo": "Ready to live the experience?",
+    "ctaBoton": "Book now"
+  },
+  "avales": {
+    "legal": "RNT No. 179868 · Composite trademark registered with SIC, Nice Class 39",
+    "selloAlt": "{nombre} seal",
+    "logoAlt": "{entidad} logo",
+    "bpa": {
+      "nombre": "Good Agricultural Practices",
+      "entidad": "ICA",
+      "detalle": "Responsible, traceable management of the cacao crop."
+    },
+    "ctc": {
+      "nombre": "Colombian Tourism Quality",
+      "entidad": "MinCIT · NTS-TS",
+      "detalle": "Seal of good practice in tourism services."
+    },
+    "rnt": {
+      "nombre": "National Tourism Registry",
+      "entidad": "Active",
+      "detalle": "Formally registered tourism service provider.",
+      "referencia": "No. 179868"
+    },
+    "marca": {
+      "nombre": "Registered trademark",
+      "entidad": "SIC · Nice Class 39",
+      "detalle": "Composite mark registered for travel arrangement services."
+    },
+    "rotulo": "Accreditations and certifications"
+  },
+  "galeria": {
+    "fotoDe": "{nombre} — photo {n} of {total}",
+    "fotoSimple": "{alt} — photo {n}",
+    "fotosDe": "Photos of {nombre}",
+    "verFoto": "View photo {n} of {total}",
+    "ampliarFoto": "Enlarge {alt} — photo {n} of {total}",
+    "fotoPendiente": "PHOTO · {nombre}",
+    "carrito": "Shopping cart, {n} items",
+    "seguirComprando": "← Continue shopping",
+    "verFotoSimple": "View photo {n} of {total}"
+  }
+}
