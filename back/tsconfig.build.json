@@ -1,4 +1,23 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "prisma", "prisma.config.ts"]
+  "exclude": [
+    "node_modules",
+    "test",
+    "dist",
+    "**/*spec.ts",
+    "prisma",
+    "prisma.config.ts",
+    // `scripts/` NO se compila, y excluirlo no es cosmetico: define donde cae
+    // la salida. tsconfig.json no declara `include`, asi que TypeScript recoge
+    // todo el paquete y el `rootDir` se deduce del ancestro comun de lo que
+    // entra. Con solo src/ dentro, ese ancestro es `src` y el resultado es
+    // dist/main.js. En cuanto entra un .ts de scripts/, el ancestro pasa a ser
+    // la raiz y la salida se mueve a dist/src/main.js — sin error de compilado,
+    // y el arranque revienta con «Cannot find module dist/main». Paso en el
+    // despliegue de Render.
+    //
+    // Estos scripts se ejecutan con ts-node, nunca compilados, asi que no se
+    // pierde nada. Cualquier .ts nuevo fuera de src/ tiene que excluirse aqui.
+    "scripts"
+  ]
 }
