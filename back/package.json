@@ -18,7 +18,12 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"
+    "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts",
+    "verificar:traduccion": "ts-node scripts/verificar-traduccion.ts",
+    "traducciones:estado": "ts-node scripts/estado-traducciones.ts",
+    "traducciones:ver": "ts-node scripts/ver-textos.ts",
+    "traducciones:rellenar": "ts-node scripts/rellenar-traducciones.ts",
+    "traducciones:siteconfig": "ts-node scripts/rellenar-siteconfig.ts"
   },
   "prisma": {
     "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"
@@ -35,6 +40,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "cloudinary": "^2.10.0",
+    "deepl-node": "^1.28.0",
     "nodemailer": "^9.0.1",
     "pg": "^8.22.0",
     "prisma": "^7.8.0",
