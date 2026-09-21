@@ -45,6 +45,10 @@ export class EmailService {
     return this.tpl('contacto-recibido', vars)
   }
 
+  templateSolicitudGrupoRecibida(vars: Record<string, string>): string {
+    return this.tpl('solicitud-grupo-recibida', vars)
+  }
+
   templateAlertaAdmin(vars: Record<string, string>): string {
     return this.tpl('alerta-admin', vars)
   }
