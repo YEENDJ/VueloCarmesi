@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Link } from '@/lib/i18n/navigation'
 import { alternatesDeIdioma } from '@/lib/i18n/alternates'
+import { SITIO } from '@/lib/sitio'
 import {
   Binoculars,
   CalendarRange,
@@ -49,25 +50,6 @@ const EBIRD_HOTSPOT_ID = 'L7999083'
 
 const EBIRD_URL = `https://ebird.org/hotspot/${EBIRD_HOTSPOT_ID}`
 
-
-/**
- * Dominio público del sitio.
- *
- * Va con el dominio real por defecto y no con un respaldo a localhost, que es
- * lo que hace Next si no se le dice nada: un `<link rel="canonical"
- * href="http://localhost:3000/aviturismo">` servido en producción le está
- * diciendo al buscador que la versión buena de esta página vive en una máquina
- * a la que no puede entrar, y con eso la saca del índice.
- *
- * La variable de entorno queda como escape para un despliegue de prueba en
- * otro dominio: ahí sí conviene que el canonical apunte a sí mismo y no a
- * producción, para no competir consigo mismo en el índice.
- */
-// Con `||` y no con `??`: en .env.example la variable va declarada pero vacía,
-// y una cadena vacía no es nullish. Con `??` pasaría el '' a new URL(), que
-// lanza, y el build se caería con un error que no señala a este archivo.
-const SITIO = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://vuelocarmesi.com'
-
 export async function generateMetadata({
   params,
 }: {
@@ -80,7 +62,10 @@ export async function generateMetadata({
     metadataBase: new URL(SITIO),
     // hreflang recíproco: /aviturismo y /en/birding son la misma página.
     alternates: alternatesDeIdioma('/aviturismo', locale),
-    title: `${t('titulo')} | Vuelo Carmesí`,
+    // Sin la marca: el layout ya la añade con title.template («%s · Vuelo
+    // Carmesí»). Escribirla también aquí la duplicaba —«… | Vuelo Carmesí ·
+    // Vuelo Carmesí»— y empujaba el título a 90 caracteres, que la SERP trunca.
+    title: t('titulo'),
     description: t('descripcion'),
     // Las claves NO se traducen a la ligera: media lista ya está en inglés a
     // propósito, porque son los términos con los que busca un birder
