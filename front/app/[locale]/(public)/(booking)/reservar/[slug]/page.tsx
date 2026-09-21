@@ -1,6 +1,7 @@
 import { getExperienciaBySlug } from '@/lib/api/experiencias'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import ReservaForm from '@/components/booking/ReservaForm'
+import MigaSuperior from '@/components/layout/MigaSuperior'
 import { notFound } from 'next/navigation'
 import { formatPrecio } from '@/lib/format'
 
@@ -24,6 +25,16 @@ export default async function ReservarPage({
   return (
     <div style={{ backgroundColor: 'var(--color-cream)', minHeight: '100svh' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: 'clamp(40px,6vw,64px) clamp(16px,4vw,24px) 80px' }}>
+
+        {/* El padre de esta pantalla NO es el listado sino la ficha de la que
+            se vino: es el paso anterior del embudo, y quien está a medio
+            reservar quiere volver a mirar un dato de ESA experiencia, no
+            empezar de cero. */}
+        <MigaSuperior
+          href={{ pathname: '/experiencias/[slug]', params: { slug } }}
+          etiqueta={exp.nombre}
+          actual={t('tituloFormulario')}
+        />
 
         {/* Page header */}
         <div style={{ marginBottom: '40px' }}>
