@@ -155,3 +155,6 @@ front/public/portafolio/
 
 # Originales de fotografia y material sin procesar (ver docs/catalogo-fotos.md)
 assets/originales/
+
+# Entregables de la skill auditoria-seo: informe para el usuario, no cambio del proyecto.
+auditoria-seo/
