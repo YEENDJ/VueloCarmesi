@@ -1,5 +1,7 @@
 import { useTranslations } from 'next-intl'
+import { ArrowRight } from 'lucide-react'
 import CertBadge from '@/components/secciones/CertBadge'
+import { Link } from '@/lib/i18n/navigation'
 import { CERTIFICACIONES } from '@/lib/certificaciones'
 
 export default function Certificaciones() {
@@ -131,6 +133,17 @@ export default function Certificaciones() {
               >
                 {ta(`${cert.clave}.detalle`)}
               </p>
+
+              {/* El sello que obliga a publicar un documento lleva al
+                  documento. Hoy solo lo hace el CTC; el resto de la tarjeta no
+                  es clicable, así que el enlace va explícito y no envolviendo
+                  la tarjeta entera. */}
+              {cert.politica && (
+                <Link href={cert.politica} className="cert-politica">
+                  {ta('verPolitica')}
+                  <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
+                </Link>
+              )}
             </div>
           ))}
         </div>

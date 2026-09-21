@@ -11,6 +11,7 @@ import {
   UserRound,
   type LucideIcon,
 } from 'lucide-react'
+import MigaSuperior from '@/components/layout/MigaSuperior'
 
 export async function generateMetadata({
   params,
@@ -101,11 +102,15 @@ export default async function PoliticaProteccionInfanciaPage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
+  const tNav = await getTranslations('nav')
   const t = await getTranslations('politicas.ninez')
   const tp = await getTranslations('politicas')
 
   return (
     <section className="page-shell politica">
+      {/* El índice de políticas no está en el navbar, así que sin esto la única
+          salida desde una política es el botón del navegador. */}
+      <MigaSuperior href="/politicas" etiqueta={tNav('politicas')} actual={t('titulo')} />
       <h1 style={{ color: 'var(--color-brown)', marginBottom: '12px', minWidth: 0 }}>
         {t('titulo')}
       </h1>

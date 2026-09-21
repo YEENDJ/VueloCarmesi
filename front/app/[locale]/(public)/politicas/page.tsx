@@ -2,7 +2,15 @@ import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Link } from '@/lib/i18n/navigation'
 import { alternatesDeIdioma } from '@/lib/i18n/alternates'
-import { ArrowRight, CalendarX, ShieldCheck, type LucideIcon } from 'lucide-react'
+import {
+  ArrowRight,
+  CalendarX,
+  Leaf,
+  Lock,
+  Receipt,
+  ShieldCheck,
+  type LucideIcon,
+} from 'lucide-react'
 
 export async function generateMetadata({
   params,
@@ -19,21 +27,33 @@ export async function generateMetadata({
 }
 
 type Politica = {
-  href: '/politicas/proteccion-infancia' | '/politicas/cancelacion'
+  href:
+    | '/politicas/proteccion-infancia'
+    | '/politicas/cancelacion'
+    | '/politicas/datos-personales'
+    | '/politicas/terminos-tienda'
+    | '/politicas/sostenibilidad'
   /** Clave dentro de `politicas.indice`; el texto vive en messages/*.json. */
-  clave: 'ninez' | 'cancelacion'
+  clave: 'ninez' | 'cancelacion' | 'datos' | 'tienda' | 'sostenibilidad'
   Icono: LucideIcon
 }
 
 /**
  * Índice de políticas del prestador turístico. Cada tarjeta es un enlace a la
  * política completa; se agrega una entrada aquí conforme exista el texto.
- * PENDIENTE: cuando existan, se suman el tratamiento de datos personales
- * (Ley 1581 de 2012) y los términos y condiciones de la tienda.
+ *
+ * El orden no es cronológico ni alfabético: va de lo que obliga a la finca
+ * frente a un tercero —la niñez, que es obligación del RNT— a lo que el
+ * visitante consulta antes de decidir —cancelación, datos, tienda—, y cierra
+ * con la sostenibilidad, que es la que respalda el sello que se exhibe en la
+ * tira de avales.
  */
 const POLITICAS: Politica[] = [
   { href: '/politicas/proteccion-infancia', clave: 'ninez', Icono: ShieldCheck },
   { href: '/politicas/cancelacion', clave: 'cancelacion', Icono: CalendarX },
+  { href: '/politicas/datos-personales', clave: 'datos', Icono: Lock },
+  { href: '/politicas/terminos-tienda', clave: 'tienda', Icono: Receipt },
+  { href: '/politicas/sostenibilidad', clave: 'sostenibilidad', Icono: Leaf },
 ]
 
 export default async function PoliticasPage({

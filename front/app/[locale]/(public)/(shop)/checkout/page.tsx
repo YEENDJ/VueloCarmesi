@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'
+import { Link } from '@/lib/i18n/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCart, setLastOrder } from '@/lib/cart/store'
@@ -81,8 +82,24 @@ export default function CheckoutPage() {
             ? t('procesando')
             : t('confirmar', { total: formatPrecio(cartTotal, idioma) })}
         </Button>
+        {/* El aviso ya decía «aceptas nuestras condiciones de venta», pero no
+            llevaba a ninguna parte. Ahora enlaza los dos textos que el
+            comprador acepta al pulsar el botón —las condiciones de la tienda y
+            el tratamiento de sus datos—, que es lo que hace que la aceptación
+            sea informada y no una frase decorativa. */}
         <p style={{ textAlign: 'center', fontSize: '0.8125rem', color: 'rgba(135,43,19,0.6)' }}>
-          {t('condiciones')}
+          {t.rich('condiciones', {
+            terminos: texto => (
+              <Link href="/politicas/terminos-tienda" style={{ color: 'var(--color-crimson)', fontWeight: 700 }}>
+                {texto}
+              </Link>
+            ),
+            datos: texto => (
+              <Link href="/politicas/datos-personales" style={{ color: 'var(--color-crimson)', fontWeight: 700 }}>
+                {texto}
+              </Link>
+            ),
+          })}
         </p>
       </form>
 
