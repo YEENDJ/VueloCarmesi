@@ -1,4 +1,8 @@
 import { useTranslations } from 'next-intl'
+// La lista vivía acá con nueve nombres y le faltaban seis de los del
+// portafolio, así que la home y /grupos mostraban prueba social distinta. Ahora
+// las dos leen del mismo archivo.
+import { TODOS_LOS_CLIENTES } from '@/lib/clientes'
 interface Props {
   /**
    * Las claves de SiteConfig con las cifras. Se pasan enteras y cada tarjeta
@@ -27,17 +31,6 @@ const STATS = [
   { clave: 'impacto_extranjeros', respaldo: '15', t: 'extranjeros' },
 ]
 
-const ORGANIZACIONES = [
-  'Uniandes',
-  'Unillanos',
-  'SENA',
-  'Unimeta',
-  'Uniminuto',
-  'Ecopetrol',
-  'Fedecacao',
-  'Socodevi',
-  'Rare',
-]
 
 export default function PruebaSocial({ cifras }: Props) {
   const t = useTranslations('pruebaSocial')
@@ -174,7 +167,7 @@ export default function PruebaSocial({ cifras }: Props) {
               gap: '12px 20px',
             }}
           >
-            {ORGANIZACIONES.map((org) => (
+            {TODOS_LOS_CLIENTES.map((org) => (
               <span
                 key={org}
                 style={{

@@ -2,6 +2,9 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
+import { Users } from 'lucide-react'
+import { Link } from '@/lib/i18n/navigation'
+import AvisoDatos from '@/components/ui/AvisoDatos'
 import type { Experiencia } from '@/lib/types'
 
 const inputStyle: React.CSSProperties = {
@@ -46,6 +49,7 @@ function Field({
 
 export default function ReservaForm({ experiencia }: { experiencia: Experiencia }) {
   const t = useTranslations('reserva')
+  const tg = useTranslations('grupos.aviso')
 
   const router = useRouter()
   const [form, setForm] = useState({
@@ -164,10 +168,20 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
           >
             {personasOpts.map(n => (
               <option key={n} value={String(n)}>
-                {n} persona{n > 1 ? 's' : ''}
+                {/* Plural ICU y no un ternario: `persona{n > 1 ? 's' : ''}`
+                    salía en español para todo el mundo, también en /en. */}
+                {t('campos.personasOpcion', { n })}
               </option>
             ))}
           </select>
+          {/* El desplegable corta en la capacidad de la experiencia —12 y 8—, y
+              este es el punto exacto donde se pierde la venta institucional:
+              un coordinador con 40 estudiantes llega hasta acá, ve que el
+              número más alto es 12 y se va sin que nadie se entere. */}
+          <Link href="/grupos" className="reserva-tope-grupos">
+            <Users size={15} strokeWidth={2} aria-hidden="true" />
+            {tg('reservaTope', { capacidad: experiencia.capacidad })}
+          </Link>
         </Field>
       </div>
 
@@ -231,6 +245,7 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
         >
           {t('contactaremos')}
         </p>
+        <AvisoDatos />
       </div>
 
     </form>

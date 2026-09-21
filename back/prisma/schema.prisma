@@ -110,6 +110,50 @@ model Contacto {
   createdAt DateTime @default(now())
 }
 
+/// Solicitud de cotización de un grupo: colegio, universidad, empresa o agencia.
+///
+/// Es hermana de `Contacto` y no una variante suya. Lo que las separa no es el
+/// texto del mensaje sino que acá cada dato que decide la cotización tiene su
+/// columna. Con todo dentro de `mensaje` no se puede filtrar por tamaño de
+/// grupo, ni contar cuántas solicitudes escolares entran, ni saber cuántas se
+/// perdieron — que es justo lo que hoy no se puede medir.
+///
+/// El otro motivo es el formulario: `/reservar/[slug]` tope el selector de
+/// personas en `experiencia.capacidad` (12 y 8), así que un colegio de 40
+/// estudiantes no tiene por dónde pedir. Este modelo es el que le abre la
+/// puerta, y por eso `personas` no tiene tope de capacidad.
+model SolicitudGrupo {
+  id                 String    @id @default(cuid())
+  /// colegio | universidad | empresa | agencia | otro
+  tipo               String
+  institucion        String
+  nit                String?
+  contacto           String
+  cargo              String?
+  email              String
+  telefono           String
+  personas           Int
+  /// Rango de edades del grupo. Solo lo pide el formulario cuando es colegio:
+  /// es lo que decide la póliza y el papeleo de menores.
+  edades             String?
+  fechaTentativa     DateTime?
+  /// Slugs de las experiencias marcadas, o vacío si pidió algo a medida.
+  experiencias       String[]  @default([])
+  requiereTransporte Boolean   @default(false)
+  requiereFactura    Boolean   @default(false)
+  mensaje            String    @default("")
+  /// nueva | contactada | cotizada | cerrada | perdida
+  ///
+  /// Entra ya, aunque en esta fase nadie lo cambie: la columna es gratis hoy y
+  /// una migración sobre la única base de datos que hay —la de producción— no.
+  estado             String    @default("nueva")
+  createdAt          DateTime  @default(now())
+
+  /// Como las va a listar el panel cuando exista la pantalla: las nuevas
+  /// primero. Se crea con la tabla vacía a propósito.
+  @@index([estado, createdAt(sort: Desc)])
+}
+
 model SiteConfig {
   key       String   @id
   value     String

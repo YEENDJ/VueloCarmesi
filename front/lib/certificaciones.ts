@@ -13,6 +13,19 @@ export type Certificacion = {
    * 'simbolo': se dibuja en curva y toma el color del contexto, sin archivo.
    */
   forma?: 'circulo' | 'sello-rectangular' | 'simbolo'
+  /**
+   * La política del sitio que respalda este aval, si alguna lo hace.
+   *
+   * Solo el CTC la tiene: las NTS-TS exigen que el prestador certificado
+   * publique su política de sostenibilidad, así que el sello y el documento son
+   * dos mitades de lo mismo. Exhibir el sello sin dejar llegar al documento es
+   * justo lo que revisa una auditoría de renovación.
+   *
+   * Se pinta en la sección de la landing, no en la tira del footer: allí los
+   * cuatro sellos van como recurso fijo de marca sobre el brown, sin texto ni
+   * enlaces.
+   */
+  politica?: '/politicas/sostenibilidad'
 }
 
 /**
@@ -29,6 +42,7 @@ export const CERTIFICACIONES: Certificacion[] = [
     logo: '/certificaciones/ctc.png',
     logoOscuro: '/certificaciones/ctc-claro.png',
     forma: 'sello-rectangular',
+    politica: '/politicas/sostenibilidad',
   },
   { clave: 'rnt', logo: '/certificaciones/logo_rnt.png', conReferencia: true },
   {

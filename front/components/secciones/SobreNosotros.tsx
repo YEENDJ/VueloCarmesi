@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl'
+import { Link } from '@/lib/i18n/navigation'
 interface Props {
   imagen?: string
 }
@@ -112,9 +113,13 @@ export default function SobreNosotros({ imagen }: Props) {
 
             {/* CTA ghost */}
             <div>
-              <a href="/sobre-nosotros" className="btn-ghost-cream">
+              {/* Link de next-intl y no <a href="/sobre-nosotros">: el ancla
+                  cruda recargaba la página entera y, peor, llevaba la ruta
+                  española incrustada, así que desde /en mandaba al visitante
+                  —y al rastreador— de vuelta al español. */}
+              <Link href="/sobre-nosotros" className="btn-ghost-cream">
                 {t('cta')}
-              </a>
+              </Link>
             </div>
 
           </div>

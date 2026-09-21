@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from '@/lib/i18n/navigation'
 import Hero from '@/components/layout/Hero'
 import Button from '@/components/ui/Button'
 import ExperienciaCard from '@/components/booking/ExperienciaCard'

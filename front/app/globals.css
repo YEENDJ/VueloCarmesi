@@ -4463,3 +4463,1375 @@ a.contacto-canal:hover {
   color: var(--color-brown);
   min-width: 0;
 }
+
+/* ─────────────────────────────────────────────────────────
+   Grupos · colegios, universidades y empresas
+   ─────────────────────────────────────────────────────────
+   Mismo idioma que aviturismo y políticas —disco de 44 px,
+   tarjeta con recinto, índice de anclas— porque es el patrón
+   que el sitio ya tiene para una página larga que se consulta
+   a saltos, y este visitante la consulta así: entra por UNA
+   pregunta (¿entra el bus?, ¿facturan?) y necesita encontrarla
+   sin leer el resto.
+
+   Lo propio de acá son tres piezas: la rejilla de perfiles
+   (foto grande + viñetas + su propio CTA), la tabla de tarifas
+   —única tabla del sitio público, y por eso scrollea en su
+   contenedor— y el formulario, que es el objetivo de la página.
+   ───────────────────────────────────────────────────────── */
+
+.grp-kicker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+}
+.grp-titulo {
+  min-width: 0;
+  margin-bottom: 14px;
+  font-size: var(--fs-h1);
+  line-height: 1.12;
+  color: var(--color-brown);
+}
+.grp-lead {
+  min-width: 0;
+  max-width: 68ch;
+  margin-bottom: clamp(24px, 4vw, 34px);
+  font-size: clamp(1rem, 2.6vw, 1.12rem);
+  line-height: 1.75;
+  opacity: 0.85;
+}
+.grp-lead b { opacity: 1; }
+
+/* ── Banda de resumen ──
+   Los cuatro datos que contestan «¿me sirven o no?» antes de que el visitante
+   lea un párrafo. Son de ancho mínimo mayor que los de aviturismo (260 y no
+   240) porque «vía pavimentada hasta la finca» es una frase, no una cifra. */
+.grp-resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: clamp(12px, 2vw, 18px);
+  margin-bottom: clamp(20px, 3vw, 28px);
+}
+.grp-resumen-dato {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 14px;
+  padding: clamp(14px, 3vw, 18px);
+  font-size: clamp(0.88rem, 2.2vw, 0.95rem);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.grp-cifra {
+  display: block;
+  color: var(--color-crimson);
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.6vw, 1.2rem);
+}
+
+/* El disco de 44 px: marca del apartado, no adorno, y área táctil de
+   referencia del sitio. */
+.grp-icono {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(234, 91, 12, 0.12);
+}
+
+/* ── Índice ──
+   Anclas y no acordeones: esta página se lee justo antes de pedir una
+   cotización que hay que defender ante un comité, y esconder las condiciones
+   detrás de un clic es lo que no puede pasar. El último chip va relleno porque
+   no es un apartado más: es la acción. */
+.grp-indice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: clamp(24px, 4vw, 34px);
+}
+.grp-chip {
+  min-width: 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 16px;
+  border: 1px solid rgba(135, 43, 19, 0.18);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-brown);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.grp-chip:hover,
+.grp-chip:focus-visible {
+  background: var(--color-crimson);
+  border-color: var(--color-crimson);
+  color: var(--color-cream);
+}
+.grp-chip--fuerte {
+  background: var(--color-orange);
+  border-color: var(--color-orange);
+  color: var(--color-cream);
+}
+.grp-chip--fuerte:hover,
+.grp-chip--fuerte:focus-visible {
+  background: var(--color-brown);
+  border-color: var(--color-brown);
+}
+
+/* ── Apartados ── */
+.grp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+  gap: clamp(16px, 3vw, 24px);
+  align-items: start;
+}
+.grp-card {
+  min-width: 0;
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 16px;
+  padding: clamp(20px, 4vw, 26px);
+  /* La navbar es sticky: sin esto el enlace del índice deja el título del
+     apartado justo debajo de la franja crimson. */
+  scroll-margin-top: clamp(80px, 10vw, 100px);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+/* Borde y sombra, nunca desplazamiento: la tarjeta no es clicable. */
+.grp-card:hover {
+  border-color: rgba(135, 43, 19, 0.28);
+  box-shadow: 0 6px 18px rgba(135, 43, 19, 0.07);
+}
+.grp-card--ancha { grid-column: 1 / -1; }
+.grp-card-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  margin-bottom: clamp(14px, 2.5vw, 18px);
+}
+.grp-card-titulo {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3.5vw, 1.4rem);
+  line-height: 1.25;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.grp-card-texto {
+  min-width: 0;
+  margin-bottom: 14px;
+  font-size: clamp(0.95rem, 2.5vw, 1.03rem);
+  line-height: 1.75;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}
+.grp-card-texto:last-child { margin-bottom: 0; }
+.grp-card-nota {
+  min-width: 0;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(135, 43, 19, 0.1);
+  font-size: clamp(0.85rem, 2.2vw, 0.92rem);
+  line-height: 1.7;
+  opacity: 0.75;
+  overflow-wrap: anywhere;
+}
+.grp-card-nota a,
+.grp-card-texto a {
+  color: var(--color-crimson);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.grp-subtitulo {
+  min-width: 0;
+  margin: clamp(16px, 3vw, 20px) 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+}
+
+/* Viñetas con marca naranja, el mismo recurso `marks` del portafolio. */
+.grp-marks {
+  min-width: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.grp-marks li {
+  min-width: 0;
+  position: relative;
+  padding-left: 18px;
+  font-size: clamp(0.9rem, 2.3vw, 0.97rem);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.grp-marks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--color-orange);
+}
+
+/* ── Quiénes ya vinieron ──
+   Nombres en píldora, nunca logotipos: listar clientes por nombre es práctica
+   comercial normal; reproducir sus marcas exige autorización de cada una. */
+.grp-clientes-cifra {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 4px;
+  font-size: clamp(0.9rem, 2.3vw, 1rem);
+  line-height: 1.5;
+}
+.grp-clientes-cifra strong {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 2.8rem);
+  line-height: 1;
+  color: var(--color-crimson);
+}
+.grp-pills {
+  min-width: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.grp-pill {
+  min-width: 0;
+  padding: 7px 15px;
+  border: 1px solid rgba(135, 43, 19, 0.16);
+  border-radius: 999px;
+  background: #fff;
+  font-size: clamp(0.82rem, 2.1vw, 0.9rem);
+  font-weight: 700;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+
+/* ── Las tres pistas ──
+   Foto grande arriba y el CTA abajo de todo, alineado al pie de la tarjeta con
+   margin-top:auto para que los tres botones queden a la misma altura aunque
+   las viñetas midan distinto. */
+.grp-perfiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: clamp(14px, 2.5vw, 20px);
+  margin-top: clamp(6px, 1.5vw, 10px);
+}
+.grp-perfil {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-top: 3px solid var(--color-orange);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.grp-perfil-foto {
+  position: relative;
+  width: 100%;
+  /* Ratio declarado: reserva el espacio y evita el salto de layout al cargar. */
+  aspect-ratio: 3 / 2;
+  background: rgba(135, 43, 19, 0.06);
+}
+.grp-perfil-credito {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 6px 12px;
+  background: rgba(135, 43, 19, 0.78);
+  color: var(--color-cream);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.grp-perfil-cuerpo {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(14px, 3vw, 18px);
+}
+.grp-perfil-kicker {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+}
+.grp-perfil-titulo {
+  min-width: 0;
+  margin-bottom: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 3.2vw, 1.3rem);
+  line-height: 1.2;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+/* Las viñetas absorben el alto que sobre en la tarjeta, y con eso la nota y el
+   botón quedan clavados al fondo: los tres CTA se alinean aunque cada perfil
+   tenga viñetas de distinto largo.
+   
+   El empuje va en la LISTA y no como `margin-top: auto` en el botón. Así estaba
+   escrito antes y no funcionaba: el botón siempre va detrás de la nota, así que
+   `.grp-perfil-nota + .grp-boton--perfil` —dos clases, más específica— le ganaba
+   al `auto` y lo dejaba sin efecto. Puesto en la lista no hay nada que lo pise,
+   y además sigue funcionando si algún día una tarjeta se queda sin nota. */
+.grp-perfil-cuerpo .grp-marks {
+  flex: 1;
+  margin-bottom: 12px;
+}
+.grp-perfil-nota {
+  min-width: 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(135, 43, 19, 0.1);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  opacity: 0.75;
+  overflow-wrap: anywhere;
+}
+.grp-boton--perfil {
+  width: 100%;
+  margin-top: 14px;
+}
+
+/* ── Tarifas ──
+   La única tabla del sitio público. Cuatro columnas no caben en 320px, así que
+   scrollea en SU contenedor: el body nunca debe scrollear en horizontal. */
+.grp-tabla-marco {
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 12px;
+  background: #fff;
+}
+.grp-tabla {
+  width: 100%;
+  min-width: 460px;
+  border-collapse: collapse;
+  font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+}
+.grp-tabla th,
+.grp-tabla td {
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.grp-tabla thead th {
+  background: rgba(135, 43, 19, 0.05);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  white-space: nowrap;
+}
+.grp-tabla tbody tr + tr td {
+  border-top: 1px solid rgba(135, 43, 19, 0.1);
+}
+.grp-tabla-derecha { text-align: right; }
+.grp-tabla-precio {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.6vw, 1.15rem);
+  color: var(--color-crimson);
+  white-space: nowrap;
+}
+.grp-tabla-enlace {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-crimson);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.grp-notas {
+  min-width: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.grp-notas li {
+  min-width: 0;
+  padding: 7px 14px;
+  border: 1px dashed rgba(135, 43, 19, 0.28);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+
+/* ── Dos columnas dentro de una tarjeta ──
+   Incluye/no incluye, acceso/terreno. Sin breakpoint: dos columnas cuando hay
+   sitio y una cuando no. */
+.grp-dos-columnas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: clamp(14px, 3vw, 26px);
+}
+.grp-dos-columnas > div { min-width: 0; }
+.grp-dos-columnas .grp-subtitulo:first-child { margin-top: 0; }
+
+.grp-checks-lista {
+  min-width: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.grp-checks-lista li {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: clamp(0.9rem, 2.3vw, 0.97rem);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.grp-checks-lista svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: #2e7d32;
+}
+/* El rojo del aspa no es alarma: es lo que hace que la columna de «no incluye»
+   se distinga de un vistazo de la de al lado, que es justo el error que esta
+   tarjeta existe para evitar. */
+.grp-checks-lista--no svg { color: var(--color-crimson); }
+
+/* ── Ruta por tramos ──
+   Base móvil: una columna, cada parada debajo de la anterior con el hilo
+   vertical pasando por la izquierda. En escritorio pasa a cuatro columnas
+   iguales con el hilo horizontal. Es una <ol> de verdad: sin CSS sigue siendo
+   «cuatro paradas en este orden».
+
+   Las tres medidas de las que cuelga todo el dibujo viven acá arriba como
+   variables. El hilo horizontal tiene que caer EXACTAMENTE en el centro
+   vertical de los nodos, y ese centro se calcula a partir de ellas en vez de
+   con un número a ojo —que es lo que tenía antes y por eso no alineaba—. */
+.grp-ruta-marco {
+  --ruta-nodo: 38px;
+  --ruta-tramo-alto: 22px;
+  --ruta-fila-gap: 8px;
+  min-width: 0;
+  margin: clamp(6px, 1.5vw, 10px) 0 clamp(16px, 3vw, 22px);
+  padding: clamp(16px, 3vw, 20px);
+  background: #fff;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 14px;
+}
+.grp-ruta {
+  min-width: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.grp-ruta-parada {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--ruta-nodo) 1fr;
+  grid-template-areas:
+    'tramo tramo'
+    'nodo  lugar';
+  align-items: center;
+  column-gap: 12px;
+}
+.grp-ruta-tramo {
+  grid-area: tramo;
+  position: relative;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* Sangrado para que el texto no se monte sobre el hilo vertical. */
+  padding: 9px 0 9px calc(var(--ruta-nodo) + 12px);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-orange);
+  overflow-wrap: anywhere;
+}
+.grp-ruta-tramo svg { flex-shrink: 0; }
+/* El hilo que une el nodo anterior con este. Se dibuja sobre la fila del
+   tramo, que es justo el espacio que queda entre los dos, y se desborda unos
+   píxeles por arriba y por abajo para meterse bajo ambos discos. */
+.grp-ruta-parada:not(:first-child) .grp-ruta-tramo::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--ruta-nodo) / 2 - 1px);
+  top: -10px;
+  bottom: -10px;
+  width: 2px;
+  background: rgba(135, 43, 19, 0.2);
+}
+.grp-ruta-nodo {
+  grid-area: nodo;
+  position: relative;
+  /* Encima del hilo: el disco lleva fondo propio y lo tapa, que es lo que hace
+     que la línea parezca entrar y salir de cada parada. */
+  z-index: 1;
+  width: var(--ruta-nodo);
+  height: var(--ruta-nodo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid rgba(135, 43, 19, 0.25);
+  color: var(--color-brown);
+}
+.grp-ruta-nodo--fin {
+  background: var(--color-crimson);
+  border-color: var(--color-crimson);
+  color: var(--color-cream);
+}
+.grp-ruta-lugar {
+  grid-area: lugar;
+  min-width: 0;
+  padding: 4px 0;
+  font-size: clamp(0.9rem, 2.3vw, 1rem);
+  font-weight: 700;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.grp-ruta-nota {
+  min-width: 0;
+  margin-top: 12px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  opacity: 0.7;
+}
+
+/* ── Qué llevar ──
+   Rejilla fluida: dos columnas en cuanto quepan, una a 320px. */
+.grp-llevar {
+  min-width: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
+  gap: 8px 18px;
+}
+.grp-llevar li {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: clamp(0.87rem, 2.2vw, 0.94rem);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.grp-llevar svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--color-orange);
+}
+
+/* ── Aviso dentro de una tarjeta ──
+   Filete dorado, mismo recurso que el recuadro de eBird en aviturismo. */
+.grp-aviso {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: clamp(14px, 3vw, 18px);
+  padding: clamp(14px, 3vw, 18px);
+  background: rgba(253, 195, 0, 0.1);
+  border-left: 4px solid var(--color-gold);
+  border-radius: 0 12px 12px 0;
+}
+.grp-aviso-rotulo {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+}
+.grp-aviso-rotulo svg { flex-shrink: 0; }
+.grp-aviso-texto {
+  min-width: 0;
+  font-size: clamp(0.9rem, 2.3vw, 0.97rem);
+  line-height: 1.65;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.grp-aviso--pdf .grp-boton { margin-top: 10px; align-self: flex-start; }
+
+/* ── Los cuatro pasos ── */
+.grp-timeline {
+  min-width: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.grp-paso {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(92px, 100%), auto));
+  align-items: baseline;
+  gap: 4px 14px;
+  padding: 11px 14px;
+  background: #fff;
+  border: 1px solid rgba(135, 43, 19, 0.1);
+  border-radius: 10px;
+}
+.grp-paso-rotulo {
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+}
+.grp-paso-texto {
+  min-width: 0;
+  font-size: clamp(0.9rem, 2.3vw, 0.97rem);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+/* ── Preguntas frecuentes ──
+   <details> nativo: funciona sin JS y es accesible sin trabajo extra. Acá sí
+   se puede esconder, al revés que las condiciones: quien abre una pregunta ya
+   sabe cuál busca, y la respuesta no es una cláusula que lo comprometa. */
+.grp-faq {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.grp-faq-item {
+  min-width: 0;
+  background: #fff;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.grp-faq-item summary {
+  min-width: 0;
+  /* 44px de alto por el padding: es un control táctil. */
+  padding: 13px 16px;
+  font-size: clamp(0.9rem, 2.3vw, 0.98rem);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--color-brown);
+  cursor: pointer;
+  list-style-position: outside;
+  overflow-wrap: anywhere;
+}
+.grp-faq-item summary::marker { color: var(--color-orange); }
+.grp-faq-item[open] summary {
+  border-bottom: 1px solid rgba(135, 43, 19, 0.1);
+}
+.grp-faq-item p {
+  min-width: 0;
+  padding: 13px 16px;
+  font-size: clamp(0.88rem, 2.2vw, 0.95rem);
+  line-height: 1.7;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}
+
+/* ── Botones ── */
+.grp-boton {
+  min-width: 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 20px;
+  border: 1px solid var(--color-crimson);
+  border-radius: 999px;
+  background: var(--color-crimson);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.grp-boton svg { flex-shrink: 0; }
+.grp-boton:hover,
+.grp-boton:focus-visible {
+  background: var(--color-brown);
+  border-color: var(--color-brown);
+}
+.grp-boton--fantasma {
+  background: transparent;
+  color: var(--color-crimson);
+}
+.grp-boton--fantasma:hover,
+.grp-boton--fantasma:focus-visible {
+  background: var(--color-crimson);
+  color: var(--color-cream);
+}
+.grp-boton[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.grp-acciones {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: clamp(14px, 3vw, 18px);
+}
+.grp-acciones--centrada { justify-content: center; }
+
+/* ── El formulario ──
+   Sobre blanco y no sobre el crema: es el objetivo de la página y tiene que
+   separarse de los apartados que vienen antes. */
+.grp-cotizar {
+  min-width: 0;
+  margin-top: clamp(28px, 5vw, 44px);
+  padding: clamp(20px, 4vw, 34px);
+  background: #fff;
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  border-top: 4px solid var(--color-orange);
+  border-radius: 16px;
+  scroll-margin-top: clamp(80px, 10vw, 100px);
+}
+.grp-cotizar-titulo {
+  min-width: 0;
+  margin-bottom: 10px;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 4vw, 1.75rem);
+  line-height: 1.18;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.grp-cotizar-texto {
+  min-width: 0;
+  max-width: 62ch;
+  margin-bottom: clamp(18px, 3vw, 26px);
+  font-size: clamp(0.93rem, 2.4vw, 1rem);
+  line-height: 1.7;
+  opacity: 0.85;
+}
+
+.grp-form {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2.5vw, 18px);
+}
+/* Dos campos por fila cuando quepan, uno cuando no. Sin breakpoint. */
+.grp-form-fila {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: clamp(14px, 2.5vw, 18px);
+}
+.grp-campo {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.grp-campo label {
+  min-width: 0;
+  font-size: 0.87rem;
+  font-weight: 700;
+  color: var(--color-brown);
+}
+.grp-campo input,
+.grp-campo textarea {
+  min-width: 0;
+  width: 100%;
+  /* 44px de alto y 16px de letra: por debajo de 16, iOS hace zoom al enfocar
+     y descuadra la página entera. */
+  min-height: 44px;
+  padding: 11px 14px;
+  border: 1.5px solid rgba(135, 43, 19, 0.35);
+  border-radius: 8px;
+  background: var(--color-cream);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-brown);
+  transition: border-color 160ms ease;
+}
+.grp-campo textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+.grp-campo input:focus-visible,
+.grp-campo textarea:focus-visible {
+  border-color: var(--color-crimson);
+  outline: 2px solid var(--color-orange);
+  outline-offset: 1px;
+}
+.grp-campo input[aria-invalid='true'],
+.grp-campo textarea[aria-invalid='true'] {
+  border-color: var(--color-crimson);
+}
+.grp-ayuda {
+  min-width: 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  opacity: 0.7;
+  overflow-wrap: anywhere;
+}
+.grp-error {
+  min-width: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--color-crimson);
+  overflow-wrap: anywhere;
+}
+.grp-error--envio {
+  padding: 11px 14px;
+  border-radius: 8px;
+  background: rgba(213, 19, 18, 0.08);
+}
+
+.grp-form-grupo {
+  min-width: 0;
+  border: none;
+}
+.grp-form-legend {
+  min-width: 0;
+  margin-bottom: 9px;
+  padding: 0;
+  font-size: 0.87rem;
+  font-weight: 700;
+  color: var(--color-brown);
+}
+.grp-radios,
+.grp-checks {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.grp-checks--apilado { flex-direction: column; }
+.grp-radio,
+.grp-check {
+  min-width: 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 15px;
+  border: 1px solid rgba(135, 43, 19, 0.2);
+  border-radius: 999px;
+  background: var(--color-cream);
+  font-size: 0.87rem;
+  font-weight: 700;
+  color: var(--color-brown);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+.grp-checks--apilado .grp-check {
+  border-radius: 10px;
+  justify-content: flex-start;
+}
+.grp-radio input,
+.grp-check input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-crimson);
+  cursor: pointer;
+}
+.grp-radio:has(input:checked),
+.grp-check:has(input:checked) {
+  border-color: var(--color-crimson);
+  background: rgba(213, 19, 18, 0.07);
+}
+.grp-radio:has(input:focus-visible),
+.grp-check:has(input:focus-visible) {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+/* Honeypot: fuera de la pantalla, no `display:none`. Algunos bots ignoran los
+   campos ocultos con display, y este tiene que parecer un campo normal. */
+.grp-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.grp-boton--enviar {
+  align-self: flex-start;
+  padding: 0 26px;
+  min-height: 48px;
+}
+
+/* ── Acuse de recibo ── */
+.grp-gracias {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: clamp(24px, 5vw, 36px) clamp(16px, 4vw, 28px);
+  background: rgba(46, 125, 50, 0.07);
+  border: 1px solid rgba(46, 125, 50, 0.22);
+  border-radius: 14px;
+  text-align: center;
+}
+.grp-gracias-icono {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #2e7d32;
+}
+.grp-gracias-titulo {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+  line-height: 1.2;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.grp-gracias-texto {
+  min-width: 0;
+  max-width: 52ch;
+  font-size: clamp(0.92rem, 2.4vw, 1rem);
+  line-height: 1.7;
+  opacity: 0.85;
+}
+
+/* ── Agencias ──
+   Bloque corto sobre marrón: separa visualmente una conversación que es de
+   otra naturaleza —tarifa neta, comisión— de la de un colegio. */
+.grp-agencias {
+  min-width: 0;
+  margin-top: clamp(20px, 4vw, 30px);
+  padding: clamp(20px, 4vw, 30px);
+  background: var(--color-brown);
+  border-radius: 16px;
+}
+.grp-agencias-titulo {
+  min-width: 0;
+  margin-bottom: 10px;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3.5vw, 1.45rem);
+  line-height: 1.2;
+  color: var(--color-cream);
+  overflow-wrap: anywhere;
+}
+.grp-agencias-texto {
+  min-width: 0;
+  max-width: 68ch;
+  margin-bottom: 14px;
+  font-size: clamp(0.9rem, 2.3vw, 0.98rem);
+  line-height: 1.7;
+  color: rgba(255, 234, 202, 0.82);
+}
+.grp-agencias-dato {
+  min-width: 0;
+  margin-bottom: 14px;
+  font-size: clamp(0.9rem, 2.3vw, 1rem);
+  font-weight: 700;
+  color: var(--color-gold);
+  overflow-wrap: anywhere;
+}
+.grp-agencias .grp-boton--fantasma {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+.grp-agencias .grp-boton--fantasma:hover,
+.grp-agencias .grp-boton--fantasma:focus-visible {
+  background: var(--color-gold);
+  color: var(--color-brown);
+}
+
+/* ── Cierre ── */
+.grp-cta {
+  min-width: 0;
+  margin-top: clamp(20px, 4vw, 30px);
+  padding: clamp(24px, 5vw, 40px) clamp(20px, 4vw, 32px);
+  background: var(--color-crimson);
+  border-radius: 16px;
+  text-align: center;
+}
+.grp-cta-titulo {
+  min-width: 0;
+  margin-bottom: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4.5vw, 2rem);
+  line-height: 1.15;
+  color: var(--color-cream);
+  overflow-wrap: anywhere;
+}
+.grp-cta-texto {
+  min-width: 0;
+  max-width: 52ch;
+  margin: 0 auto clamp(20px, 3vw, 26px);
+  font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+  line-height: 1.7;
+  color: rgba(255, 234, 202, 0.85);
+}
+.grp-cta .grp-boton {
+  background: var(--color-cream);
+  border-color: var(--color-cream);
+  color: var(--color-crimson);
+}
+.grp-cta .grp-boton:hover,
+.grp-cta .grp-boton:focus-visible {
+  background: var(--color-brown);
+  border-color: var(--color-brown);
+  color: var(--color-cream);
+}
+.grp-cta .grp-boton--fantasma {
+  background: transparent;
+  color: var(--color-cream);
+}
+.grp-cta .grp-boton--fantasma:hover,
+.grp-cta .grp-boton--fantasma:focus-visible {
+  background: var(--color-cream);
+  color: var(--color-crimson);
+}
+
+/* La ruta pasa a cuatro columnas IGUALES cuando hay ancho.
+   Iguales importa: el hilo de cada parada se dibuja de `left:-50%` a
+   `right:50%`, o sea desde el centro de la columna anterior hasta el de esta,
+   y eso solo cae bien si todas miden lo mismo. Antes la primera iba con
+   `flex: 0 1 auto` y las otras con `flex: 1`, así que Bogotá ocupaba solo lo
+   que ocupaba su palabra y ni el reparto ni el hilo cuadraban. */
+@media (min-width: 700px) {
+  .grp-ruta {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .grp-ruta-parada {
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--ruta-tramo-alto) var(--ruta-nodo) auto;
+    grid-template-areas:
+      'tramo'
+      'nodo'
+      'lugar';
+    justify-items: center;
+    text-align: center;
+    row-gap: var(--ruta-fila-gap);
+    column-gap: 0;
+  }
+  .grp-ruta-tramo {
+    justify-content: center;
+    padding: 0;
+    white-space: nowrap;
+  }
+  /* El hilo vertical del móvil no existe acá. */
+  .grp-ruta-parada:not(:first-child) .grp-ruta-tramo::before {
+    content: none;
+  }
+  /* Hilo horizontal, del centro del nodo anterior al centro de este. El `top`
+     sale de las tres variables, no de un número a ojo: fila del tramo + hueco
+     entre filas + media altura del disco. */
+  .grp-ruta-parada:not(:first-child)::before {
+    content: '';
+    position: absolute;
+    top: calc(var(--ruta-tramo-alto) + var(--ruta-fila-gap) + var(--ruta-nodo) / 2 - 1px);
+    left: -50%;
+    right: 50%;
+    height: 2px;
+    background: rgba(135, 43, 19, 0.2);
+  }
+  .grp-ruta-lugar {
+    padding: 0;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Aviso de grupos — desvío hacia /grupos
+   ─────────────────────────────────────────────────────────
+   El componente de mayor rendimiento de la entrega: el tráfico
+   institucional ya llega a /contacto y al listado, solo que ahí
+   no encuentra capacidad, tarifa de grupo ni logística de bus.
+   Mismo molde que .aviso-avi. */
+.aviso-grp {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(12px, 3vw, 20px);
+  padding: clamp(16px, 3.5vw, 22px) clamp(16px, 3.5vw, 24px);
+  background: var(--admin-bg);
+  border: 1px solid rgba(135, 43, 19, 0.14);
+  border-radius: 16px;
+  text-decoration: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.aviso-grp:hover,
+.aviso-grp:focus-visible {
+  border-color: var(--color-crimson);
+  box-shadow: 0 2px 10px rgba(135, 43, 19, 0.08);
+}
+.aviso-grp-icono {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(234, 91, 12, 0.12);
+}
+/* `flex: 1 1 260px` reparte la fila sin breakpoint: mientras quepan 260px el
+   texto va al lado del icono y la llamada a la derecha; por debajo, la llamada
+   baja sola. El min-width: 0 es lo que deja que encoja de verdad. */
+.aviso-grp-texto {
+  flex: 1 1 260px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.aviso-grp-titulo {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.02rem, 2.8vw, 1.15rem);
+  line-height: 1.25;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.aviso-grp-linea {
+  min-width: 0;
+  font-size: clamp(0.85rem, 2.2vw, 0.92rem);
+  line-height: 1.6;
+  color: var(--color-brown);
+  opacity: 0.8;
+  overflow-wrap: anywhere;
+}
+.aviso-grp-cta {
+  flex-shrink: 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 18px;
+  border: 1px solid var(--color-crimson);
+  border-radius: 999px;
+  color: var(--color-crimson);
+  font-size: 14px;
+  font-weight: 700;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+.aviso-grp:hover .aviso-grp-cta,
+.aviso-grp:focus-visible .aviso-grp-cta {
+  background: var(--color-crimson);
+  color: var(--color-cream);
+}
+.aviso-grp-marco--listado {
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+}
+.aviso-grp-marco--contacto {
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+
+/* Bajo el selector de personas del formulario de reserva: es el punto exacto
+   donde hoy se pierde la venta, cuando el visitante descubre que el número más
+   alto del desplegable es 12 y él viene con 40. */
+.reserva-tope-grupos {
+  min-width: 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--color-crimson);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.reserva-tope-grupos svg { flex-shrink: 0; }
+
+/* ─────────────────────────────────────────────────────────
+   Miga superior — el enlace al padre de la página
+   ─────────────────────────────────────────────────────────
+   Es «subir», no «volver»: un enlace a destino fijo y no un
+   history.back(). Lo llevan las páginas con un padre dentro
+   del sitio —las cinco de políticas, las dos fichas y el
+   formulario de reserva—, no las de primer nivel.
+
+   Sobrio a propósito: va encima del h1 y su trabajo es estar
+   disponible sin disputarle la atención al titular, que es lo
+   que el visitante vino a leer. */
+.miga {
+  min-width: 0;
+  margin-bottom: clamp(12px, 2.5vw, 18px);
+}
+.miga-enlace {
+  min-width: 0;
+  /* 44px de alto: el enlace mide 14px de letra y sin esto queda en unos 20,
+     por debajo de lo que un dedo acierta. El margen negativo recupera el aire
+     que ese alto añade, para que visualmente siga pegado al titular. */
+  min-height: 44px;
+  margin-left: -6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 6px;
+  border-radius: 8px;
+  color: var(--color-crimson);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+.miga-enlace svg {
+  flex-shrink: 0;
+  transition: transform 160ms ease;
+}
+.miga-enlace:hover,
+.miga-enlace:focus-visible {
+  color: var(--color-brown);
+  background-color: rgba(135, 43, 19, 0.06);
+}
+/* La flecha se corre hacia el lado al que lleva. Es el único movimiento, y
+   aquí sí cumple lo que promete: esto es un enlace de verdad. */
+.miga-enlace:hover svg {
+  transform: translateX(-3px);
+}
+
+/* Las fichas que van a sangre —la de experiencia abre con una foto de ancho
+   completo— no tienen contenedor donde apoyar la miga, así que se lo pone
+   ella: mismo ancho y mismo margen lateral que el resto del contenido. */
+.miga-marco {
+  max-width: var(--contenido-ancho);
+  margin-inline: auto;
+  padding: 16px var(--contenido-margen) 0;
+}
+/* Dentro del marco, la miga no pone margen abajo: el respiro lo pone quien
+   venga detrás. Si no, se suman dos y el hueco se duplica. */
+.miga-marco .miga {
+  margin-bottom: 0;
+}
+/* La portada de la ficha ya trae su propio respiro superior —hasta 32px— para
+   separarse del navbar. Con la miga encima ese trabajo ya está hecho, y los dos
+   juntos, más los 15px que el área táctil de 44px deja bajo el texto del
+   enlace, dejaban unos 60px de crema entre el enlace y la foto. Los 8px que
+   quedan se suman a esos 15 y dan el respiro que se ve, no el que se mide. */
+.miga-marco + .ficha-exp-portada {
+  padding-top: 8px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Aviso de autorización de datos bajo el botón de envío
+   Lo pinta components/ui/AvisoDatos y lo usan los tres
+   formularios públicos: contacto, reserva y grupos. Misma
+   letra fina que la nota de «te contactamos» del formulario
+   de reserva, para que informe sin competir con el botón.
+   ───────────────────────────────────────────────────────── */
+.aviso-datos {
+  min-width: 0;
+  margin-top: 10px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-brown);
+  opacity: 0.68;
+  overflow-wrap: anywhere;
+}
+
+/* El enlace es el único control de este aviso y mide 13 px, así que sin esto
+   su zona de toque queda en unos 18 px de alto. El padding la sube a ~45 px y
+   el margen negativo lo devuelve a su sitio, de modo que crece el área que
+   acierta el dedo sin mover ni un píxel de lo que se ve. */
+.aviso-datos a {
+  display: inline-block;
+  padding-block: 16px;
+  margin-block: -16px;
+  color: var(--color-crimson);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Enlace a la política que respalda un aval, en la sección de certificaciones.
+   Hoy solo lo lleva el sello de Calidad Turística. Va con su flecha y con los
+   44 px de área táctil del sitio: es el único elemento pulsable de la tarjeta,
+   y la tarjeta en sí no lo es. */
+.cert-politica {
+  min-width: 0;
+  min-height: 44px;
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px;
+  color: var(--color-crimson);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.cert-politica svg {
+  flex-shrink: 0;
+  transition: transform 160ms ease;
+}
+.cert-politica:hover,
+.cert-politica:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cert-politica:hover svg,
+.cert-politica:focus-visible svg {
+  transform: translateX(3px);
+}

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import AvisoDatos from "@/components/ui/AvisoDatos";
 import IconoWhatsapp from "@/components/ui/IconoWhatsapp";
 import {
   IconoInstagram,
@@ -10,6 +11,7 @@ import {
   IconoTiktok,
 } from "@/components/ui/IconosRedes";
 import { CONTACTO, MENSAJE_WHATSAPP, REDES, whatsappCon } from "@/lib/contacto";
+import AvisoGrupos from "@/components/grupos/AvisoGrupos";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
@@ -62,6 +64,13 @@ export default function ContactoPage() {
 
   return (
     <section className="page-shell contacto-shell">
+      {/* Arriba del formulario y no al pie: esta página es donde cae hoy el
+          tráfico institucional —un coordinador que no encontró capacidad de
+          grupo en ningún otro sitio— y el formulario de acá pide tres campos
+          que no sirven para cotizar. Es el desvío de mayor rendimiento del
+          proyecto y hay que verlo antes de empezar a escribir el mensaje. */}
+      <AvisoGrupos variante="contacto" />
+
       <div className="contacto-grid">
         <div className="contacto-formulario">
           <h2 className="contacto-subtitulo">{t("escribenos")}</h2>
@@ -115,6 +124,7 @@ export default function ContactoPage() {
               <Button type="submit" disabled={estado === "loading"}>
                 {estado === "loading" ? t("enviando") : t("enviar")}
               </Button>
+              <AvisoDatos />
             </form>
           )}
         </div>

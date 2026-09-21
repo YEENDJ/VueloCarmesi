@@ -15,6 +15,7 @@ import {
   RefreshCw,
   type LucideIcon,
 } from 'lucide-react'
+import MigaSuperior from '@/components/layout/MigaSuperior'
 
 export async function generateMetadata({
   params,
@@ -46,9 +47,9 @@ export async function generateMetadata({
  * la finca, ni en cuánto tiempo se devuelve un reembolso. Aquí no se inventa
  * ninguna de las dos cosas; hay que preguntarlas al negocio y añadirlas.
  *
- * PENDIENTE: faltan dos textos que este negocio necesita y aún no existen.
- * Tratamiento de datos personales, porque se recogen nombre, correo, teléfono y
- * dirección (Ley 1581 de 2012), y términos y condiciones de la tienda.
+ * Esta política cubre las experiencias. Los productos de la tienda tienen sus
+ * propias condiciones de venta, en /politicas/terminos-tienda, y el uso de los
+ * datos del formulario de reserva está en /politicas/datos-personales.
  */
 
 /** Los tres datos de la banda de resumen de la hoja 21, en el mismo orden. */
@@ -106,11 +107,15 @@ export default async function PoliticaCancelacionPage({
 }) {
   const { locale } = await params
   setRequestLocale(locale)
+  const tNav = await getTranslations('nav')
   const t = await getTranslations('politicas.cancelacion')
   const tp = await getTranslations('politicas')
 
   return (
     <section className="page-shell politica">
+      {/* El índice de políticas no está en el navbar, así que sin esto la única
+          salida desde una política es el botón del navegador. */}
+      <MigaSuperior href="/politicas" etiqueta={tNav('politicas')} actual={t('titulo')} />
       <h1 style={{ color: 'var(--color-brown)', marginBottom: '12px', minWidth: 0 }}>
         {t('titulo')}
       </h1>

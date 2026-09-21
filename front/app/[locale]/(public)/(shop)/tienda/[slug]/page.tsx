@@ -4,17 +4,17 @@ import GaleriaProducto from '@/components/shop/GaleriaProducto'
 import FichaPestanas from '@/components/shop/FichaPestanas'
 import ProductoCard from '@/components/shop/ProductoCard'
 import PanelCompra from './PanelCompra'
-import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import PublicarSlugs from '@/components/layout/PublicarSlugs'
+import MigaSuperior from '@/components/layout/MigaSuperior'
 import { permanentRedirect as permanentRedirectIdioma } from '@/lib/i18n/navigation'
 import { alternatesDeIdioma } from '@/lib/i18n/alternates'
 import { SLUGS_PRODUCTOS_LEGADOS, destinoLegado } from '@/lib/slugs-legados'
 import { formatPrecio } from '@/lib/format'
 import { metaDescription } from '@/lib/seo'
 import type { Metadata } from 'next'
-import { ChevronRight, CreditCard, ShieldCheck, Store } from 'lucide-react'
+import { CreditCard, ShieldCheck, Store } from 'lucide-react'
 
 // El segmento caduca siempre, haya respondido el backend o no. Sin esto Next
 // deriva el revalidate solo de los fetch que completaron: un detalle renderizado
@@ -92,6 +92,7 @@ export default async function ProductoDetallePage({
 }) {
   const { slug, locale } = await params
   setRequestLocale(locale)
+  const tNav = await getTranslations('nav')
 
   const [producto, todos, t] = await Promise.all([
     getProductoBySlug(slug, locale),
@@ -135,15 +136,11 @@ export default async function ProductoDetallePage({
       {/* No pinta nada: le da al selector de idioma el slug de esta ficha en
           cada lengua, para que cambiar de idioma no pierda la ficha. */}
       <PublicarSlugs slugs={producto.slugs} />
-      {/* <nav className="ficha-migas" aria-label="Migas de pan">
-        <Link href="/tienda" style={{ color: 'inherit' }}>Tienda</Link>
-        <ChevronRight size={14} aria-hidden="true" style={{ flexShrink: 0 }} />
-        <span>{producto.categoria}</span>
-        <ChevronRight size={14} aria-hidden="true" style={{ flexShrink: 0 }} />
-        <span style={{ color: 'var(--color-brown)', fontWeight: 700, minWidth: 0, overflowWrap: 'anywhere' }}>
-          {producto.nombre}
-        </span>
-      </nav> */}
+      {/* Estas migas estaban acá comentadas desde el commit de i18n: tenían
+          «Migas de pan» y «Tienda» escritos a pelo en español y se
+          desactivaron al traducir el sitio, no porque el patrón se descartara.
+          Las sustituye el componente, que sí sale del catálogo. */}
+      <MigaSuperior href="/tienda" etiqueta={tNav('tienda')} actual={producto.nombre} />
 
       <div className="ficha-prod-grid">
         <div className="ficha-prod-galeria">

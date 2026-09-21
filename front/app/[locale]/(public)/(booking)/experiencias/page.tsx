@@ -1,5 +1,6 @@
 import ExperienciaCard from '@/components/booking/ExperienciaCard'
 import AvisoAviturismo from '@/components/booking/AvisoAviturismo'
+import AvisoGrupos from '@/components/grupos/AvisoGrupos'
 import { getExperiencias } from '@/lib/api/experiencias'
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -65,6 +66,12 @@ export default async function ExperienciasPage({
           oferta y sigue buscando aves — y se pinta también con el listado
           vacío, que es cuando más falta hace tener algo a dónde ir. */}
       <AvisoAviturismo variante="listado" />
+
+      {/* Mismo criterio, y por eso va junto al de aviturismo: quien mira el
+          listado con ojos de coordinador ya vio que las capacidades son de 8 y
+          12, así que es justo acá donde necesita saber que los grupos grandes
+          se atienden por otra vía. */}
+      <AvisoGrupos variante="listado" />
     </section>
   )
 }

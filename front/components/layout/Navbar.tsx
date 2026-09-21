@@ -22,6 +22,11 @@ import SelectorIdioma from '@/components/layout/SelectorIdioma'
 const LINKS = [
   ['inicio', '/'],
   ['experiencias', '/experiencias'],
+  // Grupos y Aviturismo NO van acá, por la misma razón: son puertas de entrada
+  // de públicos que llegan buscando, no pestañas del sitio. Viven en el pie,
+  // que es donde se enlazan desde todas las páginas, y a quien ya está dentro
+  // lo recogen los avisos de /contacto, /experiencias y el formulario de
+  // reserva —que es justo donde ese visitante se estaba perdiendo—.
   ['tienda', '/tienda'],
   ['nosotros', '/sobre-nosotros'],
   ['contacto', '/contacto'],

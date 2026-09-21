@@ -40,6 +40,10 @@ export const routing = defineRouting({
     '/aviturismo': { es: '/aviturismo', en: '/birding' },
     '/sobre-nosotros': { es: '/sobre-nosotros', en: '/about' },
     '/contacto': { es: '/contacto', en: '/contact' },
+    // «group-visits» y no «groups»: misma regla que /birding. «Groups» es solo
+    // un sustantivo; lo que escribe un colegio internacional o una agencia
+    // receptiva buscando proveedor es «group visits».
+    '/grupos': { es: '/grupos', en: '/group-visits' },
 
     // Reservas. El [slug] lo rellena la base de datos: next-intl traduce el
     // segmento de ruta, no el slug del contenido. El slug inglés sale de la
@@ -62,6 +66,20 @@ export const routing = defineRouting({
     '/politicas/proteccion-infancia': {
       es: '/politicas/proteccion-infancia',
       en: '/policies/child-protection',
+    },
+    // «personal-data» y no «habeas-data»: el segundo es el término colombiano y
+    // no lo busca nadie que lea la versión inglesa.
+    '/politicas/datos-personales': {
+      es: '/politicas/datos-personales',
+      en: '/policies/personal-data',
+    },
+    '/politicas/terminos-tienda': {
+      es: '/politicas/terminos-tienda',
+      en: '/policies/shop-terms',
+    },
+    '/politicas/sostenibilidad': {
+      es: '/politicas/sostenibilidad',
+      en: '/policies/sustainability',
     },
   },
 })

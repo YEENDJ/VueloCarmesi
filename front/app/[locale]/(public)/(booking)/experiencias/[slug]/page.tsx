@@ -8,6 +8,7 @@ import { getSiteConfig } from '@/lib/api/site-config'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import PublicarSlugs from '@/components/layout/PublicarSlugs'
+import MigaSuperior from '@/components/layout/MigaSuperior'
 import { permanentRedirect as permanentRedirectIdioma } from '@/lib/i18n/navigation'
 import { alternatesDeIdioma } from '@/lib/i18n/alternates'
 import { SLUGS_EXPERIENCIAS_LEGADOS, destinoLegado } from '@/lib/slugs-legados'
@@ -83,6 +84,7 @@ export default async function ExperienciaDetallePage({
 }) {
   const { slug, locale } = await params
   setRequestLocale(locale)
+  const tNav = await getTranslations('nav')
 
   const exp = await getExperienciaBySlug(slug, locale)
   if (!exp) {
@@ -144,6 +146,11 @@ export default async function ExperienciaDetallePage({
       {/* No pinta nada: le da al selector de idioma el slug de esta ficha en
           cada lengua, para que cambiar de idioma no pierda la ficha. */}
       <PublicarSlugs slugs={exp.slugs} />
+      {/* En marco propio: la portada va a sangre y sin contenedor la miga se
+          pegaría al borde de la pantalla. */}
+      <div className="miga-marco">
+        <MigaSuperior href="/experiencias" etiqueta={tNav('experiencias')} actual={exp.nombre} />
+      </div>
       <PortadaExperiencia
         nombre={exp.nombre}
         imagenes={imagenes}

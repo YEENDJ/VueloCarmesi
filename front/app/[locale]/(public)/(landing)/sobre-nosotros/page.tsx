@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from '@/lib/i18n/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import EquipoCarrusel from "@/components/secciones/EquipoCarrusel";
 import {

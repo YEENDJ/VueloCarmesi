@@ -138,6 +138,92 @@ export class NotificacionesService {
     )
   }
 
+  /**
+   * Solicitud de cotización de un grupo.
+   *
+   * Tres salidas, como en contacto: acuse al solicitante, correo al admin y
+   * Telegram. La que de verdad importa es Telegram: una cotización
+   * institucional se gana respondiendo el mismo día, y el correo del admin se
+   * lee cuando se lee.
+   */
+  async enviarNuevaSolicitudGrupo(solicitud: {
+    id: string; tipo: string; institucion: string; nit?: string | null
+    contacto: string; cargo?: string | null; email: string; telefono: string
+    personas: number; edades?: string | null; fechaTentativa?: Date | null
+    experiencias: string[]; requiereTransporte: boolean; requiereFactura: boolean
+    mensaje: string
+  }): Promise<void> {
+    const fechaStr = solicitud.fechaTentativa
+      ? new Date(solicitud.fechaTentativa).toLocaleDateString('es-CO', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+        })
+      : 'Sin definir'
+    const experienciasStr = solicitud.experiencias.length
+      ? solicitud.experiencias.join(', ')
+      : 'A definir'
+    const siNo = (v: boolean) => (v ? 'Sí' : 'No')
+    const facturaStr = solicitud.requiereFactura
+      ? `Sí${solicitud.nit ? ` · NIT ${solicitud.nit}` : ''}`
+      : 'No'
+
+    const htmlCliente = this.email.templateSolicitudGrupoRecibida({
+      contacto: escapeHtml(solicitud.contacto),
+      institucion: escapeHtml(solicitud.institucion),
+      tipo: escapeHtml(solicitud.tipo),
+      personas: String(solicitud.personas),
+      fecha: fechaStr,
+      experiencias: escapeHtml(experienciasStr),
+      transporte: siNo(solicitud.requiereTransporte),
+      factura: escapeHtml(facturaStr),
+    })
+    await this.email.send(
+      solicitud.email,
+      `Recibimos tu solicitud de grupo — Vuelo Carmesí`,
+      htmlCliente,
+    )
+
+    const adminEmailSolicitud = await this.getAdminEmail()
+    if (adminEmailSolicitud) {
+      const filas = [
+        filaHtml('Tipo', escapeHtml(solicitud.tipo)),
+        filaHtml('Institución', escapeHtml(solicitud.institucion)),
+        filaHtml('Contacto', escapeHtml(solicitud.contacto)),
+        ...(solicitud.cargo ? [filaHtml('Cargo', escapeHtml(solicitud.cargo))] : []),
+        filaHtml('Email', escapeHtml(solicitud.email)),
+        filaHtml('Teléfono', escapeHtml(solicitud.telefono)),
+        filaHtml('Personas', String(solicitud.personas)),
+        ...(solicitud.edades ? [filaHtml('Edades', escapeHtml(solicitud.edades))] : []),
+        filaHtml('Fecha tentativa', fechaStr),
+        filaHtml('Experiencias', escapeHtml(experienciasStr)),
+        filaHtml('Transporte', siNo(solicitud.requiereTransporte)),
+        filaHtml('Factura', escapeHtml(facturaStr)),
+        ...(solicitud.mensaje ? [filaHtml('Mensaje', escapeHtml(solicitud.mensaje))] : []),
+      ].join('')
+      const htmlAdmin = this.email.templateAlertaAdmin({
+        tipo: '🏫 Nueva Solicitud de Grupo',
+        filas,
+        adminUrl: `${ADMIN_URL}/admin`,
+      })
+      await this.email.send(
+        adminEmailSolicitud,
+        `[Grupo] ${solicitud.institucion} · ${solicitud.personas} personas`,
+        htmlAdmin,
+      )
+    }
+
+    await this.telegram.send(
+      `🏫 *Nueva solicitud de grupo*\n` +
+        `Tipo: ${solicitud.tipo}\n` +
+        `Institución: ${solicitud.institucion}\n` +
+        `Contacto: ${solicitud.contacto}\n` +
+        `Personas: ${solicitud.personas}\n` +
+        `Fecha: ${fechaStr}\n` +
+        `Celular: ${solicitud.telefono}\n` +
+        `Email: ${solicitud.email}` +
+        (solicitud.mensaje ? `\n\n${solicitud.mensaje}` : ''),
+    )
+  }
+
   async enviarReservaConfirmadaCliente(reserva: {
     id: string; nombre: string; email: string
     experiencia?: { nombre: string } | null

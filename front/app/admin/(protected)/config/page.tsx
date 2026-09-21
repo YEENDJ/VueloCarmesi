@@ -40,6 +40,69 @@ const CIFRAS_FINCA = [
   { key: 'finca_produccion_kg', etiqueta: 'Kilos de grano seco al año' },
 ] as const
 
+/**
+ * Los datos comerciales de la página de grupos.
+ *
+ * Son los que `portafolio/RECOMENDACIONES.md` (P0-4) lleva marcados como deuda:
+ * sin ellos un aliado o un colegio no puede cerrar, y hasta hoy no existían en
+ * ningún sitio. Van en SiteConfig y no en el código porque el día que se
+ * definan hay que poder publicarlos sin esperar un despliegue.
+ *
+ * **Vacío significa que la fila NO se pinta**, al revés que las cifras de
+ * impacto, que caen a un respaldo escrito en el código. La diferencia es
+ * deliberada: una cifra de impacto algo vieja no le cuesta nada a nadie, pero
+ * «cobertura de la póliza» o «tarifa de menores» son compromisos que un colegio
+ * lleva a su comité y aprueba con ese número — y la diferencia la paga la finca.
+ * Mientras el dato no exista, la página prefiere callar.
+ */
+const DATOS_GRUPOS = [
+  {
+    key: 'grupos_cupo_dia',
+    etiqueta: 'Personas máximas por jornada',
+    ayuda: 'El dato que justifica la página entera. Solo el número o un rango corto: «60», «hasta 80». Sin él, la primera tarjeta del resumen no se pinta.',
+  },
+  {
+    key: 'grupos_minimo',
+    etiqueta: 'Grupo mínimo',
+    ayuda: 'Por ejemplo «10 personas» o «8 personas, o recargo del 20 %».',
+  },
+  {
+    key: 'grupos_tarifa_menores',
+    etiqueta: 'Tarifa de menores (solo el número)',
+    ayuda: 'Número pelado: 45000, no «$45.000». El símbolo y el separador los pone la web, que además lo escribe como COP en la versión en inglés.',
+  },
+  {
+    key: 'grupos_descuento_volumen',
+    etiqueta: 'Descuento por volumen',
+    ayuda: 'Por ejemplo «10 % desde 30 personas».',
+  },
+  {
+    key: 'grupos_anticipacion',
+    etiqueta: 'Anticipación mínima para grupos',
+    ayuda: 'Si lo dejas vacío, la web dice «48 horas», que es la condición publicada en las políticas. Para grupos grandes suele hacer falta más.',
+  },
+  {
+    key: 'grupos_aseguradora',
+    etiqueta: 'Aseguradora y cobertura de la póliza',
+    ayuda: 'Un colegio lo pide por escrito. Si está vacío, la web solo dice que la póliza está incluida, sin detallar.',
+  },
+  {
+    key: 'grupos_facturacion',
+    etiqueta: 'Datos de facturación',
+    ayuda: 'Qué se factura y a nombre de quién. Si está vacío, desaparecen la tarjeta del resumen y el bloque de facturación.',
+  },
+  {
+    key: 'grupos_transporte',
+    etiqueta: 'Transporte: qué ofrecemos',
+    ayuda: 'La primera pregunta de un coordinador. Por ejemplo: «no prestamos transporte, pero lo coordinamos con operadores de la región».',
+  },
+  {
+    key: 'grupos_tarifa_neta',
+    etiqueta: 'Tarifa neta para aliados',
+    ayuda: 'PORCENTAJE O RANGO, nunca un importe en pesos: este campo es texto libre y no se reformatea, así que un «$50.000» escrito acá sale igual en la web en inglés y se lee como dólares. Si está vacío, la web dice «consultar tarifario neto vigente».',
+  },
+] as const
+
 export default function ConfigPage() {
   const [config, setConfig] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(true)
@@ -282,6 +345,43 @@ export default function ConfigPage() {
               style={{ minHeight: 44 }}
             >
               {saving === CIFRAS_FINCA[0].key ? 'Guardando…' : 'Guardar cifras de la finca'}
+            </button>
+          </div>
+        </div>
+
+        {/* Sección: Grupos e instituciones */}
+        <div style={{ background: '#fff', borderRadius: 14, padding: 32, boxShadow: '0 2px 8px rgba(135,43,19,.06)' }}>
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8, color: 'var(--color-brown)' }}>
+            Grupos e instituciones
+          </div>
+          <div style={{ fontSize: 13, color: 'var(--admin-text-muted)', marginBottom: 24, maxWidth: '60ch' }}>
+            Los datos comerciales de la página <b>/grupos</b>, la que leen colegios,
+            universidades y empresas. <b>Lo que dejes vacío no se muestra</b>: la
+            página se lee completa igual, sin huecos. Es a propósito — es preferible
+            que falte un dato a publicar un compromiso que nadie revisó.
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            {DATOS_GRUPOS.map(({ key, etiqueta, ayuda }) => (
+              <div key={key} style={{ minWidth: 0 }}>
+                <div className="admin-field-label">{etiqueta}</div>
+                <input
+                  className="admin-input"
+                  type="text"
+                  value={config[key] ?? ''}
+                  onChange={e => set(key, e.target.value)}
+                />
+                <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginTop: 6, maxWidth: '72ch', lineHeight: 1.5 }}>{ayuda}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 24 }}>
+            <button
+              className="btn-primary"
+              onClick={() => guardar(DATOS_GRUPOS.map(c => c.key))}
+              disabled={saving === DATOS_GRUPOS[0].key}
+              style={{ minHeight: 44 }}
+            >
+              {saving === DATOS_GRUPOS[0].key ? 'Guardando…' : 'Guardar datos de grupos'}
             </button>
           </div>
         </div>

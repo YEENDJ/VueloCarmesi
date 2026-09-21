@@ -9,7 +9,17 @@ import { IDIOMA_ORIGEN } from '../traduccion/campos'
  * El resto —cifras de impacto, URLs de imagen, el WhatsApp, el correo del
  * admin— no es idioma y se sirve igual en los dos.
  */
-const CLAVES_TRADUCIBLES = ['punto_encuentro', 'resumen_cancelacion'] as const
+const CLAVES_TRADUCIBLES = [
+  'punto_encuentro',
+  'resumen_cancelacion',
+  // Las cuatro de la página de grupos que son prosa. Las otras cinco
+  // —cupo por jornada, grupo mínimo, tarifa de menores, descuento por volumen y
+  // tarifa neta— son cifras o porcentajes y se sirven igual en los dos idiomas.
+  'grupos_anticipacion',
+  'grupos_aseguradora',
+  'grupos_facturacion',
+  'grupos_transporte',
+] as const
 
 /**
  * Cómo se nombra la versión traducida de una clave.
