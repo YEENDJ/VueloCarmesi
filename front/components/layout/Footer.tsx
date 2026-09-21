@@ -53,15 +53,32 @@ export default function Footer() {
           <div style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--color-gold)', marginBottom: '14px' }}>
             {t('navegacion')}
           </div>
-          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {/* Aviturismo va en el pie y no en la navbar porque no es una sexta
-                pestaña del sitio: es la puerta de entrada de un público que
-                llega buscando «birding Meta Colombia», no navegando desde la
-                home. Lo que necesita es existir como enlace en todas las
-                páginas para que el buscador la alcance sin depender de una
-                sola ruta. */}
-            {([['experiencias', '/experiencias'], ['aviturismo', '/aviturismo'], ['tienda', '/tienda'], ['nosotros', '/sobre-nosotros'], ['contacto', '/contacto'], ['politicas', '/politicas']] as const).map(([clave, href]) => (
-              <li key={href}>
+          {/* Dos columnas: con siete enlaces, una sola dejaba esta columna casi
+              el doble de alta que sus vecinas y descuadraba la fila del pie.
+
+              `minmax(0, 1fr)` y no `1fr` a secas: una pista de 1fr no baja del
+              ancho de su contenido —«Experiencias» es la más larga— y en
+              pantalla angosta desbordaría en vez de encoger. */}
+          <ul style={{
+            listStyle: 'none',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+            // 12px de canal y no 16: el punto justo es cuando el footer está en
+            // tres columnas de 200px —viewport ~744px—, donde cada columna
+            // interna queda en 94px y «Experiencias», que es la etiqueta más
+            // larga, mide casi eso. Con 16px se partía en dos líneas.
+            gap: '10px 12px',
+          }}>
+            {/* Aviturismo y Grupos viven en el pie y no en la navbar: ninguno
+                es una pestaña más del sitio. Son las puertas de entrada de dos
+                públicos que llegan buscando —«birding Meta Colombia», «salida
+                pedagógica Meta»— y no navegando desde la home. Lo que necesitan
+                es existir como enlace en todas las páginas para que el buscador
+                las alcance sin depender de una sola ruta; a los visitantes que
+                ya están dentro los recogen los avisos de /contacto,
+                /experiencias y el formulario de reserva. */}
+            {([['experiencias', '/experiencias'], ['grupos', '/grupos'], ['aviturismo', '/aviturismo'], ['tienda', '/tienda'], ['nosotros', '/sobre-nosotros'], ['contacto', '/contacto'], ['politicas', '/politicas']] as const).map(([clave, href]) => (
+              <li key={href} style={{ minWidth: 0 }}>
                 <Link href={href} style={{ fontWeight: 700, fontSize: '14px', color: 'rgba(255, 234, 202, 0.85)', textDecoration: 'none' }}>
                   {tNav(clave)}
                 </Link>
