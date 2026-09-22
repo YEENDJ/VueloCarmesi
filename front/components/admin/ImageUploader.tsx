@@ -1,7 +1,6 @@
 'use client'
 import { useId, useRef, useState } from 'react'
 import { uploadImage } from '@/lib/admin/api'
-import { fotoCloudinary } from '@/lib/imagenes'
 
 interface Props {
   value: string
@@ -41,11 +40,9 @@ export default function ImageUploader({ value, onChange, label = 'Imagen' }: Pro
       <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
         {value ? (
           <div style={{ position: 'relative', flexShrink: 0 }}>
-            {/* 80×80 en pantalla: no hay razón para traer el original. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              {...fotoCloudinary(value, 80)}
-              sizes="80px"
+              src={value}
               alt="Preview"
               decoding="async"
               style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 8, border: '1px solid #e0d0c0' }}

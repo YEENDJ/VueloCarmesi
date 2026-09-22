@@ -5,7 +5,6 @@ import ReservaForm from '@/components/booking/ReservaForm'
 import MigaSuperior from '@/components/layout/MigaSuperior'
 import { notFound } from 'next/navigation'
 import { formatPrecio } from '@/lib/format'
-import { fotoCloudinary } from '@/lib/imagenes'
 
 // El segmento caduca siempre: sin esto un 404 renderizado durante una caída del
 // backend quedaba cacheado de forma indefinida.
@@ -143,14 +142,9 @@ export default async function ReservarPage({
                     marginBottom: '20px',
                   }}
                 >
-                  {/* 440 = la columna del resumen (40fr de .reserva-grid en
-                      los 1136 útiles). Por debajo de 1024px la rejilla se
-                      apila y ocupa el ancho. El marco mide 160px de alto, así
-                      que aquí el original entero sobraba por mucho. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    {...fotoCloudinary(thumbnail, 440)}
-                    sizes="(max-width: 1023px) 100vw, 440px"
+                    src={thumbnail}
                     alt={exp.nombre}
                     loading="lazy"
                     decoding="async"

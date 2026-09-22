@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import { useTranslations } from 'next-intl'
 
@@ -104,20 +103,14 @@ export default function ProcesoLinea() {
             <h3 className="proceso-titulo">{t(`${p.clave}.titulo`)}</h3>
             <p className="proceso-texto">{t(`${p.clave}.texto`)}</p>
             <div className="proceso-foto">
-              {/* `next/image` y no un <img> crudo: estas cuatro viven en
-                  `public/`, así que las optimiza el propio despliegue sin
-                  `remotePatterns` ni nada que configurar. Sin él se enviaban
-                  1,1 MB de JPEG —368 KB la primera— para un marco que en
-                  escritorio cae en ~345px de ancho.
-
-                  Los tres tramos del `sizes` son los de .proceso-grid: una
-                  columna hasta 559px, dos hasta 1023px y cuatro por encima. */}
-              <Image
+              {/* Se sirve el JPEG de `public/` tal cual, sin pasar por el
+                  optimizador del despliegue: recomprimido se notaba. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={p.imagen}
                 alt={t(`${p.clave}.alt`)}
                 width={p.ancho}
                 height={p.alto}
-                sizes="(max-width: 559px) 100vw, (max-width: 1023px) 50vw, 345px"
                 loading="lazy"
                 style={{ display: 'block', width: '100%', maxWidth: '100%', height: '100%', objectFit: 'cover' }}
               />

@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react'
-import { fotoCloudinary } from '@/lib/imagenes'
 
 /**
  * Galería de la ficha de producto, con la mecánica que la gente ya trae
@@ -75,13 +74,11 @@ export default function GaleriaProducto({ imagenes, alt }: { imagenes: string[];
             onClick={() => setAmpliada(true)}
             aria-label={tg('ampliarFoto', { alt, n: activa + 1, total })}
           >
-            {/* El LCP de la ficha. 520 = la columna de la foto (600px) menos
-                el riel de miniaturas y su hueco; entre 560 y 899px manda el
-                `max-width: 460px` de .ficha-galeria. */}
+            {/* El LCP de la ficha. Se sirve el original sin transformar: la
+                reducción de peso se retiró porque se notaba en pantalla. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              {...fotoCloudinary(imagenes[activa], 520)}
-              sizes="(max-width: 559px) 100vw, (max-width: 899px) 460px, 520px"
+              src={imagenes[activa]}
               alt={tg('fotoSimple', { alt, n: activa + 1 })}
               fetchPriority="high"
               decoding="async"
@@ -118,10 +115,8 @@ export default function GaleriaProducto({ imagenes, alt }: { imagenes: string[];
                 aria-label={tg('verFoto', { n: i + 1, total })}
                 aria-current={i === activa}
               >
-                {/* 64px fijos por CSS: pedir el original para un cuadrado de
-                    64 era la peor relación de todo el sitio. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img {...fotoCloudinary(src, 64)} sizes="64px" alt="" loading="lazy" decoding="async" />
+                <img src={src} alt="" loading="lazy" decoding="async" />
               </button>
             ))}
           </div>
@@ -134,13 +129,9 @@ export default function GaleriaProducto({ imagenes, alt }: { imagenes: string[];
               cerrar tiene que existir también para lector de pantalla. */}
           <button type="button" className="ficha-lightbox-fondo" onClick={cerrar} aria-label={t('cerrarAmpliada')} />
 
-          {/* Aquí sí hace falta ancho: `contain` a pantalla completa. El tope
-              del srcset queda en 2000px y `c_limit` evita que Cloudinary
-              amplíe si el original es más pequeño. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            {...fotoCloudinary(imagenes[activa], 1000)}
-            sizes="100vw"
+            src={imagenes[activa]}
             alt={tg('fotoSimple', { alt, n: activa + 1 })}
             decoding="async"
             className="ficha-lightbox-foto"

@@ -6,7 +6,6 @@ import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import { useCart } from '@/lib/cart/store'
 import { formatPrecio } from '@/lib/format'
-import { fotoCloudinary } from '@/lib/imagenes'
 
 function badgeStyle(producto: Producto): { label: string; bg: string; fg: string } | null {
   if (producto.stock === 0) return { label: 'agotado', bg: 'var(--color-brown)', fg: 'var(--color-cream)' }
@@ -32,13 +31,10 @@ export default function ProductoCard({ producto }: { producto: Producto }) {
           la tienda no mostraba ninguna foto aunque estuvieran cargadas. */}
       <Link href={{ pathname: '/tienda/[slug]', params: { slug: producto.slug } }} style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', backgroundColor: 'var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {producto.imagen
-          // 370 = una columna de .tienda-grid a tres. Los dos puntos de ruptura
-          // del `sizes` son los suyos: una columna hasta 479px, dos hasta 719px.
-          // En los relacionados de la ficha la columna es más estrecha y el
-          // navegador elegirá un archivo más pequeño, que es lo correcto.
+          // Se sirve el original de Cloudinary sin transformar: la reducción de
+          // peso se retiró porque la recompresión se notaba en pantalla.
           // eslint-disable-next-line @next/next/no-img-element
-          ? <img {...fotoCloudinary(producto.imagen, 370)}
-                 sizes="(max-width: 479px) 100vw, (max-width: 719px) 50vw, 370px"
+          ? <img src={producto.imagen}
                  alt={producto.nombre}
                  width={1200} height={1200} loading="lazy" decoding="async"
                  style={{ width: '100%', height: '100%', maxWidth: '100%', objectFit: 'cover', display: 'block' }} />

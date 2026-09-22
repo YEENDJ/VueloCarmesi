@@ -1,6 +1,5 @@
 import { useTranslations } from 'next-intl'
 import { Link } from '@/lib/i18n/navigation'
-import { fotoCloudinary } from '@/lib/imagenes'
 interface Props {
   imagen?: string
 }
@@ -42,8 +41,7 @@ export default function SobreNosotros({ imagen }: Props) {
               // manda: el `style` de abajo fija el alto al 100% del marco.
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                {...fotoCloudinary(imagen, 530)}
-                sizes="(max-width: 767px) 100vw, 530px"
+                src={imagen}
                 alt={t('fotoAlt')}
                 width={530}
                 height={420}
