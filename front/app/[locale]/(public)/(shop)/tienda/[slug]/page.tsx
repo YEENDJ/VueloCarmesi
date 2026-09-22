@@ -8,11 +8,13 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import PublicarSlugs from '@/components/layout/PublicarSlugs'
 import MigaSuperior from '@/components/layout/MigaSuperior'
-import { permanentRedirect as permanentRedirectIdioma } from '@/lib/i18n/navigation'
+import { permanentRedirect as permanentRedirectIdioma, getPathname } from '@/lib/i18n/navigation'
 import { alternatesDeIdioma } from '@/lib/i18n/alternates'
 import { SLUGS_PRODUCTOS_LEGADOS, destinoLegado } from '@/lib/slugs-legados'
 import { formatPrecio } from '@/lib/format'
 import { metaDescription } from '@/lib/seo'
+import { nodoProducto } from '@/lib/jsonld'
+import { SITIO } from '@/lib/sitio'
 import type { Metadata } from 'next'
 import { CreditCard, ShieldCheck, Store } from 'lucide-react'
 
@@ -37,7 +39,12 @@ export async function generateMetadata(
   const portada = producto.imagenes?.[0] ?? producto.imagen
 
   return {
-    title: `${producto.nombre} · Vuelo Carmesí`,
+    // Sin la marca: el layout de idioma ya la añade con title.template
+    // («%s · Vuelo Carmesí»). Escribirla también aquí la duplicaba —«Miel de
+    // abejas x 450 gramos · Vuelo Carmesí · Vuelo Carmesí»— y empujaba el
+    // título más allá de lo que la SERP muestra, que es donde se decide el
+    // clic.
+    title: producto.nombre,
     description: descripcion,
     alternates: alternatesDeIdioma(
       // El slug de CADA idioma sale de producto.slugs, que trae el backend.
@@ -94,10 +101,13 @@ export default async function ProductoDetallePage({
   setRequestLocale(locale)
   const tNav = await getTranslations('nav')
 
-  const [producto, todos, t] = await Promise.all([
+  const [producto, todos, t, tSitio] = await Promise.all([
     getProductoBySlug(slug, locale),
     getProductos(locale),
     getTranslations('tienda.ficha'),
+    // Para la marca del producto: es el nombre del negocio y sale de la misma
+    // clave que usa el layout, no de una cadena escrita otra vez aquí.
+    getTranslations('sitio'),
   ])
   if (!producto) {
     // Ver la ficha de experiencia: rescate de slugs viejos antes del 404.
@@ -131,8 +141,33 @@ export default async function ProductoDetallePage({
     .filter(p => p.categoria === producto.categoria && p.slug !== slug)
     .slice(0, 4)
 
+  // El `@id` del producto se construye sobre la canónica —la misma que declara
+  // generateMetadata—, no sobre la URL por la que se llegó: en la rama inglesa
+  // la ficha vive en /en/shop/<slug inglés>, y un identificador que cambie de
+  // idioma partiría un producto en dos.
+  const url = `${SITIO}${getPathname({
+    href: { pathname: '/tienda/[slug]', params: { slug: producto.slug } },
+    locale,
+  })}`
+  const datosProducto = nodoProducto({
+    producto,
+    url,
+    // La misma descripción que va en la meta: si el buscador ve una en el
+    // <head> y otra distinta en el JSON-LD, la segunda no aporta, contradice.
+    descripcion: metaDescription(producto.descripcion, producto.descripcionLarga),
+    imagenes,
+    marca: tSitio('titulo'),
+  })
+
   return (
     <div className="ficha-prod">
+      {/* El precio y el stock, en la forma en que los lee un buscador. El HTML
+          de abajo los muestra con formato colombiano —«$ 22.000»— y eso no es
+          un dato: es una cadena que hay que adivinar. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(datosProducto) }}
+      />
       {/* No pinta nada: le da al selector de idioma el slug de esta ficha en
           cada lengua, para que cambiar de idioma no pierda la ficha. */}
       <PublicarSlugs slugs={producto.slugs} />

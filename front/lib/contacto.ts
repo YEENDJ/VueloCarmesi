@@ -39,6 +39,14 @@ export const CONTACTO = {
   municipio: 'Cubarral, Meta, Colombia',
   direccionCompleta:
     'Finca La Fortuna, Vereda Brisas del Tonoa, Cubarral, Meta, Colombia',
+  // Las tres piezas sueltas de `municipio`. Hacen falta porque un PostalAddress
+  // de schema.org no acepta «Cubarral, Meta, Colombia» en un solo campo: pide
+  // localidad, region y pais por separado, y el pais en ISO 3166-1 de dos
+  // letras. Se guardan aqui en lugar de trocear la cadena en el consumidor
+  // para que el dia que cambie la sede se cambie en un solo sitio.
+  localidad: 'Cubarral',
+  region: 'Meta',
+  pais: 'CO',
 } as const
 
 /**
@@ -50,6 +58,15 @@ export const CONTACTO = {
  * junto al identificador de «Finca la Fortuna».
  */
 const COORDENADAS = '3.7537786,-73.8743938'
+
+/**
+ * Las mismas coordenadas como numeros.
+ *
+ * La cadena de arriba es la que piden las URL de Google Maps; un GeoCoordinates
+ * de schema.org pide dos numeros. Se derivan de `COORDENADAS` en vez de
+ * escribirse otra vez para que no puedan quedar dos pines distintos en el sitio.
+ */
+const [LATITUD, LONGITUD] = COORDENADAS.split(',').map(Number)
 
 /**
  * Encuadre fijo del mapa embebido.
@@ -68,6 +85,8 @@ const ZOOM = 13
 
 export const MAPA = {
   coordenadas: COORDENADAS,
+  latitud: LATITUD,
+  longitud: LONGITUD,
   /** Mapa embebido: pin en la finca, encuadre fijo y rotulos en espanol */
   embed: `https://www.google.com/maps?q=${COORDENADAS}&ll=${CENTRO}&z=${ZOOM}&hl=es&output=embed`,
   /** Abre la ficha del lugar */
@@ -81,4 +100,15 @@ export const REDES = {
     'https://www.instagram.com/vuelo_carmesi?igsh=MWUxdjc1djRyc2Y2OQ==',
   facebook: 'https://www.facebook.com/share/1D4zy8b9HB/',
   tiktok: 'https://www.tiktok.com/@vuelo_carmesi?_r=1&_t=ZS-97S50KhhcwC',
+  /**
+   * Ficha de Google Business, la del panel de Google Maps.
+   *
+   * Va vacia porque el negocio todavia no nos ha pasado la URL de su perfil, y
+   * en `sameAs` las vacias se descartan: es preferible un perfil de menos que
+   * inventarse un enlace, porque ahi `sameAs` es justo la afirmacion de «esta
+   * cuenta es nuestra». Cuando llegue se pega aqui —el enlace corto de
+   * «Compartir» en la ficha, del estilo https://maps.app.goo.gl/…— y entra sola
+   * en los datos estructurados sin tocar nada mas.
+   */
+  google: '',
 } as const

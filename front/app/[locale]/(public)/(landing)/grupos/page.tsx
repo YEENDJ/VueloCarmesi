@@ -165,9 +165,9 @@ const jsonLd = (t: (k: string) => string, locale: string) => ({
     address: {
       '@type': 'PostalAddress',
       streetAddress: CONTACTO.direccion,
-      addressLocality: 'Cubarral',
-      addressRegion: 'Meta',
-      addressCountry: 'CO',
+      addressLocality: CONTACTO.localidad,
+      addressRegion: CONTACTO.region,
+      addressCountry: CONTACTO.pais,
     },
     telephone: CONTACTO.telefonoE164,
     email: CONTACTO.email,
