@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import { useTranslations } from 'next-intl'
 
@@ -7,6 +8,10 @@ interface Paso {
   numero: string
   clave: string
   imagen: string
+  /* Las medidas del archivo, que `next/image` necesita para reservar el hueco
+     y para no generar anchos que no existen. Ninguna es 4:5 exacto. */
+  ancho: number
+  alto: number
 }
 
 /* Las fotos de `experiencias/paso-*.jpg` documentan exactamente estas etapas y
@@ -22,21 +27,29 @@ const PROCESO: Paso[] = [
     // técnico y son lo que separa «conservamos variedades» de una afirmación
     // que un cacaocultor puede verificar.
     imagen: '/images/cacao/mazorcas-en-arbol.jpg',
+    ancho: 1024,
+    alto: 1280,
   },
   {
     numero: '02',
     clave: 'cosecha',
     imagen: '/images/experiencias/paso-1.jpg',
+    ancho: 1035,
+    alto: 1280,
   },
   {
     numero: '03',
     clave: 'fermentacion',
     imagen: '/images/experiencias/paso-3.jpg',
+    ancho: 1043,
+    alto: 1280,
   },
   {
     numero: '04',
     clave: 'transformacion',
     imagen: '/images/experiencias/paso-4.jpg',
+    ancho: 1026,
+    alto: 1280,
   },
 ]
 
@@ -91,8 +104,23 @@ export default function ProcesoLinea() {
             <h3 className="proceso-titulo">{t(`${p.clave}.titulo`)}</h3>
             <p className="proceso-texto">{t(`${p.clave}.texto`)}</p>
             <div className="proceso-foto">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={p.imagen} alt={t(`${p.clave}.alt`)} loading="lazy" decoding="async" />
+              {/* `next/image` y no un <img> crudo: estas cuatro viven en
+                  `public/`, así que las optimiza el propio despliegue sin
+                  `remotePatterns` ni nada que configurar. Sin él se enviaban
+                  1,1 MB de JPEG —368 KB la primera— para un marco que en
+                  escritorio cae en ~345px de ancho.
+
+                  Los tres tramos del `sizes` son los de .proceso-grid: una
+                  columna hasta 559px, dos hasta 1023px y cuatro por encima. */}
+              <Image
+                src={p.imagen}
+                alt={t(`${p.clave}.alt`)}
+                width={p.ancho}
+                height={p.alto}
+                sizes="(max-width: 559px) 100vw, (max-width: 1023px) 50vw, 345px"
+                loading="lazy"
+                style={{ display: 'block', width: '100%', maxWidth: '100%', height: '100%', objectFit: 'cover' }}
+              />
             </div>
           </motion.div>
         ))}

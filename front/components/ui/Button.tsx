@@ -1,9 +1,19 @@
-import Link from 'next/link'
+import type { ComponentProps } from 'react'
+import { Link } from '@/lib/i18n/navigation'
+
+/**
+ * La ruta que acepta el botón. Es el tipo del `href` del Link de next-intl, no
+ * un string: se escribe la ruta *interna* —la española, la de las carpetas— y
+ * el enlace sale con el prefijo y el segmento del idioma activo. Las rutas con
+ * [slug] van en forma de objeto, porque next-intl traduce el segmento y el
+ * slug lo pone quien llama: href={{ pathname: '/tienda/[slug]', params: { slug } }}.
+ */
+export type Href = ComponentProps<typeof Link>['href']
 
 interface ButtonProps {
   children: React.ReactNode
   variant?: 'primary' | 'secondary' | 'outline'
-  href?: string
+  href?: Href
   onClick?: () => void
   disabled?: boolean
   type?: 'button' | 'submit'

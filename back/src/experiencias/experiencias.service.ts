@@ -4,6 +4,7 @@ import { SincronizadorTraduccion } from '../traduccion/sincronizador.service'
 import { aplicarTraduccion } from '../traduccion/aplicar-traduccion'
 import { IDIOMA_ORIGEN, TEXTO_EXPERIENCIA, LISTA_EXPERIENCIA } from '../traduccion/campos'
 import { toSlug, slugUnico } from '../common/slug'
+import { capitalizarNombre } from '../common/nombre'
 import { portadaDe } from '../common/portada'
 import { CreateExperienciaDto } from './dto/create-experiencia.dto'
 import { UpdateExperienciaDto } from './dto/update-experiencia.dto'
@@ -61,7 +62,7 @@ export class ExperienciasService {
   }
 
   async create(dto: CreateExperienciaDto) {
-    const nombre = dto.nombre.trim()
+    const nombre = capitalizarNombre(dto.nombre)
     const creada = await this.prisma.experiencia.create({
       data: {
         ...dto,
@@ -90,7 +91,7 @@ export class ExperienciasService {
     // El slug se regenera al cambiar el nombre: es la única vía para corregir
     // uno mal formado ahora que el panel no lo edita. Ojo, cambia la URL pública.
     if (dto.nombre !== undefined) {
-      data.nombre = dto.nombre.trim()
+      data.nombre = capitalizarNombre(dto.nombre)
       data.slug = await this.slugLibre(data.nombre, id)
     }
     // Solo se recalcula si la edición trae galería: un PATCH de un único campo

@@ -17,6 +17,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: 'experiencias' })
   return {
     title: t('tituloListado'),
+    description: t('metaDescripcion'),
     alternates: alternatesDeIdioma('/experiencias', locale),
   }
 }

@@ -4,6 +4,7 @@ import { SincronizadorTraduccion } from '../traduccion/sincronizador.service'
 import { aplicarTraduccion } from '../traduccion/aplicar-traduccion'
 import { IDIOMA_ORIGEN, TEXTO_PRODUCTO, LISTA_PRODUCTO } from '../traduccion/campos'
 import { toSlug, slugUnico } from '../common/slug'
+import { capitalizarNombre } from '../common/nombre'
 import { portadaDe } from '../common/portada'
 import { CreateProductoDto } from './dto/create-producto.dto'
 import { UpdateProductoDto } from './dto/update-producto.dto'
@@ -49,7 +50,7 @@ export class ProductosService {
   }
 
   async create(dto: CreateProductoDto) {
-    const nombre = dto.nombre.trim()
+    const nombre = capitalizarNombre(dto.nombre)
     const creado = await this.prisma.producto.create({
       data: {
         ...dto,
@@ -74,7 +75,7 @@ export class ProductosService {
     // El slug se regenera al cambiar el nombre: es la única vía para corregir
     // uno mal formado ahora que el panel no lo edita. Ojo, cambia la URL pública.
     if (dto.nombre !== undefined) {
-      data.nombre = dto.nombre.trim()
+      data.nombre = capitalizarNombre(dto.nombre)
       data.slug = await this.slugLibre(data.nombre, id)
     }
     // Un PATCH de solo stock no debe tocar la portada; solo si viene galería.

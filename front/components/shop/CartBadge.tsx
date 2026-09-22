@@ -1,5 +1,5 @@
 'use client'
-import Link from 'next/link'
+import { Link } from '@/lib/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import { ShoppingCart } from 'lucide-react'
 import { useCart } from '@/lib/cart/store'

@@ -1,11 +1,12 @@
-import Button from '@/components/ui/Button'
+import Button, { type Href } from '@/components/ui/Button'
 import { useTranslations } from 'next-intl'
+import { fotoCloudinary } from '@/lib/imagenes'
 
 interface HeroProps {
   titulo: string
   subtitulo: string
   ctaTexto: string
-  ctaHref: string
+  ctaHref: Href
   imagen?: string
 }
 
@@ -61,8 +62,25 @@ export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: H
 
         {imagen ? (
           <div className="hero-media">
+            {/* Es el elemento de LCP de la portada: la foto que el visitante
+                espera antes de ver la página hecha. Sin transformar llegaban
+                508 KB del original, los mismos al teléfono que al portátil.
+                560 = la mitad de los 1136 útiles de .contenido, que es a lo que
+                `flex: 1 1 300px` deja esta columna en escritorio; por debajo de
+                ~700px la fila envuelve y la foto ocupa el ancho entero.
+                `fetchPriority` y no `loading="lazy"`: el navegador debe pedirla
+                cuanto antes, no cuando se acerque. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={imagen} alt="Vuelo Carmesí" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img
+              {...fotoCloudinary(imagen, 560)}
+              sizes="(max-width: 700px) 100vw, 560px"
+              alt="Vuelo Carmesí"
+              width={1600}
+              height={900}
+              fetchPriority="high"
+              decoding="async"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
           </div>
         ) : (
           <div className="hero-media" style={{

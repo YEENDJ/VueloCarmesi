@@ -1,11 +1,12 @@
 'use client'
-import Link from 'next/link'
+import { Link } from '@/lib/i18n/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import type { Producto } from '@/lib/types'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import { useCart } from '@/lib/cart/store'
 import { formatPrecio } from '@/lib/format'
+import { fotoCloudinary } from '@/lib/imagenes'
 
 function badgeStyle(producto: Producto): { label: string; bg: string; fg: string } | null {
   if (producto.stock === 0) return { label: 'agotado', bg: 'var(--color-brown)', fg: 'var(--color-cream)' }
@@ -29,10 +30,18 @@ export default function ProductoCard({ producto }: { producto: Producto }) {
           reserva el espacio antes de que cargue la foto, así la tarjeta no salta.
           Antes esto pintaba el emoji siempre e ignoraba producto.imagen, y por eso
           la tienda no mostraba ninguna foto aunque estuvieran cargadas. */}
-      <Link href={`/tienda/${producto.slug}`} style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', backgroundColor: 'var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Link href={{ pathname: '/tienda/[slug]', params: { slug: producto.slug } }} style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', backgroundColor: 'var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {producto.imagen
+          // 370 = una columna de .tienda-grid a tres. Los dos puntos de ruptura
+          // del `sizes` son los suyos: una columna hasta 479px, dos hasta 719px.
+          // En los relacionados de la ficha la columna es más estrecha y el
+          // navegador elegirá un archivo más pequeño, que es lo correcto.
           // eslint-disable-next-line @next/next/no-img-element
-          ? <img src={producto.imagen} alt={producto.nombre} style={{ width: '100%', height: '100%', maxWidth: '100%', objectFit: 'cover', display: 'block' }} />
+          ? <img {...fotoCloudinary(producto.imagen, 370)}
+                 sizes="(max-width: 479px) 100vw, (max-width: 719px) 50vw, 370px"
+                 alt={producto.nombre}
+                 width={1200} height={1200} loading="lazy" decoding="async"
+                 style={{ width: '100%', height: '100%', maxWidth: '100%', objectFit: 'cover', display: 'block' }} />
           : <span style={{ fontSize: 'clamp(2rem, 8vw, 3rem)' }}>🍫</span>
         }
         {badge && (
@@ -45,7 +54,7 @@ export default function ProductoCard({ producto }: { producto: Producto }) {
         )}
       </Link>
       <div style={{ padding: 'clamp(0.85rem, 3vw, 1.15rem)', minWidth: 0 }}>
-        <Link href={`/tienda/${producto.slug}`} style={{ textDecoration: 'none' }}>
+        <Link href={{ pathname: '/tienda/[slug]', params: { slug: producto.slug } }} style={{ textDecoration: 'none' }}>
           <h3 className="producto-card-titulo" style={{ margin: '0 0 0.5rem', color: 'var(--color-brown)', minWidth: 0, fontSize: 'clamp(1rem, 2.2vw, 1.08rem)', overflowWrap: 'anywhere' }}>{producto.nombre}</h3>
         </Link>
         {/* title deja ver el texto completo al pasar el ratón, ya que se recorta */}

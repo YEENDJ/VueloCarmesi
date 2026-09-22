@@ -12,9 +12,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'nav' })
+  const [t, tTienda] = await Promise.all([
+    getTranslations({ locale, namespace: 'nav' }),
+    getTranslations({ locale, namespace: 'tienda' }),
+  ])
   return {
     title: t('tienda'),
+    description: tTienda('metaDescripcion'),
     alternates: alternatesDeIdioma('/tienda', locale),
   }
 }

@@ -1,6 +1,7 @@
 'use client'
 import { useId, useRef, useState } from 'react'
 import { uploadImage, deleteImage } from '@/lib/admin/api'
+import { fotoCloudinary } from '@/lib/imagenes'
 
 export const MAX_IMAGENES = 8
 
@@ -108,9 +109,14 @@ export default function ImagesUploader({
                 borderRadius: 8, overflow: 'hidden',
                 border: i === 0 ? '2px solid var(--color-crimson)' : '1px solid #e0d0c0',
               }}>
+                {/* Celdas de 120px que pedían el original entero: con una
+                    galería de doce fotos, el panel descargaba varios megas para
+                    pintar cuadraditos. Una URL que no sea de Cloudinary —una
+                    vista previa local antes de subir— vuelve intacta. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={url} alt={`Foto ${i + 1}`}
+                  {...fotoCloudinary(url, 200)} sizes="200px" alt={`Foto ${i + 1}`}
+                  loading="lazy" decoding="async"
                   style={{ width: '100%', height: '100%', maxWidth: '100%', objectFit: 'cover', display: 'block' }}
                 />
                 {i === 0 && (

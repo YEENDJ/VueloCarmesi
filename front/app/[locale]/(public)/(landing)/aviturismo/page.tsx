@@ -244,14 +244,16 @@ const jsonLd = (t: (k: string) => string, locale: string) => ({
   address: {
     '@type': 'PostalAddress',
     streetAddress: CONTACTO.direccion,
-    addressLocality: 'Cubarral',
-    addressRegion: 'Meta',
-    addressCountry: 'CO',
+    addressLocality: CONTACTO.localidad,
+    addressRegion: CONTACTO.region,
+    addressCountry: CONTACTO.pais,
   },
   geo: {
     '@type': 'GeoCoordinates',
-    latitude: 3.7537786,
-    longitude: -73.8743938,
+    latitude: MAPA.latitud,
+    longitude: MAPA.longitud,
+    // La altitud sí se queda escrita aquí: es la franja del hotspot, un dato de
+    // esta página y no de la sede, y no tiene sitio en lib/contacto.
     elevation: '600-850 m',
   },
   telephone: CONTACTO.telefonoE164,

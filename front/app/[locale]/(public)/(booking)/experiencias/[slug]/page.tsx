@@ -9,11 +9,13 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import PublicarSlugs from '@/components/layout/PublicarSlugs'
 import MigaSuperior from '@/components/layout/MigaSuperior'
-import { permanentRedirect as permanentRedirectIdioma } from '@/lib/i18n/navigation'
+import { permanentRedirect as permanentRedirectIdioma, getPathname } from '@/lib/i18n/navigation'
 import { alternatesDeIdioma } from '@/lib/i18n/alternates'
 import { SLUGS_EXPERIENCIAS_LEGADOS, destinoLegado } from '@/lib/slugs-legados'
 import { formatPrecio } from '@/lib/format'
 import { metaDescription, parrafosRelato } from '@/lib/seo'
+import { nodoExperiencia } from '@/lib/jsonld'
+import { SITIO } from '@/lib/sitio'
 import type { Metadata } from 'next'
 
 // El segmento caduca siempre, haya respondido el backend o no. Sin esto Next
@@ -39,7 +41,12 @@ export async function generateMetadata(
   const portada = exp.imagenes?.[0] ?? exp.imagen
 
   return {
-    title: `${exp.nombre} · Vuelo Carmesí`,
+    // Sin la marca: el layout de idioma ya la añade con title.template
+    // («%s · Vuelo Carmesí»). Escribirla también aquí la duplicaba —«CACAO
+    // EXPERIENCE · Vuelo Carmesí · Vuelo Carmesí»— y los nombres de las
+    // experiencias vienen en mayúsculas del panel, así que el título ya era
+    // largo antes de repetirla.
+    title: exp.nombre,
     description: descripcion,
     // El slug de cada idioma sale de exp.slugs, que trae el backend: sin él,
     // el alternativo inglés apuntaría al slug español y sería una URL que
@@ -141,8 +148,29 @@ export default async function ExperienciaDetallePage({
   const corte = Math.ceil(cuerpo.length / 2)
   const bloques = cuerpo.length > 0 ? [cuerpo.slice(0, corte), cuerpo.slice(corte)] : []
 
+  // Ver la ficha de producto: el identificador sale de la canónica del idioma,
+  // no de la URL por la que se entró. La oferta apunta a /reservar, que es
+  // donde se cierra: una oferta cuyo enlace lleva otra vez a la ficha manda al
+  // visitante al sitio en el que ya está.
+  const ruta = (href: Parameters<typeof getPathname>[0]['href']) =>
+    `${SITIO}${getPathname({ href, locale })}`
+  const datosExperiencia = nodoExperiencia({
+    experiencia: exp,
+    url: ruta({ pathname: '/experiencias/[slug]', params: { slug: exp.slug } }),
+    urlReserva: ruta({ pathname: '/reservar/[slug]', params: { slug: exp.slug } }),
+    descripcion: metaDescription(exp.descripcion, exp.descripcionLarga),
+    imagenes,
+  })
+
   return (
     <div className="ficha-exp">
+      {/* La salida, su precio y quién la opera, en la forma que lee un
+          buscador. Va como TouristTrip y no como Event: no hay fechas fijas
+          —ver lib/jsonld.ts—. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(datosExperiencia) }}
+      />
       {/* No pinta nada: le da al selector de idioma el slug de esta ficha en
           cada lengua, para que cambiar de idioma no pierda la ficha. */}
       <PublicarSlugs slugs={exp.slugs} />
@@ -236,7 +264,7 @@ export default async function ExperienciaDetallePage({
             </span>
           </div>
           <Button
-            href={`/reservar/${exp.slug}`}
+            href={{ pathname: '/reservar/[slug]', params: { slug: exp.slug } }}
             style={{
               flexShrink: 0, borderRadius: '8px', padding: '14px 24px',
               fontSize: '16px', minHeight: '44px', whiteSpace: 'nowrap',
@@ -264,7 +292,7 @@ export default async function ExperienciaDetallePage({
             })}
           </p>
           <Button
-            href={`/reservar/${exp.slug}`}
+            href={{ pathname: '/reservar/[slug]', params: { slug: exp.slug } }}
             style={{
               borderRadius: '8px', padding: '15px 32px',
               fontSize: '17px', minHeight: '44px',

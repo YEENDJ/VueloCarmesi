@@ -5,6 +5,14 @@ export type Certificacion = {
   logo?: string
   /** Versión del logo para el fondo brown del footer; si falta se usa `logo`. */
   logoOscuro?: string
+  /**
+   * Medidas del archivo del logo. `next/image` las necesita para reservar el
+   * hueco y para no generar anchos que no existen; el tamaño en pantalla lo
+   * siguen fijando el CSS y `--cert-size`. Ausentes con `forma: 'simbolo'`,
+   * que no carga archivo. Las dos versiones del CTC miden lo mismo.
+   */
+  ancho?: number
+  alto?: number
   /** true si el catálogo trae `referencia` para este aval (el nº de registro). */
   conReferencia?: boolean
   /**
@@ -36,15 +44,17 @@ export type Certificacion = {
  * Fuente única: alimenta la sección de la landing y la tira del footer.
  */
 export const CERTIFICACIONES: Certificacion[] = [
-  { clave: 'bpa', logo: '/certificaciones/bpa.png' },
+  { clave: 'bpa', logo: '/certificaciones/bpa.png', ancho: 554, alto: 554 },
   {
     clave: 'ctc',
     logo: '/certificaciones/ctc.png',
     logoOscuro: '/certificaciones/ctc-claro.png',
+    ancho: 900,
+    alto: 365,
     forma: 'sello-rectangular',
     politica: '/politicas/sostenibilidad',
   },
-  { clave: 'rnt', logo: '/certificaciones/logo_rnt.png', conReferencia: true },
+  { clave: 'rnt', logo: '/certificaciones/logo_rnt.png', ancho: 282, alto: 268, conReferencia: true },
   {
     // Frente a una agencia la clase 39 de Niza es su misma clase de servicio:
     // por eso el registro de marca va en la tira y no en la letra chica.

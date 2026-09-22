@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { TraduccionService } from './traduccion.service'
 import { toSlug, slugUnico } from '../common/slug'
+import { capitalizarNombre } from '../common/nombre'
 import {
   TEXTO_EXPERIENCIA,
   LISTA_EXPERIENCIA,
@@ -105,13 +106,21 @@ export class SincronizadorTraduccion {
       // El slug inglés se deriva del nombre ya traducido, no se traduce aparte.
       // Si el nombre no cambió, `res.campos.nombre` no viene y se conserva el
       // slug que ya había: cambiarlo romperia el enlace que alguien compartió.
-      const nombreNuevo = res.campos.nombre as string | undefined
+      // Se normaliza la caja tambien en el idioma de destino. DeepL copia la
+      // del original —un «AVISTAMIENTO DE AVES» salia al ingles como
+      // «BIRDWATCHING»— asi que corregir solo el español dejaria la mitad del
+      // sitio gritando. Misma funcion y mismo glosario que en el origen: ARICAO
+      // sigue siendo ARICAO en las dos lenguas.
+      const nombreNuevo = res.campos.nombre
+        ? capitalizarNombre(res.campos.nombre as string)
+        : undefined
       const slug = nombreNuevo
         ? await this.slugLibreTraduccion('experiencia', idioma, nombreNuevo, previa?.id)
         : previa?.slug
 
       const datos = {
         ...res.campos,
+        ...(nombreNuevo ? { nombre: nombreNuevo } : {}),
         ...(slug ? { slug } : {}),
         origenHash: res.huellas,
       }
@@ -159,13 +168,21 @@ export class SincronizadorTraduccion {
         continue
       }
 
-      const nombreNuevo = res.campos.nombre as string | undefined
+      // Se normaliza la caja tambien en el idioma de destino. DeepL copia la
+      // del original —un «AVISTAMIENTO DE AVES» salia al ingles como
+      // «BIRDWATCHING»— asi que corregir solo el español dejaria la mitad del
+      // sitio gritando. Misma funcion y mismo glosario que en el origen: ARICAO
+      // sigue siendo ARICAO en las dos lenguas.
+      const nombreNuevo = res.campos.nombre
+        ? capitalizarNombre(res.campos.nombre as string)
+        : undefined
       const slug = nombreNuevo
         ? await this.slugLibreTraduccion('producto', idioma, nombreNuevo, previa?.id)
         : previa?.slug
 
       const datos = {
         ...res.campos,
+        ...(nombreNuevo ? { nombre: nombreNuevo } : {}),
         ...(slug ? { slug } : {}),
         origenHash: res.huellas,
       }

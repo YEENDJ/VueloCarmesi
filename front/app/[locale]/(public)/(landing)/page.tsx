@@ -9,8 +9,68 @@ import PruebaSocial from '@/components/secciones/PruebaSocial'
 import { getSiteConfig } from '@/lib/api/site-config'
 import { getExperienciasDestacadas } from '@/lib/api/experiencias'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { alternatesDeIdioma } from '@/lib/i18n/alternates'
+import type { Metadata } from 'next'
 
 export const revalidate = 60
+
+/**
+ * La portada tenía `alternates` pero heredaba título y descripción del layout
+ * de idioma. Se decidió no repetirlos para no mantener el mismo texto en dos
+ * archivos, y mientras el texto fuera el mismo el argumento valía. Ya no lo es:
+ * heredar significaba servir «Vuelo Carmesí» y «Experiencias agroecológicas con
+ * sabor a cacao» en la URL de más autoridad del sitio, sin que Cubarral, el
+ * Meta ni Colombia aparecieran en ninguna señal. El nombre de la marca no es
+ * una consulta que nadie busque todavía.
+ *
+ * El título dice «cacao y visitas», no «cacao y aviturismo», a propósito:
+ * /aviturismo ya se titula «Aviturismo en Cubarral, Meta · 180 especies
+ * registradas». Repetir ese sintagma aquí pondría dos URLs propias a competir
+ * por la misma consulta, y la portada, con más autoridad y menos contenido de
+ * aves, taparía a la página que sí tiene el hotspot de eBird y los horarios.
+ * Las aves y los grupos van en la descripción, que no compite: reclama la
+ * consulta paraguas de la finca y reparte hacia las hijas especializadas.
+ *
+ * `metadataBase` no se declara: se hereda del layout de idioma, y es lo que
+ * vuelve absoluta la ruta relativa de la og:image.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'portada.meta' })
+
+  return {
+    alternates: alternatesDeIdioma('/', locale),
+    // Sin la marca: el layout ya la añade con title.template («%s · Vuelo
+    // Carmesí»), y el resultado queda en 58 caracteres. Ojo: `title.default`
+    // del layout NO pasa por el template, así que hasta ahora la portada era
+    // la única página que servía la marca a secas.
+    title: t('titulo'),
+    description: t('descripcion'),
+    openGraph: {
+      title: t('titulo'),
+      description: t('descripcion'),
+      type: 'website',
+      locale: locale === 'en' ? 'en_US' : 'es_CO',
+      siteName: 'Vuelo Carmesí',
+      // Las medidas son las reales del archivo. Es vertical porque no hay
+      // ninguna foto de cacao en horizontal en el repositorio: la tarjeta de
+      // WhatsApp y Facebook saldrá recortada hasta que se suba un recorte
+      // 1200×630 de esta misma imagen.
+      images: [
+        {
+          url: '/images/cacao/cacaotal-mazorcas-rojas.jpg',
+          width: 812,
+          height: 1280,
+          alt: t('ogAlt'),
+        },
+      ],
+    },
+  }
+}
 
 export default async function HomePage({
   params,

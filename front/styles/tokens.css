@@ -7,10 +7,22 @@
   font-display: swap;
 }
 
+/* La fuente de cuerpo: la carga todo el sitio, en todas las páginas.
+   Se servía en .otf (70 KB) con el .ttf (125 KB) detrás, y el navegador se
+   quedaba con el primero que entendía, que es el .otf. El mismo archivo en
+   woff2 pesa 49 KB —un 29% menos— sin perder un solo glifo: los 803 del
+   original, acentos y signos de apertura incluidos. Sin formatos de respaldo,
+   igual que Playfair de aquí arriba: woff2 lo entiende cualquier navegador
+   desde 2016, y listar otro solo sirve para que alguno se lleve el pesado.
+
+   El .ttf se queda en public/fonts porque es de donde `scripts/generar-peso.py`
+   recorta el signo de peso; no lo pide nadie más. Se regenera con:
+
+       python -m fontTools ttLib.woff2 compress
+         -o public/fonts/Bellota-Bold.woff2 public/fonts/Bellota-Bold.ttf */
 @font-face {
   font-family: 'Bellota';
-  src: url('/fonts/Bellota-Bold.otf') format('opentype'),
-       url('/fonts/Bellota-Bold.ttf') format('truetype');
+  src: url('/fonts/Bellota-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;

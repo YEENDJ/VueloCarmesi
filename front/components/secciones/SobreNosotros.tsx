@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl'
 import { Link } from '@/lib/i18n/navigation'
+import { fotoCloudinary } from '@/lib/imagenes'
 interface Props {
   imagen?: string
 }
@@ -28,10 +29,26 @@ export default function SobreNosotros({ imagen }: Props) {
             }}
           >
             {imagen ? (
+              // 530 = media rejilla de dos columnas con los 80px de hueco. Por
+              // debajo de 768px la rejilla se apila y la foto ocupa el ancho.
+              //
+              // `width`/`height` son la proporción del marco, no las del
+              // archivo: el recorte lo decide el panel y aquí no se conoce.
+              // Van igualmente porque son el único dato que tiene el navegador
+              // antes de que llegue la foto, y sin ellas una imagen sin CSS
+              // aplicado —o con el CSS todavía en vuelo— se pinta al tamaño
+              // intrínseco y arrastra la columna de texto. El hueco real lo
+              // sigue reservando el `min-height` de .about-media, que es quien
+              // manda: el `style` de abajo fija el alto al 100% del marco.
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={imagen}
+                {...fotoCloudinary(imagen, 530)}
+                sizes="(max-width: 767px) 100vw, 530px"
                 alt={t('fotoAlt')}
+                width={530}
+                height={420}
+                loading="lazy"
+                decoding="async"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', borderRadius: '12px' }}
               />
             ) : (

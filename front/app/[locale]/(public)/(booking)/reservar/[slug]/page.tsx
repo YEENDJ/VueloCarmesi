@@ -1,13 +1,30 @@
+import type { Metadata } from 'next'
 import { getExperienciaBySlug } from '@/lib/api/experiencias'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import ReservaForm from '@/components/booking/ReservaForm'
 import MigaSuperior from '@/components/layout/MigaSuperior'
 import { notFound } from 'next/navigation'
 import { formatPrecio } from '@/lib/format'
+import { fotoCloudinary } from '@/lib/imagenes'
 
 // El segmento caduca siempre: sin esto un 404 renderizado durante una caída del
 // backend quedaba cacheado de forma indefinida.
 export const revalidate = 60
+
+/**
+ * El formulario de reserva no entra al índice.
+ *
+ * Es un paso del embudo, no un destino de búsqueda: quien busca la
+ * experiencia tiene que llegar a /experiencias/[slug], que sí la describe y
+ * sí enlaza aquí. Indexar las dos hace que compitan entre ellas por la misma
+ * consulta y la que gana es la que menos cuenta.
+ *
+ * `follow: true` porque la miga y el resumen de la experiencia siguen siendo
+ * enlaces internos legítimos que conviene que el rastreador recorra.
+ */
+export const metadata: Metadata = {
+  robots: { index: false, follow: true },
+}
 
 export default async function ReservarPage({
   params,
@@ -126,10 +143,17 @@ export default async function ReservarPage({
                     marginBottom: '20px',
                   }}
                 >
+                  {/* 440 = la columna del resumen (40fr de .reserva-grid en
+                      los 1136 útiles). Por debajo de 1024px la rejilla se
+                      apila y ocupa el ancho. El marco mide 160px de alto, así
+                      que aquí el original entero sobraba por mucho. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={thumbnail}
+                    {...fotoCloudinary(thumbnail, 440)}
+                    sizes="(max-width: 1023px) 100vw, 440px"
                     alt={exp.nombre}
+                    loading="lazy"
+                    decoding="async"
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </div>
