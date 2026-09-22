@@ -3,6 +3,7 @@ import { useTranslations, useLocale } from 'next-intl'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import { formatPrecio } from '@/lib/format'
+import { fotoCloudinary } from '@/lib/imagenes'
 
 interface ExperienciaCardProps {
   experiencia: Experiencia
@@ -32,7 +33,15 @@ export default function ExperienciaCard({
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         {experiencia.imagen
-          ? <img src={experiencia.imagen} alt={experiencia.nombre}
+          ? // 370 = una columna de la rejilla de tres a 1136px de contenido. El
+            // `sizes` sigue sus dos puntos de ruptura: una columna hasta 559px
+            // y dos hasta 899px. `next/image` no aporta aquí: la URL ya es de
+            // un CDN de imágenes y la transformación la hace él.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img {...fotoCloudinary(experiencia.imagen, 370)}
+                 sizes="(max-width: 559px) 100vw, (max-width: 899px) 50vw, 370px"
+                 alt={experiencia.nombre}
+                 width={1200} height={900} loading="lazy" decoding="async"
                  style={{ width: '100%', height: '100%', maxWidth: '100%', objectFit: 'cover', display: 'block' }} />
           : <span style={{ fontSize: 'clamp(2.5rem, 10vw, 4rem)' }}>🍫</span>
         }
@@ -88,7 +97,7 @@ export default function ExperienciaCard({
           }}>
             {formatPrecio(experiencia.precio, idioma)}
           </span>
-          <Button href={`/experiencias/${experiencia.slug}`} variant="outline" className="btn-card">{t('verMas')}</Button>
+          <Button href={{ pathname: '/experiencias/[slug]', params: { slug: experiencia.slug } }} variant="outline" className="btn-card">{t('verMas')}</Button>
         </div>
       </div>
     </Card>
