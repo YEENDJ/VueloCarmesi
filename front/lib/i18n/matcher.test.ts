@@ -41,7 +41,7 @@ describe('matcher del proxy de idioma', () => {
   it('excluye los archivos con extensión', () => {
     // Esta es la que cazaría la regresión del backslash comido: con el patrón
     // roto (`.*..*`) estas daban false igual, pero también las de arriba.
-    for (const r of ['/favicon.ico', '/images/marca/logo-crema.png', '/fonts/Bellota-Bold.ttf']) {
+    for (const r of ['/favicon.ico', '/images/marca/logo-crema.png', '/fonts/Bellota-Bold.woff2']) {
       expect(pasa(r), r).toBe(false)
     }
   })
