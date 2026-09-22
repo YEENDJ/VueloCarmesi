@@ -1,11 +1,12 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import Link from 'next/link'
+import { Link } from '@/lib/i18n/navigation'
 import { Check, ChevronLeft, ChevronRight, Clock, Users } from 'lucide-react'
 import IconoWhatsapp from '@/components/ui/IconoWhatsapp'
 import Button from '@/components/ui/Button'
 import { formatPrecio } from '@/lib/format'
+import { fotoCloudinary } from '@/lib/imagenes'
 
 /** Cuántos "incluye" asoman junto al precio. El resto se cuenta en una línea. */
 const RESUMEN_INCLUYE = 3
@@ -59,41 +60,58 @@ export default function PortadaExperiencia({
   // mientras la pestaña está abierta, un índice viejo dejaría la foto en blanco.
   const activa = Math.min(indice, Math.max(total - 1, 0))
 
-  // La tira de miniaturas no baja de línea: se desplaza. Hay que medirla para
-  // saber si sobra ancho, porque las flechas solo tienen sentido si hay algo
-  // fuera de vista — y en cuál de los dos extremos está la tira, para no dejar
-  // una flecha que no lleva a ninguna parte.
+  // Mismo criterio que la galería de producto: el `+ total` mantiene el índice
+  // positivo al retroceder desde la primera, porque en JavaScript -1 % 4 es -1
+  // y no 3. Da la vuelta a propósito — con el contador «1 / 8» a la vista, una
+  // flecha que se apaga en los extremos no se distingue de una que se rompió.
+  //
+  // El acotado va DENTRO del actualizador en vez de partir de `activa`: si el
+  // administrador quita fotos con la pestaña abierta, el índice guardado puede
+  // apuntar fuera de la lista y la primera flecha daría un salto en vez de un
+  // paso. Y leyendo el valor anterior en vez del de la última renderización,
+  // dos clics seguidos avanzan dos fotos aunque React los agrupe en un lote.
+  const mover = (paso: 1 | -1) =>
+    setIndice(i => (total === 0 ? 0 : (Math.min(i, total - 1) + paso + total) % total))
+
+  // La tira de miniaturas no baja de línea: se desplaza. Se mide para saber si
+  // sobra ancho, porque de eso depende el aviso de abajo: «desliza la tira»
+  // solo es cierto si hay algo fuera de vista.
   const tira = useRef<HTMLDivElement>(null)
-  const [despl, setDespl] = useState({ desborda: false, inicio: true, final: false })
+  const [desborda, setDesborda] = useState(false)
 
   useEffect(() => {
     const el = tira.current
     if (!el) return
-    const medir = () => {
-      const margen = el.scrollWidth - el.clientWidth
-      setDespl({
-        desborda: margen > 1,
-        inicio: el.scrollLeft <= 1,
-        final: el.scrollLeft >= margen - 1,
-      })
-    }
+    const medir = () => setDesborda(el.scrollWidth - el.clientWidth > 1)
     medir()
-    el.addEventListener('scroll', medir, { passive: true })
-    // Sin esto, pasar de escritorio a móvil dejaría las flechas puestas aunque
-    // ya no hicieran falta, o al revés.
+    // Sin esto, pasar de escritorio a móvil dejaría el aviso puesto aunque ya
+    // no hiciera falta, o al revés.
     const ro = new ResizeObserver(medir)
     ro.observe(el)
-    return () => { el.removeEventListener('scroll', medir); ro.disconnect() }
+    return () => ro.disconnect()
   }, [total])
 
-  function desplazar(sentido: 1 | -1) {
+  // Las flechas cambian la foto grande, así que a partir de la séptima foto la
+  // miniatura activa se queda fuera de vista y la tira deja de decir por dónde
+  // va uno. Esto la arrastra detrás.
+  //
+  // Se mueve `scrollLeft` a mano en vez de usar scrollIntoView porque ese
+  // también desplaza la PÁGINA cuando el elemento no cabe entero en pantalla, y
+  // aquí pulsar una flecha no puede mover nada que no sea la tira.
+  useEffect(() => {
     const el = tira.current
-    if (!el) return
-    // Ocho décimas del ancho visible y no el ancho entero: deja una miniatura
-    // de las que ya se veían, y así no se pierde el hilo de dónde iba uno.
+    const miniatura = el?.children[activa]
+    if (!el || !(miniatura instanceof HTMLElement)) return
+    const izquierda = miniatura.offsetLeft
+    const derecha = izquierda + miniatura.offsetWidth
     const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    el.scrollBy({ left: sentido * el.clientWidth * 0.8, behavior: suave ? 'smooth' : 'auto' })
-  }
+    const behavior: ScrollBehavior = suave ? 'smooth' : 'auto'
+    if (izquierda < el.scrollLeft) {
+      el.scrollTo({ left: izquierda, behavior })
+    } else if (derecha > el.scrollLeft + el.clientWidth) {
+      el.scrollTo({ left: derecha - el.clientWidth, behavior })
+    }
+  }, [activa])
 
   const incluyeVisible = incluye.slice(0, RESUMEN_INCLUYE)
   const incluyeResto = incluye.length - incluyeVisible.length
@@ -110,8 +128,17 @@ export default function PortadaExperiencia({
       <div className="ficha-exp-galeria">
         <div className="ficha-exp-foto">
           {total > 0 && (
+            // El LCP de la ficha. 620 = lo que `flex: 1 1 460px` le deja a
+            // .ficha-exp-galeria dentro de los 1136 útiles; por debajo de
+            // ~860px la fila envuelve y la foto ocupa el ancho entero.
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={imagenes[activa]} alt={tg('fotoDe', { nombre, n: activa + 1, total })} />
+            <img
+              {...fotoCloudinary(imagenes[activa], 620)}
+              sizes="(max-width: 860px) 100vw, 620px"
+              alt={tg('fotoDe', { nombre, n: activa + 1, total })}
+              fetchPriority="high"
+              decoding="async"
+            />
           )}
           {total > 1 && (
             <span className="ficha-exp-contador">{activa + 1} / {total}</span>
@@ -126,22 +153,24 @@ export default function PortadaExperiencia({
                 que se desplaza — el alto de la galería ya no depende de cuántas
                 fotos suba el administrador.
 
-                Las flechas solo se pintan si hay algo fuera de vista, y en
-                pantallas táctiles ni eso: ahí se arrastra con el dedo. */}
+                Las flechas se apoyan en los extremos de la tira, que es donde
+                estaban, pero ya no la desplazan: cambian la foto de arriba y la
+                tira se recoloca sola detrás. La tira además se arrastra con el
+                dedo o con el ratón, y se pulsa una miniatura para saltar
+                directo a ella. */}
             <div className="ficha-exp-tira">
-              {/* Se pinta solo si lleva a alguna parte, no deshabilitada: va
-                  encima de una miniatura, y una flecha muerta ahí taparía la
-                  foto que hay debajo sin dejar pulsarla. */}
-              {despl.desborda && !despl.inicio && (
-                <button
-                  type="button"
-                  className="ficha-exp-tira-flecha ficha-exp-tira-flecha--prev"
-                  onClick={() => desplazar(-1)}
-                  aria-label={t('verFotosAnteriores')}
-                >
-                  <ChevronLeft size={20} strokeWidth={2.2} aria-hidden="true" />
-                </button>
-              )}
+              {/* Las dos se pintan siempre, sin apagarse en los extremos: el
+                  recorrido da la vuelta, así que ninguna se queda sin destino.
+                  Antes sí se escondían, porque entonces desplazaban la tira y
+                  en el extremo no llevaban a ninguna parte. */}
+              <button
+                type="button"
+                className="ficha-exp-tira-flecha ficha-exp-tira-flecha--prev"
+                onClick={() => mover(-1)}
+                aria-label={tg('fotoAnterior')}
+              >
+                <ChevronLeft size={20} strokeWidth={2.2} aria-hidden="true" />
+              </button>
 
               <div
                 className="ficha-exp-miniaturas"
@@ -157,31 +186,30 @@ export default function PortadaExperiencia({
                     aria-label={tg('verFoto', { n: i + 1, total })}
                     aria-current={i === activa}
                   >
+                    {/* 88px fijos (`flex: 0 0 88px`). Con la tira de veinte
+                        fotos que admite el panel, `lazy` deja fuera todo lo
+                        que no se ha desplazado todavía. */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={src} alt="" />
+                    <img {...fotoCloudinary(src, 88)} sizes="88px" alt="" loading="lazy" decoding="async" />
                   </button>
                 ))}
               </div>
 
-              {despl.desborda && !despl.final && (
-                <button
-                  type="button"
-                  className="ficha-exp-tira-flecha ficha-exp-tira-flecha--next"
-                  onClick={() => desplazar(1)}
-                  aria-label={t('verMasFotos')}
-                >
-                  <ChevronRight size={20} strokeWidth={2.2} aria-hidden="true" />
-                </button>
-              )}
+              <button
+                type="button"
+                className="ficha-exp-tira-flecha ficha-exp-tira-flecha--next"
+                onClick={() => mover(1)}
+                aria-label={tg('fotoSiguiente')}
+              >
+                <ChevronRight size={20} strokeWidth={2.2} aria-hidden="true" />
+              </button>
             </div>
 
             {/* Las miniaturas se ven, pero nadie sabe que se pulsan hasta que
                 alguien lo dice. Y si además hay fotos fuera de vista, el aviso
                 es el único sitio donde eso se puede contar. */}
             <p className="ficha-exp-aviso-fotos">
-              {despl.desborda
-                ? t('deslizaTira')
-                : t('tocaFoto')}
+              {desborda ? t('deslizaTira') : t('tocaFoto')}
             </p>
           </>
         )}
@@ -241,7 +269,7 @@ export default function PortadaExperiencia({
           )}
 
           <Button
-            href={`/reservar/${slug}`}
+            href={{ pathname: '/reservar/[slug]', params: { slug } }}
             style={{
               width: '100%', textAlign: 'center', borderRadius: '8px',
               padding: '15px', fontSize: '17px', minHeight: '44px',

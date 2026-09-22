@@ -1926,17 +1926,6 @@ a.contacto-canal:hover {
   color: rgba(135, 43, 19, 0.6);
 }
 
-.ficha-migas {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  font-size: 13px;
-  color: rgba(135, 43, 19, 0.6);
-  margin-bottom: 18px;
-  min-width: 0;
-}
-
 .ficha-avales {
   border-top: 1px solid rgba(135, 43, 19, 0.12);
   margin-top: 18px;
@@ -2486,14 +2475,18 @@ a.contacto-canal:hover {
 
 /* Las flechas salen en cualquier dispositivo, sin condicionar por tipo de
    puntero: un portátil con pantalla táctil reporta `pointer: coarse` y se
-   quedaba sin ellas aunque hubiera fotos fuera de vista. La galería de
-   producto ya las muestra siempre, y este bloque hace lo mismo.
+   quedaba sin ellas aunque hubiera fotos fuera de vista.
 
    Van encima de la tira, no a los lados. Puestas al lado le
    robaban 104px de ancho y la tira dejaba de medir lo mismo que la foto de
    arriba: dos bloques que arrancan y acaban en sitios distintos se leen como
    un descuadre. Ahora la tira ocupa el ancho entero de la foto y las flechas
-   se apoyan en sus extremos. */
+   se apoyan en sus extremos.
+
+   Como cambian la foto y el recorrido da la vuelta, ya no se apagan en los
+   extremos: están siempre. El precio es que cada una se apoya sobre una
+   miniatura; se aceptan los 88px que tapan a cambio de que la tira siga
+   midiendo lo mismo que la foto. */
 .ficha-exp-tira {
   position: relative;
   min-width: 0;
