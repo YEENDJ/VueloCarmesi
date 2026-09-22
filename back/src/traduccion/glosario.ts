@@ -16,7 +16,7 @@
  * su nombre en media web. Se declaran como par idéntico, que es la forma de
  * decirle a un glosario «deja esto en paz».
  */
-const NOMBRES_PROPIOS = [
+export const NOMBRES_PROPIOS = [
   'Vuelo Carmesí',
   'Finca La Fortuna',
   'Vereda Brisas del Tonoa',
