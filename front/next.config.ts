@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
   //
   // Estas rutas no llevan hash en el nombre, pero tampoco cambian solas: las fotos
   // y los sellos entran por commit, y las que edita el negocio desde el panel no
-  // viven aquí sino en Cloudinary (ver lib/imagenes.ts). Por eso `immutable`:
+  // viven aquí sino en Cloudinary. Por eso `immutable`:
   // durante un año el navegador ni siquiera pregunta.
   //
   // **Para reemplazar una imagen, cambia el nombre del archivo.** Si subes otra

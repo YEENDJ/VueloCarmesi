@@ -3,7 +3,6 @@ import { useCallback, useRef, useState } from 'react'
 import Cropper from 'react-easy-crop'
 import type { Area, Point } from 'react-easy-crop'
 import { uploadImage } from '@/lib/admin/api'
-import { fotoCloudinary } from '@/lib/imagenes'
 
 const ASPECTOS: { label: string; value: number | undefined }[] = [
   { label: '16:9', value: 16 / 9 },
@@ -184,12 +183,9 @@ export default function HeroImageEditor({
         marginBottom: 14,
       }}>
         {value ? (
-          // Es la vista de lo que ya está guardado —el recorte viene horneado
-          // en el archivo subido—, así que reducirla no falsea lo que se ve.
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            {...fotoCloudinary(value, 640)}
-            sizes="(max-width: 700px) 100vw, 640px"
+            src={value}
             alt="Hero"
             decoding="async"
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}

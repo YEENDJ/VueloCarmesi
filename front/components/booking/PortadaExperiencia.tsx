@@ -6,7 +6,6 @@ import { Check, ChevronLeft, ChevronRight, Clock, Users } from 'lucide-react'
 import IconoWhatsapp from '@/components/ui/IconoWhatsapp'
 import Button from '@/components/ui/Button'
 import { formatPrecio } from '@/lib/format'
-import { fotoCloudinary } from '@/lib/imagenes'
 
 /** Cuántos "incluye" asoman junto al precio. El resto se cuenta en una línea. */
 const RESUMEN_INCLUYE = 3
@@ -128,13 +127,13 @@ export default function PortadaExperiencia({
       <div className="ficha-exp-galeria">
         <div className="ficha-exp-foto">
           {total > 0 && (
-            // El LCP de la ficha. 620 = lo que `flex: 1 1 460px` le deja a
-            // .ficha-exp-galeria dentro de los 1136 útiles; por debajo de
-            // ~860px la fila envuelve y la foto ocupa el ancho entero.
+            // El LCP de la ficha. Se sirve el original sin transformar: la
+            // reducción de peso se retiró porque se notaba en pantalla. De paso
+            // las flechas vuelven a ser instantáneas — al pedir una derivación
+            // nueva por foto, Cloudinary la fabricaba en el momento del clic.
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              {...fotoCloudinary(imagenes[activa], 620)}
-              sizes="(max-width: 860px) 100vw, 620px"
+              src={imagenes[activa]}
               alt={tg('fotoDe', { nombre, n: activa + 1, total })}
               fetchPriority="high"
               decoding="async"
@@ -186,11 +185,10 @@ export default function PortadaExperiencia({
                     aria-label={tg('verFoto', { n: i + 1, total })}
                     aria-current={i === activa}
                   >
-                    {/* 88px fijos (`flex: 0 0 88px`). Con la tira de veinte
-                        fotos que admite el panel, `lazy` deja fuera todo lo
-                        que no se ha desplazado todavía. */}
+                    {/* Con la tira de veinte fotos que admite el panel, `lazy`
+                        deja fuera todo lo que no se ha desplazado todavía. */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img {...fotoCloudinary(src, 88)} sizes="88px" alt="" loading="lazy" decoding="async" />
+                    <img src={src} alt="" loading="lazy" decoding="async" />
                   </button>
                 ))}
               </div>

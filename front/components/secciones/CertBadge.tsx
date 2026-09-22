@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import type { Certificacion } from '@/lib/certificaciones'
 import { useTranslations } from 'next-intl'
 
@@ -56,18 +55,16 @@ export default function CertBadge({ cert, variant = 'card' }: Props) {
     // prohíbe recortarlos, así que van completos y sin círculo. La versión
     // horizontal a estas alturas queda por encima del mínimo digital de 141px.
     return (
-      // `next/image` y no un <img>: ctc.png son 900×365 y 65 KB para pintarse
-      // a 96px de alto en la tarjeta y a 46-60 en el pie. Y el pie va en
-      // todas las páginas. Al vivir en `public/` los optimiza el despliegue
-      // sin `remotePatterns`. El tamaño real lo siguen fijando el CSS y
-      // `style`; `width`/`height` solo dan la proporción del archivo.
-      <Image
+      // Se sirve el PNG tal cual, sin pasar por el optimizador: recomprimido
+      // se notaba en los bordes duros del sello. El tamaño real lo fijan el
+      // CSS y `style`; `width`/`height` solo dan la proporción del archivo.
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
         src={logo}
         alt={ta('selloAlt', { nombre: ta(`${cert.clave}.nombre`) })}
         title={ta(`${cert.clave}.nombre`)}
         width={cert.ancho ?? 900}
         height={cert.alto ?? 365}
-        sizes="240px"
         className={isCard ? undefined : 'cert-sello-footer'}
         style={{
           maxWidth: '100%',
@@ -97,15 +94,15 @@ export default function CertBadge({ cert, variant = 'card' }: Props) {
           : undefined),
       }}
     >
-      {/* 96px en la tarjeta, --cert-size (46-60) en el pie. bpa.png son
-          554×554 y 82 KB para eso. El contenedor le fija el tamaño; las
-          medidas son las del archivo, que no es cuadrado en los dos casos. */}
-      <Image
+      {/* 96px en la tarjeta, --cert-size (46-60) en el pie. El contenedor le
+          fija el tamaño; las medidas son las del archivo, que no es cuadrado
+          en los dos casos. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src={logo}
         alt={ta('logoAlt', { entidad: ta(`${cert.clave}.entidad`) })}
         width={cert.ancho ?? 96}
         height={cert.alto ?? 96}
-        sizes="96px"
         style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
       />
     </div>
