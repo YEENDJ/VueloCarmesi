@@ -1,5 +1,17 @@
+import type { Metadata } from 'next'
 import Button from '@/components/ui/Button'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+
+/**
+ * La confirmación de reserva no entra al índice.
+ *
+ * Es una pantalla de después: solo tiene sentido con una reserva recién
+ * hecha detrás, y de un resultado de búsqueda se llega en frío a un acuse de
+ * algo que no ha pasado.
+ */
+export const metadata: Metadata = {
+  robots: { index: false, follow: true },
+}
 
 export default async function ConfirmacionPage({
   params,
