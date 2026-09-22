@@ -37,7 +37,8 @@
     "metaTitulo": "Page not found"
   },
   "experiencias": {
-    "tituloListado": "Our Experiences"
+    "tituloListado": "Our Experiences",
+    "metaDescripcion": "Cacao tours, birdwatching and group visits at the Vuelo Carmesí agroecological farm in Cubarral, Meta (Colombia). Duration, group size and price in Colombian pesos for each experience."
   },
   "diferenciales": {
     "kicker": "Why Vuelo Carmesí?",
@@ -114,8 +115,6 @@
     "verPolitica": "Read the policy",
     "dudas": "Questions before booking?",
     "escribenosWhatsapp": "Message us on WhatsApp",
-    "verFotosAnteriores": "See previous photos",
-    "verMasFotos": "See more photos",
     "deslizaTira": "Swipe the strip and tap a photo to enlarge it",
     "tocaFoto": "Tap a photo to enlarge it",
     "masFotos": "{n, plural, one {# more} other {# more}}",
@@ -284,6 +283,7 @@
     }
   },
   "tienda": {
+    "metaDescripcion": "Artisanal chocolate and cacao from the Vuelo Carmesí farm in Cubarral, Meta. Prices in Colombian pesos with VAT included and shipping anywhere in Colombia, quoted by destination city.",
     "catalogoVacio": "No products available yet. Check back soon.",
     "sinFotografia": "No photograph",
     "fotoAnterior": "Previous photo",
@@ -378,6 +378,9 @@
     "todos": "All"
   },
   "contacto": {
+    "metaTitulo": "Contact",
+    "metaDescripcion": "Message us on WhatsApp, or reach us by phone or email. Vuelo Carmesí farm, Cubarral, Meta, Colombia: bookings, group visits and how to get here.",
+    "h1": "Contact Vuelo Carmesí and how to get to the farm in Cubarral, Meta",
     "escribenos": "Send us a message",
     "gracias": "Thank you! We will reply as soon as we can. Check your inbox.",
     "error": "Something went wrong sending your message. Please try again or write to us directly at {email}.",
@@ -679,7 +682,7 @@
     "indice": {
       "titulo": "Policies",
       "bajada": "The official texts governing the relationship between Vuelo Carmesí and its visitors.",
-      "metaTitulo": "Policies · Vuelo Carmesí",
+      "metaTitulo": "Policies",
       "metaDescripcion": "Official policies of Finca Agroturística Vuelo Carmesí: child protection, booking cancellation, personal data, shop terms of sale and sustainability.",
       "ninez": {
         "titulo": "Child protection",
@@ -708,7 +711,7 @@
       }
     },
     "ninez": {
-      "metaTitulo": "Child protection · Vuelo Carmesí",
+      "metaTitulo": "Child protection",
       "metaDescripcion": "Vuelo Carmesí commitment to protecting children and adolescents and against ESCNNA, in compliance with Law 679 of 2001 and Law 1336 of 2009.",
       "titulo": "Our commitment to children and adolescents",
       "ley": "Law 1336 of 2009",
@@ -735,7 +738,7 @@
       "compromisoTexto": "Finca Agroturística Vuelo Carmesí promotes responsible, safe tourism committed to the full protection of children and adolescents."
     },
     "cancelacion": {
-      "metaTitulo": "Cancellation policy · Vuelo Carmesí",
+      "metaTitulo": "Cancellation policy",
       "metaDescripcion": "Booking, cancellation and payment terms for Vuelo Carmesí experiences.",
       "titulo": "Cancellation policy",
       "escribenos": "Write to us",
@@ -753,11 +756,13 @@
           "que": "100% penalty on the amount paid"
         }
       },
+      "reserva": "Booking and confirmation",
       "reserva1": "All activities must be booked in advance and paid in full before they take place.",
       "reserva2": "Online bookings must be confirmed at least 48 hours in advance by sending proof of payment through the channels authorised by the farm.",
       "reserva3": "Quotes are for information only and do not constitute a booking confirmation. All bookings are subject to availability.",
       "reserva4": "Once a booking is confirmed, any change of date, activity or itinerary is subject to availability and to the terms of the contracted service.",
       "reserva5": "Visitors must provide truthful and complete information, including names, identification documents and any other data required to comply with current regulations.",
+      "pago": "Payment for the service",
       "pago1": "On booking, 30% of the service value is paid; the remaining 70% is paid in cash on the day of the activity.",
       "pago2": "Payment is made by bank transfer to the farm's authorised account, or via NEQUI and BreB. Write to us and we will send you the details.",
       "visitanteTitulo": "Cancellation by the visitor",
@@ -805,7 +810,7 @@
       "pago": "Payment"
     },
     "datos": {
-      "metaTitulo": "Personal data policy · Vuelo Carmesí",
+      "metaTitulo": "Personal data policy",
       "metaDescripcion": "What personal data Vuelo Carmesí collects through the forms on this site, what it is used for, how long it is kept and how to exercise your rights under Colombian Law 1581 of 2012.",
       "titulo": "Personal data policy",
       "fecha": "17 September 2026",
@@ -880,7 +885,7 @@
       "cookies": "Cookies"
     },
     "tienda": {
-      "metaTitulo": "Shop terms and conditions · Vuelo Carmesí",
+      "metaTitulo": "Shop terms and conditions",
       "metaDescripcion": "Terms of sale for the Vuelo Carmesí shop: how an order is placed, prices, payment methods, shipping, right of withdrawal, payment reversal and legal warranty.",
       "titulo": "Shop terms and conditions",
       "fecha": "17 September 2026",
@@ -960,7 +965,7 @@
       "datos": "Your data"
     },
     "sostenibilidad": {
-      "metaTitulo": "Sustainability policy · Vuelo Carmesí",
+      "metaTitulo": "Sustainability policy",
       "metaDescripcion": "Sustainability policy of Finca Agroturística Vuelo Carmesí: environmental, sociocultural and economic commitments of the provider, under Colombia's Sustainable Tourism Sectoral Standards.",
       "titulo": "Sustainability policy",
       "fecha": "17 September 2026",
@@ -1026,8 +1031,9 @@
     }
   },
   "nosotros": {
-    "metaTitulo": "About us · Vuelo Carmesí",
+    "metaTitulo": "About us",
     "metaDescripcion": "The story of Vuelo Carmesí: 40 years of cacao in Cubarral, Meta, and the shift from a traditional crop to an agroecological farm open to visitors.",
+    "metaOgAlt": "The Vuelo Carmesí team at Finca La Fortuna in Cubarral, Meta",
     "secciones": {
       "origen": "The origin",
       "historia": "Our story",
@@ -1250,6 +1256,11 @@
     }
   },
   "portada": {
+    "meta": {
+      "titulo": "Cacao farm visits in Cubarral, Colombia",
+      "descripcion": "Harvest, ferment and taste cacao on a working agroecological farm in Cubarral, Meta. A day trip from Bogotá or Villavicencio, with birding and group visits.",
+      "ogAlt": "The farm's cacao grove with ripe red pods on the tree"
+    },
     "heroTitulo": "Agroecological experiences\nwith the taste of cacao.",
     "heroSubtitulo": "We harvest, ferment and taste alongside you. Get to know cacao from its roots, on a farm full of life and tradition.",
     "heroCta": "Book your experience",
@@ -1292,6 +1303,8 @@
     "fotoSimple": "{alt} — photo {n}",
     "fotosDe": "Photos of {nombre}",
     "verFoto": "View photo {n} of {total}",
+    "fotoAnterior": "Previous photo",
+    "fotoSiguiente": "Next photo",
     "ampliarFoto": "Enlarge {alt} — photo {n} of {total}",
     "fotoPendiente": "PHOTO · {nombre}",
     "carrito": "Shopping cart, {n} items",

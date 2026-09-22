@@ -37,7 +37,8 @@
     "metaTitulo": "Página no encontrada"
   },
   "experiencias": {
-    "tituloListado": "Nuestras Experiencias"
+    "tituloListado": "Nuestras Experiencias",
+    "metaDescripcion": "Recorridos de cacao, avistamiento de aves y visitas de grupo en la finca agroecológica Vuelo Carmesí, en Cubarral (Meta). Duración, cupos y precio en pesos colombianos de cada experiencia."
   },
   "diferenciales": {
     "kicker": "¿Por qué Vuelo Carmesí?",
@@ -114,8 +115,6 @@
     "verPolitica": "Ver política",
     "dudas": "¿Dudas antes de reservar?",
     "escribenosWhatsapp": "Escríbenos por WhatsApp",
-    "verFotosAnteriores": "Ver fotos anteriores",
-    "verMasFotos": "Ver más fotos",
     "deslizaTira": "Desliza la tira y toca una foto para verla en grande",
     "tocaFoto": "Toca una foto para verla en grande",
     "masFotos": "{n, plural, one {# cosa más} other {# cosas más}}",
@@ -284,6 +283,7 @@
     }
   },
   "tienda": {
+    "metaDescripcion": "Chocolate y cacao artesanal de la finca Vuelo Carmesí, en Cubarral (Meta). Precios en pesos colombianos con IVA incluido y envíos a toda Colombia, cotizados según la ciudad de destino.",
     "catalogoVacio": "Aún no hay productos disponibles. Vuelve pronto.",
     "sinFotografia": "Sin fotografía",
     "fotoAnterior": "Foto anterior",
@@ -378,6 +378,9 @@
     "todos": "Todos"
   },
   "contacto": {
+    "metaTitulo": "Contacto",
+    "metaDescripcion": "Escríbenos por WhatsApp, teléfono o correo. Finca Vuelo Carmesí, vereda Brisas del Tonoa, Cubarral (Meta): reservas, visitas de grupo y cómo llegar.",
+    "h1": "Contacto y cómo llegar a Vuelo Carmesí, Cubarral (Meta)",
     "escribenos": "Escríbenos un mensaje",
     "gracias": "¡Gracias! Te respondemos lo antes posible. Revisa tu correo.",
     "error": "Hubo un error al enviar. Inténtalo de nuevo o escríbenos directamente a {email}.",
@@ -679,7 +682,7 @@
     "indice": {
       "titulo": "Políticas",
       "bajada": "Los textos oficiales que rigen la relación entre Vuelo Carmesí y sus visitantes.",
-      "metaTitulo": "Políticas · Vuelo Carmesí",
+      "metaTitulo": "Políticas",
       "metaDescripcion": "Políticas oficiales de la Finca Agroturística Vuelo Carmesí: protección de la niñez, cancelación de reservas, tratamiento de datos personales, condiciones de venta de la tienda y sostenibilidad.",
       "ninez": {
         "titulo": "Protección de la niñez",
@@ -708,7 +711,7 @@
       }
     },
     "ninez": {
-      "metaTitulo": "Protección de la niñez · Vuelo Carmesí",
+      "metaTitulo": "Protección de la niñez",
       "metaDescripcion": "Compromiso de Vuelo Carmesí con la protección de niños, niñas y adolescentes y contra la ESCNNA, en cumplimiento de la Ley 679 de 2001 y la Ley 1336 de 2009.",
       "titulo": "Compromiso con niños, niñas y adolescentes",
       "ley": "Ley 1336 de 2009",
@@ -735,7 +738,7 @@
       "compromisoTexto": "La Finca Agroturística Vuelo Carmesí promueve un turismo responsable, seguro y comprometido con la protección integral de la niñez y la adolescencia."
     },
     "cancelacion": {
-      "metaTitulo": "Política de cancelación · Vuelo Carmesí",
+      "metaTitulo": "Política de cancelación",
       "metaDescripcion": "Condiciones de reserva, cancelación y pago de las experiencias de Vuelo Carmesí.",
       "titulo": "Política de cancelación",
       "escribenos": "Escríbenos",
@@ -753,11 +756,13 @@
           "que": "Penalidad del 100 % del valor abonado"
         }
       },
+      "reserva": "Reserva y confirmación",
       "reserva1": "Todas las actividades deben reservarse con anticipación y estar pagadas en su totalidad antes de su realización.",
       "reserva2": "Las reservas virtuales deben confirmarse con un mínimo de 48 horas de anticipación, enviando el comprobante de pago por los medios autorizados por la finca.",
       "reserva3": "Las cotizaciones tienen carácter informativo y no constituyen una confirmación de reserva. Todas las reservas están sujetas a disponibilidad.",
       "reserva4": "Una vez confirmada la reserva, cualquier cambio de fecha, actividad o itinerario queda sujeto a disponibilidad y a las condiciones del servicio contratado.",
       "reserva5": "El visitante debe suministrar información veraz y completa, incluyendo nombres, documento de identificación y demás datos requeridos para el cumplimiento de la normatividad vigente.",
+      "pago": "Pago del servicio",
       "pago1": "Al reservar se cancela el 30 % del valor del servicio; el 70 % restante se paga en efectivo el día de la actividad.",
       "pago2": "El pago se realiza por transferencia bancaria a la cuenta autorizada de la finca, o por NEQUI y BreB. Escríbenos y te indicamos los datos.",
       "visitanteTitulo": "Cancelación por parte del visitante",
@@ -805,7 +810,7 @@
       "pago": "Pago"
     },
     "datos": {
-      "metaTitulo": "Tratamiento de datos personales · Vuelo Carmesí",
+      "metaTitulo": "Tratamiento de datos personales",
       "metaDescripcion": "Qué datos personales recoge Vuelo Carmesí en los formularios del sitio, para qué los usa, cuánto los guarda y cómo ejercer tus derechos, conforme a la Ley 1581 de 2012.",
       "titulo": "Tratamiento de datos personales",
       "fecha": "17 de septiembre de 2026",
@@ -880,7 +885,7 @@
       "cookies": "Cookies"
     },
     "tienda": {
-      "metaTitulo": "Términos y condiciones de la tienda · Vuelo Carmesí",
+      "metaTitulo": "Términos y condiciones de la tienda",
       "metaDescripcion": "Condiciones de venta de la tienda de Vuelo Carmesí: cómo se hace un pedido, precios, medios de pago, envío, derecho de retracto, reversión del pago y garantía legal.",
       "titulo": "Términos y condiciones de la tienda",
       "fecha": "17 de septiembre de 2026",
@@ -960,7 +965,7 @@
       "datos": "Tus datos"
     },
     "sostenibilidad": {
-      "metaTitulo": "Política de sostenibilidad · Vuelo Carmesí",
+      "metaTitulo": "Política de sostenibilidad",
       "metaDescripcion": "Política de sostenibilidad de la Finca Agroturística Vuelo Carmesí: compromisos ambientales, socioculturales y económicos del prestador, conforme a las Normas Técnicas Sectoriales de Turismo Sostenible.",
       "titulo": "Política de sostenibilidad",
       "fecha": "17 de septiembre de 2026",
@@ -1026,8 +1031,9 @@
     }
   },
   "nosotros": {
-    "metaTitulo": "Sobre nosotros · Vuelo Carmesí",
+    "metaTitulo": "Sobre nosotros",
     "metaDescripcion": "La historia de Vuelo Carmesí: 40 años de cacao en Cubarral, Meta, y el paso de un cultivo tradicional a una finca agroecológica abierta a visitantes.",
+    "metaOgAlt": "El equipo de Vuelo Carmesí en la finca La Fortuna, en Cubarral (Meta)",
     "secciones": {
       "origen": "El origen",
       "historia": "Nuestra historia",
@@ -1250,6 +1256,11 @@
     }
   },
   "portada": {
+    "meta": {
+      "titulo": "Finca de cacao y visitas en Cubarral, Meta",
+      "descripcion": "Finca agroecológica de cacao en Cubarral, Meta, a menos de dos horas de Villavicencio. Cosecha, fermentación y cata guiadas, aviturismo y visitas de grupo.",
+      "ogAlt": "Cacaotal de la finca con mazorcas rojas maduras en el árbol"
+    },
     "heroTitulo": "Experiencias agroecológicas\ncon sabor a cacao.",
     "heroSubtitulo": "Cosechamos, fermentamos y degustamos junto a ti. Conoce el cacao desde su raíz, en una finca llena de vida y tradición.",
     "heroCta": "Reserva tu experiencia",
@@ -1292,6 +1303,8 @@
     "fotoSimple": "{alt} — foto {n}",
     "fotosDe": "Fotos de {nombre}",
     "verFoto": "Ver foto {n} de {total}",
+    "fotoAnterior": "Foto anterior",
+    "fotoSiguiente": "Foto siguiente",
     "ampliarFoto": "Ampliar {alt} — foto {n} de {total}",
     "fotoPendiente": "FOTO · {nombre}",
     "carrito": "Carrito de compras, {n} artículos",

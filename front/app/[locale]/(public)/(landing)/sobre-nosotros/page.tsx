@@ -1,5 +1,8 @@
+import type { Metadata } from 'next'
 import { Link } from '@/lib/i18n/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { alternatesDeIdioma } from '@/lib/i18n/alternates'
+import { SITIO } from '@/lib/sitio'
 import EquipoCarrusel from "@/components/secciones/EquipoCarrusel";
 import {
   CONTACTO,
@@ -110,6 +113,53 @@ function miles(valor: string) {
 // durante el build dejaría la página cacheada con las cifras de respaldo y sin
 // nada que la invalidara. Mismo criterio que la ficha de experiencia.
 export const revalidate = 300;
+
+/**
+ * Los metadatos que la página nunca llegó a declarar, aunque el texto llevaba
+ * meses escrito: `nosotros.metaTitulo` y `nosotros.metaDescripcion` ya estaban
+ * en los dos catálogos y no los leía nadie. Sin ellos, /sobre-nosotros y
+ * /en/about heredaban el título genérico del layout y no se declaraban como la
+ * misma página en dos lenguas.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "nosotros" });
+  return {
+    // Lo hereda del layout de idioma, pero se repite aquí por el og:image: la
+    // ruta de abajo es relativa y sin una base contra la que resolverla sale
+    // relativa también en la etiqueta, y ni WhatsApp ni Facebook la descargan.
+    metadataBase: new URL(SITIO),
+    // Sin la marca: la añade el title.template del layout de idioma.
+    title: t("metaTitulo"),
+    description: t("metaDescripcion"),
+    alternates: alternatesDeIdioma("/sobre-nosotros", locale),
+    // La página que más se pega en un WhatsApp cuando alguien pregunta «¿y
+    // quiénes son ustedes?», así que la tarjeta importa tanto como la SERP.
+    // Declarar `openGraph` aquí reemplaza entero el del layout —Next no fusiona
+    // campo a campo dentro del objeto—, por eso van también siteName y locale.
+    openGraph: {
+      title: t("metaTitulo"),
+      description: t("metaDescripcion"),
+      type: "website",
+      locale: locale === "en" ? "en_US" : "es_CO",
+      siteName: "Vuelo Carmesí",
+      // El equipo y no el cacaotal: es una página de quiénes somos, y las
+      // caras son lo que sostiene la autoridad que esta URL tiene que mostrar.
+      images: [
+        {
+          url: "/images/personas/equipo.jpg",
+          width: 1080,
+          height: 970,
+          alt: t("metaOgAlt"),
+        },
+      ],
+    },
+  };
+}
 
 export default async function SobreNosotrosPage({
   params,
