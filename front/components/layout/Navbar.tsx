@@ -101,8 +101,11 @@ export default function Navbar() {
       </ul>
 
       {/* Navegación móvil */}
+      {/* El idioma va en la barra y no dentro del panel: así sigue a mano,
+          junto a la hamburguesa, esté el menú abierto o cerrado. */}
       <div className="navbar-mobile-actions">
         <CartBadge />
+        <SelectorIdioma />
         <button
           type="button"
           className="navbar-toggle"
@@ -131,9 +134,6 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
-        {/* Fuera de la <ul>: cambiar de idioma no es navegar a una sexta
-            página, y dentro de la lista se leería como una pestaña más. */}
-        <SelectorIdioma variante="panel" />
       </div>
     </nav>
   )
