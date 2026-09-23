@@ -40,7 +40,10 @@ export default async function ReservarPage({
 
   return (
     <div style={{ backgroundColor: 'var(--color-cream)', minHeight: '100svh' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: 'clamp(40px,6vw,64px) clamp(16px,4vw,24px) 80px' }}>
+      {/* 16px arriba y no los 40–64 de una página con titular: lo primero es
+          la miga, y con ese respiro quedaba flotando lejos del navbar. Es el
+          mismo que deja .miga-marco en la ficha de experiencia. */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '16px clamp(16px,4vw,24px) 80px' }}>
 
         {/* El padre de esta pantalla NO es el listado sino la ficha de la que
             se vino: es el paso anterior del embudo, y quien está a medio

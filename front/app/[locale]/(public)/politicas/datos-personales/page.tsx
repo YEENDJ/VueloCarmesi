@@ -165,7 +165,7 @@ export default async function PoliticaDatosPersonalesPage({
   const tp = await getTranslations('politicas')
 
   return (
-    <section className="page-shell politica">
+    <section className="page-shell page-shell--con-miga politica">
       {/* El índice de políticas no está en el navbar, así que sin esto la única
           salida desde una política es el botón del navegador. */}
       <MigaSuperior href="/politicas" etiqueta={tNav('politicas')} actual={t('titulo')} />
