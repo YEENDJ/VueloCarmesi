@@ -106,6 +106,8 @@ model Contacto {
   id        String   @id @default(cuid())
   nombre    String
   email     String
+  /// Opcional: si lo dejan, se les puede contestar por WhatsApp.
+  telefono  String?
   mensaje   String
   createdAt DateTime @default(now())
 }

@@ -29,6 +29,19 @@ export const TIPOS_SOLICITANTE = [
  */
 export const MAX_PERSONAS = 500
 
+/**
+ * Los slugs que se pueden marcar, mismo listado que
+ * `front/lib/schemas/solicitud-grupo.ts`. Lista cerrada por el mismo motivo que
+ * `tipo`: es por lo que se va a contar qué piden los grupos.
+ */
+export const EXPERIENCIAS_COTIZABLES = [
+  'experiencia-cacaotera',
+  'avistamiento-de-aves',
+  'experiencia-aves-cacao',
+  'chocoterapia',
+  'a-medida',
+] as const
+
 export class CreateSolicitudGrupoDto {
   @IsIn(TIPOS_SOLICITANTE, { message: 'El tipo de solicitante no es válido' })
   tipo: (typeof TIPOS_SOLICITANTE)[number]
@@ -46,7 +59,8 @@ export class CreateSolicitudGrupoDto {
 
   @Transform(trim)
   @IsString()
-  @Length(3, 100, { message: 'El nombre debe tener entre 3 y 100 caracteres' })
+  // Mínimo 2: «Li» o «Bo» son nombres reales. Mismo tope que la reserva.
+  @Length(2, 100, { message: 'El nombre debe tener entre 2 y 100 caracteres' })
   contacto: string
 
   @IsOptional()
@@ -81,15 +95,15 @@ export class CreateSolicitudGrupoDto {
   // Opcional a propósito: un coordinador pide la cotización para poder proponer
   // la salida, y la fecha depende de una aprobación que todavía no tiene.
   // Exigírsela lo obliga a inventarla o a abandonar el formulario.
+  // Que sea posterior a hoy lo revisa el service, que calcula «hoy» en Bogotá.
   @IsOptional()
-  @IsDateString({}, { message: 'La fecha no es válida' })
+  @IsDateString({ strict: true }, { message: 'La fecha no es válida' })
   fechaTentativa?: string
 
   @IsOptional()
   @IsArray()
   @ArrayMaxSize(10)
-  @IsString({ each: true })
-  @MaxLength(80, { each: true })
+  @IsIn(EXPERIENCIAS_COTIZABLES, { each: true, message: 'Hay una experiencia que no existe' })
   experiencias?: string[]
 
   @IsOptional()

@@ -22,12 +22,22 @@ describe('CreateReservaDto', () => {
     expect(await erroresDe(base)).toEqual([])
   })
 
+  it('hace trim de las notas', async () => {
+    const dto = plainToInstance(CreateReservaDto, { ...base, notas: '  Sin gluten  ' })
+    expect(await validate(dto)).toEqual([])
+    expect(dto.notas).toBe('Sin gluten')
+  })
+
   it('acepta notas y website opcionales', async () => {
     expect(await erroresDe({ ...base, notas: 'Sin gluten', website: '' })).toEqual([])
   })
 
-  it('rechaza nombre corto, vacío o de solo espacios', async () => {
-    expect(await erroresDe({ ...base, nombre: 'Al' })).toContain('nombre')
+  it('acepta nombres reales de dos letras', async () => {
+    expect(await erroresDe({ ...base, nombre: 'Li' })).toEqual([])
+  })
+
+  it('rechaza nombre de una letra, vacío o de solo espacios', async () => {
+    expect(await erroresDe({ ...base, nombre: 'A' })).toContain('nombre')
     expect(await erroresDe({ ...base, nombre: '   ' })).toContain('nombre')
     expect(await erroresDe({ ...base, nombre: 'x'.repeat(101) })).toContain('nombre')
   })

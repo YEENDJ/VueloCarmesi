@@ -1,6 +1,13 @@
 "use client";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  contactoSchema,
+  MAX_MENSAJE_CONTACTO,
+  type ContactoFormValues,
+} from "@/lib/schemas/contacto";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import AvisoDatos from "@/components/ui/AvisoDatos";
@@ -10,7 +17,7 @@ import {
   IconoFacebook,
   IconoTiktok,
 } from "@/components/ui/IconosRedes";
-import { CONTACTO, MENSAJE_WHATSAPP, REDES, whatsappCon } from "@/lib/contacto";
+import { CONTACTO, REDES, whatsappCon } from "@/lib/contacto";
 import AvisoGrupos from "@/components/grupos/AvisoGrupos";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
@@ -42,26 +49,32 @@ const RED_LINKS = [
  */
 export default function ContactoContenido() {
   const t = useTranslations("contacto");
+  const tw = useTranslations("whatsapp");
 
-  const [form, setForm] = useState({ nombre: "", email: "", mensaje: "" });
   const [estado, setEstado] = useState<"idle" | "loading" | "ok" | "error">(
     "idle",
   );
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ContactoFormValues>({ resolver: zodResolver(contactoSchema) });
+
+  // Los errores del esquema son claves de `contacto`; se traducen aquí.
+  const msg = (campo: keyof ContactoFormValues) => {
+    const clave = errors[campo]?.message;
+    return clave ? t(clave, { max: MAX_MENSAJE_CONTACTO }) : undefined;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: ContactoFormValues) => {
     setEstado("loading");
     try {
       const res = await fetch(`${API}/contacto`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        // El teléfono vacío no se manda: el DTO lo valida solo si viene.
+        body: JSON.stringify({ ...data, telefono: data.telefono || undefined }),
       });
       if (!res.ok) throw new Error();
       setEstado("ok");
@@ -101,7 +114,8 @@ export default function ContactoContenido() {
             </p>
           ) : (
             <form
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -110,29 +124,54 @@ export default function ContactoContenido() {
             >
               <Input
                 label={t("nombre")}
-                name="nombre"
                 required
-                value={form.nombre}
-                onChange={handleChange}
+                autoComplete="name"
+                maxLength={100}
+                error={msg("nombre")}
+                {...register("nombre")}
               />
               <Input
                 label={t("email")}
-                name="email"
                 type="email"
                 required
-                value={form.email}
-                onChange={handleChange}
+                autoComplete="email"
+                maxLength={255}
+                error={msg("email")}
+                {...register("email")}
+              />
+              <Input
+                label={t("telefono")}
+                nota={t("opcional")}
+                ayuda={t("telefonoAyuda")}
+                type="tel"
+                autoComplete="tel"
+                placeholder="+57 300 000 0000"
+                error={msg("telefono")}
+                {...register("telefono")}
               />
               <Input
                 label={t("mensaje")}
-                name="mensaje"
                 required
-                value={form.mensaje}
-                onChange={handleChange}
                 multiline
+                maxLength={MAX_MENSAJE_CONTACTO}
+                error={msg("mensaje")}
+                {...register("mensaje")}
               />
+              {/* Honeypot: fuera de pantalla, sin tabulación y sin
+                  autocompletado. Los bots lo llenan y el backend los descarta. */}
+              <div className="campo-trampa" aria-hidden="true">
+                <label htmlFor="website">Website</label>
+                <input
+                  id="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  {...register("website")}
+                />
+              </div>
               {estado === "error" && (
                 <p
+                  role="alert"
                   style={{
                     color: "var(--color-crimson)",
                     fontSize: 14,
@@ -157,7 +196,7 @@ export default function ContactoContenido() {
           <h2 className="contacto-subtitulo">{t("otrasFormas")}</h2>
 
           <a
-            href={whatsappCon(MENSAJE_WHATSAPP.contacto)}
+            href={whatsappCon(tw("contacto"))}
             target="_blank"
             rel="noopener noreferrer"
             className="contacto-canal contacto-canal-destacado"
