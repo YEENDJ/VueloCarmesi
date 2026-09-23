@@ -28,7 +28,8 @@
   },
   "sitio": {
     "titulo": "Vuelo Carmesí",
-    "descripcion": "Agroecological experiences with a taste of cacao"
+    "descripcion": "Agroecological experiences with a taste of cacao",
+    "ogAlt": "The farm's cacao grove with ripe red pods on the tree"
   },
   "noEncontrado": {
     "titulo": "This page does not exist",
@@ -37,7 +38,7 @@
     "metaTitulo": "Page not found"
   },
   "experiencias": {
-    "tituloListado": "Our Experiences",
+    "tituloListado": "Cacao and bird tours in Cubarral, Colombia",
     "metaDescripcion": "Cacao tours, birdwatching and group visits at the Vuelo Carmesí agroecological farm in Cubarral, Meta (Colombia). Duration, group size and price in Colombian pesos for each experience."
   },
   "diferenciales": {
@@ -110,6 +111,7 @@
   },
   "reserva": {
     "verMas": "View details",
+    "verMasDe": "View details: {nombre}",
     "porPersona": "per person",
     "reservarAhora": "Book now",
     "verPolitica": "Read the policy",
@@ -283,6 +285,7 @@
     }
   },
   "tienda": {
+    "tituloListado": "Craft chocolate and cacao from Cubarral, Colombia",
     "metaDescripcion": "Artisanal chocolate and cacao from the Vuelo Carmesí farm in Cubarral, Meta. Prices in Colombian pesos with VAT included and shipping anywhere in Colombia, quoted by destination city.",
     "catalogoVacio": "No products available yet. Check back soon.",
     "sinFotografia": "No photograph",

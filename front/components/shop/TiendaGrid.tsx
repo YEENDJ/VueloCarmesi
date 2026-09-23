@@ -79,7 +79,7 @@ export default function TiendaGrid({ productos }: { productos: Producto[] }) {
         })}
       </div>
       <div className="tienda-grid">
-        {filtrados.map(p => <ProductoCard key={p.id} producto={p} />)}
+        {filtrados.map(p => <ProductoCard key={p.id} producto={p} nivelTitulo="h2" />)}
       </div>
     </>
   )

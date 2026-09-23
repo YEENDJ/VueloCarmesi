@@ -12,13 +12,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const [t, tTienda] = await Promise.all([
-    getTranslations({ locale, namespace: 'nav' }),
-    getTranslations({ locale, namespace: 'tienda' }),
-  ])
+  const t = await getTranslations({ locale, namespace: 'tienda' })
   return {
-    title: t('tienda'),
-    description: tTienda('metaDescripcion'),
+    title: t('tituloListado'),
+    description: t('metaDescripcion'),
     alternates: alternatesDeIdioma('/tienda', locale),
   }
 }
@@ -33,12 +30,12 @@ export default async function TiendaPage({
 
   const [productos, t] = await Promise.all([
     getProductos(locale),
-    getTranslations('nav'),
+    getTranslations('tienda'),
   ])
 
   return (
     <section className="page-shell page-shell--listado" style={{ maxWidth: '1200px' }}>
-      <h1 className="solo-lectores">{t('tienda')}</h1>
+      <h1 className="solo-lectores">{t('tituloListado')}</h1>
       <TiendaGrid productos={productos} />
     </section>
   )

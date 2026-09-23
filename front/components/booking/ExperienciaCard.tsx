@@ -1,4 +1,5 @@
 import type { Experiencia } from '@/lib/types'
+import { Link } from '@/lib/i18n/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
@@ -12,21 +13,30 @@ interface ExperienciaCardProps {
    * completo sí informa, y por eso viene encendido por defecto.
    */
   mostrarBadgeDestacada?: boolean
+  /**
+   * El nivel del nombre depende de dónde cae la tarjeta. En la landing cuelga
+   * del h2 «Experiencias» y va en h3; en el catálogo no hay nada entre el h1 y
+   * las tarjetas, y un h3 ahí dejaba un salto de nivel en el esquema.
+   */
+  nivelTitulo?: 'h2' | 'h3'
 }
 
 export default function ExperienciaCard({
   experiencia,
   mostrarBadgeDestacada = true,
+  nivelTitulo: Titulo = 'h3',
 }: ExperienciaCardProps) {
   const idioma = useLocale()
 
   const t = useTranslations('reserva')
+  const ficha = { pathname: '/experiencias/[slug]', params: { slug: experiencia.slug } } as const
 
   return (
     <Card>
       {/* aspect-ratio en vez de alto fijo: el marco crece con la columna del grid
-          y reserva el espacio antes de que cargue la foto, así la tarjeta no salta. */}
-      <div style={{
+          y reserva el espacio antes de que cargue la foto, así la tarjeta no salta.
+          La foto enlaza a la ficha, como en la tarjeta de producto. */}
+      <Link href={ficha} style={{
         position: 'relative', overflow: 'hidden',
         width: '100%', aspectRatio: '4 / 3', backgroundColor: 'var(--color-amber)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -70,15 +80,19 @@ export default function ExperienciaCard({
         }}>
           {experiencia.duracion}
         </div>
-      </div>
+      </Link>
       <div style={{ padding: 'clamp(0.9rem, 3vw, 1.25rem)', minWidth: 0 }}>
         {/* overflowWrap parte un nombre largo sin espacios en vez de desbordar la tarjeta. */}
-        <h3 style={{
-          marginBottom: '0.5rem', color: 'var(--color-brown)', minWidth: 0,
-          fontSize: 'clamp(1rem, 2.2vw, 1.08rem)', overflowWrap: 'anywhere',
-        }}>
-          {experiencia.nombre}
-        </h3>
+        {/* El nombre es el enlace a la ficha: su texto le dice a Google y al
+            lector de voz de qué trata el destino, cosa que «Ver más» no hace. */}
+        <Link href={ficha} style={{ textDecoration: 'none' }}>
+          <Titulo style={{
+            marginBottom: '0.5rem', color: 'var(--color-brown)', minWidth: 0,
+            fontSize: 'clamp(1rem, 2.2vw, 1.08rem)', overflowWrap: 'anywhere',
+          }}>
+            {experiencia.nombre}
+          </Titulo>
+        </Link>
         {/* Sin descripción: la foto y el nombre venden, y textos de largo
             variable dejaban las tarjetas desparejas entre sí. El detalle vive
             en la ficha, que es donde hay sitio para contarlo. */}
@@ -93,7 +107,7 @@ export default function ExperienciaCard({
           }}>
             {formatPrecio(experiencia.precio, idioma)}
           </span>
-          <Button href={{ pathname: '/experiencias/[slug]', params: { slug: experiencia.slug } }} variant="outline" className="btn-card">{t('verMas')}</Button>
+          <Button href={ficha} variant="outline" className="btn-card" aria-label={t('verMasDe', { nombre: experiencia.nombre })}>{t('verMas')}</Button>
         </div>
       </div>
     </Card>

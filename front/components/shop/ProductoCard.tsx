@@ -14,7 +14,18 @@ function badgeStyle(producto: Producto): { label: string; bg: string; fg: string
   return null
 }
 
-export default function ProductoCard({ producto }: { producto: Producto }) {
+export default function ProductoCard({
+  producto,
+  nivelTitulo: Titulo = 'h3',
+}: {
+  producto: Producto
+  /**
+   * En «Productos relacionados» la tarjeta cuelga de un h2 y va en h3; en el
+   * listado de la tienda no hay nada entre el h1 y las tarjetas, y un h3 ahí
+   * dejaba un salto de nivel en el esquema.
+   */
+  nivelTitulo?: 'h2' | 'h3'
+}) {
   const idioma = useLocale()
 
   const t = useTranslations('tienda')
@@ -51,7 +62,7 @@ export default function ProductoCard({ producto }: { producto: Producto }) {
       </Link>
       <div style={{ padding: 'clamp(0.85rem, 3vw, 1.15rem)', minWidth: 0 }}>
         <Link href={{ pathname: '/tienda/[slug]', params: { slug: producto.slug } }} style={{ textDecoration: 'none' }}>
-          <h3 className="producto-card-titulo" style={{ margin: '0 0 0.5rem', color: 'var(--color-brown)', minWidth: 0, fontSize: 'clamp(1rem, 2.2vw, 1.08rem)', overflowWrap: 'anywhere' }}>{producto.nombre}</h3>
+          <Titulo className="producto-card-titulo" style={{ margin: '0 0 0.5rem', color: 'var(--color-brown)', minWidth: 0, fontSize: 'clamp(1rem, 2.2vw, 1.08rem)', overflowWrap: 'anywhere' }}>{producto.nombre}</Titulo>
         </Link>
         {/* title deja ver el texto completo al pasar el ratón, ya que se recorta */}
         {/* Mismo criterio que en las experiencias: la tarjeta no lleva párrafo,
