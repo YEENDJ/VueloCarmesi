@@ -4,11 +4,12 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Link } from '@/lib/i18n/navigation'
 import { alternatesDeIdioma } from '@/lib/i18n/alternates'
 import { SITIO } from '@/lib/sitio'
+import { ID_NEGOCIO } from '@/lib/jsonld'
 import {
   Bus, Check, ExternalLink, FileText, GraduationCap, Handshake, MapPin,
   Receipt, School, ShieldCheck, Users, X, type LucideIcon,
 } from 'lucide-react'
-import { CONTACTO, MAPA, MENSAJE_WHATSAPP, whatsappCon } from '@/lib/contacto'
+import { MAPA, MENSAJE_WHATSAPP, whatsappCon } from '@/lib/contacto'
 import { getSiteConfig } from '@/lib/api/site-config'
 import { getExperiencias } from '@/lib/api/experiencias'
 import { formatPrecio } from '@/lib/format'
@@ -109,6 +110,8 @@ const PERFILES = [
     clave: 'colegio',
     Icono: School,
     foto: '/images/personas/grupo-mural.jpg',
+    ancho: 1280,
+    alto: 960,
     foco: 'center 40%',
     credito: false,
   },
@@ -116,6 +119,8 @@ const PERFILES = [
     clave: 'universidad',
     Icono: GraduationCap,
     foto: '/images/personas/estudiantes.jpg',
+    ancho: 1280,
+    alto: 960,
     foco: 'center 45%',
     credito: true,
   },
@@ -123,6 +128,8 @@ const PERFILES = [
     clave: 'empresa',
     Icono: Users,
     foto: '/images/personas/corporativos.jpg',
+    ancho: 1600,
+    alto: 1200,
     foco: 'center center',
     credito: false,
   },
@@ -159,19 +166,9 @@ const jsonLd = (t: (k: string) => string, locale: string) => ({
   name: t('meta.titulo'),
   description: t('meta.descripcion'),
   serviceType: locale === 'en' ? 'Group educational and corporate farm visits' : 'Jornadas agroturísticas para grupos escolares, universitarios y corporativos',
-  provider: {
-    '@type': 'TouristAttraction',
-    name: 'Vuelo Carmesí',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: CONTACTO.direccion,
-      addressLocality: CONTACTO.localidad,
-      addressRegion: CONTACTO.region,
-      addressCountry: CONTACTO.pais,
-    },
-    telephone: CONTACTO.telefonoE164,
-    email: CONTACTO.email,
-  },
+  // Por `@id` contra el negocio que el layout ya publica en cada página: una
+  // copia aquí era la tercera dirección de la URL y podía desincronizarse.
+  provider: { '@id': ID_NEGOCIO },
   areaServed: [
     { '@type': 'AdministrativeArea', name: 'Meta' },
     { '@type': 'AdministrativeArea', name: 'Cundinamarca' },
@@ -332,15 +329,18 @@ export default async function GruposPage({
           <p className="grp-card-texto">{t('perfiles.texto')}</p>
 
           <div className="grp-perfiles">
-            {PERFILES.map(({ clave, Icono, foto, foco, credito }) => (
+            {PERFILES.map(({ clave, Icono, foto, ancho, alto, foco, credito }) => (
               <div key={clave} className="grp-perfil">
                 <div className="grp-perfil-foto">
+                  {/* Medidas y no `fill`: `fill` pinta el <img> sin width/height.
+                      El marco ya reserva el 3:2; el 100% lo hace llenarlo. */}
                   <Image
                     src={foto}
                     alt={t(`perfiles.${clave}.alt`)}
-                    fill
+                    width={ancho}
+                    height={alto}
                     sizes="(min-width: 1100px) 340px, (min-width: 700px) 45vw, 90vw"
-                    style={{ objectFit: 'cover', objectPosition: foco }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: foco }}
                   />
                   {credito && (
                     <span className="grp-perfil-credito">{t(`perfiles.${clave}.credito`)}</span>

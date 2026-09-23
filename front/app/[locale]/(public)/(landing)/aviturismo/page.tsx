@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Link } from '@/lib/i18n/navigation'
 import { alternatesDeIdioma } from '@/lib/i18n/alternates'
 import { SITIO } from '@/lib/sitio'
+import { ID_NEGOCIO } from '@/lib/jsonld'
 import {
   Binoculars,
   CalendarRange,
@@ -116,8 +117,11 @@ type Especie = {
   ingles: string
   local: string
   foto: string
+  /** Medidas reales del archivo: van al `<img>` para que el HTML declare el ratio. */
+  ancho: number
+  alto: number
   altKey: string
-  /** Encuadre: las fotos son 4:3 y el marco recorta; esto evita cortar el pico. */
+  /** Encuadre: el marco es 4:3 y recorta (la tangara es vertical); esto evita cortar el pico. */
   foco: string
 }
 
@@ -141,6 +145,8 @@ const RESIDENTES: Especie[] = [
     ingles: 'Chestnut-eared Aracari',
     local: 'Pichí de collar',
     foto: '/images/aves/aracari.jpg',
+    ancho: 1152,
+    alto: 864,
     altKey: 'aracari',
     foco: 'center 45%',
   },
@@ -149,6 +155,8 @@ const RESIDENTES: Especie[] = [
     ingles: 'Crimson-crested Woodpecker',
     local: 'Carpintero real',
     foto: '/images/aves/carpintero.jpg',
+    ancho: 1152,
+    alto: 864,
     altKey: 'carpintero',
     foco: 'center 33%',
   },
@@ -157,6 +165,8 @@ const RESIDENTES: Especie[] = [
     ingles: 'Ferruginous Pygmy-Owl',
     local: 'Currucutú común',
     foto: '/images/aves/currucutu.jpg',
+    ancho: 1040,
+    alto: 780,
     altKey: 'currucutu',
     foco: 'center 34%',
   },
@@ -165,6 +175,8 @@ const RESIDENTES: Especie[] = [
     ingles: 'Sunbittern',
     local: 'Tigana',
     foto: '/images/aves/tigana.jpg',
+    ancho: 1280,
+    alto: 959,
     altKey: 'tigana',
     foco: 'center 40%',
   },
@@ -173,6 +185,8 @@ const RESIDENTES: Especie[] = [
     ingles: 'Violaceous Jay',
     local: 'Carriquí violáceo',
     foto: '/images/aves/carriqui.jpg',
+    ancho: 1152,
+    alto: 864,
     altKey: 'carriqui',
     foco: 'center 88%',
   },
@@ -181,6 +195,8 @@ const RESIDENTES: Especie[] = [
     ingles: 'Palm Tanager',
     local: 'Azulejo palmero',
     foto: '/images/aves/azulejo-palmero.jpg',
+    ancho: 1152,
+    alto: 864,
     altKey: 'azulejo',
     foco: 'center 88%',
   },
@@ -189,6 +205,8 @@ const RESIDENTES: Especie[] = [
     ingles: 'Magpie Tanager',
     local: 'Tangara urraca',
     foto: '/images/aves/tangara-urraca.jpg',
+    ancho: 815,
+    alto: 1600,
     altKey: 'tangara',
     foco: 'center 30%',
   },
@@ -230,6 +248,12 @@ const APARTADOS = [
  * salir en una búsqueda de aviturismo «cerca de» y no solo por nombre, y el
  * `sameAs` al hotspot es lo que le dice al buscador que esto que afirmamos lo
  * respalda un tercero.
+ *
+ * Dirección, teléfono y correo NO se repiten aquí: son del negocio, que el
+ * layout ya declara en la misma página. Repetirlos creaba una segunda entidad
+ * con los mismos datos compitiendo con la principal; colgarla por `@id` hace
+ * que lo que gane este nodo se sume a la finca. Aquí queda solo lo propio del
+ * hotspot.
  */
 const jsonLd = (t: (k: string) => string, locale: string) => ({
   '@context': 'https://schema.org',
@@ -241,13 +265,10 @@ const jsonLd = (t: (k: string) => string, locale: string) => ({
   description: t('meta.descripcion'),
   touristType: ['Birdwatchers', 'Aviturismo', 'Ecotourism'],
   isAccessibleForFree: false,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: CONTACTO.direccion,
-    addressLocality: CONTACTO.localidad,
-    addressRegion: CONTACTO.region,
-    addressCountry: CONTACTO.pais,
-  },
+  // `containedInPlace` y no `provider`: una TouristAttraction es un Place y
+  // `provider` no es propiedad suya. El negocio es LocalBusiness, que también
+  // es Place, así que el hotspot queda dicho como parte de la finca.
+  containedInPlace: { '@id': ID_NEGOCIO },
   geo: {
     '@type': 'GeoCoordinates',
     latitude: MAPA.latitud,
@@ -256,8 +277,6 @@ const jsonLd = (t: (k: string) => string, locale: string) => ({
     // esta página y no de la sede, y no tiene sitio en lib/contacto.
     elevation: '600-850 m',
   },
-  telephone: CONTACTO.telefonoE164,
-  email: CONTACTO.email,
   sameAs: [EBIRD_URL],
 })
 
@@ -348,15 +367,18 @@ export default async function AviturismoPage({
           </p>
 
           <ul className="avi-especies">
-            {RESIDENTES.map(({ cientifico, ingles, local, foto, altKey, foco }) => (
+            {RESIDENTES.map(({ cientifico, ingles, local, foto, ancho, alto, altKey, foco }) => (
               <li key={cientifico} className="avi-especie">
                 <div className="avi-especie-foto">
+                  {/* Medidas y no `fill`: `fill` pinta el <img> sin width/height.
+                      El marco ya reserva el 4:3; el 100% lo hace llenarlo. */}
                   <Image
                     src={foto}
                     alt={t(`alts.${altKey}`)}
-                    fill
+                    width={ancho}
+                    height={alto}
                     sizes="(min-width: 1100px) 260px, (min-width: 700px) 45vw, 90vw"
-                    style={{ objectFit: 'cover', objectPosition: foco }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: foco }}
                   />
                 </div>
                 {/* El científico manda y el inglés va justo debajo: son los dos
@@ -470,9 +492,10 @@ export default async function AviturismoPage({
               <Image
                 src="/images/personas/cristian-enciso.jpg"
                 alt={t('guia.fotoAlt')}
-                fill
+                width={640}
+                height={640}
                 sizes="72px"
-                style={{ objectFit: 'cover', objectPosition: 'center 20%' }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
               />
             </div>
             <div style={{ minWidth: 0 }}>
