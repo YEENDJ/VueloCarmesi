@@ -12,7 +12,7 @@ export async function PATCH(req: NextRequest) {
 
   const res = await fetch(`${BASE}/site-config`, {
     method: 'PATCH',
-    headers: { 'content-type': 'application/json', cookie: sesion.cookie },
+    headers: { 'content-type': 'application/json', ...sesion.headers },
     body: await req.text(),
   })
 

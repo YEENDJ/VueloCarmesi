@@ -73,6 +73,30 @@ export interface AdminPedido {
   items: ItemPedido[]
 }
 
+/** Mismo recorrido que `ESTADOS_SOLICITUD` en el DTO del backend. */
+export const ESTADOS_SOLICITUD = ['nueva', 'contactada', 'cotizada', 'cerrada', 'perdida'] as const
+export type EstadoSolicitud = typeof ESTADOS_SOLICITUD[number]
+
+export interface AdminSolicitudGrupo {
+  id: string
+  tipo: string
+  institucion: string
+  nit: string | null
+  contacto: string
+  cargo: string | null
+  email: string
+  telefono: string
+  personas: number
+  edades: string | null
+  /** Medianoche UTC del día elegido: se formatea con `timeZone: 'UTC'`. */
+  fechaTentativa: string | null
+  experiencias: string[]
+  requiereFactura: boolean
+  mensaje: string
+  estado: EstadoSolicitud
+  createdAt: string
+}
+
 export interface OverviewData {
   reservasMes: number
   pedidosMes: number

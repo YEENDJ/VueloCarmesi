@@ -21,10 +21,10 @@ export async function POST(req: NextRequest) {
 
   const res = await fetch(`${BASE}/uploads/image`, {
     method: 'POST',
-    // Solo la cookie: el content-type lo pone fetch con el boundary nuevo que
+    // Solo las de sesión: el content-type lo pone fetch con el boundary nuevo que
     // le corresponde a este FormData, y copiar el de la petición original lo
     // rompería.
-    headers: { cookie: sesion.cookie },
+    headers: sesion.headers,
     body: form,
   })
 
@@ -38,7 +38,7 @@ export async function DELETE(req: NextRequest) {
 
   const res = await fetch(`${BASE}/uploads/image`, {
     method: 'DELETE',
-    headers: { 'content-type': 'application/json', cookie: sesion.cookie },
+    headers: { 'content-type': 'application/json', ...sesion.headers },
     body: await req.text(),
   })
 

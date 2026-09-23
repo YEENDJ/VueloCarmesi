@@ -148,6 +148,9 @@ referencia.
 ```
 NEXT_PUBLIC_API_URL=http://localhost:3001
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+ADMIN_PASSWORD=…
+ADMIN_SESSION_SECRET=…   # 32+ caracteres
+ADMIN_API_KEY=…          # la misma que en back/.env
 ```
 
 **Sin `/api` al final.** El backend no tiene prefijo global, así que con
@@ -158,7 +161,17 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 DATABASE_URL=postgresql://…
 DEEPL_API_KEY=…:fx
+ADMIN_API_KEY=…          # la misma que en front/.env.local
 ```
+
+Para generar `ADMIN_SESSION_SECRET` y `ADMIN_API_KEY`:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
+```
+
+Sin ellas el panel no deja entrar (falta el secreto) o no puede leer ni guardar
+nada (falta la clave). El sitio público funciona igual.
 
 `DEEPL_API_KEY` es opcional para levantar el proyecto: sin ella el backend
 arranca y guarda solo en español. Con ella, cada experiencia o producto que se
@@ -220,12 +233,16 @@ cada paquete lista cuáles hacen falta.
 | `NEXT_PUBLIC_SITE_URL` | Vercel | Los `hreflang` y `canonical` salen con URLs relativas y la indexación bilingüe no sirve. |
 | `NEXT_PUBLIC_API_URL` | Vercel | El front no encuentra el backend. |
 | `DATABASE_URL` | Render | — |
+| `ADMIN_PASSWORD` | Vercel | Nadie puede entrar al panel. |
+| `ADMIN_SESSION_SECRET` | Vercel | El login responde «el panel no está configurado». Firma la cookie de sesión; cambiarla cierra todas las sesiones. |
+| `ADMIN_API_KEY` | Vercel **y** Render, con el mismo valor | El panel entra pero todo responde 401. Es la clave con la que el puente del front (`app/api/admin/`) le habla al backend; el navegador nunca la ve. |
 
 > `NEXT_PUBLIC_*` **no es secreto**: Next incrusta esas variables en el
 > JavaScript que descarga cada visitante, así que cualquiera puede leerlas del
 > sitio publicado. Marcarlas como *Secret* en Vercel no protege de nada y solo
 > impide consultarlas desde el panel. Lo que protege los endpoints de admin es
-> el `AdminGuard` y el CORS, no que la URL sea difícil de encontrar.
+> el `AdminGuard`, que exige `ADMIN_API_KEY`, no que la URL sea difícil de
+> encontrar. El CORS no protege nada aquí: solo lo respetan los navegadores.
 
 ### Cachés al desplegar
 
