@@ -20,7 +20,7 @@ import {
   Users,
   type LucideIcon,
 } from 'lucide-react'
-import { CONTACTO, MAPA, MENSAJE_WHATSAPP, whatsappCon } from '@/lib/contacto'
+import { CONTACTO, MAPA, whatsappCon } from '@/lib/contacto'
 
 /**
  * Página propia de aviturismo. La fuente es la hoja 12 del portafolio 2026
@@ -288,6 +288,10 @@ export default async function AviturismoPage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('aviturismo')
+  const tw = await getTranslations('whatsapp')
+  // El resumen para birders extranjeros va en inglés dentro de la página en
+  // español: quien lo lee escribe en inglés, así que su mensaje también.
+  const twEn = await getTranslations({ locale: 'en', namespace: 'whatsapp' })
 
   // Etiquetas para el texto con marcado dentro. next-intl pide que el
   // componente diga cómo se pinta cada etiqueta; así el traductor mueve el
@@ -557,7 +561,7 @@ export default async function AviturismoPage({
               <p className="avi-card-nota">
                 To arrange a visit, write to{' '}
                 <a href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a> or message{' '}
-                <a href={CONTACTO.whatsapp} target="_blank" rel="noopener noreferrer">
+                <a href={whatsappCon(twEn('aviturismo'))} target="_blank" rel="noopener noreferrer">
                   {CONTACTO.telefono}
                 </a>{' '}
                 on WhatsApp. Registered tourism operator, RNT 179868.
@@ -610,7 +614,7 @@ export default async function AviturismoPage({
           </Link>
           <a
             className="avi-boton avi-boton--fantasma"
-            href={whatsappCon(MENSAJE_WHATSAPP.contacto)}
+            href={whatsappCon(tw('aviturismo'))}
             target="_blank"
             rel="noopener noreferrer"
           >

@@ -15,18 +15,17 @@ const NUMERO_E164 = '+573118171907'
  * El texto cambia segun desde donde se hizo clic: quien pregunta como llegar no
  * quiere el mismo mensaje que quien pide precios. Llega escrito y el visitante
  * solo pulsa enviar, asi que del otro lado se sabe de entrada que necesita.
+ *
+ * Los textos viven en el catalogo, bajo `whatsapp.*`, y no aqui: el visitante
+ * de /en escribe en ingles, y un mensaje que llega en otro idioma que el de la
+ * pagina que estaba leyendo no parece suyo. Un boton nuevo se lleva su propia
+ * clave en los dos catalogos en vez de reciclar la de otra pagina.
+ *
+ * `numero` existe para la ficha de experiencia, que usa el de Configuracion.
+ * wa.me solo admite digitos —ni el «+» ni espacios—, asi que se limpia aqui.
  */
-export const whatsappCon = (mensaje: string) =>
-  `https://wa.me/${NUMERO_E164}?text=${encodeURIComponent(mensaje)}`
-
-export const MENSAJE_WHATSAPP = {
-  contacto:
-    '¡Hola! Escribo desde la página de Vuelo Carmesí y quiero más información sobre las experiencias.',
-  comoLlegar:
-    '¡Hola! Estoy en la página de Vuelo Carmesí y tengo dudas de cómo llegar a la finca. ¿Me ayudan con las indicaciones?',
-  general:
-    '¡Hola! Los encontré en la página de Vuelo Carmesí y quiero hacerles una consulta.',
-} as const
+export const whatsappCon = (mensaje: string, numero: string = NUMERO_E164) =>
+  `https://wa.me/${numero.replace(/\D/g, '')}?text=${encodeURIComponent(mensaje)}`
 
 export const CONTACTO = {
   email: 'carmesivuelo@gmail.com',
@@ -34,7 +33,7 @@ export const CONTACTO = {
   telefono: '+57 311 817 1907',
   /** Para enlazar: sin espacios, como lo piden tel: y wa.me */
   telefonoE164: NUMERO_E164,
-  whatsapp: `https://wa.me/${NUMERO_E164}`,
+  whatsapp: `https://wa.me/${NUMERO_E164.replace(/\D/g, '')}`,
   direccion: 'Finca La Fortuna, Vereda Brisas del Tonoa',
   municipio: 'Cubarral, Meta, Colombia',
   direccionCompleta:

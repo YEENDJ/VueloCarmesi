@@ -153,7 +153,14 @@
       "enviar": "Confirm booking",
       "enviando": "Sending…",
       "error": "Something went wrong sending your booking. Please try again or message us directly.",
-      "emailPlaceholder": "you@email.com"
+      "emailPlaceholder": "you@email.com",
+      "errorNombre": "Enter your name (2 to 100 characters).",
+      "errorTelefono": "The phone number must have between 7 and 15 digits.",
+      "errorEmail": "This email address is not valid.",
+      "errorFechaVacia": "Choose the date you would like to come.",
+      "errorFecha": "Choose a date between tomorrow and the next six months.",
+      "errorPersonas": "Choose how many people are coming.",
+      "errorNotas": "Comments cannot be longer than {max} characters."
     },
     "porPersonaDuracion": "per person · {duracion}",
     "cierreTexto": "Don't miss the chance to live an unforgettable agroecological experience. From {precio} per person · {duracion}",
@@ -397,7 +404,14 @@
     "whatsappNota": "The fastest way to book",
     "llamanos": "Call us",
     "correo": "Email",
-    "dondeEstamos": "Where we are"
+    "dondeEstamos": "Where we are",
+    "telefono": "Phone or WhatsApp",
+    "opcional": "optional",
+    "telefonoAyuda": "If you leave it, we can reply on WhatsApp.",
+    "errorNombre": "Enter your name (2 to 100 characters).",
+    "errorEmail": "This email address is not valid.",
+    "errorTelefono": "The phone number must have between 7 and 15 digits.",
+    "errorMensaje": "Write your message (up to {max} characters)."
   },
   "grupos": {
     "meta": {
@@ -636,7 +650,6 @@
         "chocoterapia": "Chocotherapy and snack",
         "a-medida": "Something tailored, tell me the options"
       },
-      "requiereTransporte": "We need help with transport",
       "requiereFactura": "We need an invoice in the institution's name",
       "nit": "Tax ID (NIT)",
       "mensaje": "Anything else we should know?",
@@ -658,7 +671,8 @@
       "errorEdades": "That age range is too long.",
       "errorFecha": "The date must be later than today.",
       "errorNit": "That tax ID is too long.",
-      "errorMensaje": "The message cannot be longer than {max} characters."
+      "errorMensaje": "The message cannot be longer than {max} characters.",
+      "nitAyuda": "If you don't have it to hand, leave it blank: we will ask for it when we send the quote."
     },
     "agencias": {
       "titulo": "Writing from a travel agency or operator?",
@@ -1316,5 +1330,14 @@
   },
   "formularios": {
     "avisoDatos": "By submitting you authorise the <datos>processing of your data</datos>."
+  },
+  "whatsapp": {
+    "general": "Hi! I found you on the Vuelo Carmesí website and I have a question.",
+    "contacto": "Hi! I'm writing from the Vuelo Carmesí website and I'd like more information about your experiences.",
+    "comoLlegar": "Hi! I'm on the Vuelo Carmesí website and I'm not sure how to get to the farm. Could you help me with directions?",
+    "experiencia": "Hi! I'm looking at the \"{nombre}\" experience on the Vuelo Carmesí website and I have a question before booking.",
+    "aviturismo": "Hi! I saw the birding page on the Vuelo Carmesí website and I'd like information about birdwatching at the farm.",
+    "grupos": "Hi! I saw the groups page on the Vuelo Carmesí website and I'd like information to get a quote for a group visit.",
+    "grupoEnviado": "Hi! I just sent a quote request for {institucion} from the Vuelo Carmesí website and I'd like to follow up."
   }
 }

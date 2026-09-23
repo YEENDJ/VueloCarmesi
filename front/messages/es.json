@@ -153,7 +153,14 @@
       "enviar": "Confirmar reserva",
       "enviando": "Enviando…",
       "error": "Hubo un problema al enviar tu reserva. Por favor inténtalo de nuevo o escríbenos directamente.",
-      "emailPlaceholder": "tu@email.com"
+      "emailPlaceholder": "tu@email.com",
+      "errorNombre": "Escribe tu nombre (entre 2 y 100 caracteres).",
+      "errorTelefono": "El teléfono debe tener entre 7 y 15 dígitos.",
+      "errorEmail": "El correo no es válido.",
+      "errorFechaVacia": "Elige la fecha en que quieres venir.",
+      "errorFecha": "Elige una fecha entre mañana y los próximos seis meses.",
+      "errorPersonas": "Elige cuántas personas vienen.",
+      "errorNotas": "Los comentarios no pueden superar {max} caracteres."
     },
     "porPersonaDuracion": "por persona · {duracion}",
     "cierreTexto": "No pierdas la oportunidad de vivir una experiencia agroecológica inolvidable. Desde {precio} por persona · {duracion}",
@@ -397,7 +404,14 @@
     "whatsappNota": "Lo más rápido para reservar",
     "llamanos": "Llámanos",
     "correo": "Correo",
-    "dondeEstamos": "Dónde estamos"
+    "dondeEstamos": "Dónde estamos",
+    "telefono": "Teléfono o WhatsApp",
+    "opcional": "opcional",
+    "telefonoAyuda": "Si lo dejas, podemos responderte por WhatsApp.",
+    "errorNombre": "Escribe tu nombre (entre 2 y 100 caracteres).",
+    "errorEmail": "El correo no es válido.",
+    "errorTelefono": "El teléfono debe tener entre 7 y 15 dígitos.",
+    "errorMensaje": "Escribe tu mensaje (hasta {max} caracteres)."
   },
   "grupos": {
     "meta": {
@@ -636,7 +650,6 @@
         "chocoterapia": "Chocoterapia y refrigerio",
         "a-medida": "Algo a medida, cuéntenme opciones"
       },
-      "requiereTransporte": "Necesitamos apoyo con el transporte",
       "requiereFactura": "Necesitamos factura a nombre de la institución",
       "nit": "NIT",
       "mensaje": "¿Algo más que debamos saber?",
@@ -658,7 +671,8 @@
       "errorEdades": "Las edades son demasiado largas.",
       "errorFecha": "La fecha debe ser posterior a hoy.",
       "errorNit": "El NIT es demasiado largo.",
-      "errorMensaje": "El mensaje no puede superar {max} caracteres."
+      "errorMensaje": "El mensaje no puede superar {max} caracteres.",
+      "nitAyuda": "Si no lo tienes a mano, déjalo en blanco: te lo pedimos al enviar la cotización."
     },
     "agencias": {
       "titulo": "¿Escribes desde una agencia u operador?",
@@ -1316,5 +1330,14 @@
   },
   "formularios": {
     "avisoDatos": "Al enviar autorizas el <datos>tratamiento de tus datos</datos>."
+  },
+  "whatsapp": {
+    "general": "¡Hola! Los encontré en la página de Vuelo Carmesí y quiero hacerles una consulta.",
+    "contacto": "¡Hola! Escribo desde la página de Vuelo Carmesí y quiero más información sobre las experiencias.",
+    "comoLlegar": "¡Hola! Estoy en la página de Vuelo Carmesí y tengo dudas de cómo llegar a la finca. ¿Me ayudan con las indicaciones?",
+    "experiencia": "¡Hola! Estoy viendo la experiencia «{nombre}» en la página de Vuelo Carmesí y tengo una pregunta antes de reservar.",
+    "aviturismo": "¡Hola! Vi la página de aviturismo de Vuelo Carmesí y quiero información para ir a observar aves en la finca.",
+    "grupos": "¡Hola! Vi la página de grupos de Vuelo Carmesí y quiero información para cotizar una visita en grupo.",
+    "grupoEnviado": "¡Hola! Acabo de enviar la solicitud de cotización de {institucion} desde la página de Vuelo Carmesí y quiero hacerle seguimiento."
   }
 }
