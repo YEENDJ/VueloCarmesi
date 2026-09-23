@@ -3,6 +3,7 @@ import Button from '@/components/ui/Button'
 import PortadaExperiencia from '@/components/booking/PortadaExperiencia'
 import DatosPracticos from '@/components/booking/DatosPracticos'
 import ListaFicha from '@/components/booking/ListaFicha'
+import BarraReserva from '@/components/booking/BarraReserva'
 import AvisoAviturismo, { tieneAvistamiento } from '@/components/booking/AvisoAviturismo'
 import { getSiteConfig } from '@/lib/api/site-config'
 import { notFound, permanentRedirect } from 'next/navigation'
@@ -251,38 +252,10 @@ export default async function ExperienciaDetallePage({
           la ficha, que es la que cierra la reserva. */}
       {tieneAvistamiento(exp.slug) && <AvisoAviturismo variante="ficha" />}
 
-      {/* El precio sale dos veces y es a propósito: la tarjeta lo presenta en
-          el momento del antojo y la barra lo mantiene a mano durante el scroll.
-          En escritorio la barra no se pinta —igual que en la ficha de producto—
-          y ahí el que cierra es el bloque de abajo. */}
-      <div className="ficha-exp-barra">
-        <div className="ficha-exp-barra-contenido">
-          <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '4px 8px', minWidth: 0 }}>
-            <span className="ficha-exp-barra-precio">{formatPrecio(exp.precio, locale)}</span>
-            <span style={{ fontSize: '14px', fontWeight: 700, color: 'rgba(255,234,202,0.8)', minWidth: 0 }}>
-              {t('porPersonaDuracion', { duracion: exp.duracion })}
-            </span>
-          </div>
-          <Button
-            href={{ pathname: '/reservar/[slug]', params: { slug: exp.slug } }}
-            style={{
-              flexShrink: 0, borderRadius: '8px', padding: '14px 24px',
-              fontSize: '16px', minHeight: '44px', whiteSpace: 'nowrap',
-            }}
-          >
-            {t('reservarAhora')}
-          </Button>
-        </div>
-      </div>
-
-      {/* Se mete entre la barra y el pie del sitio a propósito: los dos son del
-          mismo marrón y al final del scroll se tocaban, así que la barra dejaba
-          de leerse como una acción y parecía el principio del footer. Con un
-          bloque claro en medio, la barra aparca sobre algo que no es el pie.
-
-          Y no es solo un separador: en escritorio la barra no existe, y sin
-          esto la ficha terminaría en una lista de viñetas y nada que pulsar. */}
-      <section className="ficha-exp-cierre">
+      {/* Cierra la ficha con algo que pulsar. En escritorio es el único botón
+          del final; en móvil es además donde la barra fija se retira, así que
+          nunca se ven los dos a la vez (lleva `data-cta-reserva` por eso). */}
+      <section className="ficha-exp-cierre" data-cta-reserva>
         <div className="ficha-exp-cierre-caja">
           <h2 className="ficha-exp-cierre-titulo">{t('reservaTuCupo')}</h2>
           <p className="ficha-exp-cierre-precio">
@@ -302,6 +275,11 @@ export default async function ExperienciaDetallePage({
           </Button>
         </div>
       </section>
+
+      {/* El precio sale dos veces y es a propósito: la tarjeta lo presenta en
+          el momento del antojo y la barra lo mantiene a mano durante el scroll.
+          En escritorio la barra no se pinta —igual que en la ficha de producto—. */}
+      <BarraReserva precio={exp.precio} duracion={exp.duracion} slug={exp.slug} />
     </div>
   )
 }

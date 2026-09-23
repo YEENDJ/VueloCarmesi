@@ -75,4 +75,98 @@ describe('NotificacionesService.enviarConfirmacionPedido', () => {
     expect(mensaje).toContain('Miel Orgánica 250g × 1 — $15.000 c/u — $15.000')
     expect(mensaje).toContain('Total: $55.000')
   })
+
+  it('manda Telegram y el aviso al admin aunque el correo al cliente falle', async () => {
+    mockEmail.send.mockRejectedValueOnce(new Error('Gmail: dirección inexistente'))
+
+    await expect(service.enviarConfirmacionPedido(pedido)).resolves.toBeUndefined()
+
+    expect(mockTelegram.send).toHaveBeenCalledTimes(1)
+    expect(mockEmail.send).toHaveBeenCalledWith(
+      'admin@vuelocarmesi.com', expect.any(String), '<html-admin>',
+    )
+  })
+
+  it('manda Telegram aunque no se pueda leer el correo del admin', async () => {
+    mockPrisma.siteConfig.findUnique.mockRejectedValueOnce(new Error('Neon caído'))
+
+    await service.enviarConfirmacionPedido(pedido)
+
+    expect(mockTelegram.send).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('NotificacionesService.enviarNuevaSolicitudGrupo', () => {
+  let service: NotificacionesService
+
+  const solicitud = {
+    id: 'sol1', tipo: 'colegio', institucion: 'Colegio <San José> & Cía',
+    nit: null, contacto: 'Juan_Pérez', cargo: null,
+    email: 'juan_perez@colegio.edu.co', telefono: '+57 311 000 0000',
+    personas: 40, edades: null, fechaTentativa: new Date('2026-10-20T00:00:00.000Z'),
+    experiencias: ['experiencia-cacaotera', 'a-medida'],
+    requiereTransporte: false, requiereFactura: false,
+    mensaje: 'Somos *40* niños',
+  }
+
+  const email = {
+    ...mockEmail,
+    templateSolicitudGrupoRecibida: jest.fn().mockReturnValue('<html-cliente>'),
+  }
+  const prisma = {
+    ...mockPrisma,
+    experiencia: {
+      findMany: jest.fn().mockResolvedValue([
+        { slug: 'experiencia-cacaotera', nombre: 'Experiencia cacaotera' },
+      ]),
+    },
+  }
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        NotificacionesService,
+        { provide: EmailService, useValue: email },
+        { provide: TelegramService, useValue: mockTelegram },
+        { provide: PrismaService, useValue: prisma },
+      ],
+    }).compile()
+    service = module.get(NotificacionesService)
+    jest.clearAllMocks()
+    mockPrisma.siteConfig.findUnique.mockResolvedValue({ value: 'admin@vuelocarmesi.com' })
+  })
+
+  it('escapa los datos del cliente en el Telegram, que va en modo HTML', async () => {
+    await service.enviarNuevaSolicitudGrupo(solicitud)
+
+    const mensaje: string = mockTelegram.send.mock.calls[0][0]
+    expect(mensaje).toContain('<b>Nueva solicitud de grupo</b>')
+    expect(mensaje).toContain('Colegio &lt;San José&gt; &amp; Cía')
+    expect(mensaje).not.toContain('<San José>')
+    // Con Markdown, estos `_` y `*` sin pareja hacían que Telegram rechazara el mensaje.
+    expect(mensaje).toContain('juan_perez@colegio.edu.co')
+    expect(mensaje).toContain('Somos *40* niños')
+  })
+
+  it('pone la fecha del día elegido, sin correrla por la zona horaria', async () => {
+    await service.enviarNuevaSolicitudGrupo(solicitud)
+
+    expect(mockTelegram.send.mock.calls[0][0]).toContain('martes, 20 de octubre de 2026')
+  })
+
+  it('nombra las experiencias en vez de mandar los slugs', async () => {
+    await service.enviarNuevaSolicitudGrupo(solicitud)
+
+    const vars = email.templateSolicitudGrupoRecibida.mock.calls[0][0]
+    expect(vars.experiencias).toBe('Experiencia cacaotera, A medida')
+  })
+
+  it('manda Telegram aunque falle la consulta de nombres y el acuse', async () => {
+    prisma.experiencia.findMany.mockRejectedValueOnce(new Error('Neon caído'))
+    email.send.mockRejectedValueOnce(new Error('Gmail: rebote'))
+
+    await service.enviarNuevaSolicitudGrupo(solicitud)
+
+    expect(mockTelegram.send).toHaveBeenCalledTimes(1)
+  })
 })

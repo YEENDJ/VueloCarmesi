@@ -9,7 +9,7 @@ import {
   Bus, Check, ExternalLink, FileText, GraduationCap, Handshake, MapPin,
   Receipt, School, ShieldCheck, Users, X, type LucideIcon,
 } from 'lucide-react'
-import { MAPA, MENSAJE_WHATSAPP, whatsappCon } from '@/lib/contacto'
+import { MAPA, whatsappCon } from '@/lib/contacto'
 import { getSiteConfig } from '@/lib/api/site-config'
 import { getExperiencias } from '@/lib/api/experiencias'
 import { formatPrecio } from '@/lib/format'
@@ -188,6 +188,7 @@ export default async function GruposPage({
   const { locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('grupos')
+  const tw = await getTranslations('whatsapp')
 
   // Las dos fuentes de datos vivos de la página. `getSiteConfig` devuelve {} si
   // la API no responde y `getExperiencias` devuelve []: ninguna de las dos
@@ -672,7 +673,7 @@ export default async function GruposPage({
           <a href="#cotizar" className="grp-boton">{t('cta.cotizar')}</a>
           <a
             className="grp-boton grp-boton--fantasma"
-            href={whatsappCon(MENSAJE_WHATSAPP.contacto)}
+            href={whatsappCon(tw('grupos'))}
             target="_blank"
             rel="noopener noreferrer"
           >

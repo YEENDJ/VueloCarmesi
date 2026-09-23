@@ -17,7 +17,7 @@ vi.mock('next/cache', () => ({ revalidateTag: (...a: unknown[]) => revalidateTag
 // fuera de una petición real no existe. Lo que se prueba está en route.ts.
 vi.mock('../proxy', () => ({
   BASE: 'http://backend',
-  sesionAdmin: async () => ({ ok: true, cookie: 'admin_session=authenticated' }),
+  sesionAdmin: async () => ({ ok: true, headers: { 'x-admin-key': 'k' } }),
   comoLlego: async (res: Response) => res,
 }))
 

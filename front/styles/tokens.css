@@ -125,6 +125,10 @@
   --status-entregado-txt:  #1F8A5B;
   --status-activa-bg:      rgba(31, 138, 91, 0.12);
   --status-activa-txt:     #1F8A5B;
+  /* Cotización enviada y a la espera: ni pendiente de nosotros (ámbar) ni
+     cerrada (verde). Violeta para que no se confunda con «contactada» (azul). */
+  --status-cotizada-bg:    rgba(109, 40, 217, 0.12);
+  --status-cotizada-txt:   #6D28D9;
 
   --stock-alert-bg:    rgba(245, 156, 0, 0.18);
   --stock-alert-txt:   #B45309;

@@ -21,7 +21,11 @@ export default function AdminLoginPage() {
       router.refresh()
       router.push('/admin')
     } else {
-      setError('Contraseña incorrecta')
+      // El servidor distingue la contraseña mala del panel sin configurar
+      // (falta ADMIN_SESSION_SECRET); mostrar siempre «incorrecta» mandaba a
+      // probar contraseñas cuando el problema era el despliegue.
+      const motivo = await res.json().then((d: { error?: string }) => d.error, () => undefined)
+      setError(motivo || 'Contraseña incorrecta')
       setLoading(false)
     }
   }

@@ -13,7 +13,17 @@ export class ContactoService {
   ) {}
 
   async create(dto: CreateContactoDto) {
-    const contacto = await this.prisma.contacto.create({ data: dto })
+    // `website` es el honeypot: no es columna, así que no puede llegar a Prisma.
+    const { website, ...data } = dto
+
+    // Bot: se responde como si hubiera salido bien, igual que en grupos y
+    // reservas. Decirle que se detectó solo le enseña cuál campo no llenar.
+    if (website) {
+      this.logger.warn(`Contacto descartado por honeypot: ${dto.email}`)
+      return { id: 'descartado', createdAt: new Date() }
+    }
+
+    const contacto = await this.prisma.contacto.create({ data })
 
     this.notificaciones
       .enviarNuevoContacto(contacto)

@@ -4,21 +4,24 @@ import { Link } from '@/lib/i18n/navigation'
 import TiraConfianza from '@/components/layout/TiraConfianza'
 import IconoWhatsapp from '@/components/ui/IconoWhatsapp'
 import { IconoInstagram, IconoFacebook, IconoTiktok } from '@/components/ui/IconosRedes'
-import { CONTACTO, MENSAJE_WHATSAPP, REDES, whatsappCon } from '@/lib/contacto'
+import { CONTACTO, REDES, whatsappCon } from '@/lib/contacto'
 
 // Crédito de desarrollo mostrado en la barra legal del footer
 const AGENCIA = { nombre: 'XyraCode', url: 'https://Xyracode.com' }
 
-const SOCIAL = [
-  { label: 'Instagram', href: REDES.instagram, icon: <IconoInstagram /> },
-  { label: 'Facebook', href: REDES.facebook, icon: <IconoFacebook /> },
-  { label: 'WhatsApp', href: whatsappCon(MENSAJE_WHATSAPP.general), icon: <IconoWhatsapp /> },
-  { label: 'TikTok', href: REDES.tiktok, icon: <IconoTiktok /> },
-]
-
 export default function Footer() {
   const t = useTranslations('footer')
   const tNav = useTranslations('nav')
+  const tw = useTranslations('whatsapp')
+
+  // Dentro del componente y no a nivel de módulo: el mensaje de WhatsApp sale
+  // del catálogo y necesita el idioma de la página.
+  const SOCIAL = [
+    { label: 'Instagram', href: REDES.instagram, icon: <IconoInstagram /> },
+    { label: 'Facebook', href: REDES.facebook, icon: <IconoFacebook /> },
+    { label: 'WhatsApp', href: whatsappCon(tw('general')), icon: <IconoWhatsapp /> },
+    { label: 'TikTok', href: REDES.tiktok, icon: <IconoTiktok /> },
+  ]
 
   return (
     <footer style={{

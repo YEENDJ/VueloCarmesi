@@ -13,16 +13,21 @@ export class CreateReservaDto {
   @IsString() @IsNotEmpty()
   experienciaId: string
 
-  @IsDateString({}, { message: 'La fecha no es válida' })
+  // Solo el día, `YYYY-MM-DD`: el rango (de mañana a seis meses) lo revisa el
+  // service con `fechaReservaValida`, que calcula «hoy» en hora de Bogotá.
+  @IsDateString({ strict: true }, { message: 'La fecha no es válida' })
   fecha: string
 
+  // El tope real es la capacidad de la experiencia, y ese lo revisa el
+  // service contra la base: el DTO no la conoce.
   @IsInt({ message: 'La cantidad de personas debe ser un número entero' })
   @Min(1, { message: 'Debe reservar para al menos 1 persona' })
   cantidadPersonas: number
 
+  // Mínimo 2 y no 3: «Li», «Bo» o «Ed» son nombres reales.
   @Transform(trim)
   @IsString()
-  @Length(3, 100, { message: 'El nombre debe tener entre 3 y 100 caracteres' })
+  @Length(2, 100, { message: 'El nombre debe tener entre 2 y 100 caracteres' })
   nombre: string
 
   @Transform(trim)
@@ -34,7 +39,9 @@ export class CreateReservaDto {
   @Matches(TELEFONO_REGEX, { message: 'El teléfono debe tener entre 7 y 15 dígitos' })
   telefono: string
 
-  @IsOptional() @IsString()
+  @IsOptional()
+  @Transform(trim)
+  @IsString()
   @MaxLength(500, { message: 'Las notas no pueden superar 500 caracteres' })
   notas?: string
 

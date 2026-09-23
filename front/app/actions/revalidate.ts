@@ -1,5 +1,19 @@
 'use server'
+import { cookies } from 'next/headers'
 import { updateTag, revalidatePath, refresh } from 'next/cache'
+import { COOKIE_SESION, sesionValida } from '@/lib/admin/sesion'
+
+/**
+ * Una Server Action es un endpoint público: cualquiera que tenga su id puede
+ * invocarla con un POST, venga o no del panel. Estas solo vacían caché, pero
+ * sin esta comprobación cualquiera podía obligar al sitio a rehacer todas sus
+ * páginas una y otra vez.
+ */
+async function exigirSesion() {
+  if (!sesionValida((await cookies()).get(COOKIE_SESION)?.value)) {
+    throw new Error('Sin sesión de administrador')
+  }
+}
 
 // updateTag, no revalidateTag: en Next 16 revalidateTag exige un perfil de
 // cacheLife y el que usábamos, 'default', deja la entrada servible como stale
@@ -18,6 +32,7 @@ import { updateTag, revalidatePath, refresh } from 'next/cache'
 // desde su caché de cliente aunque el servidor ya tenga la nueva.
 
 export async function revalidateExperiencias() {
+  await exigirSesion()
   updateTag('experiencias')
   revalidatePath('/experiencias', 'page')
   revalidatePath('/experiencias/[slug]', 'page')
@@ -27,6 +42,7 @@ export async function revalidateExperiencias() {
 }
 
 export async function revalidateProductos() {
+  await exigirSesion()
   updateTag('productos')
   revalidatePath('/tienda', 'page')
   revalidatePath('/tienda/[slug]', 'page')
@@ -34,6 +50,7 @@ export async function revalidateProductos() {
 }
 
 export async function revalidateSiteConfig() {
+  await exigirSesion()
   updateTag('site-config')
   revalidatePath('/', 'page') // hero_image y about_image viven en la portada
   // La ficha de experiencia también lee de acá —punto de encuentro, resumen de

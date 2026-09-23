@@ -3,8 +3,12 @@ import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { ReservasService } from './reservas.service'
 import { PrismaService } from '../prisma.service'
 import { NotificacionesService } from '../notificaciones/notificaciones.service'
+import { hoyBogota, sumarDias } from './fecha-reserva.util'
 
 const mockPrisma = {
+  experiencia: {
+    findUnique: jest.fn(),
+  },
   reserva: {
     findUnique: jest.fn(),
     findMany: jest.fn(),
@@ -110,5 +114,74 @@ describe('ReservasService.cambiarEstado', () => {
     await new Promise(r => setImmediate(r))
     expect(mockNotificaciones.enviarReservaConfirmadaCliente).not.toHaveBeenCalled()
     expect(mockNotificaciones.enviarReservaCanceladaCliente).not.toHaveBeenCalled()
+  })
+})
+
+describe('ReservasService.create', () => {
+  let service: ReservasService
+
+  // Pasado mañana: siempre dentro del rango, sea la hora que sea en Bogotá.
+  const fechaValida = sumarDias(hoyBogota(), 2)
+
+  const dto = {
+    experienciaId: 'exp1',
+    fecha: fechaValida,
+    cantidadPersonas: 2,
+    nombre: 'Ana García',
+    email: 'ana@test.com',
+    telefono: '3001234567',
+  }
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        ReservasService,
+        { provide: PrismaService, useValue: mockPrisma },
+        { provide: NotificacionesService, useValue: mockNotificaciones },
+      ],
+    }).compile()
+    service = module.get(ReservasService)
+    jest.clearAllMocks()
+    mockPrisma.experiencia.findUnique.mockResolvedValue({ capacidad: 12, archivada: false })
+    mockPrisma.reserva.create.mockResolvedValue({ ...reservaBase, estado: 'pendiente' })
+  })
+
+  it('crea la reserva sin pasarle el honeypot a Prisma', async () => {
+    await service.create({ ...dto, website: '' })
+    const data = mockPrisma.reserva.create.mock.calls[0][0].data
+    expect(data).not.toHaveProperty('website')
+    expect(data.fecha).toEqual(new Date(fechaValida))
+  })
+
+  it('descarta en silencio si el honeypot viene lleno', async () => {
+    const res = await service.create({ ...dto, website: 'http://spam' })
+    expect(res).toMatchObject({ id: 'descartada' })
+    expect(mockPrisma.reserva.create).not.toHaveBeenCalled()
+  })
+
+  it('rechaza una fecha de hoy o anterior', async () => {
+    await expect(service.create({ ...dto, fecha: hoyBogota() }))
+      .rejects.toThrow(BadRequestException)
+    expect(mockPrisma.reserva.create).not.toHaveBeenCalled()
+  })
+
+  it('rechaza una fecha más allá del horizonte', async () => {
+    await expect(service.create({ ...dto, fecha: sumarDias(hoyBogota(), 400) }))
+      .rejects.toThrow(BadRequestException)
+  })
+
+  it('rechaza más personas que la capacidad de la experiencia', async () => {
+    await expect(service.create({ ...dto, cantidadPersonas: 13 }))
+      .rejects.toThrow(BadRequestException)
+  })
+
+  it('responde 404 si la experiencia no existe', async () => {
+    mockPrisma.experiencia.findUnique.mockResolvedValue(null)
+    await expect(service.create(dto)).rejects.toThrow(NotFoundException)
+  })
+
+  it('responde 404 si la experiencia está archivada', async () => {
+    mockPrisma.experiencia.findUnique.mockResolvedValue({ capacidad: 12, archivada: true })
+    await expect(service.create(dto)).rejects.toThrow(NotFoundException)
   })
 })

@@ -1,9 +1,20 @@
 import type {
   AdminReserva, AdminExperiencia, AdminProducto, AdminPedido,
-  EstadoReserva, EstadoPedido,
+  EstadoReserva, EstadoPedido, AdminSolicitudGrupo, EstadoSolicitud,
 } from './types'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
+
+/**
+ * Todo lo que lee datos privados o cambia algo va por el puente del propio
+ * front (app/api/admin/backend/), no contra `BASE`. En el backend esas rutas
+ * exigen `x-admin-key`, una clave que solo tiene el servidor del front y que el
+ * navegador nunca ve; el puente la pone después de validar la sesión firmada.
+ *
+ * Contra `BASE` quedan solo las lecturas públicas —experiencias, productos,
+ * configuración—, las mismas que usa la web.
+ */
+const ADMIN = '/api/admin/backend'
 
 function checked(r: Response) {
   if (!r.ok) throw new Error(`API error ${r.status}`)
@@ -12,13 +23,13 @@ function checked(r: Response) {
 
 // ── Reservas ───────────────────────────────────────────────
 export function getReservas(): Promise<AdminReserva[]> {
-  return fetch(`${BASE}/reservas`).then(checked)
+  return fetch(`${ADMIN}/reservas`).then(checked)
 }
 export function getReserva(id: string): Promise<AdminReserva> {
-  return fetch(`${BASE}/reservas/${id}`).then(checked)
+  return fetch(`${ADMIN}/reservas/${id}`).then(checked)
 }
 export function updateEstadoReserva(id: string, estado: EstadoReserva, motivo?: string): Promise<AdminReserva> {
-  return fetch(`${BASE}/reservas/${id}/estado`, {
+  return fetch(`${ADMIN}/reservas/${id}/estado`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ estado, ...(motivo ? { motivo } : {}) }),
@@ -30,21 +41,21 @@ export function getExperienciasAdmin(): Promise<AdminExperiencia[]> {
   return fetch(`${BASE}/experiencias`).then(checked)
 }
 export function createExperiencia(data: Partial<AdminExperiencia>): Promise<AdminExperiencia> {
-  return fetch(`${BASE}/experiencias`, {
+  return fetch(`${ADMIN}/experiencias`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   }).then(checked)
 }
 export function updateExperiencia(id: string, data: Partial<AdminExperiencia>): Promise<AdminExperiencia> {
-  return fetch(`${BASE}/experiencias/${id}`, {
+  return fetch(`${ADMIN}/experiencias/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   }).then(checked)
 }
 export function deleteExperiencia(id: string): Promise<void> {
-  return fetch(`${BASE}/experiencias/${id}`, { method: 'DELETE' }).then(() => undefined)
+  return fetch(`${ADMIN}/experiencias/${id}`, { method: 'DELETE' }).then(() => undefined)
 }
 
 // ── Productos ──────────────────────────────────────────────
@@ -52,32 +63,32 @@ export function getProductosAdmin(): Promise<AdminProducto[]> {
   return fetch(`${BASE}/productos`).then(checked)
 }
 export function createProducto(data: Partial<AdminProducto>): Promise<AdminProducto> {
-  return fetch(`${BASE}/productos`, {
+  return fetch(`${ADMIN}/productos`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   }).then(checked)
 }
 export function updateProducto(id: string, data: Partial<AdminProducto>): Promise<AdminProducto> {
-  return fetch(`${BASE}/productos/${id}`, {
+  return fetch(`${ADMIN}/productos/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   }).then(checked)
 }
 export function deleteProducto(id: string): Promise<void> {
-  return fetch(`${BASE}/productos/${id}`, { method: 'DELETE' }).then(() => undefined)
+  return fetch(`${ADMIN}/productos/${id}`, { method: 'DELETE' }).then(() => undefined)
 }
 
 // ── Pedidos ────────────────────────────────────────────────
 export function getPedidos(): Promise<AdminPedido[]> {
-  return fetch(`${BASE}/pedidos`).then(checked)
+  return fetch(`${ADMIN}/pedidos`).then(checked)
 }
 export function getPedido(id: string): Promise<AdminPedido> {
-  return fetch(`${BASE}/pedidos/${id}`).then(checked)
+  return fetch(`${ADMIN}/pedidos/${id}`).then(checked)
 }
 export function updateEstadoPedido(id: string, estado: EstadoPedido): Promise<AdminPedido> {
-  return fetch(`${BASE}/pedidos/${id}`, {
+  return fetch(`${ADMIN}/pedidos/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ estado }),
@@ -153,6 +164,23 @@ export async function deleteImage(url: string): Promise<void> {
   } catch {
     // silencio deliberado: ver comentario de arriba
   }
+}
+
+// ── Solicitudes de grupo ───────────────────────────────────
+export function getSolicitudesGrupo(): Promise<AdminSolicitudGrupo[]> {
+  return fetch(`${ADMIN}/solicitudes-grupo`).then(checked)
+}
+export function updateEstadoSolicitud(id: string, estado: EstadoSolicitud): Promise<AdminSolicitudGrupo> {
+  return fetch(`${ADMIN}/solicitudes-grupo/${id}/estado`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ estado }),
+  }).then(checked)
+}
+export function deleteSolicitudGrupo(id: string): Promise<void> {
+  return fetch(`${ADMIN}/solicitudes-grupo/${id}`, { method: 'DELETE' })
+    .then(checked)
+    .then(() => undefined)
 }
 
 // ── SiteConfig ─────────────────────────────────────────────

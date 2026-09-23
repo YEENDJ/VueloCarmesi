@@ -6,11 +6,6 @@ import { Link, usePathname } from '@/lib/i18n/navigation'
 import { IDIOMAS, ETIQUETA_IDIOMA, type Idioma } from '@/lib/i18n/routing'
 import { useSlugsIdioma } from '@/lib/i18n/slugs-store'
 
-interface Props {
-  /** 'barra' para la navbar de escritorio, 'panel' para el menú desplegable. */
-  variante?: 'barra' | 'panel'
-}
-
 /**
  * Cambia de idioma conservando la página en la que está el visitante.
  *
@@ -26,7 +21,7 @@ interface Props {
  * de ruta: /experiencias pasa a /en/experiences sin que este componente sepa
  * nada de ese mapeo.
  */
-export default function SelectorIdioma({ variante = 'barra' }: Props) {
+export default function SelectorIdioma() {
   const actual = useLocale() as Idioma
   const pathname = usePathname()
   const params = useParams()
@@ -67,7 +62,7 @@ export default function SelectorIdioma({ variante = 'barra' }: Props) {
       // hace falta para no perder la ficha al cambiar de idioma.
       href={destino() as never}
       locale={otro}
-      className={`selector-idioma selector-idioma--${variante}`}
+      className="selector-idioma"
       // El nombre del idioma va escrito EN ese idioma y con `lang` puesto, que
       // es lo que permite a un lector de pantalla pronunciarlo bien y a quien
       // no lee español entender el botón. Sin `lang`, un lector en castellano

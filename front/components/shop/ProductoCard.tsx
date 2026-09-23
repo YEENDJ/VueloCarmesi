@@ -60,7 +60,7 @@ export default function ProductoCard({
           </span>
         )}
       </Link>
-      <div style={{ padding: 'clamp(0.85rem, 3vw, 1.15rem)', minWidth: 0 }}>
+      <div className="producto-card-cuerpo" style={{ padding: 'clamp(0.75rem, 3vw, 1.15rem)' }}>
         <Link href={{ pathname: '/tienda/[slug]', params: { slug: producto.slug } }} style={{ textDecoration: 'none' }}>
           <Titulo className="producto-card-titulo" style={{ margin: '0 0 0.5rem', color: 'var(--color-brown)', minWidth: 0, fontSize: 'clamp(1rem, 2.2vw, 1.08rem)', overflowWrap: 'anywhere' }}>{producto.nombre}</Titulo>
         </Link>
@@ -68,13 +68,14 @@ export default function ProductoCard({
         {/* Mismo criterio que en las experiencias: la tarjeta no lleva párrafo,
             así todas alinean sin importar cuánto se escribió en cada ficha. El
             recorte a dos líneas dejaba de todos modos frases cortadas. */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div className="producto-card-pie">
           <span style={{ fontWeight: 700, color: 'var(--color-crimson)', fontSize: 'clamp(1rem, 2.5vw, 1.12rem)', minWidth: 0 }}>
             {formatPrecio(producto.precio, idioma)}
           </span>
-          {/* Compacto, no el tamaño por defecto: con la tarjeta a 266 px el botón
-              ancho empujaba el precio a una línea aparte. inline-flex para que el
-              rótulo siga centrado dentro del alto mínimo. */}
+          {/* Compacto, no el tamaño por defecto. El ancho y el alto mínimo los
+              pone .producto-card-pie según lo que mida la tarjeta: en dos
+              columnas de móvil va debajo del precio y a lo ancho. inline-flex
+              para que el rótulo siga centrado dentro del alto mínimo. */}
           <Button
             onClick={() => addToCart(producto, 1)}
             variant="secondary"
@@ -82,7 +83,7 @@ export default function ProductoCard({
             className="btn-card"
             style={{
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              minHeight: 36, padding: '0.4rem 0.95rem', fontSize: '1rem',
+              padding: '0.4rem 0.95rem', fontSize: '1rem',
             }}
           >
             {agotado ? t('agotado') : t('agregar')}

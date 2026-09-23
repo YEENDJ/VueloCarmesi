@@ -1,4 +1,4 @@
-import { MAPA, whatsappCon, MENSAJE_WHATSAPP } from '@/lib/contacto'
+import { MAPA, whatsappCon } from '@/lib/contacto'
 import { useTranslations } from 'next-intl'
 
 /**
@@ -20,6 +20,7 @@ const TRAMOS = [
 
 export default function ComoLlegar() {
   const t = useTranslations('nosotros.comoLlegar')
+  const tw = useTranslations('whatsapp')
 
   return (
     <div
@@ -171,7 +172,7 @@ export default function ComoLlegar() {
       </a>
 
       <a
-        href={whatsappCon(MENSAJE_WHATSAPP.comoLlegar)}
+        href={whatsappCon(tw('comoLlegar'))}
         target="_blank"
         rel="noopener noreferrer"
         className="ubicacion-enlace"

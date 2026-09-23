@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { COOKIE_SESION, sesionValida } from '@/lib/admin/sesion'
 
 /**
  * Puente entre el panel y las rutas del backend que exigen sesión de admin.
@@ -26,16 +27,22 @@ import { NextResponse } from 'next/server'
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 
 /**
- * Comprueba la sesión y devuelve la cabecera Cookie con la que hablarle al
+ * Comprueba la sesión y devuelve las cabeceras con las que hablarle al
  * backend, o la respuesta 401 si no hay sesión. Quien manda es esta
- * comprobación: se hace en el servidor que emitió la cookie.
+ * comprobación: se hace en el servidor que emitió y firmó la cookie.
+ *
+ * Al backend no le llega la sesión sino `x-admin-key`, una clave que solo
+ * tienen este servidor y el de Render. El navegador nunca la ve, así que la
+ * única forma de llegar a una ruta de administración es pasar por aquí, y aquí
+ * primero se valida la firma.
  */
 export async function sesionAdmin(): Promise<
-  { ok: true; cookie: string } | { ok: false; respuesta: NextResponse }
+  { ok: true; headers: Record<string, string> } | { ok: false; respuesta: NextResponse }
 > {
-  const session = (await cookies()).get('admin_session')
+  const token = (await cookies()).get(COOKIE_SESION)?.value
+  const clave = process.env.ADMIN_API_KEY
 
-  if (session?.value !== 'authenticated') {
+  if (!sesionValida(token)) {
     return {
       ok: false,
       respuesta: NextResponse.json(
@@ -45,7 +52,27 @@ export async function sesionAdmin(): Promise<
     }
   }
 
-  return { ok: true, cookie: `admin_session=${session.value}` }
+  if (!clave) {
+    return {
+      ok: false,
+      respuesta: NextResponse.json(
+        { message: 'El panel no está configurado: falta ADMIN_API_KEY en el servidor.' },
+        { status: 500 },
+      ),
+    }
+  }
+
+  return {
+    ok: true,
+    headers: {
+      'x-admin-key': clave,
+      // TRANSICIÓN — borrar cuando Render tenga el AdminGuard nuevo. Si Vercel
+      // publica antes que Render, el backend viejo todavía mira esta cookie y
+      // sin ella el panel se quedaría sin poder guardar en esa ventana. El
+      // backend nuevo la ignora.
+      cookie: 'admin_session=authenticated',
+    },
+  }
 }
 
 /**

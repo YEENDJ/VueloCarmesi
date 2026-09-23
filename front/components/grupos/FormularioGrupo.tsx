@@ -12,7 +12,7 @@ import {
   MAX_PERSONAS,
   fechaMinima,
 } from '@/lib/schemas/solicitud-grupo'
-import { CONTACTO, MENSAJE_WHATSAPP, whatsappCon } from '@/lib/contacto'
+import { CONTACTO, whatsappCon } from '@/lib/contacto'
 import AvisoDatos from '@/components/ui/AvisoDatos'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
@@ -33,8 +33,12 @@ const MAX_MENSAJE = 1000
  */
 export default function FormularioGrupo() {
   const t = useTranslations('grupos.formulario')
+  const tw = useTranslations('whatsapp')
 
-  const [enviado, setEnviado] = useState(false)
+  // Guarda la institución de la solicitud enviada: el mensaje de WhatsApp de la
+  // pantalla de gracias la nombra, para que del otro lado se cruce con la
+  // solicitud que ya entró por correo en vez de parecer un contacto nuevo.
+  const [enviado, setEnviado] = useState<string | null>(null)
   const [errorEnvio, setErrorEnvio] = useState('')
 
   const {
@@ -65,23 +69,26 @@ export default function FormularioGrupo() {
         headers: { 'Content-Type': 'application/json' },
         // Los opcionales vacíos no se mandan: el DTO los valida con @IsOptional
         // y una cadena vacía en `fechaTentativa` no es una fecha ISO válida.
+        // Edades y NIT solo si su campo está a la vista: si alguien los llenó y
+        // luego cambió de colegio a empresa, o desmarcó la factura, el valor
+        // seguía en el formulario y llegaba a la cotización sin venir a cuento.
         body: JSON.stringify({
           ...data,
           cargo: data.cargo || undefined,
-          edades: data.edades || undefined,
-          nit: data.nit || undefined,
+          edades: (data.tipo === 'colegio' && data.edades) || undefined,
+          nit: (data.requiereFactura && data.nit) || undefined,
           mensaje: data.mensaje || undefined,
           fechaTentativa: data.fechaTentativa || undefined,
         }),
       })
       if (!res.ok) throw new Error(`POST /solicitudes-grupo respondió ${res.status}`)
-      setEnviado(true)
+      setEnviado(data.institucion)
     } catch {
       setErrorEnvio(t('errorEnvio', { email: CONTACTO.email }))
     }
   }
 
-  if (enviado) {
+  if (enviado !== null) {
     return (
       <div className="grp-gracias" role="status">
         <span className="grp-gracias-icono" aria-hidden="true">
@@ -91,7 +98,7 @@ export default function FormularioGrupo() {
         <p className="grp-gracias-texto">{t('gracias')}</p>
         <a
           className="grp-boton"
-          href={whatsappCon(MENSAJE_WHATSAPP.contacto)}
+          href={whatsappCon(tw('grupoEnviado', { institucion: enviado }))}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -267,10 +274,6 @@ export default function FormularioGrupo() {
 
       <div className="grp-checks grp-checks--apilado">
         <label className="grp-check">
-          <input type="checkbox" {...register('requiereTransporte')} />
-          <span>{t('requiereTransporte')}</span>
-        </label>
-        <label className="grp-check">
           <input type="checkbox" {...register('requiereFactura')} />
           <span>{t('requiereFactura')}</span>
         </label>
@@ -279,7 +282,17 @@ export default function FormularioGrupo() {
       {requiereFactura && (
         <div className="grp-campo">
           <label htmlFor="nit">{t('nit')}</label>
-          <input id="nit" type="text" aria-invalid={!!errors.nit} {...register('nit')} />
+          {/* Opcional aunque haya factura: pedirlo como obligatorio frena la
+              solicitud de quien no lo tiene a mano, y se puede pedir al cotizar. */}
+          <input
+            id="nit"
+            type="text"
+            maxLength={40}
+            aria-describedby="ayuda-nit"
+            aria-invalid={!!errors.nit}
+            {...register('nit')}
+          />
+          <span id="ayuda-nit" className="grp-ayuda">{t('nitAyuda')}</span>
           {errors.nit?.message && <span className="grp-error">{t(errors.nit.message)}</span>}
         </div>
       )}
@@ -304,7 +317,7 @@ export default function FormularioGrupo() {
 
       {/* Honeypot: fuera de pantalla, sin tabulación y sin autocompletado. Los
           humanos no lo ven; los bots lo llenan y el backend los descarta. */}
-      <div className="grp-honeypot" aria-hidden="true">
+      <div className="campo-trampa" aria-hidden="true">
         <label htmlFor="website">Website</label>
         <input id="website" type="text" tabIndex={-1} autoComplete="off" {...register('website')} />
       </div>
