@@ -95,11 +95,16 @@ export const MAPA = {
   rutas: `https://www.google.com/maps/dir/?api=1&destination=${COORDENADAS}`,
 } as const
 
+/**
+ * URLs canonicas de cada perfil, sin los parametros que anade el boton de
+ * «Compartir» (`?igsh=`, `?_r=&_t=`, `/share/<token>/`): alimentan `sameAs`,
+ * que es una afirmacion de identidad, y un enlace de compartir puede caducar
+ * sin que nadie lo note.
+ */
 export const REDES = {
-  instagram:
-    'https://www.instagram.com/vuelo_carmesi?igsh=MWUxdjc1djRyc2Y2OQ==',
-  facebook: 'https://www.facebook.com/share/1D4zy8b9HB/',
-  tiktok: 'https://www.tiktok.com/@vuelo_carmesi?_r=1&_t=ZS-97S50KhhcwC',
+  instagram: 'https://www.instagram.com/vuelo_carmesi',
+  facebook: 'https://www.facebook.com/fincalafortunacubarral/',
+  tiktok: 'https://www.tiktok.com/@vuelo_carmesi',
   /**
    * Ficha de Google Business, la del panel de Google Maps.
    *

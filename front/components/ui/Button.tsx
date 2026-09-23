@@ -22,6 +22,9 @@ interface ButtonProps {
      className es para efectos que el inline no declara —transform, sombra,
      filtro, pseudo-elementos— como el hover de .btn-card. */
   className?: string
+  /* Nombre accesible cuando el rótulo visible es genérico («Ver más»): debe
+     empezar por ese mismo rótulo para que el lector de voz y la etiqueta coincidan. */
+  'aria-label'?: string
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -54,12 +57,12 @@ const styles: Record<string, React.CSSProperties> = {
 
 export default function Button({
   children, variant = 'primary', href, onClick, disabled, type = 'button', style: styleProp,
-  className,
+  className, 'aria-label': ariaLabel,
 }: ButtonProps) {
   const style = { ...styles.base, ...styles[variant], opacity: disabled ? 0.5 : 1, ...styleProp }
-  if (href) return <Link href={href} className={className} style={style}>{children}</Link>
+  if (href) return <Link href={href} className={className} style={style} aria-label={ariaLabel}>{children}</Link>
   return (
-    <button type={type} onClick={onClick} disabled={disabled} className={className} style={style}>
+    <button type={type} onClick={onClick} disabled={disabled} className={className} style={style} aria-label={ariaLabel}>
       {children}
     </button>
   )

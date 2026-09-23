@@ -38,6 +38,27 @@ export async function generateMetadata({
       template: `%s · ${t('titulo')}`,
     },
     description: t('descripcion'),
+    // La tarjeta por defecto para las plantillas que no declaran la suya
+    // (tienda, experiencias, contacto, políticas): sin esto se compartían por
+    // WhatsApp como un enlace pelado. Sin `title` ni `description` a propósito:
+    // Next los rellena al final con los de cada página, y también copia todo
+    // esto a `twitter:*`. Las páginas que declaran `openGraph` lo reemplazan
+    // entero —Next no fusiona dentro del objeto—, así que tienen que seguir
+    // trayendo su siteName, locale e imagen.
+    openGraph: {
+      type: 'website',
+      locale: locale === 'en' ? 'en_US' : 'es_CO',
+      siteName: t('titulo'),
+      // La misma de la portada y del grafo; las medidas son las del archivo.
+      images: [
+        {
+          url: '/images/cacao/cacaotal-mazorcas-rojas.jpg',
+          width: 812,
+          height: 1280,
+          alt: t('ogAlt'),
+        },
+      ],
+    },
     // Aquí NO van los `alternates`. Declarados en el layout valdrían lo mismo
     // para todas las páginas de debajo, y /en/experiences acabaría diciendo que
     // su versión española es la portada. Los pone cada página con

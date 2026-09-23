@@ -57,7 +57,7 @@ export default async function ExperienciasPage({
         </p>
       ) : (
         <div className="experiencias-grid">
-          {experiencias.map(exp => <ExperienciaCard key={exp.id} experiencia={exp} />)}
+          {experiencias.map(exp => <ExperienciaCard key={exp.id} experiencia={exp} nivelTitulo="h2" />)}
         </div>
       )}
 

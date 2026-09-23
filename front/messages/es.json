@@ -28,7 +28,8 @@
   },
   "sitio": {
     "titulo": "Vuelo Carmesí",
-    "descripcion": "Experiencias agroecológicas con sabor a cacao"
+    "descripcion": "Experiencias agroecológicas con sabor a cacao",
+    "ogAlt": "Cacaotal de la finca con mazorcas rojas maduras en el árbol"
   },
   "noEncontrado": {
     "titulo": "Esta página no existe",
@@ -37,7 +38,7 @@
     "metaTitulo": "Página no encontrada"
   },
   "experiencias": {
-    "tituloListado": "Nuestras Experiencias",
+    "tituloListado": "Experiencias de cacao y aves en Cubarral, Meta",
     "metaDescripcion": "Recorridos de cacao, avistamiento de aves y visitas de grupo en la finca agroecológica Vuelo Carmesí, en Cubarral (Meta). Duración, cupos y precio en pesos colombianos de cada experiencia."
   },
   "diferenciales": {
@@ -110,6 +111,7 @@
   },
   "reserva": {
     "verMas": "Ver más",
+    "verMasDe": "Ver más: {nombre}",
     "porPersona": "por persona",
     "reservarAhora": "Reservar ahora",
     "verPolitica": "Ver política",
@@ -283,6 +285,7 @@
     }
   },
   "tienda": {
+    "tituloListado": "Chocolate y cacao artesanal de Cubarral, Meta",
     "metaDescripcion": "Chocolate y cacao artesanal de la finca Vuelo Carmesí, en Cubarral (Meta). Precios en pesos colombianos con IVA incluido y envíos a toda Colombia, cotizados según la ciudad de destino.",
     "catalogoVacio": "Aún no hay productos disponibles. Vuelve pronto.",
     "sinFotografia": "Sin fotografía",
