@@ -136,7 +136,7 @@ export function grafoDelSitio({
         '@id': ID_NEGOCIO,
         name: nombre,
         description: descripcion,
-        url: `${SITIO}/`,
+        url: SITIO,
         logo: {
           '@type': 'ImageObject',
           '@id': ID_LOGO,
@@ -173,7 +173,7 @@ export function grafoDelSitio({
         '@id': ID_SITIO,
         name: nombre,
         description: descripcion,
-        url: `${SITIO}/`,
+        url: SITIO,
         // Las dos ramas del sitio, no solo la del idioma que se está pintando:
         // el nodo es el mismo `@id` en /es y en /en, y declararlo monolingüe en
         // cada rama sería contradecirse a sí mismo página a página.

@@ -73,9 +73,17 @@ type Href = Parameters<typeof getPathname>[0]['href']
  * elemento inválido y algunos validadores tiran el sitemap entero. Los slugs de
  * hoy están normalizados, pero los hubo con espacios (ver lib/slugs-legados.ts)
  * y el panel puede volver a crearlos.
+ *
+ * La portada sale sin barra final, como `SITIO`. `new URL('/', …)` la añade,
+ * pero Next escribe la canónica y el hreflang de la raíz con el origen pelado
+ * (resolveAbsoluteUrlWithPathname en next/dist/lib/metadata): si el sitemap
+ * pusiera la barra, la URL de más autoridad del sitio llegaría a Google con
+ * dos grafías y sería él quien eligiera cuál vale.
  */
-const absoluta = (href: Href, idioma: string): string =>
-  new URL(getPathname({ href, locale: idioma }), SITIO).toString()
+const absoluta = (href: Href, idioma: string): string => {
+  const url = new URL(getPathname({ href, locale: idioma }), SITIO)
+  return url.pathname === '/' && !url.search ? url.origin : url.toString()
+}
 
 /**
  * Las dos entradas de una página —española e inglesa— con su bloque hreflang.

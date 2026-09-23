@@ -34,8 +34,12 @@ const SITIO = 'https://www.vuelocarmesi.com'
 
 describe('sitemap.xml', () => {
   it('declara las páginas fijas en los dos idiomas', () => {
+    // La portada va sin barra final: es como Next escribe su canónica.
+    expect(urls).toContain(SITIO)
+    expect(urls).not.toContain(`${SITIO}/`)
+
     for (const ruta of [
-      '/', '/aviturismo', '/sobre-nosotros', '/contacto', '/grupos',
+      '/aviturismo', '/sobre-nosotros', '/contacto', '/grupos',
       '/experiencias', '/tienda',
       '/politicas', '/politicas/cancelacion', '/politicas/proteccion-infancia',
       '/politicas/datos-personales', '/politicas/terminos-tienda',
@@ -94,7 +98,7 @@ describe('sitemap.xml', () => {
     // El host importa: el ápex responde 301 y un sitemap de URLs que redirigen
     // es exactamente lo que Search Console marca como «URL no válida».
     for (const url of urls) {
-      expect(url.startsWith(`${SITIO}/`), url).toBe(true)
+      expect(url === SITIO || url.startsWith(`${SITIO}/`), url).toBe(true)
     }
     expect(new Set(urls).size, 'hay URLs duplicadas').toBe(urls.length)
   })
