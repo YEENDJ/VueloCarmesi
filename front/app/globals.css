@@ -92,6 +92,13 @@ footer :focus-visible {
   padding-top: clamp(1.5rem, 3vw, 2.25rem);
 }
 
+/* Las páginas que abren con la miga de «Volver a…»: el respiro grande de
+   arriba la dejaba flotando lejos del navbar. 16px, igual que .miga-marco en
+   la ficha de experiencia, para que el enlace caiga en el mismo sitio en todas. */
+.page-shell--con-miga {
+  padding-top: 16px;
+}
+
 /* Visible para buscadores y lectores de pantalla, invisible en la página.
    Se usa en el h1 de los listados: quitarlo del todo dejaría dos páginas sin
    encabezado, y el titular no aporta nada que la rejilla no diga ya. */
@@ -215,11 +222,11 @@ footer :focus-visible {
   color: var(--color-cream);
 }
 
-/* Acciones móviles (carrito + hamburguesa) — ocultas en desktop */
+/* Acciones móviles (carrito + idioma + hamburguesa) — ocultas en desktop */
 .navbar-mobile-actions {
   display: none;
   align-items: center;
-  gap: 18px;
+  gap: 14px;
 }
 
 .navbar-toggle {
@@ -287,13 +294,16 @@ footer :focus-visible {
   }
 }
 
-/* En el panel móvil va a lo ancho y separado de los enlaces, no colgando del
-   final de la lista como si fuera una página más. */
-.selector-idioma--panel {
-  display: flex;
-  min-height: 44px;
-  margin: 12px var(--contenido-margen) 4px;
-  font-size: 0.9375rem;
+/* En móvil comparte fila con el logo, el carrito y la hamburguesa. A 320px
+   los cuatro no caben con el globo puesto, así que ahí queda solo «EN»/«ES»:
+   el borde en píldora ya lo hace reconocible como botón. */
+@media (max-width: 379px) {
+  .navbar-mobile-actions .selector-idioma {
+    padding-inline: 10px;
+  }
+  .navbar-mobile-actions .selector-idioma svg {
+    display: none;
+  }
 }
 
 /* Panel desplegable — sólo existe en móvil */
@@ -571,15 +581,14 @@ footer :focus-visible {
    sola tarjeta huérfana en la segunda fila, así que se quedan
    en tres y el tope se lo pone la rejilla entera, centrada. */
 
+/* Dos columnas desde el móvil más estrecho, como en cualquier tienda. Con una
+   sola, cada tarjeta medía casi una pantalla de alto y para comparar dos
+   chocolates había que hacer scroll. A 320px la tarjeta queda en ~140px, que
+   la tarjeta aguanta porque su pie se apila (ver .producto-card-pie). */
 .tienda-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(1rem, 2.5vw, 1.5rem);
-}
-@media (min-width: 480px) {
-  .tienda-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2.5vw, 1.5rem);
 }
 @media (min-width: 720px) {
   .tienda-grid {
@@ -605,6 +614,39 @@ footer :focus-visible {
 @media (min-width: 900px) {
   .experiencias-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* El pie de la tarjeta se decide por el ancho de la tarjeta, no de la
+   pantalla: la misma tarjeta va a dos columnas en móvil y a cuatro en
+   escritorio, y en los dos casos puede quedar estrecha. Por debajo de 220px el
+   precio y el botón no caben en una fila sin apretarse, así que el botón baja
+   a lo ancho y con alto táctil completo. */
+.producto-card-cuerpo {
+  container-type: inline-size;
+  min-width: 0;
+}
+.producto-card-pie {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+.producto-card-pie .btn-card {
+  width: 100%;
+  min-height: 44px;
+}
+@container (min-width: 220px) {
+  .producto-card-pie {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .producto-card-pie .btn-card {
+    width: auto;
+    min-height: 36px;
   }
 }
 
@@ -1773,7 +1815,6 @@ a.contacto-canal:hover {
    MÓVIL MUY ANGOSTO — hasta 419px
    ═════════════════════════════════════════════════════════ */
 @media (max-width: 419px) {
-  .related-grid,
   .galeria-sobre {
     grid-template-columns: 1fr;
   }
@@ -2890,8 +2931,8 @@ a.contacto-canal:hover {
 }
 /* El bloque cierra sin padding porque abajo siempre vienen las listas con el
    suyo. "Incluye" es obligatorio, así que eso pasa siempre… salvo que un día
-   deje de serlo, y entonces los datos prácticos quedarían pegados a la barra. */
-.ficha-exp-practicos:has(+ .ficha-exp-barra) {
+   deje de serlo, y entonces los datos prácticos quedarían pegados al cierre. */
+.ficha-exp-practicos:has(+ .ficha-exp-cierre) {
   padding-bottom: clamp(2rem, 4vw, 3rem);
 }
 .ficha-exp-practico-valor {
@@ -2983,18 +3024,21 @@ a.contacto-canal:hover {
 }
 
 /* ── Barra de reserva ──
-   El diseño la pide `fixed`. Aquí va `sticky`, que se comporta igual
-   —pegada al borde inferior durante todo el scroll de la ficha— pero
-   ocupa su sitio en el flujo y por eso no tapa el footer del sitio, que el
-   prototipo no tiene. Sin eso haría falta un padding-bottom de 104px en el
-   documento y aun así el pie quedaría cubierto al final. */
+   Fija, como pide el diseño, pero sólo se monta mientras no se ve ningún otro
+   botón de reservar (ver BarraReserva.tsx). Fue `sticky`: al final del scroll
+   dejaba de pegarse y quedaba justo encima del bloque de cierre, con el mismo
+   precio y el mismo botón dos veces. Como se retira antes de que asome el
+   cierre, tampoco llega a tapar el footer. */
 .ficha-exp-barra {
-  position: sticky;
+  position: fixed;
+  left: 0;
+  right: 0;
   bottom: 0;
-  z-index: 20;
+  z-index: 90;
   background: var(--color-brown);
   padding: 14px var(--contenido-margen);
   padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  animation: ficha-barra-entra 180ms ease-out;
   box-shadow: 0 -4px 18px rgba(74, 23, 9, 0.28);
 }
 .ficha-exp-barra-contenido {
@@ -5387,7 +5431,7 @@ a.contacto-canal:hover {
 
 /* Honeypot: fuera de la pantalla, no `display:none`. Algunos bots ignoran los
    campos ocultos con display, y este tiene que parecer un campo normal. */
-.grp-honeypot {
+.campo-trampa {
   position: absolute;
   width: 1px;
   height: 1px;

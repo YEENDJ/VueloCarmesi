@@ -6,6 +6,7 @@ import { Check, ChevronLeft, ChevronRight, Clock, Users } from 'lucide-react'
 import IconoWhatsapp from '@/components/ui/IconoWhatsapp'
 import Button from '@/components/ui/Button'
 import { formatPrecio } from '@/lib/format'
+import { whatsappCon } from '@/lib/contacto'
 
 /** Cuántos "incluye" asoman junto al precio. El resto se cuenta en una línea. */
 const RESUMEN_INCLUYE = 3
@@ -52,6 +53,8 @@ export default function PortadaExperiencia({
   const tg = useTranslations('galeria')
 
   const t = useTranslations('reserva')
+
+  const tw = useTranslations('whatsapp')
 
   const [indice, setIndice] = useState(0)
   const total = imagenes.length
@@ -115,11 +118,10 @@ export default function PortadaExperiencia({
   const incluyeVisible = incluye.slice(0, RESUMEN_INCLUYE)
   const incluyeResto = incluye.length - incluyeVisible.length
 
-  // wa.me no admite espacios ni el "+": se queda solo con los dígitos. El texto
-  // llega escrito para que el visitante no tenga que explicar de qué escribe.
-  const telefono = (whatsapp ?? '').replace(/\D/g, '')
-  const enlaceWhatsapp = telefono
-    ? `https://wa.me/${telefono}?text=${encodeURIComponent(`Hola, quiero información sobre ${nombre}.`)}`
+  // El texto llega escrito y nombra la experiencia, para que el visitante no
+  // tenga que explicar de qué escribe.
+  const enlaceWhatsapp = (whatsapp ?? '').replace(/\D/g, '')
+    ? whatsappCon(tw('experiencia', { nombre }), whatsapp)
     : ''
 
   return (
@@ -266,15 +268,18 @@ export default function PortadaExperiencia({
             </ul>
           )}
 
-          <Button
-            href={{ pathname: '/reservar/[slug]', params: { slug } }}
-            style={{
-              width: '100%', textAlign: 'center', borderRadius: '8px',
-              padding: '15px', fontSize: '17px', minHeight: '44px',
-            }}
-          >
-            {t('reservarAhora')}
-          </Button>
+          {/* La barra fija de móvil se aparta mientras este botón se ve. */}
+          <div data-cta-reserva>
+            <Button
+              href={{ pathname: '/reservar/[slug]', params: { slug } }}
+              style={{
+                display: 'block', width: '100%', textAlign: 'center', borderRadius: '8px',
+                padding: '15px', fontSize: '17px', minHeight: '44px',
+              }}
+            >
+              {t('reservarAhora')}
+            </Button>
+          </div>
 
           {/* La duda sobre cancelar aparece justo aquí, en el momento de
               decidir. Resolverla en una línea evita que el visitante tenga
