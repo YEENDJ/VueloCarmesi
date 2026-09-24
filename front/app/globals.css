@@ -488,20 +488,15 @@ footer :focus-visible {
   color: var(--color-crimson);
 }
 
-/* Barra legal del footer: copyright a un lado, crédito de desarrollo al otro */
-/* Aviso legal del pie (enlace a la SIC). Texto corrido que envuelve solo:
-   sin anchos fijos, así que a 320px no desborda. Los enlaces van en línea con
-   el texto, donde el área táctil de 44px no aplica (excepción de WCAG 2.5.8). */
-.footer-avisos {
-  max-width: 1200px;
-  margin: 24px auto 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+/* Aviso legal bajo el logo del pie (enlace a la SIC). Texto corrido que
+   envuelve al ancho de la columna: a 320px no desborda.
+   El enlace va en línea con el texto, donde el área táctil de 44px no aplica
+   (excepción de WCAG 2.5.8). */
+.footer-sic {
+  margin-top: 16px;
   font-size: 12px;
   line-height: 1.6;
   color: rgba(255, 234, 202, 0.75);
-  text-align: center;
   overflow-wrap: anywhere;
 }
 
@@ -511,16 +506,29 @@ footer :focus-visible {
   text-underline-offset: 2px;
 }
 
+/* Barra legal del footer: copyright, RNT y marca, crédito de desarrollo.
+   Apilada y centrada hasta que las tres caben en una línea; en fila, cada una
+   en su extremo y el RNT al medio. 1200px porque las tres suman unos 1060px de
+   texto: con menos, alguna se partía en dos líneas y la fila quedaba chueca. */
 .footer-legal {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  gap: 8px 24px;
+  gap: 8px;
   text-align: center;
+}
+.footer-legal > * {
+  min-width: 0;
+}
+@media (min-width: 1200px) {
+  .footer-legal {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 24px;
+  }
 }
 
 .footer-credito {
