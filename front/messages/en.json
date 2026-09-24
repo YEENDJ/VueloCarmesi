@@ -1348,9 +1348,14 @@
     "experiencia": "Hi! I'm looking at the \"{nombre}\" experience on the Vuelo Carmesí website and I have a question before booking.",
     "aviturismo": "Hi! I saw the birding page on the Vuelo Carmesí website and I'd like information about birdwatching at the farm.",
     "grupos": "Hi! I saw the groups page on the Vuelo Carmesí website and I'd like information to get a quote for a group visit.",
-    "grupoEnviado": "Hi! I just sent a quote request for {institucion} from the Vuelo Carmesí website and I'd like to follow up."
+    "grupoEnviado": "Hi! I just sent a quote request for {institucion} from the Vuelo Carmesí website and I'd like to follow up.",
+    "tienda": "Hi! I'm looking at the Vuelo Carmesí shop and I have a question about the products."
   },
   "escnna": {
     "aviso": "The sexual exploitation and abuse of children and adolescents are crimes in Colombia, punishable under criminal and administrative law (Law 679 of 2001 and Law 1336 of 2009). <politica>Our policy</politica>."
+  },
+  "whatsappFlotante": {
+    "aria": "Message us on WhatsApp",
+    "rotulo": "Questions? Chat with us"
   }
 }

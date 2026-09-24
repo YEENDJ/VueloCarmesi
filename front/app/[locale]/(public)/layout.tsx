@@ -1,6 +1,7 @@
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import AutoActualizar from '@/components/layout/AutoActualizar'
+import WhatsappFlotante from '@/components/layout/WhatsappFlotante'
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +12,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <Navbar />
       <main>{children}</main>
       <Footer />
+      <WhatsappFlotante />
     </>
   )
 }

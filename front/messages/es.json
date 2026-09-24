@@ -1348,9 +1348,14 @@
     "experiencia": "¡Hola! Estoy viendo la experiencia «{nombre}» en la página de Vuelo Carmesí y tengo una pregunta antes de reservar.",
     "aviturismo": "¡Hola! Vi la página de aviturismo de Vuelo Carmesí y quiero información para ir a observar aves en la finca.",
     "grupos": "¡Hola! Vi la página de grupos de Vuelo Carmesí y quiero información para cotizar una visita en grupo.",
-    "grupoEnviado": "¡Hola! Acabo de enviar la solicitud de cotización de {institucion} desde la página de Vuelo Carmesí y quiero hacerle seguimiento."
+    "grupoEnviado": "¡Hola! Acabo de enviar la solicitud de cotización de {institucion} desde la página de Vuelo Carmesí y quiero hacerle seguimiento.",
+    "tienda": "¡Hola! Estoy viendo la tienda de Vuelo Carmesí y tengo una pregunta sobre los productos."
   },
   "escnna": {
     "aviso": "La explotación y el abuso sexual de niños, niñas y adolescentes son delitos en Colombia y se sancionan penal y administrativamente (Ley 679 de 2001 y Ley 1336 de 2009). <politica>Nuestra política</politica>."
+  },
+  "whatsappFlotante": {
+    "aria": "Escríbenos por WhatsApp",
+    "rotulo": "¿Dudas? Te respondemos"
   }
 }
