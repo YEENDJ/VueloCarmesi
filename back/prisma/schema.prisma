@@ -109,6 +109,11 @@ model Contacto {
   /// Opcional: si lo dejan, se les puede contestar por WhatsApp.
   telefono  String?
   mensaje   String
+  /// nuevo | respondido
+  ///
+  /// Lo marca el panel. Sin esto, si el aviso por correo o Telegram se perdía,
+  /// el mensaje quedaba guardado sin que nadie supiera que existía.
+  estado    String   @default("nuevo")
   createdAt DateTime @default(now())
 }
 

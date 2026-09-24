@@ -1,6 +1,7 @@
 import type {
   AdminReserva, AdminExperiencia, AdminProducto, AdminPedido,
   EstadoReserva, EstadoPedido, AdminSolicitudGrupo, EstadoSolicitud,
+  AdminContacto, EstadoContacto,
 } from './types'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
@@ -11,8 +12,8 @@ const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
  * exigen `x-admin-key`, una clave que solo tiene el servidor del front y que el
  * navegador nunca ve; el puente la pone después de validar la sesión firmada.
  *
- * Contra `BASE` quedan solo las lecturas públicas —experiencias, productos,
- * configuración—, las mismas que usa la web.
+ * Contra `BASE` quedan solo las lecturas públicas —experiencias y productos—,
+ * las mismas que usa la web.
  */
 const ADMIN = '/api/admin/backend'
 
@@ -183,9 +184,28 @@ export function deleteSolicitudGrupo(id: string): Promise<void> {
     .then(() => undefined)
 }
 
+// ── Mensajes de contacto ───────────────────────────────────
+export function getContactos(): Promise<AdminContacto[]> {
+  return fetch(`${ADMIN}/contacto`).then(checked)
+}
+export function updateEstadoContacto(id: string, estado: EstadoContacto): Promise<AdminContacto> {
+  return fetch(`${ADMIN}/contacto/${id}/estado`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ estado }),
+  }).then(checked)
+}
+export function deleteContacto(id: string): Promise<void> {
+  return fetch(`${ADMIN}/contacto/${id}`, { method: 'DELETE' })
+    .then(checked)
+    .then(() => undefined)
+}
+
 // ── SiteConfig ─────────────────────────────────────────────
+// Por el puente y no contra `BASE`: trae el correo de alertas, que el
+// `GET /site-config` público ya no entrega.
 export function getSiteConfigAdmin(): Promise<Record<string, string>> {
-  return fetch(`${BASE}/site-config`).then(checked)
+  return fetch('/api/admin/site-config').then(checked)
 }
 export function patchSiteConfig(data: Record<string, string>): Promise<Record<string, string>> {
   return fetch('/api/admin/site-config', {

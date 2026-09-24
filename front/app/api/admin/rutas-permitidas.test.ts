@@ -10,6 +10,9 @@ describe('rutas que reenvía el puente del panel', () => {
     expect(rutaPermitida('DELETE', 'productos/abc123')).toBe(true)
     expect(rutaPermitida('GET', 'solicitudes-grupo')).toBe(true)
     expect(rutaPermitida('PATCH', 'solicitudes-grupo/abc123/estado')).toBe(true)
+    expect(rutaPermitida('GET', 'contacto')).toBe(true)
+    expect(rutaPermitida('PATCH', 'contacto/abc123/estado')).toBe(true)
+    expect(rutaPermitida('DELETE', 'contacto/abc123')).toBe(true)
   })
 
   it('no reenvía rutas que no están en la lista', () => {
@@ -21,6 +24,10 @@ describe('rutas que reenvía el puente del panel', () => {
   it('no reenvía con otro método del que está permitido', () => {
     expect(rutaPermitida('DELETE', 'reservas')).toBe(false)
     expect(rutaPermitida('POST', 'reservas/abc123')).toBe(false)
+    // El POST de contacto es el formulario público: por el puente llevaría
+    // la clave de admin sin necesitarla.
+    expect(rutaPermitida('POST', 'contacto')).toBe(false)
+    expect(rutaPermitida('DELETE', 'contacto')).toBe(false)
   })
 
   it('no se deja engañar con rutas relativas ni pegadas', () => {

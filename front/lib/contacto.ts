@@ -27,6 +27,19 @@ const NUMERO_E164 = '+573118171907'
 export const whatsappCon = (mensaje: string, numero: string = NUMERO_E164) =>
   `https://wa.me/${numero.replace(/\D/g, '')}?text=${encodeURIComponent(mensaje)}`
 
+/**
+ * Un número tal como lo escribió alguien en un formulario, listo para wa.me.
+ *
+ * Los formularios aceptan «311 000 0000» sin indicativo, y wa.me sin indicativo
+ * abre un chat con un número de otro país. Diez dígitos que empiezan por 3 son
+ * un celular colombiano: se les antepone el 57. Cualquier otra cosa se deja
+ * como vino, porque adivinar el país de un número extranjero es peor.
+ */
+export function numeroWhatsapp(telefono: string): string {
+  const digitos = telefono.replace(/\D/g, '')
+  return digitos.length === 10 && digitos.startsWith('3') ? `57${digitos}` : digitos
+}
+
 export const CONTACTO = {
   email: 'carmesivuelo@gmail.com',
   /** Para mostrar: agrupado como se lee un número colombiano */

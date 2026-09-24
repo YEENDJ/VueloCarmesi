@@ -5,6 +5,7 @@ import ReservaForm from '@/components/booking/ReservaForm'
 import MigaSuperior from '@/components/layout/MigaSuperior'
 import { notFound } from 'next/navigation'
 import { formatPrecio } from '@/lib/format'
+import AvisoEscnna from '@/components/legal/AvisoEscnna'
 
 // El segmento caduca siempre: sin esto un 404 renderizado durante una caída del
 // backend quedaba cacheado de forma indefinida.
@@ -94,6 +95,7 @@ export default async function ReservarPage({
               }}
             >
               <ReservaForm experiencia={exp} />
+              <AvisoEscnna />
             </div>
           </div>
 

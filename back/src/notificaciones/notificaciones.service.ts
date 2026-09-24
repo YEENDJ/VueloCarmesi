@@ -4,6 +4,7 @@ import { TelegramService } from './telegram.service'
 import { PrismaService } from '../prisma.service'
 import { formatDireccionPedido } from './format-direccion.util'
 import { escapeHtml } from './escape-html.util'
+import { fechaHoraRecibido, radicado } from './radicado.util'
 import { tablaItemsHtml, lineasItemsTexto, formatPrecio, ItemPedido } from './format-items-pedido.util'
 
 const ADMIN_URL = process.env.FRONTEND_URL ?? 'http://localhost:3000'
@@ -99,6 +100,13 @@ export class NotificacionesService {
   }): Promise<void> {
     const expNombre = reserva.experiencia?.nombre ?? 'Experiencia'
     const fechaStr = fechaEnLetras(reserva.fecha)
+    // Todo lo que escribió el visitante va escapado antes de entrar al HTML.
+    // Sin esto, un nombre como `<a href="…">Paga aquí</a>` salía como enlace en
+    // un correo enviado desde la cuenta de la finca a la dirección que el
+    // visitante quisiera: phishing con remitente legítimo.
+    const nombre = escapeHtml(reserva.nombre)
+    const email = escapeHtml(reserva.email)
+    const experiencia = escapeHtml(expNombre)
 
     await this.enviarPorSeparado(`Reserva ${reserva.id}`, {
       telegram: () => this.telegram.send(
@@ -108,19 +116,19 @@ export class NotificacionesService {
         reserva.email,
         `Confirmación de tu reserva — Vuelo Carmesí`,
         this.email.templateConfirmacionReserva({
-          nombre: reserva.nombre,
-          experiencia: expNombre,
+          nombre,
+          experiencia,
           fecha: fechaStr,
           cantidadPersonas: String(reserva.cantidadPersonas),
-          email: reserva.email,
+          email,
         }),
       ),
       'correo al admin': () => this.alertarAdmin(`[Reserva] Nueva: ${reserva.nombre}`, {
         tipo: '📅 Nueva Reserva',
         filas: [
-          filaHtml('Nombre', reserva.nombre),
-          filaHtml('Email', reserva.email),
-          filaHtml('Experiencia', expNombre),
+          filaHtml('Nombre', nombre),
+          filaHtml('Email', email),
+          filaHtml('Experiencia', experiencia),
           filaHtml('Fecha', fechaStr),
           filaHtml('Personas', String(reserva.cantidadPersonas)),
         ].join(''),
@@ -134,7 +142,11 @@ export class NotificacionesService {
     direccion: string; ciudad: string; codigoPostal: string; total: number
     items: ItemPedido[]
   }): Promise<void> {
-    const direccionCompleta = formatDireccionPedido(pedido)
+    // Escapados por lo mismo que en la reserva: nombre y dirección los escribe
+    // el visitante. Los productos ya salen escapados de tablaItemsHtml.
+    const nombre = escapeHtml(pedido.nombre)
+    const email = escapeHtml(pedido.email)
+    const direccionCompleta = escapeHtml(formatDireccionPedido(pedido))
     const itemsTableCliente = tablaItemsHtml(pedido.items, 'cliente')
     const itemsTableAdmin = tablaItemsHtml(pedido.items, 'admin')
     const lineasItems = lineasItemsTexto(pedido.items)
@@ -147,7 +159,7 @@ export class NotificacionesService {
         pedido.email,
         `Recibimos tu pedido — Vuelo Carmesí`,
         this.email.templateConfirmacionPedido({
-          nombre: pedido.nombre,
+          nombre,
           id: pedido.id,
           direccion: direccionCompleta,
           itemsTable: itemsTableCliente,
@@ -157,8 +169,8 @@ export class NotificacionesService {
         tipo: '🛒 Nuevo Pedido',
         filas: [
           filaHtml('N° pedido', pedido.id),
-          filaHtml('Nombre', pedido.nombre),
-          filaHtml('Email', pedido.email),
+          filaHtml('Nombre', nombre),
+          filaHtml('Email', email),
           filaHtml('Dirección', direccionCompleta),
           itemsTableAdmin,
         ].join(''),
@@ -169,12 +181,17 @@ export class NotificacionesService {
 
   async enviarNuevoContacto(contacto: {
     id: string; nombre: string; email: string; telefono?: string | null; mensaje: string
+    createdAt: Date
   }): Promise<void> {
     // Opcional: solo sale si lo dejaron. Es el que permite contestar por WhatsApp.
     const telefono = contacto.telefono?.trim()
+    // El radicado va en los tres avisos: es con lo que el cliente hace
+    // seguimiento a un reclamo y con lo que el equipo lo encuentra.
+    const numero = radicado(contacto.id, contacto.createdAt)
+    const recibido = fechaHoraRecibido(contacto.createdAt)
     await this.enviarPorSeparado(`Contacto ${contacto.id}`, {
       telegram: () => this.telegram.send(
-        `✉️ <b>Nuevo Contacto</b>\nNombre: ${escapeHtml(contacto.nombre)}\nEmail: ${escapeHtml(contacto.email)}` +
+        `✉️ <b>Nuevo Contacto</b> · ${numero}\nNombre: ${escapeHtml(contacto.nombre)}\nEmail: ${escapeHtml(contacto.email)}` +
         (telefono ? `\nTeléfono: ${escapeHtml(telefono)}` : '') +
         `\nMensaje: ${escapeHtml(contacto.mensaje)}`,
       ),
@@ -182,15 +199,19 @@ export class NotificacionesService {
       // formulario público y van dentro del HTML de los dos correos.
       'correo al cliente': () => this.email.send(
         contacto.email,
-        `Recibimos tu mensaje — Vuelo Carmesí`,
+        `Recibimos tu mensaje (${numero}) — Vuelo Carmesí`,
         this.email.templateContactoRecibido({
           nombre: escapeHtml(contacto.nombre),
           mensaje: escapeHtml(contacto.mensaje),
+          radicado: numero,
+          recibido,
         }),
       ),
-      'correo al admin': () => this.alertarAdmin(`[Contacto] Mensaje de ${contacto.nombre}`, {
+      'correo al admin': () => this.alertarAdmin(`[Contacto] ${numero} · Mensaje de ${contacto.nombre}`, {
         tipo: '✉️ Nuevo Mensaje de Contacto',
         filas: [
+          filaHtml('Radicado', numero),
+          filaHtml('Recibido', recibido),
           filaHtml('Nombre', escapeHtml(contacto.nombre)),
           filaHtml('Email', escapeHtml(contacto.email)),
           ...(telefono ? [filaHtml('Teléfono', escapeHtml(telefono))] : []),

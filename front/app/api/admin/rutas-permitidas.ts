@@ -17,6 +17,7 @@ const PERMITIDAS: Record<Metodo, RegExp[]> = {
     /^reservas$/, new RegExp(`^reservas/${ID}$`),
     /^pedidos$/, new RegExp(`^pedidos/${ID}$`),
     /^solicitudes-grupo$/,
+    /^contacto$/,
   ],
   POST: [/^experiencias$/, /^productos$/],
   PATCH: [
@@ -24,11 +25,13 @@ const PERMITIDAS: Record<Metodo, RegExp[]> = {
     new RegExp(`^pedidos/${ID}$`),
     new RegExp(`^experiencias/${ID}$`), new RegExp(`^productos/${ID}$`),
     new RegExp(`^solicitudes-grupo/${ID}/estado$`),
+    new RegExp(`^contacto/${ID}/estado$`),
   ],
   DELETE: [
     new RegExp(`^reservas/${ID}$`), new RegExp(`^pedidos/${ID}$`),
     new RegExp(`^experiencias/${ID}$`), new RegExp(`^productos/${ID}$`),
     new RegExp(`^solicitudes-grupo/${ID}$`),
+    new RegExp(`^contacto/${ID}$`),
   ],
 }
 

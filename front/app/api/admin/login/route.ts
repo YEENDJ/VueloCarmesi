@@ -1,11 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { COOKIE_SESION, DURACION_SESION_S, contrasenaCorrecta, crearSesion } from '@/lib/admin/sesion'
+import { bloqueoRestante, ipDe, limpiarFallos, registrarFallo } from '@/lib/admin/limite-intentos'
 
 export async function POST(req: NextRequest) {
+  const ip = ipDe(req.headers)
+  const espera = bloqueoRestante(ip)
+  if (espera > 0) {
+    const minutos = Math.ceil(espera / 60_000)
+    return NextResponse.json(
+      { error: `Demasiados intentos. Vuelve a probar en ${minutos} min.` },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil(espera / 1000)) } },
+    )
+  }
+
   const { password } = await req.json().catch(() => ({ password: undefined }))
   if (!contrasenaCorrecta(password)) {
+    registrarFallo(ip)
     return NextResponse.json({ error: 'Contraseña incorrecta' }, { status: 401 })
   }
+  limpiarFallos(ip)
 
   let token: string
   try {

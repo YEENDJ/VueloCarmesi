@@ -9,6 +9,8 @@ const mockEmail = {
   send: jest.fn().mockResolvedValue(undefined),
   templateConfirmacionPedido: jest.fn().mockReturnValue('<html-cliente>'),
   templateAlertaAdmin: jest.fn().mockReturnValue('<html-admin>'),
+  templateConfirmacionReserva: jest.fn().mockReturnValue('<html-reserva>'),
+  templateContactoRecibido: jest.fn().mockReturnValue('<html-contacto>'),
 }
 
 const mockTelegram = { send: jest.fn().mockResolvedValue(undefined) }
@@ -93,6 +95,78 @@ describe('NotificacionesService.enviarConfirmacionPedido', () => {
     await service.enviarConfirmacionPedido(pedido)
 
     expect(mockTelegram.send).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('NotificacionesService: HTML del visitante en los correos', () => {
+  let service: NotificacionesService
+  const enlace = '<a href="https://falso.example">Paga aquí</a>'
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        NotificacionesService,
+        { provide: EmailService, useValue: mockEmail },
+        { provide: TelegramService, useValue: mockTelegram },
+        { provide: PrismaService, useValue: mockPrisma },
+      ],
+    }).compile()
+    service = module.get(NotificacionesService)
+    jest.clearAllMocks()
+    mockPrisma.siteConfig.findUnique.mockResolvedValue({ value: 'admin@vuelocarmesi.com' })
+  })
+
+  it('escapa nombre y dirección del pedido en el acuse y en el aviso al admin', async () => {
+    await service.enviarConfirmacionPedido({ ...pedido, nombre: enlace, direccion: enlace })
+
+    const cliente = mockEmail.templateConfirmacionPedido.mock.calls[0][0]
+    expect(cliente.nombre).not.toContain('<a')
+    expect(cliente.nombre).toContain('&lt;a href=')
+    expect(cliente.direccion).not.toContain('<a')
+    expect(mockEmail.templateAlertaAdmin.mock.calls[0][0].filas).not.toContain('<a href')
+  })
+
+  it('escapa el nombre de la reserva en el acuse y en el aviso al admin', async () => {
+    await service.enviarConfirmacionReserva({
+      id: 'r1', nombre: enlace, email: 'ana@example.com', telefono: '3001234567',
+      experiencia: { nombre: 'Ruta del cacao' }, fecha: new Date('2026-10-20'), cantidadPersonas: 2,
+    })
+
+    const cliente = mockEmail.templateConfirmacionReserva.mock.calls[0][0]
+    expect(cliente.nombre).toContain('&lt;a href=')
+    expect(mockEmail.templateAlertaAdmin.mock.calls[0][0].filas).not.toContain('<a href')
+  })
+})
+
+describe('NotificacionesService.enviarNuevoContacto', () => {
+  let service: NotificacionesService
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        NotificacionesService,
+        { provide: EmailService, useValue: mockEmail },
+        { provide: TelegramService, useValue: mockTelegram },
+        { provide: PrismaService, useValue: mockPrisma },
+      ],
+    }).compile()
+    service = module.get(NotificacionesService)
+    jest.clearAllMocks()
+    mockPrisma.siteConfig.findUnique.mockResolvedValue({ value: 'admin@vuelocarmesi.com' })
+  })
+
+  it('pone el radicado en el acuse, en el asunto, en Telegram y en el aviso al admin', async () => {
+    await service.enviarNuevoContacto({
+      id: 'cmabcdef4f7k2q', nombre: 'Ana', email: 'ana@example.com', mensaje: 'Reclamo por un pedido',
+      createdAt: new Date('2026-09-24T15:32:00Z'),
+    })
+
+    const vars = mockEmail.templateContactoRecibido.mock.calls[0][0]
+    expect(vars.radicado).toBe('VC-20260924-4F7K2Q')
+    expect(vars.recibido).toContain('24 de septiembre de 2026')
+    expect(mockEmail.send.mock.calls[0][1]).toContain('VC-20260924-4F7K2Q')
+    expect(mockTelegram.send.mock.calls[0][0]).toContain('VC-20260924-4F7K2Q')
+    expect(mockEmail.templateAlertaAdmin.mock.calls[0][0].filas).toContain('VC-20260924-4F7K2Q')
   })
 })
 

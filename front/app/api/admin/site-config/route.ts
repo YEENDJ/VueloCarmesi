@@ -3,9 +3,29 @@ import { revalidateTag } from 'next/cache'
 import { BASE, comoLlego, sesionAdmin } from '../proxy'
 
 /**
- * Guardar las opciones del sitio. El GET no pasa por aquí: es público en el
- * backend y el panel lo pide directo, como el resto de la web.
+ * Leer las opciones con las claves privadas (el correo de alertas), que el
+ * `GET /site-config` público ya no entrega.
  */
+export async function GET() {
+  const sesion = await sesionAdmin()
+  if (!sesion.ok) return sesion.respuesta
+
+  const res = await fetch(`${BASE}/site-config/admin`, {
+    headers: sesion.headers,
+    cache: 'no-store',
+  })
+
+  // TRANSICIÓN — borrar cuando Render tenga `GET /site-config/admin`. Si Vercel
+  // publica antes, el backend viejo responde 404 y el panel se quedaría sin
+  // configuración; el público todavía trae todas las claves.
+  if (res.status === 404) {
+    return comoLlego(await fetch(`${BASE}/site-config`, { cache: 'no-store' }))
+  }
+
+  return comoLlego(res)
+}
+
+/** Guardar las opciones del sitio. */
 export async function PATCH(req: NextRequest) {
   const sesion = await sesionAdmin()
   if (!sesion.ok) return sesion.respuesta

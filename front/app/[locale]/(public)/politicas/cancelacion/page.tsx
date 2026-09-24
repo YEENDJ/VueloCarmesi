@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import MigaSuperior from '@/components/layout/MigaSuperior'
+import { CONTACTO } from '@/lib/contacto'
 
 export async function generateMetadata({
   params,
@@ -94,6 +95,12 @@ const SECCIONES: Seccion[] = [
     parrafos: ['pago1', 'pago2'] },
   { id: 'cancelacion', titulo: 'visitanteTitulo', indice: 'cancelacion', Icono: CircleX,
     parrafos: ['visitante1', 'visitante2'], ancha: true },
+  // No viene de la hoja 21 sino de la ley: una reserva hecha en la web es una
+  // venta a distancia, y el art. 47 de la Ley 1480 le da al cliente cinco días
+  // hábiles de retracto con devolución completa. El reembolso en 15 días es el
+  // plazo de la Ley 2439 de 2024. La escala de arriba rige después de eso.
+  { id: 'retracto', titulo: 'retractoTitulo', indice: 'retracto', Icono: Banknote,
+    parrafos: ['retracto1', 'retracto2', 'retracto3'] },
   { id: 'reprogramacion', titulo: 'reprogramacionTitulo', indice: 'reprogramacion', Icono: CalendarX,
     parrafos: ['repro1', 'repro2'] },
   { id: 'cambios', titulo: 'fincaTitulo', indice: 'cambios', Icono: RefreshCw,
@@ -190,7 +197,7 @@ export default async function PoliticaCancelacionPage({
 
             <div className="politica-parrafos">
               {parrafos.map(clave => (
-                <p key={clave}>{t(clave)}</p>
+                <p key={clave}>{t(clave, { email: CONTACTO.email })}</p>
               ))}
             </div>
           </article>

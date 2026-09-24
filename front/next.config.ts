@@ -1,7 +1,33 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
+/**
+ * Cabeceras de seguridad para todas las rutas. Vercel solo ponía HSTS.
+ *
+ * La CSP es la parte que no rompe nada: prohíbe que otro sitio meta estas
+ * páginas en un iframe (clickjacking sobre el panel), que un `<base>` inyectado
+ * cambie a dónde apuntan los enlaces relativos, los plugins, y que un
+ * formulario mande a otro dominio. No limita `script-src`: Next mete scripts en
+ * línea en cada página, y cerrarlo exige nonces, que obligan a renderizar todo
+ * en cada petición y apagan la caché estática. Si algún día se hace, es aquí.
+ */
+const CABECERAS_SEGURIDAD = [
+  {
+    key: 'Content-Security-Policy',
+    value: "frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'",
+  },
+  // El gemelo viejo de frame-ancestors, para navegadores que no leen la CSP.
+  { key: 'X-Frame-Options', value: 'DENY' },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=()' },
+];
+
 const nextConfig: NextConfig = {
+  // Anunciar «X-Powered-By: Next.js» solo le ahorra trabajo a quien busca qué
+  // versión atacar.
+  poweredByHeader: false,
+
   // El portafolio comercial es un único HTML estático en public/portafolio: 21 hojas
   // A4 horizontales con las fuentes y las imágenes incrustadas. Al no pedir ningún
   // asset relativo, el rewrite es seguro y deja la URL corta para compartirlo.
@@ -26,6 +52,7 @@ const nextConfig: NextConfig = {
   // hasta que expire, y no hay forma de purgarla desde aquí.
   async headers() {
     return [
+      { source: '/:path*', headers: CABECERAS_SEGURIDAD },
       {
         source: '/:carpeta(images|certificaciones|fonts)/:path*',
         headers: [

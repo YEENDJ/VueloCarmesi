@@ -15,6 +15,9 @@ const CONFIG: Record<string, { bg: string; txt: string; label: string }> = {
   cotizada:    { bg: 'var(--status-cotizada-bg)',   txt: 'var(--status-cotizada-txt)',   label: 'Cotizada' },
   cerrada:     { bg: 'var(--status-confirmada-bg)', txt: 'var(--status-confirmada-txt)', label: 'Cerrada' },
   perdida:     { bg: 'var(--status-cancelada-bg)',  txt: 'var(--status-cancelada-txt)',  label: 'Perdida' },
+  // Mensajes de contacto: el mismo ámbar para lo que espera respuesta.
+  nuevo:       { bg: 'var(--status-pendiente-bg)',  txt: 'var(--status-pendiente-txt)',  label: 'Nuevo' },
+  respondido:  { bg: 'var(--status-confirmada-bg)', txt: 'var(--status-confirmada-txt)', label: 'Respondido' },
 }
 
 export default function StatusBadge({ estado }: { estado: Estado }) {

@@ -12,6 +12,13 @@ export class SiteConfigController {
     return this.service.getAll(idiomaValido(idioma))
   }
 
+  /** Todo, con las claves privadas. Es lo que lee el panel. */
+  @Get('admin')
+  @UseGuards(AdminGuard)
+  getAdmin() {
+    return this.service.getAll(undefined, true)
+  }
+
   @Patch()
   @UseGuards(AdminGuard)
   patch(@Body() data: Record<string, string>) {

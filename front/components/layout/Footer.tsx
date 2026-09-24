@@ -13,6 +13,7 @@ export default function Footer() {
   const t = useTranslations('footer')
   const tNav = useTranslations('nav')
   const tw = useTranslations('whatsapp')
+  const ta = useTranslations('avales')
 
   // Dentro del componente y no a nivel de módulo: el mensaje de WhatsApp sale
   // del catálogo y necesita el idioma de la página.
@@ -49,6 +50,22 @@ export default function Footer() {
           />
           <p style={{ fontSize: '14px', lineHeight: 1.6, color: 'rgba(255, 234, 202, 0.8)', maxWidth: '30ch' }}>
             {t('lema')}
+          </p>
+          {/* El art. 50 de la Ley 1480, modificado por la Ley 2439 de 2024, exige
+              a quien vende en línea un enlace visible a la Superintendencia. Va
+              bajo el logo, en el pie de todas las páginas de la tienda: la ley
+              pide que se vea, no fija el lugar. El logo de la SIC es opcional;
+              el nombre no se traduce porque es la entidad.
+              El aviso de ESCNNA no va aquí: está en las páginas donde se ofrecen
+              los servicios, ver components/legal/AvisoEscnna.tsx. */}
+          <p className="footer-sic">
+            {t.rich('sic', {
+              enlace: (texto) => (
+                <a href="https://www.sic.gov.co" target="_blank" rel="noopener noreferrer" className="footer-aviso-enlace">
+                  {texto}
+                </a>
+              ),
+            })}
           </p>
         </div>
 
@@ -116,10 +133,13 @@ export default function Footer() {
 
       {/* Los cuatro avales van a lo ancho, no apretados en una columna: es la
           tira de confianza de la marca y se lee igual que en el portafolio. */}
-      <TiraConfianza />
+      <TiraConfianza sinLegal />
 
       <div className="footer-legal" style={{ marginTop: '24px', paddingTop: '20px', fontWeight: 700, fontSize: '12px', color: 'rgba(255, 234, 202, 0.6)' }}>
         <span>{t('derechos', { anio: new Date().getFullYear() })}</span>
+        {/* El RNT y la marca, que la tira de sellos lleva de pie: acá, en la
+            misma fila que el copyright, sigue a la vista en todas las páginas. */}
+        <span>{ta('legal')}</span>
         <span>
           {t('desarrolladoPor')}{' '}
           <a href={AGENCIA.url} target="_blank" rel="noopener noreferrer" className="footer-credito">

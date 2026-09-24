@@ -64,14 +64,7 @@ export async function sesionAdmin(): Promise<
 
   return {
     ok: true,
-    headers: {
-      'x-admin-key': clave,
-      // TRANSICIÓN — borrar cuando Render tenga el AdminGuard nuevo. Si Vercel
-      // publica antes que Render, el backend viejo todavía mira esta cookie y
-      // sin ella el panel se quedaría sin poder guardar en esa ventana. El
-      // backend nuevo la ignora.
-      cookie: 'admin_session=authenticated',
-    },
+    headers: { 'x-admin-key': clave },
   }
 }
 

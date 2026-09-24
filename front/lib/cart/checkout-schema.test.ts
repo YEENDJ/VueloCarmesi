@@ -28,4 +28,16 @@ describe('checkoutSchema', () => {
     expect(checkoutSchema.safeParse({ ...VALID, ciudad: '' }).success).toBe(false)
     expect(checkoutSchema.safeParse({ ...VALID, codigoPostal: '' }).success).toBe(false)
   })
+
+  it('rechaza teléfono con letras aunque tenga 7 caracteres', () => {
+    expect(checkoutSchema.safeParse({ ...VALID, telefono: 'abcdefg' }).success).toBe(false)
+  })
+
+  it('acepta teléfono con prefijo y espacios', () => {
+    expect(checkoutSchema.safeParse({ ...VALID, telefono: '+57 300 123 4567' }).success).toBe(true)
+  })
+
+  it('rechaza dirección de más de 200 caracteres', () => {
+    expect(checkoutSchema.safeParse({ ...VALID, direccion: 'x'.repeat(201) }).success).toBe(false)
+  })
 })
