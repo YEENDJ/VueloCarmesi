@@ -34,6 +34,9 @@ export default function CheckoutPage() {
           items: items.map(i => ({ productoId: i.productoId, cantidad: i.q })),
         }),
       })
+      // 429: el backend frena a quien manda muchos pedidos seguidos. Su mensaje
+      // viene en inglés técnico; este sale del catálogo.
+      if (res.status === 429) throw new Error(t('errorDemasiados'))
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
         throw new Error(body?.message ?? `Error ${res.status}`)

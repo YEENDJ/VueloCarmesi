@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common'
+import { ThrottlerModule } from '@nestjs/throttler'
+import { LIMITES_FORMULARIOS } from './common/limite-formularios'
 import { PrismaService } from './prisma.service'
 import { ExperienciasModule } from './experiencias/experiencias.module'
 import { ReservasModule } from './reservas/reservas.module'
@@ -13,6 +15,7 @@ import { TraduccionModule } from './traduccion/traduccion.module'
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot(LIMITES_FORMULARIOS),
     ExperienciasModule,
     ReservasModule,
     ProductosModule,

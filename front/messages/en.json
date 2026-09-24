@@ -360,6 +360,7 @@
       "resumenPedido": "Your order summary",
       "coordinamosMetodo": "We arrange the payment method when we confirm your order.",
       "errorPedido": "The order could not be processed",
+      "errorDemasiados": "Too many orders in a row. Wait a few minutes and try again, or message us on WhatsApp.",
       "total": "Total",
       "nombre": "Full name",
       "email": "Email",

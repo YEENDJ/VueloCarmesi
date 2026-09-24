@@ -1,4 +1,6 @@
 import { Test } from '@nestjs/testing'
+import { ThrottlerModule } from '@nestjs/throttler'
+import { LIMITES_FORMULARIOS } from '../common/limite-formularios'
 import { ReservasController } from './reservas.controller'
 import { ReservasService } from './reservas.service'
 
@@ -13,6 +15,7 @@ describe('ReservasController', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     const module = await Test.createTestingModule({
+      imports: [ThrottlerModule.forRoot(LIMITES_FORMULARIOS)],
       controllers: [ReservasController],
       providers: [{ provide: ReservasService, useValue: mockService }],
     }).compile()

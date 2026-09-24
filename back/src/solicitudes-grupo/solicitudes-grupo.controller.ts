@@ -3,6 +3,7 @@ import { SolicitudesGrupoService } from './solicitudes-grupo.service'
 import { CreateSolicitudGrupoDto } from './dto/create-solicitud-grupo.dto'
 import { UpdateEstadoSolicitudDto } from './dto/update-estado-solicitud.dto'
 import { AdminGuard } from '../common/guards/admin.guard'
+import { LimiteFormularios } from '../common/limite-formularios'
 
 /**
  * Solo el POST es público: es el formulario. Todo lo demás lleva nombre,
@@ -14,6 +15,7 @@ export class SolicitudesGrupoController {
   constructor(private readonly service: SolicitudesGrupoService) {}
 
   @Post()
+  @LimiteFormularios()
   create(@Body() dto: CreateSolicitudGrupoDto) {
     return this.service.create(dto)
   }
