@@ -2,6 +2,7 @@ import { useTranslations, useLocale } from 'next-intl'
 import { ArrowLeft } from 'lucide-react'
 import { Link, getPathname } from '@/lib/i18n/navigation'
 import { SITIO } from '@/lib/sitio'
+import { jsonLdHtml } from '@/lib/json-ld-html'
 
 /**
  * El enlace al padre de una página, arriba del titular.
@@ -65,7 +66,7 @@ export default function MigaSuperior({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(datos) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml(datos) }}
       />
       <nav className="miga" aria-label={t('aria')}>
         <Link href={href} className="miga-enlace">

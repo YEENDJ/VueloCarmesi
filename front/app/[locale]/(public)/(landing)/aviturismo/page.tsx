@@ -21,6 +21,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { CONTACTO, MAPA, whatsappCon } from '@/lib/contacto'
+import { jsonLdHtml } from '@/lib/json-ld-html'
 
 /**
  * Página propia de aviturismo. La fuente es la hoja 12 del portafolio 2026
@@ -301,7 +302,7 @@ export default async function AviturismoPage({
     <section className="page-shell avi">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd(t, locale)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml(jsonLd(t, locale)) }}
       />
 
       <p className="avi-kicker">

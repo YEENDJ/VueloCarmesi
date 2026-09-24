@@ -5,6 +5,7 @@ import { getPathname } from '@/lib/i18n/navigation'
 import { etiquetaDeIdioma, ID_NEGOCIO, ID_SITIO } from '@/lib/jsonld'
 import { SITIO } from '@/lib/sitio'
 import ContactoContenido from '@/components/contacto/ContactoContenido'
+import { jsonLdHtml } from '@/lib/json-ld-html'
 
 /**
  * /contacto era un componente cliente de cabo a rabo —lleva formulario— y por
@@ -80,7 +81,7 @@ export default async function ContactoPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd(t, locale, url)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml(jsonLd(t, locale, url)) }}
       />
       <ContactoContenido />
     </>

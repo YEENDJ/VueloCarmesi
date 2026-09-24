@@ -5,6 +5,7 @@ import { setRequestLocale, getTranslations } from 'next-intl/server'
 import { routing, IDIOMAS } from '@/lib/i18n/routing'
 import { grafoDelSitio } from '@/lib/jsonld'
 import { SITIO } from '@/lib/sitio'
+import { jsonLdHtml } from '@/lib/json-ld-html'
 
 /** Prerrenderiza las dos ramas de idioma en el build en vez de bajo demanda. */
 export function generateStaticParams() {
@@ -133,7 +134,7 @@ export default async function LocaleLayout({
       <body>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(grafo) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdHtml(grafo) }}
         />
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>

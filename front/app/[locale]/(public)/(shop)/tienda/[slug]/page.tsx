@@ -17,6 +17,7 @@ import { nodoProducto } from '@/lib/jsonld'
 import { SITIO } from '@/lib/sitio'
 import type { Metadata } from 'next'
 import { CreditCard, ShieldCheck, Store } from 'lucide-react'
+import { jsonLdHtml } from '@/lib/json-ld-html'
 
 // El segmento caduca siempre, haya respondido el backend o no. Sin esto Next
 // deriva el revalidate solo de los fetch que completaron: un detalle renderizado
@@ -166,7 +167,7 @@ export default async function ProductoDetallePage({
           un dato: es una cadena que hay que adivinar. */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(datosProducto) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml(datosProducto) }}
       />
       {/* No pinta nada: le da al selector de idioma el slug de esta ficha en
           cada lengua, para que cambiar de idioma no pierda la ficha. */}

@@ -16,6 +16,7 @@ import { formatPrecio } from '@/lib/format'
 import { INSTITUCIONES_EDUCATIVAS, ORGANIZACIONES } from '@/lib/clientes'
 import RutaTramos from '@/components/grupos/RutaTramos'
 import FormularioGrupo from '@/components/grupos/FormularioGrupo'
+import { jsonLdHtml } from '@/lib/json-ld-html'
 
 /**
  * Página de grupos: colegios, universidades y empresas.
@@ -248,7 +249,7 @@ export default async function GruposPage({
     <section className="page-shell grp">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd(t, locale)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml(jsonLd(t, locale)) }}
       />
 
       <p className="grp-kicker">

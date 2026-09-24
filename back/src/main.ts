@@ -12,6 +12,10 @@ async function bootstrap() {
   // X-Forwarded-For, que el cliente puede inventar; se prefiere así porque el
   // error contrario —juntar a todos en una IP— bloquearía a clientes reales.
   app.set('trust proxy', true)
+  // Anunciar «X-Powered-By: Express» solo le ahorra trabajo a quien busca qué
+  // atacar. Tampoco hacen falta más cabeceras: el backend solo responde JSON y
+  // no sirve páginas que se puedan incrustar o interpretar como HTML.
+  app.disable('x-powered-by')
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
@@ -21,7 +25,9 @@ async function bootstrap() {
   app.enableCors({
     // acepta el dominio con y sin www: son orígenes distintos para CORS
     origin: [frontendUrl, frontendUrl.replace('://', '://www.')],
-    credentials: true,
+    // Sin credenciales: ninguna petición del navegador al backend lleva cookies.
+    // El panel habla por el puente del front, de servidor a servidor.
+    credentials: false,
   })
   await app.listen(process.env.PORT ?? 3001)
 }

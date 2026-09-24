@@ -18,6 +18,7 @@ import { metaDescription, parrafosRelato } from '@/lib/seo'
 import { nodoExperiencia } from '@/lib/jsonld'
 import { SITIO } from '@/lib/sitio'
 import type { Metadata } from 'next'
+import { jsonLdHtml } from '@/lib/json-ld-html'
 
 // El segmento caduca siempre, haya respondido el backend o no. Sin esto Next
 // deriva el revalidate solo de los fetch que completaron: un detalle renderizado
@@ -170,7 +171,7 @@ export default async function ExperienciaDetallePage({
           —ver lib/jsonld.ts—. */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(datosExperiencia) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml(datosExperiencia) }}
       />
       {/* No pinta nada: le da al selector de idioma el slug de esta ficha en
           cada lengua, para que cambiar de idioma no pierda la ficha. */}
