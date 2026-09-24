@@ -11,8 +11,8 @@ const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
  * exigen `x-admin-key`, una clave que solo tiene el servidor del front y que el
  * navegador nunca ve; el puente la pone después de validar la sesión firmada.
  *
- * Contra `BASE` quedan solo las lecturas públicas —experiencias, productos,
- * configuración—, las mismas que usa la web.
+ * Contra `BASE` quedan solo las lecturas públicas —experiencias y productos—,
+ * las mismas que usa la web.
  */
 const ADMIN = '/api/admin/backend'
 
@@ -184,8 +184,10 @@ export function deleteSolicitudGrupo(id: string): Promise<void> {
 }
 
 // ── SiteConfig ─────────────────────────────────────────────
+// Por el puente y no contra `BASE`: trae el correo de alertas, que el
+// `GET /site-config` público ya no entrega.
 export function getSiteConfigAdmin(): Promise<Record<string, string>> {
-  return fetch(`${BASE}/site-config`).then(checked)
+  return fetch('/api/admin/site-config').then(checked)
 }
 export function patchSiteConfig(data: Record<string, string>): Promise<Record<string, string>> {
   return fetch('/api/admin/site-config', {

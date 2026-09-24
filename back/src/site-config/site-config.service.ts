@@ -31,6 +31,13 @@ const CLAVES_TRADUCIBLES = [
  */
 const claveEn = (clave: string, idioma: string) => `${clave}__${idioma}`
 
+/**
+ * Claves que son del panel y no de la web. `GET /site-config` es público y lo
+ * devolvía todo, incluido el correo que recibe las alertas, que ninguna página
+ * usa. Solo las ve `GET /site-config/admin`, detrás del AdminGuard.
+ */
+export const CLAVES_PRIVADAS = ['admin_email'] as const
+
 @Injectable()
 export class SiteConfigService {
   private readonly logger = new Logger(SiteConfigService.name)
@@ -46,15 +53,20 @@ export class SiteConfigService {
    * Las claves sufijadas no salen en el resultado: quien consume esto recibe
    * `resumen_cancelacion` con el valor del idioma que pidió, y no tiene que
    * saber que existe el sufijo.
+   *
+   * Sin `conPrivadas` quedan fuera las de `CLAVES_PRIVADAS`: es lo que se
+   * sirve al público.
    */
-  async getAll(idioma = IDIOMA_ORIGEN): Promise<Record<string, string>> {
+  async getAll(idioma = IDIOMA_ORIGEN, conPrivadas = false): Promise<Record<string, string>> {
     const rows = await this.prisma.siteConfig.findMany()
     const todo = Object.fromEntries(rows.map(r => [r.key, r.value]))
+    const privadas: readonly string[] = CLAVES_PRIVADAS
 
     const salida: Record<string, string> = {}
     for (const [clave, valor] of Object.entries(todo)) {
       // Las sufijadas se resuelven abajo; acá solo pasan las originales.
       if (clave.includes('__')) continue
+      if (!conPrivadas && privadas.includes(clave)) continue
       salida[clave] = valor
     }
 
@@ -87,7 +99,7 @@ export class SiteConfigService {
     )
 
     await this.traducirCambios(data)
-    return this.getAll()
+    return this.getAll(IDIOMA_ORIGEN, true)
   }
 
   /**
