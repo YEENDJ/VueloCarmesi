@@ -99,6 +99,13 @@ export class NotificacionesService {
   }): Promise<void> {
     const expNombre = reserva.experiencia?.nombre ?? 'Experiencia'
     const fechaStr = fechaEnLetras(reserva.fecha)
+    // Todo lo que escribió el visitante va escapado antes de entrar al HTML.
+    // Sin esto, un nombre como `<a href="…">Paga aquí</a>` salía como enlace en
+    // un correo enviado desde la cuenta de la finca a la dirección que el
+    // visitante quisiera: phishing con remitente legítimo.
+    const nombre = escapeHtml(reserva.nombre)
+    const email = escapeHtml(reserva.email)
+    const experiencia = escapeHtml(expNombre)
 
     await this.enviarPorSeparado(`Reserva ${reserva.id}`, {
       telegram: () => this.telegram.send(
@@ -108,19 +115,19 @@ export class NotificacionesService {
         reserva.email,
         `Confirmación de tu reserva — Vuelo Carmesí`,
         this.email.templateConfirmacionReserva({
-          nombre: reserva.nombre,
-          experiencia: expNombre,
+          nombre,
+          experiencia,
           fecha: fechaStr,
           cantidadPersonas: String(reserva.cantidadPersonas),
-          email: reserva.email,
+          email,
         }),
       ),
       'correo al admin': () => this.alertarAdmin(`[Reserva] Nueva: ${reserva.nombre}`, {
         tipo: '📅 Nueva Reserva',
         filas: [
-          filaHtml('Nombre', reserva.nombre),
-          filaHtml('Email', reserva.email),
-          filaHtml('Experiencia', expNombre),
+          filaHtml('Nombre', nombre),
+          filaHtml('Email', email),
+          filaHtml('Experiencia', experiencia),
           filaHtml('Fecha', fechaStr),
           filaHtml('Personas', String(reserva.cantidadPersonas)),
         ].join(''),
@@ -134,7 +141,11 @@ export class NotificacionesService {
     direccion: string; ciudad: string; codigoPostal: string; total: number
     items: ItemPedido[]
   }): Promise<void> {
-    const direccionCompleta = formatDireccionPedido(pedido)
+    // Escapados por lo mismo que en la reserva: nombre y dirección los escribe
+    // el visitante. Los productos ya salen escapados de tablaItemsHtml.
+    const nombre = escapeHtml(pedido.nombre)
+    const email = escapeHtml(pedido.email)
+    const direccionCompleta = escapeHtml(formatDireccionPedido(pedido))
     const itemsTableCliente = tablaItemsHtml(pedido.items, 'cliente')
     const itemsTableAdmin = tablaItemsHtml(pedido.items, 'admin')
     const lineasItems = lineasItemsTexto(pedido.items)
@@ -147,7 +158,7 @@ export class NotificacionesService {
         pedido.email,
         `Recibimos tu pedido — Vuelo Carmesí`,
         this.email.templateConfirmacionPedido({
-          nombre: pedido.nombre,
+          nombre,
           id: pedido.id,
           direccion: direccionCompleta,
           itemsTable: itemsTableCliente,
@@ -157,8 +168,8 @@ export class NotificacionesService {
         tipo: '🛒 Nuevo Pedido',
         filas: [
           filaHtml('N° pedido', pedido.id),
-          filaHtml('Nombre', pedido.nombre),
-          filaHtml('Email', pedido.email),
+          filaHtml('Nombre', nombre),
+          filaHtml('Email', email),
           filaHtml('Dirección', direccionCompleta),
           itemsTableAdmin,
         ].join(''),
