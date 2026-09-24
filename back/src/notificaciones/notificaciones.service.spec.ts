@@ -10,6 +10,7 @@ const mockEmail = {
   templateConfirmacionPedido: jest.fn().mockReturnValue('<html-cliente>'),
   templateAlertaAdmin: jest.fn().mockReturnValue('<html-admin>'),
   templateConfirmacionReserva: jest.fn().mockReturnValue('<html-reserva>'),
+  templateContactoRecibido: jest.fn().mockReturnValue('<html-contacto>'),
 }
 
 const mockTelegram = { send: jest.fn().mockResolvedValue(undefined) }
@@ -134,6 +135,38 @@ describe('NotificacionesService: HTML del visitante en los correos', () => {
     const cliente = mockEmail.templateConfirmacionReserva.mock.calls[0][0]
     expect(cliente.nombre).toContain('&lt;a href=')
     expect(mockEmail.templateAlertaAdmin.mock.calls[0][0].filas).not.toContain('<a href')
+  })
+})
+
+describe('NotificacionesService.enviarNuevoContacto', () => {
+  let service: NotificacionesService
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        NotificacionesService,
+        { provide: EmailService, useValue: mockEmail },
+        { provide: TelegramService, useValue: mockTelegram },
+        { provide: PrismaService, useValue: mockPrisma },
+      ],
+    }).compile()
+    service = module.get(NotificacionesService)
+    jest.clearAllMocks()
+    mockPrisma.siteConfig.findUnique.mockResolvedValue({ value: 'admin@vuelocarmesi.com' })
+  })
+
+  it('pone el radicado en el acuse, en el asunto, en Telegram y en el aviso al admin', async () => {
+    await service.enviarNuevoContacto({
+      id: 'cmabcdef4f7k2q', nombre: 'Ana', email: 'ana@example.com', mensaje: 'Reclamo por un pedido',
+      createdAt: new Date('2026-09-24T15:32:00Z'),
+    })
+
+    const vars = mockEmail.templateContactoRecibido.mock.calls[0][0]
+    expect(vars.radicado).toBe('VC-20260924-4F7K2Q')
+    expect(vars.recibido).toContain('24 de septiembre de 2026')
+    expect(mockEmail.send.mock.calls[0][1]).toContain('VC-20260924-4F7K2Q')
+    expect(mockTelegram.send.mock.calls[0][0]).toContain('VC-20260924-4F7K2Q')
+    expect(mockEmail.templateAlertaAdmin.mock.calls[0][0].filas).toContain('VC-20260924-4F7K2Q')
   })
 })
 

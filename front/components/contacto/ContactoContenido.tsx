@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/IconosRedes";
 import { CONTACTO, REDES, whatsappCon } from "@/lib/contacto";
 import AvisoGrupos from "@/components/grupos/AvisoGrupos";
+import { radicado, ZONA_RADICADO } from "@/lib/radicado";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
@@ -54,6 +55,10 @@ export default function ContactoContenido() {
   const [estado, setEstado] = useState<"idle" | "loading" | "ok" | "error">(
     "idle",
   );
+  // Lo que responde el backend al guardar: con eso se arma el radicado, que la
+  // Ley 2439 de 2024 pide para darle seguimiento a un reclamo.
+  const [recibido, setRecibido] = useState<{ id: string; createdAt: string } | null>(null);
+  const format = useFormatter();
 
   const {
     register,
@@ -77,6 +82,10 @@ export default function ContactoContenido() {
         body: JSON.stringify({ ...data, telefono: data.telefono || undefined }),
       });
       if (!res.ok) throw new Error();
+      // Si el cuerpo no llega completo el mensaje igual quedó guardado: se
+      // agradece sin radicado en vez de mostrar un error que no es cierto.
+      const cuerpo = await res.json().catch(() => null);
+      if (cuerpo?.id && cuerpo?.createdAt) setRecibido(cuerpo);
       setEstado("ok");
     } catch {
       setEstado("error");
@@ -109,9 +118,30 @@ export default function ContactoContenido() {
         <div className="contacto-formulario">
           <h2 className="contacto-subtitulo">{t("escribenos")}</h2>
           {estado === "ok" ? (
-            <p style={{ color: "var(--color-crimson)", fontSize: "1.1rem" }}>
-              {t("gracias")}
-            </p>
+            <div role="status" style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <p style={{ color: "var(--color-crimson)", fontSize: "1.1rem" }}>
+                {t("gracias")}
+              </p>
+              {recibido && (
+                <>
+                  <p style={{ color: "var(--color-brown)", overflowWrap: "anywhere" }}>
+                    {t.rich("radicado", {
+                      numero: radicado(recibido.id, recibido.createdAt),
+                      b: (texto) => <strong style={{ fontFamily: "monospace", fontSize: "1.05em" }}>{texto}</strong>,
+                    })}
+                  </p>
+                  <p style={{ color: "var(--color-brown)", fontSize: "0.95rem", lineHeight: 1.6 }}>
+                    {t("radicadoTexto", {
+                      fecha: format.dateTime(new Date(recibido.createdAt), {
+                        dateStyle: "long",
+                        timeStyle: "short",
+                        timeZone: ZONA_RADICADO,
+                      }),
+                    })}
+                  </p>
+                </>
+              )}
+            </div>
           ) : (
             <form
               onSubmit={handleSubmit(onSubmit)}

@@ -4,6 +4,7 @@ import { TelegramService } from './telegram.service'
 import { PrismaService } from '../prisma.service'
 import { formatDireccionPedido } from './format-direccion.util'
 import { escapeHtml } from './escape-html.util'
+import { fechaHoraRecibido, radicado } from './radicado.util'
 import { tablaItemsHtml, lineasItemsTexto, formatPrecio, ItemPedido } from './format-items-pedido.util'
 
 const ADMIN_URL = process.env.FRONTEND_URL ?? 'http://localhost:3000'
@@ -180,12 +181,17 @@ export class NotificacionesService {
 
   async enviarNuevoContacto(contacto: {
     id: string; nombre: string; email: string; telefono?: string | null; mensaje: string
+    createdAt: Date
   }): Promise<void> {
     // Opcional: solo sale si lo dejaron. Es el que permite contestar por WhatsApp.
     const telefono = contacto.telefono?.trim()
+    // El radicado va en los tres avisos: es con lo que el cliente hace
+    // seguimiento a un reclamo y con lo que el equipo lo encuentra.
+    const numero = radicado(contacto.id, contacto.createdAt)
+    const recibido = fechaHoraRecibido(contacto.createdAt)
     await this.enviarPorSeparado(`Contacto ${contacto.id}`, {
       telegram: () => this.telegram.send(
-        `✉️ <b>Nuevo Contacto</b>\nNombre: ${escapeHtml(contacto.nombre)}\nEmail: ${escapeHtml(contacto.email)}` +
+        `✉️ <b>Nuevo Contacto</b> · ${numero}\nNombre: ${escapeHtml(contacto.nombre)}\nEmail: ${escapeHtml(contacto.email)}` +
         (telefono ? `\nTeléfono: ${escapeHtml(telefono)}` : '') +
         `\nMensaje: ${escapeHtml(contacto.mensaje)}`,
       ),
@@ -193,15 +199,19 @@ export class NotificacionesService {
       // formulario público y van dentro del HTML de los dos correos.
       'correo al cliente': () => this.email.send(
         contacto.email,
-        `Recibimos tu mensaje — Vuelo Carmesí`,
+        `Recibimos tu mensaje (${numero}) — Vuelo Carmesí`,
         this.email.templateContactoRecibido({
           nombre: escapeHtml(contacto.nombre),
           mensaje: escapeHtml(contacto.mensaje),
+          radicado: numero,
+          recibido,
         }),
       ),
-      'correo al admin': () => this.alertarAdmin(`[Contacto] Mensaje de ${contacto.nombre}`, {
+      'correo al admin': () => this.alertarAdmin(`[Contacto] ${numero} · Mensaje de ${contacto.nombre}`, {
         tipo: '✉️ Nuevo Mensaje de Contacto',
         filas: [
+          filaHtml('Radicado', numero),
+          filaHtml('Recibido', recibido),
           filaHtml('Nombre', escapeHtml(contacto.nombre)),
           filaHtml('Email', escapeHtml(contacto.email)),
           ...(telefono ? [filaHtml('Teléfono', escapeHtml(telefono))] : []),
