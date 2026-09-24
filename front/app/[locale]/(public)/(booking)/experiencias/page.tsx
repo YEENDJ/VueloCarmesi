@@ -5,6 +5,7 @@ import { getExperiencias } from '@/lib/api/experiencias'
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { alternatesDeIdioma } from '@/lib/i18n/alternates'
+import AvisoEscnna from '@/components/legal/AvisoEscnna'
 
 export const revalidate = 60
 
@@ -73,6 +74,8 @@ export default async function ExperienciasPage({
           12, así que es justo acá donde necesita saber que los grupos grandes
           se atienden por otra vía. */}
       <AvisoGrupos variante="listado" />
+
+      <AvisoEscnna />
     </section>
   )
 }

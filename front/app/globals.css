@@ -489,7 +489,7 @@ footer :focus-visible {
 }
 
 /* Barra legal del footer: copyright a un lado, crédito de desarrollo al otro */
-/* Avisos legales del pie (ESCNNA y SIC). Texto corrido que envuelve solo:
+/* Aviso legal del pie (enlace a la SIC). Texto corrido que envuelve solo:
    sin anchos fijos, así que a 320px no desborda. Los enlaces van en línea con
    el texto, donde el área táctil de 44px no aplica (excepción de WCAG 2.5.8). */
 .footer-avisos {

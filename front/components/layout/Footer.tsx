@@ -118,21 +118,13 @@ export default function Footer() {
           tira de confianza de la marca y se lee igual que en el portafolio. */}
       <TiraConfianza />
 
-      {/* Dos avisos que la ley pide en la publicidad y en la tienda, por eso
-          van en todas las páginas y no solo en /politicas:
-          - ESCNNA: el art. 17 de la Ley 679 de 2001 obliga al prestador
-            turístico a informar las consecuencias legales en su publicidad.
-          - SIC: el art. 50 de la Ley 1480, modificado por la Ley 2439 de 2024,
-            exige a quien vende en línea un enlace visible a la Superintendencia.
-            El logo es opcional; el nombre no se traduce porque es la entidad. */}
+      {/* El art. 50 de la Ley 1480, modificado por la Ley 2439 de 2024, exige a
+          quien vende en línea un enlace visible a la Superintendencia. Va en el
+          pie para que esté en todas las páginas de la tienda. El logo es
+          opcional; el nombre no se traduce porque es la entidad.
+          El aviso de ESCNNA no va aquí: está en las páginas donde se ofrecen
+          los servicios, ver components/legal/AvisoEscnna.tsx. */}
       <div className="footer-avisos">
-        <p>
-          {t.rich('avisoEscnna', {
-            politica: (texto) => (
-              <Link href="/politicas/proteccion-infancia" className="footer-aviso-enlace">{texto}</Link>
-            ),
-          })}
-        </p>
         <p>
           {t.rich('sic', {
             enlace: (texto) => (

@@ -17,6 +17,7 @@ import { INSTITUCIONES_EDUCATIVAS, ORGANIZACIONES } from '@/lib/clientes'
 import RutaTramos from '@/components/grupos/RutaTramos'
 import FormularioGrupo from '@/components/grupos/FormularioGrupo'
 import { jsonLdHtml } from '@/lib/json-ld-html'
+import AvisoEscnna from '@/components/legal/AvisoEscnna'
 
 /**
  * Página de grupos: colegios, universidades y empresas.
@@ -682,6 +683,8 @@ export default async function GruposPage({
           </a>
         </div>
       </div>
+
+      <AvisoEscnna />
     </section>
   )
 }

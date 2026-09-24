@@ -22,6 +22,7 @@ import {
 } from 'lucide-react'
 import { CONTACTO, MAPA, whatsappCon } from '@/lib/contacto'
 import { jsonLdHtml } from '@/lib/json-ld-html'
+import AvisoEscnna from '@/components/legal/AvisoEscnna'
 
 /**
  * Página propia de aviturismo. La fuente es la hoja 12 del portafolio 2026
@@ -623,6 +624,8 @@ export default async function AviturismoPage({
           </a>
         </div>
       </div>
+
+      <AvisoEscnna />
     </section>
   )
 }

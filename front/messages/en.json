@@ -25,7 +25,6 @@
     "redes": "Social",
     "derechos": "© {anio} Vuelo Carmesí. All rights reserved.",
     "desarrolladoPor": "Built by",
-    "avisoEscnna": "The sexual exploitation and abuse of children and adolescents are crimes in Colombia, punishable under criminal and administrative law (Law 679 of 2001 and Law 1336 of 2009). <politica>Our policy</politica>.",
     "sic": "Consumer protection: <enlace>Superintendencia de Industria y Comercio</enlace>"
   },
   "sitio": {
@@ -1349,5 +1348,8 @@
     "aviturismo": "Hi! I saw the birding page on the Vuelo Carmesí website and I'd like information about birdwatching at the farm.",
     "grupos": "Hi! I saw the groups page on the Vuelo Carmesí website and I'd like information to get a quote for a group visit.",
     "grupoEnviado": "Hi! I just sent a quote request for {institucion} from the Vuelo Carmesí website and I'd like to follow up."
+  },
+  "escnna": {
+    "aviso": "The sexual exploitation and abuse of children and adolescents are crimes in Colombia, punishable under criminal and administrative law (Law 679 of 2001 and Law 1336 of 2009). <politica>Our policy</politica>."
   }
 }

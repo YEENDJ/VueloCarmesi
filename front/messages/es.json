@@ -25,7 +25,6 @@
     "redes": "Redes",
     "derechos": "© {anio} Vuelo Carmesí. Todos los derechos reservados.",
     "desarrolladoPor": "Desarrollado por",
-    "avisoEscnna": "La explotación y el abuso sexual de niños, niñas y adolescentes son delitos en Colombia y se sancionan penal y administrativamente (Ley 679 de 2001 y Ley 1336 de 2009). <politica>Nuestra política</politica>.",
     "sic": "Protección al consumidor: <enlace>Superintendencia de Industria y Comercio</enlace>"
   },
   "sitio": {
@@ -1349,5 +1348,8 @@
     "aviturismo": "¡Hola! Vi la página de aviturismo de Vuelo Carmesí y quiero información para ir a observar aves en la finca.",
     "grupos": "¡Hola! Vi la página de grupos de Vuelo Carmesí y quiero información para cotizar una visita en grupo.",
     "grupoEnviado": "¡Hola! Acabo de enviar la solicitud de cotización de {institucion} desde la página de Vuelo Carmesí y quiero hacerle seguimiento."
+  },
+  "escnna": {
+    "aviso": "La explotación y el abuso sexual de niños, niñas y adolescentes son delitos en Colombia y se sancionan penal y administrativamente (Ley 679 de 2001 y Ley 1336 de 2009). <politica>Nuestra política</politica>."
   }
 }
