@@ -24,7 +24,9 @@
     "contacto": "Contact",
     "redes": "Social",
     "derechos": "© {anio} Vuelo Carmesí. All rights reserved.",
-    "desarrolladoPor": "Built by"
+    "desarrolladoPor": "Built by",
+    "avisoEscnna": "The sexual exploitation and abuse of children and adolescents are crimes in Colombia, punishable under criminal and administrative law (Law 679 of 2001 and Law 1336 of 2009). <politica>Our policy</politica>.",
+    "sic": "Consumer protection: <enlace>Superintendencia de Industria y Comercio</enlace>"
   },
   "sitio": {
     "titulo": "Vuelo Carmesí",
@@ -412,7 +414,9 @@
     "errorNombre": "Enter your name (2 to 100 characters).",
     "errorEmail": "This email address is not valid.",
     "errorTelefono": "The phone number must have between 7 and 15 digits.",
-    "errorMensaje": "Write your message (up to {max} characters)."
+    "errorMensaje": "Write your message (up to {max} characters).",
+    "radicado": "Reference number: <b>{numero}</b>",
+    "radicadoTexto": "Received on {fecha}, Colombia time. Keep it: if your message is a request, complaint or claim, you can follow it up by replying to the confirmation email we sent you."
   },
   "grupos": {
     "meta": {
@@ -794,7 +798,11 @@
       "finca1": "Finca Agroturística Vuelo Carmesí will make every reasonable effort to keep to the established schedule. Times may be changed for reasons of force majeure, safety or extraordinary circumstances beyond its control, without this giving rise to liability for the company.",
       "finca2": "If we have to move your experience for any of those reasons, we will contact you to agree a new date subject to availability.",
       "finca3": "Birdwatching is not cancelled for lack of sightings: observing wildlife can never be guaranteed, and the guided walk goes ahead regardless.",
-      "dudasReserva": "Questions about your booking?"
+      "dudasReserva": "Questions about your booking?",
+      "retractoTitulo": "Right of withdrawal for bookings made online",
+      "retracto1": "If you booked through this website, you may withdraw within five (5) business days after the contract is made, without giving reasons and without penalty, as provided in article 47 of Law 1480 of 2011, the Colombian Consumer Statute.",
+      "retracto2": "Withdrawal does not apply once the service has begun with your agreement, which is the exception set out in the same law.",
+      "retracto3": "To exercise it, write to {email} with your booking details. We refund everything you paid, with no deductions, within the following fifteen (15) calendar days, through the same payment method or one we agree with you. Once those five business days have passed, the cancellation scale in this policy applies."
     },
     "actualizado": "Last updated: {fecha}",
     "fecha": "9 September 2026",
@@ -821,7 +829,8 @@
       "pago": "Payment",
       "cancelacion": "Cancellation",
       "reprogramacion": "Rescheduling",
-      "cambios": "Changes by the farm"
+      "cambios": "Changes by the farm",
+      "retracto": "Withdrawal"
     },
     "cancelTitulos": {
       "reserva": "Booking",
@@ -941,7 +950,7 @@
       "re3": "Legal warranty: if the product arrives defective, incomplete, expired or is not what you ordered, write to us with photos as soon as you receive it and we replace it or refund you, as you choose under the law. For food, the warranty period is the expiry date printed on the product.",
       "re4": "Payment reversal applies when the purchase was paid by card or another electronic payment instrument and there was fraud, an unrequested transaction, an undelivered product or a defective one. You request it from your bank or the payment issuer, and we support the process with the order records.",
       "reclamosTitulo": "Requests, complaints and claims",
-      "rc1": "The channel for any claim is {email}. We reply within fifteen business days.",
+      "rc1": "Claims can be sent through the contact form or to {email}. Every message sent through the form gets a reference number with date and time, which also reaches you by email and lets you follow it up. We reply within fifteen business days.",
       "rc2": "If you are not satisfied, you can turn to the Superintendency of Industry and Commerce, Colombia's consumer protection authority.",
       "rc3": "These terms are governed by Colombian law, in particular Law 1480 of 2011 —the Consumer Statute— and the rules on e-commerce and distance selling.",
       "datosTitulo": "Your data",
@@ -952,7 +961,7 @@
       "escala": {
         "retracto": {
           "cuando": "Within 5 business days of delivery",
-          "que": "Withdrawal: we refund everything within 30 calendar days at most"
+          "que": "Withdrawal: we refund everything within 15 calendar days at most"
         },
         "reversion": {
           "cuando": "If you paid by card or another electronic payment instrument",

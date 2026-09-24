@@ -24,7 +24,9 @@
     "contacto": "Contacto",
     "redes": "Redes",
     "derechos": "© {anio} Vuelo Carmesí. Todos los derechos reservados.",
-    "desarrolladoPor": "Desarrollado por"
+    "desarrolladoPor": "Desarrollado por",
+    "avisoEscnna": "La explotación y el abuso sexual de niños, niñas y adolescentes son delitos en Colombia y se sancionan penal y administrativamente (Ley 679 de 2001 y Ley 1336 de 2009). <politica>Nuestra política</politica>.",
+    "sic": "Protección al consumidor: <enlace>Superintendencia de Industria y Comercio</enlace>"
   },
   "sitio": {
     "titulo": "Vuelo Carmesí",
@@ -412,7 +414,9 @@
     "errorNombre": "Escribe tu nombre (entre 2 y 100 caracteres).",
     "errorEmail": "El correo no es válido.",
     "errorTelefono": "El teléfono debe tener entre 7 y 15 dígitos.",
-    "errorMensaje": "Escribe tu mensaje (hasta {max} caracteres)."
+    "errorMensaje": "Escribe tu mensaje (hasta {max} caracteres).",
+    "radicado": "Número de radicado: <b>{numero}</b>",
+    "radicadoTexto": "Recibido el {fecha}, hora de Colombia. Guárdalo: si tu mensaje es una petición, queja o reclamo, con él le haces seguimiento respondiendo al correo de confirmación que te enviamos."
   },
   "grupos": {
     "meta": {
@@ -794,7 +798,11 @@
       "finca1": "La Finca Agroturística Vuelo Carmesí realizará todos los esfuerzos razonables para cumplir con los horarios establecidos. Podrán modificarse por causas de fuerza mayor, razones de seguridad o circunstancias extraordinarias ajenas a su control, sin que ello genere responsabilidad para la empresa.",
       "finca2": "Si tenemos que mover tu experiencia por alguno de esos motivos, nos comunicamos contigo para acordar una nueva fecha según disponibilidad.",
       "finca3": "El avistamiento de aves no se cancela por ausencia de avistamientos: la observación de fauna silvestre nunca puede garantizarse, y el recorrido guiado se realiza igual.",
-      "dudasReserva": "¿Dudas sobre tu reserva?"
+      "dudasReserva": "¿Dudas sobre tu reserva?",
+      "retractoTitulo": "Derecho de retracto en reservas hechas en línea",
+      "retracto1": "Si reservaste a través de este sitio, puedes retractarte dentro de los cinco (5) días hábiles siguientes a la celebración del contrato, sin dar explicaciones y sin penalidad, como lo prevé el artículo 47 de la Ley 1480 de 2011, Estatuto del Consumidor.",
+      "retracto2": "El retracto no procede cuando la prestación del servicio ya comenzó con tu acuerdo, que es la excepción que prevé la misma ley.",
+      "retracto3": "Para ejercerlo, escríbenos a {email} indicando tu reserva. Te devolvemos todo lo que hayas pagado, sin descuentos, dentro de los quince (15) días calendario siguientes, por el mismo medio de pago o por el que acordemos contigo. Vencido ese plazo de cinco días hábiles, aplica la escala de cancelación de esta política."
     },
     "actualizado": "Última actualización: {fecha}",
     "fecha": "9 de septiembre de 2026",
@@ -821,7 +829,8 @@
       "pago": "Pago",
       "cancelacion": "Cancelación",
       "reprogramacion": "Reprogramación",
-      "cambios": "Cambios de la finca"
+      "cambios": "Cambios de la finca",
+      "retracto": "Retracto"
     },
     "cancelTitulos": {
       "reserva": "Reserva",
@@ -941,7 +950,7 @@
       "re3": "Garantía legal: si el producto llega defectuoso, incompleto, vencido o no corresponde a lo que pediste, escríbenos con fotos apenas lo recibas y lo reponemos o te devolvemos el dinero, a tu elección según la ley. En alimentos, el término de la garantía es la fecha de vencimiento impresa en el producto.",
       "re4": "La reversión del pago procede cuando la compra se pagó con tarjeta o con otro instrumento de pago electrónico y hubo fraude, operación no solicitada, producto no recibido o producto defectuoso. La pides ante tu banco o el emisor del medio de pago, y nosotros acompañamos el trámite con los soportes del pedido.",
       "reclamosTitulo": "Peticiones, quejas y reclamos",
-      "rc1": "El canal para cualquier reclamo es el correo {email}. Respondemos dentro de los quince días hábiles siguientes.",
+      "rc1": "Los reclamos se reciben por el formulario de contacto o en el correo {email}. Cada mensaje del formulario recibe un número de radicado con fecha y hora, que te llega también por correo y con el que le haces seguimiento. Respondemos dentro de los quince días hábiles siguientes.",
       "rc2": "Si no quedas conforme, puedes acudir a la Superintendencia de Industria y Comercio, que es la autoridad de protección al consumidor en Colombia.",
       "rc3": "Estas condiciones se rigen por la ley colombiana, en particular por la Ley 1480 de 2011 —Estatuto del Consumidor— y por las normas sobre comercio electrónico y venta a distancia.",
       "datosTitulo": "Tus datos",
@@ -952,7 +961,7 @@
       "escala": {
         "retracto": {
           "cuando": "Dentro de los 5 días hábiles siguientes a la entrega",
-          "que": "Retracto: te devolvemos todo el dinero en máximo 30 días calendario"
+          "que": "Retracto: te devolvemos todo el dinero en máximo 15 días calendario"
         },
         "reversion": {
           "cuando": "Si pagaste con tarjeta u otro instrumento de pago electrónico",

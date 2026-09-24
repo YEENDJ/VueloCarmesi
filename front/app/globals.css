@@ -489,6 +489,28 @@ footer :focus-visible {
 }
 
 /* Barra legal del footer: copyright a un lado, crédito de desarrollo al otro */
+/* Avisos legales del pie (ESCNNA y SIC). Texto corrido que envuelve solo:
+   sin anchos fijos, así que a 320px no desborda. Los enlaces van en línea con
+   el texto, donde el área táctil de 44px no aplica (excepción de WCAG 2.5.8). */
+.footer-avisos {
+  max-width: 1200px;
+  margin: 24px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255, 234, 202, 0.75);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.footer-aviso-enlace {
+  color: var(--color-cream);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .footer-legal {
   max-width: 1200px;
   margin-left: auto;
