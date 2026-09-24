@@ -1459,6 +1459,9 @@ footer :focus-visible {
    ───────────────────────────────────────────────────────── */
 .contacto-shell {
   max-width: 1040px;
+  /* Sin titular visible, el respiro grande de .page-shell dejaba los
+     subtítulos flotando lejos del navbar. 16px, como .page-shell--con-miga. */
+  padding-top: 16px;
 }
 
 .contacto-encabezado {
@@ -1563,39 +1566,42 @@ a.contacto-canal:hover {
   opacity: 0.6;
 }
 
-/* Las redes cierran la seccion como una fila propia, centrada bajo las dos
-   columnas: no pertenecen ni al formulario ni a los canales. */
-.contacto-redes-lista {
-  /* Aire con la rejilla de canales de arriba */
-  margin-top: clamp(28px, 5vw, 48px);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
+/* La pista de que «Dónde estamos» lleva al mapa: en carmesí y opaca, que la
+   nota gris de al lado no se lea como parte de la dirección. */
+.contacto-canal-enlace {
+  margin-top: 4px;
+  color: var(--color-crimson);
+  opacity: 1;
 }
 
+/* Las redes cierran la columna de canales, bajo «Dónde estamos»: solo el
+   logotipo, repartidos en el 80% central del ancho de la columna. El margen
+   de 12px que ya deja cada .contacto-canal más estos 8 igualan el hueco de 20
+   bajo el subtítulo. */
+.contacto-redes-lista {
+  width: 80%;
+  margin: 8px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Solo el logotipo, sin círculo, como en .footer-social: al pasar el cursor
+   cambia de color y nada más. El área de 44x44 sigue ahí, invisible, para el
+   dedo. El nombre de la red va en aria-label y title. */
 .contacto-red {
   display: inline-flex;
   align-items: center;
-  /* Hueco entre el logotipo y el nombre de la red */
-  gap: 9px;
-  min-height: 44px;
-  /* 16px en vez de 18: el logotipo ya aporta peso visual por el lado izquierdo
-     y con 18 la píldora quedaba desbalanceada */
-  padding: 0 16px;
-  border: 1px solid rgba(135, 43, 19, 0.2);
-  border-radius: 999px;
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 14px;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
   color: var(--color-crimson);
-  text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: color 150ms ease;
 }
 
 .contacto-red:hover {
-  background-color: var(--color-crimson);
-  color: var(--color-cream);
+  color: var(--color-orange);
 }
 
 @media (min-width: 900px) {
@@ -5741,7 +5747,8 @@ a.contacto-canal:hover {
   margin-top: clamp(2rem, 4vw, 2.75rem);
 }
 .aviso-grp-marco--contacto {
-  margin-bottom: clamp(1.5rem, 3vw, 2rem);
+  /* Va al pie de /contacto, debajo de las redes. */
+  margin-top: clamp(28px, 5vw, 48px);
 }
 
 /* Bajo el selector de personas del formulario de reserva: es el punto exacto

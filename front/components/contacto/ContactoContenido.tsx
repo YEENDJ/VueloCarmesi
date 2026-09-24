@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/IconosRedes";
 import { CONTACTO, REDES, whatsappCon } from "@/lib/contacto";
 import AvisoGrupos from "@/components/grupos/AvisoGrupos";
+import { Link } from "@/lib/i18n/navigation";
 import { radicado, ZONA_RADICADO } from "@/lib/radicado";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
@@ -30,14 +31,14 @@ const RED_LINKS = [
   {
     label: "Instagram",
     href: REDES.instagram,
-    icono: <IconoInstagram size={18} />,
+    icono: <IconoInstagram size={26} />,
   },
   {
     label: "Facebook",
     href: REDES.facebook,
-    icono: <IconoFacebook size={18} />,
+    icono: <IconoFacebook size={26} />,
   },
-  { label: "TikTok", href: REDES.tiktok, icono: <IconoTiktok size={18} /> },
+  { label: "TikTok", href: REDES.tiktok, icono: <IconoTiktok size={26} /> },
 ];
 
 /**
@@ -58,6 +59,41 @@ export default function ContactoContenido() {
   // Lo que responde el backend al guardar: con eso se arma el radicado, que la
   // Ley 2439 de 2024 pide para darle seguimiento a un reclamo.
   const [recibido, setRecibido] = useState<{ id: string; createdAt: string } | null>(null);
+
+  // En escritorio las redes bajan hasta quedar a la altura del botón de
+  // enviar, que está en la otra columna. Se mide porque ese botón se mueve:
+  // los errores de campo y el aviso de fallo lo empujan hacia abajo. En móvil
+  // las columnas se apilan y no hay nada que alinear.
+  const gridRef = useRef<HTMLDivElement>(null);
+  const redesRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const grid = gridRef.current;
+    const redes = redesRef.current;
+    if (!grid || !redes) return;
+    const escritorio = window.matchMedia("(min-width: 900px)");
+    const alinear = () => {
+      redes.style.marginTop = "";
+      const boton = grid.querySelector<HTMLElement>(
+        '.contacto-formulario button[type="submit"]',
+      );
+      if (!boton || !escritorio.matches) return;
+      const b = boton.getBoundingClientRect();
+      const r = redes.getBoundingClientRect();
+      const bajar = b.top + b.height / 2 - (r.top + r.height / 2);
+      if (bajar > 0) {
+        const base = parseFloat(getComputedStyle(redes).marginTop) || 0;
+        redes.style.marginTop = `${base + bajar}px`;
+      }
+    };
+    alinear();
+    const observador = new ResizeObserver(alinear);
+    observador.observe(grid);
+    escritorio.addEventListener("change", alinear);
+    return () => {
+      observador.disconnect();
+      escritorio.removeEventListener("change", alinear);
+    };
+  }, []);
   const format = useFormatter();
 
   const {
@@ -107,14 +143,7 @@ export default function ContactoContenido() {
           que uno visible, así que no hay motivo para desaprovecharlo. */}
       <h1 className="solo-lectores">{t("h1")}</h1>
 
-      {/* Arriba del formulario y no al pie: esta página es donde cae hoy el
-          tráfico institucional —un coordinador que no encontró capacidad de
-          grupo en ningún otro sitio— y el formulario de acá pide tres campos
-          que no sirven para cotizar. Es el desvío de mayor rendimiento del
-          proyecto y hay que verlo antes de empezar a escribir el mensaje. */}
-      <AvisoGrupos variante="contacto" />
-
-      <div className="contacto-grid">
+      <div className="contacto-grid" ref={gridRef}>
         <div className="contacto-formulario">
           <h2 className="contacto-subtitulo">{t("escribenos")}</h2>
           {estado === "ok" ? (
@@ -261,7 +290,12 @@ export default function ContactoContenido() {
             </span>
           </a>
 
-          <div className="contacto-canal contacto-canal-estatico">
+          {/* Al ancla del mapa y no a la raíz de /sobre-nosotros: la tarjeta
+              promete la ubicación, y la página abre con la historia de la finca. */}
+          <Link
+            href={{ pathname: "/sobre-nosotros", hash: "dondeestamos" }}
+            className="contacto-canal"
+          >
             <span className="contacto-canal-icono" aria-hidden="true">
               📍
             </span>
@@ -269,25 +303,33 @@ export default function ContactoContenido() {
               <span className="contacto-canal-titulo">{t("dondeEstamos")}</span>
               <span className="contacto-canal-dato">{CONTACTO.direccion}</span>
               <span className="contacto-canal-nota">{CONTACTO.municipio}</span>
+              <span className="contacto-canal-nota contacto-canal-enlace">{t("verMapa")}</span>
             </span>
+          </Link>
+
+          <div className="contacto-redes-lista" ref={redesRef}>
+            {RED_LINKS.map(({ label, href, icono }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contacto-red"
+                aria-label={label}
+                title={label}
+              >
+                {icono}
+              </a>
+            ))}
           </div>
         </aside>
-        
       </div>
-      <div className="contacto-redes-lista">
-          {RED_LINKS.map(({ label, href, icono }) => (
-            <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="contacto-red"
-            >
-              {icono}
-              {label}
-            </a>
-          ))}
-        </div>
+
+      {/* Al pie: la página abre con el formulario, que es a lo que viene casi
+          todo el que entra. El coordinador de un grupo —cuyo formulario es el
+          de /grupos, porque este no pide los datos para cotizar— encuentra el
+          desvío al terminar de recorrer los canales. */}
+      <AvisoGrupos variante="contacto" />
     </section>
   );
 }
