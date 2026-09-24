@@ -3,7 +3,7 @@ import { useState } from 'react'
 import type { AdminSolicitudGrupo, EstadoSolicitud } from '@/lib/admin/types'
 import { ESTADOS_SOLICITUD } from '@/lib/admin/types'
 import { updateEstadoSolicitud, deleteSolicitudGrupo } from '@/lib/admin/api'
-import { whatsappCon } from '@/lib/contacto'
+import { whatsappCon, numeroWhatsapp } from '@/lib/contacto'
 import StatusBadge from './StatusBadge'
 import ConfirmModal, { TrashIcon } from './ConfirmModal'
 import { nombreExperiencia, nombreTipo, fechaDia, haceCuanto } from './solicitudes-grupo'
@@ -18,19 +18,6 @@ const DESCRIPCION: Record<EstadoSolicitud, string> = {
   cotizada: 'Cotizada — enviamos precio, esperamos respuesta',
   cerrada: 'Cerrada — el grupo confirmó la visita',
   perdida: 'Perdida — no se dio',
-}
-
-/**
- * El número tal como lo escribió el coordinador, listo para wa.me.
- *
- * El formulario acepta «311 000 0000» sin indicativo, y wa.me sin indicativo
- * abre un chat con un número de otro país. Diez dígitos que empiezan por 3 son
- * un celular colombiano: se les antepone el 57. Cualquier otra cosa se deja
- * como vino, porque adivinar el país de un número extranjero es peor.
- */
-function numeroWhatsapp(telefono: string): string {
-  const digitos = telefono.replace(/\D/g, '')
-  return digitos.length === 10 && digitos.startsWith('3') ? `57${digitos}` : digitos
 }
 
 export default function SolicitudGrupoDrawer({

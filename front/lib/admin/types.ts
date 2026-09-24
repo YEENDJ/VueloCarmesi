@@ -97,6 +97,21 @@ export interface AdminSolicitudGrupo {
   createdAt: string
 }
 
+/** Mismos valores que `ESTADOS_CONTACTO` en el DTO del backend. */
+export const ESTADOS_CONTACTO = ['nuevo', 'respondido'] as const
+export type EstadoContacto = typeof ESTADOS_CONTACTO[number]
+
+/** Un mensaje del formulario de /contacto. */
+export interface AdminContacto {
+  id: string
+  nombre: string
+  email: string
+  telefono: string | null
+  mensaje: string
+  estado: EstadoContacto
+  createdAt: string
+}
+
 export interface OverviewData {
   reservasMes: number
   pedidosMes: number

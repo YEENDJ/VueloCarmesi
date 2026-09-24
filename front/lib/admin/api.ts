@@ -1,6 +1,7 @@
 import type {
   AdminReserva, AdminExperiencia, AdminProducto, AdminPedido,
   EstadoReserva, EstadoPedido, AdminSolicitudGrupo, EstadoSolicitud,
+  AdminContacto, EstadoContacto,
 } from './types'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
@@ -179,6 +180,23 @@ export function updateEstadoSolicitud(id: string, estado: EstadoSolicitud): Prom
 }
 export function deleteSolicitudGrupo(id: string): Promise<void> {
   return fetch(`${ADMIN}/solicitudes-grupo/${id}`, { method: 'DELETE' })
+    .then(checked)
+    .then(() => undefined)
+}
+
+// ── Mensajes de contacto ───────────────────────────────────
+export function getContactos(): Promise<AdminContacto[]> {
+  return fetch(`${ADMIN}/contacto`).then(checked)
+}
+export function updateEstadoContacto(id: string, estado: EstadoContacto): Promise<AdminContacto> {
+  return fetch(`${ADMIN}/contacto/${id}/estado`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ estado }),
+  }).then(checked)
+}
+export function deleteContacto(id: string): Promise<void> {
+  return fetch(`${ADMIN}/contacto/${id}`, { method: 'DELETE' })
     .then(checked)
     .then(() => undefined)
 }

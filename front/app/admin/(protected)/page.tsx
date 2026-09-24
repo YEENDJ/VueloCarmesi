@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
-import type { AdminReserva, AdminPedido, AdminProducto, AdminSolicitudGrupo } from '@/lib/admin/types'
-import { getReservas, getPedidos, getProductosAdmin, getSolicitudesGrupo } from '@/lib/admin/api'
+import type { AdminReserva, AdminPedido, AdminProducto, AdminSolicitudGrupo, AdminContacto } from '@/lib/admin/types'
+import { getReservas, getPedidos, getProductosAdmin, getSolicitudesGrupo, getContactos } from '@/lib/admin/api'
 import StatCard from '@/components/admin/StatCard'
 import StatusBadge from '@/components/admin/StatusBadge'
 import ReservasChart from '@/components/admin/ReservasChart'
@@ -13,17 +13,19 @@ export default function AdminOverviewPage() {
   const [pedidos, setPedidos] = useState<AdminPedido[]>([])
   const [productos, setProductos] = useState<AdminProducto[]>([])
   const [solicitudes, setSolicitudes] = useState<AdminSolicitudGrupo[]>([])
+  const [contactos, setContactos] = useState<AdminContacto[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Las solicitudes van por el puente con sesión y pueden fallar por su
-    // cuenta (un 401 al vencerse la cookie): sin el catch, ese fallo dejaba
+    // Las solicitudes y los mensajes van por el puente con sesión y pueden
+    // fallar por su cuenta (un 401 al vencerse la cookie): sin el catch, ese fallo dejaba
     // el Overview entero en «Cargando…» aunque lo demás hubiera llegado.
     Promise.all([
       getReservas(), getPedidos(), getProductosAdmin(),
       getSolicitudesGrupo().catch(() => [] as AdminSolicitudGrupo[]),
-    ]).then(([r, p, pr, sg]) => {
-      setReservas(r); setPedidos(p); setProductos(pr); setSolicitudes(sg); setLoading(false)
+      getContactos().catch(() => [] as AdminContacto[]),
+    ]).then(([r, p, pr, sg, c]) => {
+      setReservas(r); setPedidos(p); setProductos(pr); setSolicitudes(sg); setContactos(c); setLoading(false)
     })
   }, [])
 
@@ -42,6 +44,7 @@ export default function AdminOverviewPage() {
   const ingresosMes = pedidosMes.reduce((s, p) => s + p.total, 0)
   const stockBajo = productos.filter(p => p.stock > 0 && p.stock < 5).length
   const cotizacionesNuevas = solicitudes.filter(s => s.estado === 'nueva').length
+  const mensajesNuevos = contactos.filter(c => c.estado === 'nuevo').length
 
   const reservasPorSemana = [1, 2, 3, 4].map(sem => ({
     semana: `Sem ${sem}`,
@@ -73,6 +76,9 @@ export default function AdminOverviewPage() {
         <StatCard label="Stock bajo" value={stockBajo} icon="⚠️" alerta={stockBajo > 0} />
         <Link href="/admin/grupos" style={{ flex: 1, minWidth: 180, display: 'flex', textDecoration: 'none', color: 'inherit' }}>
           <StatCard label="Cotizaciones nuevas" value={cotizacionesNuevas} icon="🏫" alerta={cotizacionesNuevas > 0} />
+        </Link>
+        <Link href="/admin/mensajes" style={{ flex: 1, minWidth: 180, display: 'flex', textDecoration: 'none', color: 'inherit' }}>
+          <StatCard label="Mensajes sin responder" value={mensajesNuevos} icon="✉️" alerta={mensajesNuevos > 0} />
         </Link>
       </div>
 
