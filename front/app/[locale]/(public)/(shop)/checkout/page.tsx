@@ -75,6 +75,13 @@ export default function CheckoutPage() {
         <Input label={t('ciudad')} error={errors.ciudad?.message && t(errors.ciudad.message)} {...register('ciudad')} />
         <Input label={t('codigoPostal')} error={errors.codigoPostal?.message && t(errors.codigoPostal.message)} {...register('codigoPostal')} />
 
+        {/* Honeypot: fuera de pantalla, sin tabulación y sin autocompletado. Los
+            humanos no lo ven; los bots lo llenan y el backend los descarta. */}
+        <div className="campo-trampa" aria-hidden="true">
+          <label htmlFor="website">Website</label>
+          <input id="website" type="text" tabIndex={-1} autoComplete="off" {...register('website')} />
+        </div>
+
         {submitError && <p style={{ color: 'var(--color-crimson)', fontSize: '0.9rem' }}>{submitError}</p>}
 
         <Button type="submit" disabled={isSubmitting}>

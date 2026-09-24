@@ -113,11 +113,19 @@ function showToast(aviso: AvisoCarrito) {
   }, TOAST_DURATION_MS)
 }
 
+/**
+ * Tope por producto: el de `MAX_CANTIDAD_POR_PRODUCTO` en create-pedido.dto.ts.
+ * Más que eso es venta al por mayor y el backend rechaza el pedido.
+ */
+export const MAX_POR_PRODUCTO = 99
+
+const tope = (stock: number) => Math.min(stock, MAX_POR_PRODUCTO)
+
 export function addToCart(producto: Producto, qty = 1): void {
   if (producto.stock === 0) return
   const existing = items.find(item => item.productoId === producto.id)
   if (existing) {
-    const nextQ = Math.min(existing.q + qty, producto.stock)
+    const nextQ = Math.min(existing.q + qty, tope(producto.stock))
     items = items.map(item => item.productoId === producto.id ? { ...item, q: nextQ } : item)
   } else {
     items = [...items, {
@@ -127,7 +135,7 @@ export function addToCart(producto: Producto, qty = 1): void {
       precio: producto.precio,
       imagen: producto.imagenes?.[0] ?? producto.imagen,
       stock: producto.stock,
-      q: Math.min(qty, producto.stock),
+      q: Math.min(qty, tope(producto.stock)),
     }]
   }
   persistCart()
@@ -141,7 +149,7 @@ export function addToCart(producto: Producto, qty = 1): void {
 
 export function inc(productoId: string): void {
   items = items.map(item =>
-    item.productoId === productoId ? { ...item, q: Math.min(item.q + 1, item.stock) } : item
+    item.productoId === productoId ? { ...item, q: Math.min(item.q + 1, tope(item.stock)) } : item
   )
   persistCart()
   emit()

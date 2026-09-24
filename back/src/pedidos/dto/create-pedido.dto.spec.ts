@@ -28,4 +28,30 @@ describe('CreatePedidoDto', () => {
     expect((await validate(sinCiudad)).length).toBeGreaterThan(0)
     expect((await validate(sinCP)).length).toBeGreaterThan(0)
   })
+
+  const erroresDe = async (data: Record<string, unknown>) =>
+    (await validate(plainToInstance(CreatePedidoDto, data))).map(e => e.property)
+
+  it('rechaza cantidades negativas, cero o con decimales', async () => {
+    for (const cantidad of [-100, 0, 0.5]) {
+      expect(await erroresDe({ ...BASE, items: [{ productoId: 'p1', cantidad }] })).toContain('items')
+    }
+  })
+
+  it('rechaza un pedido sin productos', async () => {
+    expect(await erroresDe({ ...BASE, items: [] })).toContain('items')
+  })
+
+  it('rechaza email inválido y teléfono sin dígitos suficientes', async () => {
+    expect(await erroresDe({ ...BASE, email: 'no-es-email' })).toContain('email')
+    expect(await erroresDe({ ...BASE, telefono: 'abcdefg' })).toContain('telefono')
+  })
+
+  it('rechaza una dirección de más de 200 caracteres', async () => {
+    expect(await erroresDe({ ...BASE, direccion: 'x'.repeat(201) })).toContain('direccion')
+  })
+
+  it('acepta el honeypot como campo opcional', async () => {
+    expect(await erroresDe({ ...BASE, website: '' })).toEqual([])
+  })
 })

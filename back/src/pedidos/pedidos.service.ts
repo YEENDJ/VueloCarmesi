@@ -30,19 +30,29 @@ export class PedidosService {
   }
 
   async create(dto: CreatePedidoDto) {
-    const { nombre, email, telefono, direccion, ciudad, codigoPostal, items } = dto
+    // `website` es el honeypot: no es columna, así que no puede llegar a Prisma.
+    const { nombre, email, telefono, direccion, ciudad, codigoPostal, website } = dto
 
-    // Create pedido with items in a transaction (stock fetch + validation inside to avoid race condition)
+    // Bot: se responde como si hubiera salido bien, igual que en reservas.
+    // Aquí importa más que en ningún otro formulario, porque cada pedido
+    // aparta stock: sin esto un bot vaciaba la tienda sin pagar nada.
+    if (website) {
+      this.logger.warn(`Pedido descartado por honeypot: ${dto.email}`)
+      return { id: 'descartado', createdAt: new Date() }
+    }
+
+    // El mismo producto en dos líneas se junta en una. Revisadas por separado,
+    // dos líneas de 8 pasaban contra un stock de 10 y lo dejaban en -6.
+    const items = agruparItems(dto.items)
+
     const pedido = await this.prisma.$transaction(async (tx) => {
-      // Fetch all products inside the transaction
-      const productIds = items.map((i) => i.productoId)
       const productos = await tx.producto.findMany({
-        where: { id: { in: productIds } },
+        where: { id: { in: items.map((i) => i.productoId) } },
       })
+      const porId = new Map(productos.map((p) => [p.id, p]))
 
-      // Validate all products exist and have sufficient stock
       for (const item of items) {
-        const producto = productos.find((p) => p.id === item.productoId)
+        const producto = porId.get(item.productoId)
         if (!producto) {
           throw new NotFoundException(`Producto '${item.productoId}' no encontrado`)
         }
@@ -53,13 +63,28 @@ export class PedidosService {
         }
       }
 
-      // Calculate total
-      const total = items.reduce((sum, item) => {
-        const producto = productos.find((p) => p.id === item.productoId)!
-        return sum + producto.precio * item.cantidad
-      }, 0)
+      // El descuento lleva la condición dentro del UPDATE, y no solo la
+      // revisión de arriba: dos pedidos a la vez leen el mismo stock antes de
+      // que ninguno descuente, y los dos pasarían. Con `stock >= cantidad` en
+      // el WHERE el segundo no toca ninguna fila y la transacción se deshace.
+      for (const item of items) {
+        const { count } = await tx.producto.updateMany({
+          where: { id: item.productoId, stock: { gte: item.cantidad } },
+          data: { stock: { decrement: item.cantidad } },
+        })
+        if (count === 0) {
+          throw new BadRequestException(
+            `Stock insuficiente para producto '${porId.get(item.productoId)!.nombre}'`,
+          )
+        }
+      }
 
-      const pedido = await tx.pedido.create({
+      const total = items.reduce(
+        (sum, item) => sum + porId.get(item.productoId)!.precio * item.cantidad,
+        0,
+      )
+
+      return tx.pedido.create({
         data: {
           nombre,
           email,
@@ -69,28 +94,15 @@ export class PedidosService {
           codigoPostal,
           total,
           items: {
-            create: items.map((item) => {
-              const producto = productos.find((p) => p.id === item.productoId)!
-              return {
-                productoId: item.productoId,
-                cantidad: item.cantidad,
-                precio: producto.precio,
-              }
-            }),
+            create: items.map((item) => ({
+              productoId: item.productoId,
+              cantidad: item.cantidad,
+              precio: porId.get(item.productoId)!.precio,
+            })),
           },
         },
         include: { items: { include: { producto: true } } },
       })
-
-      // Decrement stock for each product
-      for (const item of items) {
-        await tx.producto.update({
-          where: { id: item.productoId },
-          data: { stock: { decrement: item.cantidad } },
-        })
-      }
-
-      return pedido
     })
 
     this.notificaciones
@@ -101,11 +113,34 @@ export class PedidosService {
   }
 
   async update(id: string, dto: UpdatePedidoDto) {
-    await this.findById(id)
-    return this.prisma.pedido.update({
-      where: { id },
-      data: { estado: dto.estado },
-      include: { items: { include: { producto: true } } },
+    const actual = await this.findById(id)
+    if (actual.estado === dto.estado) return actual
+
+    // Un pedido cancelado ya devolvió sus unidades al inventario. Sacarlo de
+    // ahí obligaría a volver a apartarlas, y puede que ya no estén: se hace un
+    // pedido nuevo, igual que una reserva cancelada no se reabre.
+    if (actual.estado === 'cancelado') {
+      throw new BadRequestException(
+        `No se puede cambiar el estado de "cancelado" a "${dto.estado}"`,
+      )
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      // Al crear el pedido se descontó el stock; si no se va a vender, vuelve.
+      // Sin esto cada pedido cancelado dejaba unidades fantasma fuera de la tienda.
+      if (dto.estado === 'cancelado') {
+        for (const item of actual.items) {
+          await tx.producto.update({
+            where: { id: item.productoId },
+            data: { stock: { increment: item.cantidad } },
+          })
+        }
+      }
+      return tx.pedido.update({
+        where: { id },
+        data: { estado: dto.estado },
+        include: { items: { include: { producto: true } } },
+      })
     })
   }
 
@@ -113,4 +148,15 @@ export class PedidosService {
     await this.findById(id)
     return this.prisma.pedido.delete({ where: { id } })
   }
+}
+
+/** Junta las líneas del mismo producto sumando sus cantidades. */
+export function agruparItems<T extends { productoId: string; cantidad: number }>(
+  items: T[],
+): { productoId: string; cantidad: number }[] {
+  const suma = new Map<string, number>()
+  for (const { productoId, cantidad } of items) {
+    suma.set(productoId, (suma.get(productoId) ?? 0) + cantidad)
+  }
+  return [...suma].map(([productoId, cantidad]) => ({ productoId, cantidad }))
 }
