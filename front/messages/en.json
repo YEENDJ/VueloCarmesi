@@ -161,7 +161,8 @@
       "errorFechaVacia": "Choose the date you would like to come.",
       "errorFecha": "Choose a date between tomorrow and the next six months.",
       "errorPersonas": "Choose how many people are coming.",
-      "errorNotas": "Comments cannot be longer than {max} characters."
+      "errorNotas": "Comments cannot be longer than {max} characters.",
+      "opcional": "optional"
     },
     "porPersonaDuracion": "per person · {duracion}",
     "cierreTexto": "Don't miss the chance to live an unforgettable agroecological experience. From {precio} per person · {duracion}",
@@ -176,8 +177,11 @@
       "enviar": "Continue to payment · {monto}",
       "nota": "We hold your spot for 30 minutes while you pay.",
       "lateral": "When you book, you pay {porcentaje}% of the total online; the rest on the day of the activity.",
-      "errorAbrir": "Your booking is on hold, but we couldn’t open the payment page. Please try again in a moment."
-    }
+      "errorAbrir": "Your booking is on hold, but we couldn’t open the payment page. Please try again in a moment.",
+      "desglose": "{precio} × {n, plural, one {# person} other {# people}}"
+    },
+    "grupoDatos": "Your details",
+    "grupoVisita": "Your visit"
   },
   "aviturismoAviso": {
     "titulo": "Birding guide to the farm",
@@ -389,10 +393,21 @@
       "errorDireccion": "Enter your address",
       "errorCiudad": "Enter your city",
       "pagar": "Pay {total}",
-      "pagoEnLinea": "You pay online on our payment provider’s secure page. We hold your items for 30 minutes while you finish.",
+      "pagoEnLinea": "We hold your items for 30 minutes while you finish.",
+      "pagoSeguro": "Secure payment",
       "errorAbrirPago": "Your order is on hold, but we couldn’t open the payment page. Please try again in a moment.",
       "pagoAnteriorEnCurso": "You have a payment waiting for your bank’s confirmation. <ver>Check its status</ver>",
-      "pedidoCodigo": "Order {codigo}"
+      "pedidoCodigo": "Order {codigo}",
+      "titulo": "Complete your purchase",
+      "bajada": "Two steps and you’re done. We’ll get in touch to arrange delivery.",
+      "ayudaDireccion": "Include the neighbourhood, apartment or a landmark if needed.",
+      "placeholderEmail": "you@email.com",
+      "placeholderDireccion": "Calle 10 # 5-30, apt 201",
+      "placeholderCiudad": "Villavicencio",
+      "verResumen": "Show summary · {n, plural, one {# product} other {# products}}",
+      "ocultarResumen": "Hide summary · {n, plural, one {# product} other {# products}}",
+      "editarCarrito": "Edit cart",
+      "cantidadPorPrecio": "{q} × {precio}"
     },
     "quitarUno": "Remove one",
     "agregarUno": "Add one",

@@ -161,7 +161,8 @@
       "errorFechaVacia": "Elige la fecha en que quieres venir.",
       "errorFecha": "Elige una fecha entre mañana y los próximos seis meses.",
       "errorPersonas": "Elige cuántas personas vienen.",
-      "errorNotas": "Los comentarios no pueden superar {max} caracteres."
+      "errorNotas": "Los comentarios no pueden superar {max} caracteres.",
+      "opcional": "opcional"
     },
     "porPersonaDuracion": "por persona · {duracion}",
     "cierreTexto": "No pierdas la oportunidad de vivir una experiencia agroecológica inolvidable. Desde {precio} por persona · {duracion}",
@@ -176,8 +177,11 @@
       "enviar": "Continuar al pago · {monto}",
       "nota": "Te apartamos el cupo por 30 minutos mientras pagas.",
       "lateral": "Al reservar pagas en línea el {porcentaje} % del total; el resto, el día de la actividad.",
-      "errorAbrir": "Tu reserva quedó apartada, pero no pudimos abrir la página de pago. Vuelve a intentarlo en un momento."
-    }
+      "errorAbrir": "Tu reserva quedó apartada, pero no pudimos abrir la página de pago. Vuelve a intentarlo en un momento.",
+      "desglose": "{precio} × {n, plural, one {# persona} other {# personas}}"
+    },
+    "grupoDatos": "Tus datos",
+    "grupoVisita": "Tu visita"
   },
   "aviturismoAviso": {
     "titulo": "Guía de aviturismo en la finca",
@@ -389,10 +393,21 @@
       "errorDireccion": "Ingresa tu dirección",
       "errorCiudad": "Ingresa tu ciudad",
       "pagar": "Pagar {total}",
-      "pagoEnLinea": "Pagas en línea en la página segura de nuestra pasarela. Te apartamos los productos por 30 minutos mientras terminas.",
+      "pagoEnLinea": "Te apartamos los productos por 30 minutos mientras terminas.",
+      "pagoSeguro": "Pago seguro",
       "errorAbrirPago": "Tu pedido quedó apartado, pero no pudimos abrir la página de pago. Vuelve a intentarlo en un momento.",
       "pagoAnteriorEnCurso": "Tienes un pago esperando la confirmación de tu banco. <ver>Ver cómo va</ver>",
-      "pedidoCodigo": "Pedido {codigo}"
+      "pedidoCodigo": "Pedido {codigo}",
+      "titulo": "Finaliza tu compra",
+      "bajada": "Dos pasos y listo. Te escribimos para coordinar el envío.",
+      "ayudaDireccion": "Incluye barrio, apartamento o una referencia si hace falta.",
+      "placeholderEmail": "tu@email.com",
+      "placeholderDireccion": "Calle 10 # 5-30, apto 201",
+      "placeholderCiudad": "Villavicencio",
+      "verResumen": "Ver resumen · {n, plural, one {# producto} other {# productos}}",
+      "ocultarResumen": "Ocultar resumen · {n, plural, one {# producto} other {# productos}}",
+      "editarCarrito": "Editar carrito",
+      "cantidadPorPrecio": "{q} × {precio}"
     },
     "quitarUno": "Quitar uno",
     "agregarUno": "Agregar uno",
