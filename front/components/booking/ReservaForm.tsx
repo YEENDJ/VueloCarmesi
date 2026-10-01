@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
-import { useForm } from 'react-hook-form'
+import { useLocale, useTranslations } from 'next-intl'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Users } from 'lucide-react'
 // El router de next-intl y no el de `next/navigation`: con el de Next, quien
@@ -11,6 +11,8 @@ import AvisoDatos from '@/components/ui/AvisoDatos'
 import { reservaSchema, MAX_NOTAS, type ReservaFormValues } from '@/lib/schemas/reserva'
 import { fechaMinima, fechaMaximaReserva } from '@/lib/schemas/comunes'
 import type { Experiencia } from '@/lib/types'
+import { formatPrecio } from '@/lib/format'
+import { calcularAbono, crearPago, type ConfigPagos } from '@/lib/pagos'
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -65,15 +67,27 @@ function Field({
   )
 }
 
-export default function ReservaForm({ experiencia }: { experiencia: Experiencia }) {
+export default function ReservaForm({
+  experiencia,
+  pagos,
+}: {
+  experiencia: Experiencia
+  /** Si el sitio cobra en línea y con qué porcentaje. Lo lee la página en el servidor. */
+  pagos: ConfigPagos
+}) {
   const t = useTranslations('reserva')
   const tg = useTranslations('grupos.aviso')
+  const idioma = useLocale()
 
   const router = useRouter()
   const [error, setError] = useState('')
+  // La reserva ya creada cuyo pago no se pudo abrir: al volver a pulsar se
+  // reintenta solo el pago, sin crear otra reserva.
+  const [reservaSinPagar, setReservaSinPagar] = useState<string | null>(null)
+  const [redirigiendo, setRedirigiendo] = useState(false)
 
   const {
-    register, handleSubmit, formState: { errors, isSubmitting },
+    register, handleSubmit, control, formState: { errors, isSubmitting },
   } = useForm<ReservaFormValues>({
     resolver: zodResolver(reservaSchema(experiencia.capacidad)),
     defaultValues: { cantidadPersonas: 1, notas: '' },
@@ -89,8 +103,31 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
     'aria-describedby': errors[campo] ? `err-${campo}` : undefined,
   })
 
+  // Las cifras que se anuncian son las mismas que calcula el backend al crear
+  // la reserva: mismo precio, mismo porcentaje, mismo redondeo.
+  const personas = Number(useWatch({ control, name: 'cantidadPersonas' })) || 1
+  const total = experiencia.precio * personas
+  const abono = calcularAbono(total, pagos.porcentajeAbono)
+  const cobra = pagos.activo && abono > 0
+
+  /** Abre la pasarela para una reserva ya creada. */
+  const irAPagar = async (reservaId: string) => {
+    try {
+      const intento = await crearPago({ reservaId }, idioma)
+      setRedirigiendo(true)
+      window.location.assign(intento.url)
+    } catch {
+      setReservaSinPagar(reservaId)
+      setError(t('pago.errorAbrir'))
+    }
+  }
+
   const onSubmit = async (data: ReservaFormValues) => {
     setError('')
+    if (reservaSinPagar) {
+      await irAPagar(reservaSinPagar)
+      return
+    }
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservas`, {
         method: 'POST',
@@ -103,6 +140,13 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
         }),
       })
       if (!res.ok) throw new Error(`POST /reservas respondió ${res.status}`)
+      const reserva = await res.json()
+      // El backend decide si se cobra: si la reserva nace esperando pago, va a
+      // la pasarela; si no, el flujo manual de siempre.
+      if (reserva.estado === 'pendiente_pago') {
+        await irAPagar(reserva.id)
+        return
+      }
       router.push('/reservar/confirmacion')
     } catch {
       setError(t('campos.error'))
@@ -248,26 +292,63 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
         </p>
       )}
 
+      {/* Resumen del cobro: lo que se paga hoy y lo que queda para el día. Solo
+          con pasarela activa; sin ella, nada se cobra al enviar. */}
+      {cobra && (
+        <div
+          style={{
+            border: '1.5px solid var(--color-amber)',
+            borderRadius: '8px',
+            backgroundColor: '#FFF6E4',
+            padding: 'clamp(16px, 4vw, 20px)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            color: 'var(--color-brown)',
+            fontFamily: 'var(--font-body)',
+          }}
+        >
+          <p style={{ fontWeight: 700, fontSize: '13px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--color-amber)', margin: 0 }}>
+            {t('pago.titulo')}
+          </p>
+          {[
+            { id: 'total', rotulo: t('pago.total', { n: personas }), valor: total, fuerte: false },
+            { id: 'hoy', rotulo: t('pago.hoy', { porcentaje: pagos.porcentajeAbono }), valor: abono, fuerte: true },
+            { id: 'saldo', rotulo: t('pago.saldo'), valor: total - abono, fuerte: false },
+          ].map(fila => (
+            <div key={fila.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '12px', flexWrap: 'wrap' }}>
+              <span style={{ minWidth: 0, fontSize: '15px', fontWeight: fila.fuerte ? 700 : 400 }}>{fila.rotulo}</span>
+              <span style={{ fontWeight: 700, fontSize: fila.fuerte ? '18px' : '15px', color: fila.fuerte ? 'var(--color-crimson)' : 'inherit' }}>
+                {formatPrecio(fila.valor, idioma)}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Submit */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || redirigiendo}
           style={{
             width: '100%',
             padding: '12px 32px',
             borderRadius: '8px',
             border: 'none',
-            backgroundColor: isSubmitting ? 'rgba(213,19,18,.6)' : 'var(--color-crimson)',
+            minHeight: '48px',
+            backgroundColor: isSubmitting || redirigiendo ? 'rgba(213,19,18,.6)' : 'var(--color-crimson)',
             color: 'var(--color-cream)',
             fontFamily: 'var(--font-body)',
             fontWeight: 700,
             fontSize: '16px',
-            cursor: isSubmitting ? 'not-allowed' : 'pointer',
+            cursor: isSubmitting || redirigiendo ? 'not-allowed' : 'pointer',
             transition: 'background-color 0.2s',
           }}
         >
-          {isSubmitting ? t('campos.enviando') : t('campos.enviar')}
+          {isSubmitting || redirigiendo
+            ? t('campos.enviando')
+            : cobra ? t('pago.enviar', { monto: formatPrecio(abono, idioma) }) : t('campos.enviar')}
         </button>
         <p
           style={{
@@ -278,7 +359,7 @@ export default function ReservaForm({ experiencia }: { experiencia: Experiencia 
             opacity: 0.6,
           }}
         >
-          {t('contactaremos')}
+          {cobra ? t('pago.nota') : t('contactaremos')}
         </p>
         <AvisoDatos />
       </div>

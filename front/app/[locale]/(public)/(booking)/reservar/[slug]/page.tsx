@@ -6,6 +6,7 @@ import MigaSuperior from '@/components/layout/MigaSuperior'
 import { notFound } from 'next/navigation'
 import { formatPrecio } from '@/lib/format'
 import AvisoEscnna from '@/components/legal/AvisoEscnna'
+import { getConfigPagos } from '@/lib/api/pagos'
 
 // El segmento caduca siempre: sin esto un 404 renderizado durante una caída del
 // backend quedaba cacheado de forma indefinida.
@@ -34,7 +35,7 @@ export default async function ReservarPage({
   const { slug, locale } = await params
   setRequestLocale(locale)
   const t = await getTranslations('reserva')
-  const exp = await getExperienciaBySlug(slug, locale)
+  const [exp, pagos] = await Promise.all([getExperienciaBySlug(slug, locale), getConfigPagos()])
   if (!exp) notFound()
 
   const thumbnail = exp.imagenes?.[0] ?? exp.imagen
@@ -94,7 +95,7 @@ export default async function ReservarPage({
                 boxShadow: '0 4px 16px rgba(135,43,19,.16)',
               }}
             >
-              <ReservaForm experiencia={exp} />
+              <ReservaForm experiencia={exp} pagos={pagos} />
               <AvisoEscnna />
             </div>
           </div>
@@ -182,7 +183,8 @@ export default async function ReservarPage({
                     lineHeight: 1.6,
                   }}
                 >
-                  {t('sinCompromiso')}
+                  {/* Con cobro en línea, «sin compromiso de pago» deja de ser cierto. */}
+                  {pagos.activo ? t('pago.lateral', { porcentaje: pagos.porcentajeAbono }) : t('sinCompromiso')}
                 </p>
               </div>
             </div>

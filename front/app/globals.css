@@ -6088,3 +6088,15 @@ a.contacto-canal:hover {
 @media print {
   .wa-flotante { display: none; }
 }
+
+/* Reloj de «estamos confirmando tu pago» (components/pagos/ResultadoPago).
+   Late despacio para decir que algo está pasando sin distraer; quien pidió
+   menos movimiento lo ve quieto. */
+@keyframes pago-latido {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .45; }
+}
+.pago-latido { animation: pago-latido 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .pago-latido { animation: none; }
+}

@@ -54,7 +54,9 @@ const FUERA: readonly RutaFija[] = [
   '/carrito',
   '/checkout',
   '/checkout/confirmacion',
+  '/checkout/resultado',
   '/reservar/confirmacion',
+  '/reservar/resultado',
 ]
 
 const esFija = (ruta: Ruta): ruta is RutaFija => !ruta.includes('[')
