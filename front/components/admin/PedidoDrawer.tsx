@@ -67,7 +67,7 @@ export default function PedidoDrawer({
             </Field>
           )}
           <Field label="Fecha">{new Date(pedido.createdAt).toLocaleDateString('es-CO', { day: '2-digit', month: 'long', year: 'numeric' })}</Field>
-          <Field label="Dirección de envío">{pedido.direccion}, {pedido.ciudad} (CP {pedido.codigoPostal})</Field>
+          <Field label="Dirección de envío">{pedido.direccion}, {pedido.ciudad}{pedido.codigoPostal && ` (CP ${pedido.codigoPostal})`}</Field>
           <Field label="Teléfono">{pedido.telefono}</Field>
           <div style={{ height: 1, background: 'var(--admin-border)', margin: '16px 0' }} />
 

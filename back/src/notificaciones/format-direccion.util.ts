@@ -1,5 +1,7 @@
 export function formatDireccionPedido(pedido: {
-  direccion: string; ciudad: string; codigoPostal: string
+  direccion: string; ciudad: string; codigoPostal?: string | null
 }): string {
-  return `${pedido.direccion}, ${pedido.ciudad} (CP ${pedido.codigoPostal})`
+  const base = `${pedido.direccion}, ${pedido.ciudad}`
+  // Los pedidos nuevos llegan sin código postal; los viejos lo conservan.
+  return pedido.codigoPostal ? `${base} (CP ${pedido.codigoPostal})` : base
 }

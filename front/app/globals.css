@@ -1672,6 +1672,7 @@ a.contacto-canal:hover {
   width: 80px;
   height: 80px;
   border-radius: 8px;
+  overflow: hidden;
   flex: none;
   background-color: var(--color-gold);
   display: flex;

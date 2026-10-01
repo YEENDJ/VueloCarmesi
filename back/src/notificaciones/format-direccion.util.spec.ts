@@ -7,4 +7,9 @@ describe('formatDireccionPedido', () => {
     })
     expect(resultado).toBe('Calle 10 # 5-30, Medellín (CP 050001)')
   })
+
+  it('omite el código postal cuando el pedido no lo tiene', () => {
+    expect(formatDireccionPedido({ direccion: 'Calle 10 # 5-30', ciudad: 'Medellín', codigoPostal: null }))
+      .toBe('Calle 10 # 5-30, Medellín')
+  })
 })

@@ -107,7 +107,8 @@ model Pedido {
   telefono     String
   direccion    String
   ciudad       String
-  codigoPostal String
+  /// Ya no se pide en el checkout: nulo en los pedidos nuevos, se conserva en los viejos.
+  codigoPostal String?
   total        Int
   /// pendiente | pendiente_pago | pagado | enviado | entregado | cancelado | expirado | requiere_revision
   ///

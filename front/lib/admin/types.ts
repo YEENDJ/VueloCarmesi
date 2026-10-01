@@ -97,7 +97,8 @@ export interface AdminPedido {
   telefono: string
   direccion: string
   ciudad: string
-  codigoPostal: string
+  /** Nulo en los pedidos nuevos: el checkout ya no lo pide. */
+  codigoPostal: string | null
   total: number
   estado: EstadoPedido
   createdAt: string
