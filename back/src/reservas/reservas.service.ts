@@ -1,9 +1,15 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common'
+import {
+  Injectable, Logger, NotFoundException, BadRequestException, ConflictException,
+} from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { NotificacionesService } from '../notificaciones/notificaciones.service'
 import { CreateReservaDto } from './dto/create-reserva.dto'
 import { UpdateEstadoReservaDto } from './dto/update-estado-reserva.dto'
 import { fechaReservaValida, MESES_HORIZONTE_MAXIMO } from './fecha-reserva.util'
+import { PagosService } from '../pagos/pagos.service'
+import { PAGOS_PANEL } from '../pagos/panel'
+import { venceEnDesde } from '../pagos/config'
+import { calcularAbono, CLAVE_ABONO, leerPorcentajeAbono } from '../pagos/abono'
 
 @Injectable()
 export class ReservasService {
@@ -11,22 +17,25 @@ export class ReservasService {
 
   private static readonly TRANSICIONES_INVALIDAS: Partial<Record<string, string[]>> = {
     cancelada: ['confirmada', 'pendiente'],
+    // Venció sin pago. Solo vuelve sola, si ese pago llega (PagosService).
+    expirada: ['confirmada', 'pendiente', 'cancelada'],
   }
 
   constructor(
     private prisma: PrismaService,
     private notificaciones: NotificacionesService,
+    private pagos: PagosService,
   ) {}
 
   findAll() {
     return this.prisma.reserva.findMany({
-      include: { experiencia: { select: { id: true, nombre: true } } },
+      include: { experiencia: { select: { id: true, nombre: true } }, pagos: PAGOS_PANEL },
       orderBy: { createdAt: 'desc' },
     })
   }
 
   async findById(id: string) {
-    const reserva = await this.prisma.reserva.findUnique({ where: { id } })
+    const reserva = await this.prisma.reserva.findUnique({ where: { id }, include: { pagos: PAGOS_PANEL } })
     if (!reserva) throw new NotFoundException()
     return reserva
   }
@@ -53,7 +62,7 @@ export class ReservasService {
 
     const experiencia = await this.prisma.experiencia.findUnique({
       where: { id: rest.experienciaId },
-      select: { capacidad: true, archivada: true },
+      select: { capacidad: true, archivada: true, precio: true },
     })
     // Una archivada ya no se ofrece: aceptarle una reserva es venderle a
     // alguien una salida que la finca dejó de hacer.
@@ -68,16 +77,47 @@ export class ReservasService {
       )
     }
 
+    // Lo que se le ofrece queda congelado en la reserva: si mañana cambia el
+    // precio o el porcentaje de abono, esta conserva sus cifras.
+    const total = experiencia.precio * rest.cantidadPersonas
+    const cobro = this.pagos.activo && total > 0 ? await this.abono(total) : null
+
     const reserva = await this.prisma.reserva.create({
-      data: { ...rest, fecha: new Date(fecha) },
+      data: {
+        ...rest,
+        fecha: new Date(fecha),
+        total,
+        ...(cobro
+          ? { ...cobro, estado: 'pendiente_pago', venceEn: venceEnDesde(new Date()) }
+          : {}),
+      },
       include: { experiencia: { select: { id: true, nombre: true } } },
     })
 
-    this.notificaciones
-      .enviarConfirmacionReserva(reserva)
-      .catch(err => this.logger.error('Notificación de reserva fallida', err))
+    // Con cobro en línea, el aviso de «nueva reserva» sale al aprobarse el
+    // abono (PagosService), no al llenar el formulario.
+    if (reserva.estado !== 'pendiente_pago') {
+      this.notificaciones
+        .enviarConfirmacionReserva(reserva)
+        .catch(err => this.logger.error('Notificación de reserva fallida', err))
+    }
 
     return reserva
+  }
+
+  /**
+   * Cuánto se cobra hoy, con el porcentaje de `reservas_abono_porcentaje`. Si
+   * el abono redondea a cero no hay qué cobrar y la reserva sigue el flujo
+   * manual.
+   */
+  private async abono(total: number): Promise<{ porcentajeAbono: number; montoAbono: number } | null> {
+    const fila = await this.prisma.siteConfig.findUnique({ where: { key: CLAVE_ABONO } })
+    const { porcentaje, valido } = leerPorcentajeAbono(fila?.value)
+    if (!valido) {
+      this.logger.warn(`${CLAVE_ABONO} = «${fila?.value}» no es un porcentaje válido: se cobra el ${porcentaje} %`)
+    }
+    const montoAbono = calcularAbono(total, porcentaje)
+    return montoAbono > 0 ? { porcentajeAbono: porcentaje, montoAbono } : null
   }
 
   async update(id: string, dto: Partial<CreateReservaDto>) {
@@ -107,7 +147,7 @@ export class ReservasService {
     const updated = await this.prisma.reserva.update({
       where: { id },
       data: { estado: dto.estado },
-      include: { experiencia: { select: { id: true, nombre: true } } },
+      include: { experiencia: { select: { id: true, nombre: true } }, pagos: PAGOS_PANEL },
     })
 
     if (dto.estado === 'confirmada') {
@@ -125,6 +165,15 @@ export class ReservasService {
 
   async remove(id: string) {
     await this.findById(id)
+    // Un cobro no se borra con su reserva: es lo que responde un reclamo o un
+    // contracargo. La base ya lo impide (RESTRICT); esto es para que el panel
+    // reciba un motivo y no un 500.
+    const pagos = await this.prisma.pago.count({ where: { reservaId: id } })
+    if (pagos > 0) {
+      throw new ConflictException(
+        'Tiene pagos registrados y no se puede eliminar. Cámbiale el estado a cancelado',
+      )
+    }
     return this.prisma.reserva.delete({ where: { id } })
   }
 }

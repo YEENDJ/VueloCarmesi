@@ -5,7 +5,10 @@ import type { NestExpressApplication } from '@nestjs/platform-express'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule)
+  // `rawBody`: el webhook de pagos verifica la firma sobre los bytes exactos
+  // que mandó la pasarela. El JSON ya parseado y vuelto a serializar no da la
+  // misma firma. No cambia nada para el resto de rutas: `req.body` sigue igual.
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true })
   // Render pone un proxy delante y el socket siempre viene de él: sin esto
   // `req.ip` es la IP del proxy y el límite de los formularios sería uno solo
   // para todos los visitantes. Con `true` se toma la primera de

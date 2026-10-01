@@ -1,8 +1,15 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common'
+import {
+  Injectable, Logger, NotFoundException, BadRequestException, ConflictException,
+} from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { NotificacionesService } from '../notificaciones/notificaciones.service'
 import { CreatePedidoDto } from './dto/create-pedido.dto'
 import { UpdatePedidoDto } from './dto/update-pedido.dto'
+import { PAGOS_PANEL } from '../pagos/panel'
+import { PagosService } from '../pagos/pagos.service'
+import { VencimientoService } from '../pagos/vencimiento.service'
+import { venceEnDesde } from '../pagos/config'
+import { devolverStock } from './stock.util'
 
 @Injectable()
 export class PedidosService {
@@ -11,11 +18,13 @@ export class PedidosService {
   constructor(
     private prisma: PrismaService,
     private notificaciones: NotificacionesService,
+    private pagos: PagosService,
+    private vencimiento: VencimientoService,
   ) {}
 
   findAll() {
     return this.prisma.pedido.findMany({
-      include: { items: { include: { producto: true } } },
+      include: { items: { include: { producto: true } }, pagos: PAGOS_PANEL },
       orderBy: { createdAt: 'desc' },
     })
   }
@@ -23,7 +32,7 @@ export class PedidosService {
   async findById(id: string) {
     const pedido = await this.prisma.pedido.findUnique({
       where: { id },
-      include: { items: { include: { producto: true } } },
+      include: { items: { include: { producto: true } }, pagos: PAGOS_PANEL },
     })
     if (!pedido) throw new NotFoundException()
     return pedido
@@ -44,6 +53,16 @@ export class PedidosService {
     // El mismo producto en dos líneas se junta en una. Revisadas por separado,
     // dos líneas de 8 pasaban contra un stock de 10 y lo dejaban en -6.
     const items = agruparItems(dto.items)
+
+    // Antes de revisar el stock se sueltan los pedidos que vencieron sin pago:
+    // es justo cuando esas unidades hacen falta, y el backend puede haber
+    // estado dormido sin que nada las devolviera. Si falla, se vende igual con
+    // el stock que haya; nunca bloquea una compra.
+    await this.vencimiento.vencerPendientes().catch(err =>
+      this.logger.error('Vencimiento previo al pedido fallido', err instanceof Error ? err.stack : String(err)),
+    )
+
+    const cobraEnLinea = this.pagos.activo
 
     const pedido = await this.prisma.$transaction(async (tx) => {
       const productos = await tx.producto.findMany({
@@ -93,6 +112,12 @@ export class PedidosService {
           ciudad,
           codigoPostal,
           total,
+          // Con pasarela, el pedido aparta el stock solo por un rato: si no se
+          // paga, el vencimiento lo devuelve. Un total de cero no pasa por la
+          // pasarela (no hay qué cobrar) y sigue el flujo manual.
+          ...(cobraEnLinea && total > 0
+            ? { estado: 'pendiente_pago', venceEn: venceEnDesde(new Date()) }
+            : {}),
           items: {
             create: items.map((item) => ({
               productoId: item.productoId,
@@ -105,9 +130,13 @@ export class PedidosService {
       })
     })
 
-    this.notificaciones
-      .enviarConfirmacionPedido(pedido)
-      .catch(err => this.logger.error('Notificación de pedido fallida', err))
+    // Con cobro en línea, el aviso de «nuevo pedido» sale al aprobarse el pago
+    // (PagosService): avisar ahora sería anunciar ventas que no se pagaron.
+    if (pedido.estado !== 'pendiente_pago') {
+      this.notificaciones
+        .enviarConfirmacionPedido(pedido)
+        .catch(err => this.logger.error('Notificación de pedido fallida', err))
+    }
 
     return pedido
   }
@@ -116,36 +145,43 @@ export class PedidosService {
     const actual = await this.findById(id)
     if (actual.estado === dto.estado) return actual
 
-    // Un pedido cancelado ya devolvió sus unidades al inventario. Sacarlo de
-    // ahí obligaría a volver a apartarlas, y puede que ya no estén: se hace un
-    // pedido nuevo, igual que una reserva cancelada no se reabre.
-    if (actual.estado === 'cancelado') {
+    // Un pedido cancelado o expirado ya devolvió sus unidades al inventario.
+    // Sacarlo de ahí obligaría a volver a apartarlas, y puede que ya no estén:
+    // se hace un pedido nuevo, igual que una reserva cancelada no se reabre.
+    // (Un expirado solo vuelve solo, si llega su pago: ver PagosService.)
+    if (actual.estado === 'cancelado' || actual.estado === 'expirado') {
       throw new BadRequestException(
-        `No se puede cambiar el estado de "cancelado" a "${dto.estado}"`,
+        `No se puede cambiar el estado de "${actual.estado}" a "${dto.estado}"`,
       )
     }
 
     return this.prisma.$transaction(async (tx) => {
       // Al crear el pedido se descontó el stock; si no se va a vender, vuelve.
-      // Sin esto cada pedido cancelado dejaba unidades fantasma fuera de la tienda.
+      // Sin esto cada pedido cancelado dejaba unidades fantasma fuera de la
+      // tienda. `devolverStock` mira `stockApartado` y no el estado: un pedido
+      // en revisión puede tenerlas o no según por qué llegó ahí.
       if (dto.estado === 'cancelado') {
-        for (const item of actual.items) {
-          await tx.producto.update({
-            where: { id: item.productoId },
-            data: { stock: { increment: item.cantidad } },
-          })
-        }
+        await devolverStock(tx, id, actual.items)
       }
       return tx.pedido.update({
         where: { id },
         data: { estado: dto.estado },
-        include: { items: { include: { producto: true } } },
+        include: { items: { include: { producto: true } }, pagos: PAGOS_PANEL },
       })
     })
   }
 
   async remove(id: string) {
     await this.findById(id)
+    // Un cobro no se borra con su pedido: es lo que responde un reclamo o un
+    // contracargo. La base ya lo impide (RESTRICT); esto es para que el panel
+    // reciba un motivo y no un 500.
+    const pagos = await this.prisma.pago.count({ where: { pedidoId: id } })
+    if (pagos > 0) {
+      throw new ConflictException(
+        'Tiene pagos registrados y no se puede eliminar. Cámbiale el estado a cancelado',
+      )
+    }
     return this.prisma.pedido.delete({ where: { id } })
   }
 }
