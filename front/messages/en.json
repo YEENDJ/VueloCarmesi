@@ -167,7 +167,17 @@
     "cierreTexto": "Don't miss the chance to live an unforgettable agroecological experience. From {precio} per person · {duracion}",
     "hastaPersonas": "Up to {n} people",
     "cuando": "When",
-    "desde": "From"
+    "desde": "From",
+    "pago": {
+      "titulo": "Payment summary",
+      "total": "Total ({n, plural, one {# person} other {# people}})",
+      "hoy": "Due today ({porcentaje}%)",
+      "saldo": "Balance due on the day",
+      "enviar": "Continue to payment · {monto}",
+      "nota": "We hold your spot for 30 minutes while you pay.",
+      "lateral": "When you book, you pay {porcentaje}% of the total online; the rest on the day of the activity.",
+      "errorAbrir": "Your booking is on hold, but we couldn’t open the payment page. Please try again in a moment."
+    }
   },
   "aviturismoAviso": {
     "titulo": "Birding guide to the farm",
@@ -379,7 +389,12 @@
       "errorTelefono": "Enter a valid phone number",
       "errorDireccion": "Enter your address",
       "errorCiudad": "Enter your city",
-      "errorCodigoPostal": "Enter your postal code"
+      "errorCodigoPostal": "Enter your postal code",
+      "pagar": "Pay {total}",
+      "pagoEnLinea": "You pay online on our payment provider’s secure page. We hold your items for 30 minutes while you finish.",
+      "errorAbrirPago": "Your order is on hold, but we couldn’t open the payment page. Please try again in a moment.",
+      "pagoAnteriorEnCurso": "You have a payment waiting for your bank’s confirmation. <ver>Check its status</ver>",
+      "pedidoCodigo": "Order {codigo}"
     },
     "quitarUno": "Remove one",
     "agregarUno": "Add one",
@@ -1357,5 +1372,38 @@
   "whatsappFlotante": {
     "aria": "Message us on WhatsApp",
     "rotulo": "Questions? Chat with us"
+  },
+  "pagos": {
+    "resultado": {
+      "cargando": "Checking your payment…",
+      "referencia": "Payment reference: {referencia}",
+      "aprobadoPedidoTitulo": "Payment received!",
+      "aprobadoPedidoTexto": "Your order is paid. We sent you an email with the details and will let you know when it ships.",
+      "aprobadoReservaTitulo": "Booking paid!",
+      "aprobadoReservaTexto": "We received your deposit of {monto}. We’ll be in touch soon to confirm your spot.",
+      "saldoReserva": "The remaining {saldo} is paid on the day of the activity.",
+      "pendienteTitulo": "We’re confirming your payment",
+      "pendienteTexto": "Your bank hasn’t replied yet. It usually takes a few minutes, so please keep this page open.",
+      "pendienteLargo": "Your bank is taking longer than usual. No need to wait here: we’ll email you as soon as it’s confirmed.",
+      "consultar": "Check again",
+      "rechazadoTitulo": "The payment didn’t go through",
+      "rechazadoTexto": "Your bank didn’t approve the payment and you weren’t charged. You can try again with another payment method.",
+      "apartadoHasta": "We’re holding everything for you until {hora}.",
+      "reintentar": "Try again",
+      "reintentando": "Opening the payment…",
+      "errorReintentar": "We couldn’t open the payment. Please try again in a moment.",
+      "vencidoTitulo": "The time to pay has run out",
+      "vencidoPedidoTexto": "We released the items we were holding and you weren’t charged. Your cart is still there if you want to try again.",
+      "vencidoReservaTexto": "We released the spot and you weren’t charged. You can book again whenever you like.",
+      "irCarrito": "Back to cart",
+      "irExperiencias": "See experiences",
+      "revisionTitulo": "We received your payment",
+      "revisionTexto": "There’s something we need to check by hand before we confirm. We’ll write to you very soon; you don’t need to do anything.",
+      "noEncontradoTitulo": "We couldn’t find this payment",
+      "noEncontradoTexto": "The link may be incomplete. If you paid, message us on WhatsApp with your email and we’ll look it up.",
+      "errorRed": "We couldn’t check your payment. Check your connection and try again.",
+      "volverInicio": "Back to home",
+      "volverTienda": "Back to the shop"
+    }
   }
 }

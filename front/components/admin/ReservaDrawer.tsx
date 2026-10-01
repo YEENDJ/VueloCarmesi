@@ -2,7 +2,11 @@
 import { useState } from 'react'
 import type { AdminReserva, EstadoReserva } from '@/lib/admin/types'
 import StatusBadge from './StatusBadge'
+import PagosLista from './PagosLista'
+import AvisoRevision from './AvisoRevision'
 import { updateEstadoReserva } from '@/lib/admin/api'
+import { esDePrueba } from '@/lib/admin/pagos'
+import { formatPrecio } from '@/lib/format'
 
 export default function ReservaDrawer({
   reserva,
@@ -47,8 +51,9 @@ export default function ReservaDrawer({
             <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-cream)' }}>
               {reserva.nombre}
             </div>
-            <div style={{ marginTop: 6 }}>
+            <div style={{ marginTop: 6, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               <StatusBadge estado={reserva.estado} />
+              {esDePrueba(reserva) && <StatusBadge estado="prueba" />}
             </div>
           </div>
           <button
@@ -59,6 +64,7 @@ export default function ReservaDrawer({
 
         {/* Body */}
         <div className="admin-drawer-body">
+          {reserva.estado === 'requiere_revision' && <AvisoRevision tipo="reserva" />}
           <Field label="Experiencia">{experienciaNombre}</Field>
           <Field label="Fecha">{new Date(reserva.fecha).toLocaleDateString('es-CO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</Field>
           <Field label="Personas">{reserva.cantidadPersonas}</Field>
@@ -66,10 +72,33 @@ export default function ReservaDrawer({
           <Field label="Teléfono">{reserva.telefono}</Field>
           <Field label="Email">{reserva.email}</Field>
           {reserva.notas && <Field label="Notas">{reserva.notas}</Field>}
+
+          {/* Las cifras congeladas al crearla. Las de antes de la pasarela no
+              las tienen, y no se inventan con el precio de hoy. */}
+          {reserva.total != null && (
+            <>
+              <div style={{ height: 1, background: 'var(--admin-border)', margin: '16px 0' }} />
+              <Field label="Total">{formatPrecio(reserva.total)}</Field>
+              {reserva.montoAbono != null && (
+                <>
+                  <Field label={`Abono en línea${reserva.porcentajeAbono != null ? ` (${reserva.porcentajeAbono} %)` : ''}`}>
+                    {formatPrecio(reserva.montoAbono)}
+                    {reserva.pagos?.some(p => p.estado === 'aprobado') ? ' · pagado' : ' · sin pagar'}
+                  </Field>
+                  <Field label="Saldo el día de la actividad">
+                    {formatPrecio(Math.max(reserva.total - reserva.montoAbono, 0))}
+                  </Field>
+                </>
+              )}
+            </>
+          )}
+
+          <PagosLista pagos={reserva.pagos} />
         </div>
 
         {/* Footer */}
-        {reserva.estado !== 'cancelada' && (
+        {/* Cancelada y vencida no se reabren: el backend lo rechaza. */}
+        {reserva.estado !== 'cancelada' && reserva.estado !== 'expirada' && (
           <div className="admin-drawer-footer">
             {reserva.estado !== 'confirmada' && (
               <button

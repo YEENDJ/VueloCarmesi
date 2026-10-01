@@ -44,7 +44,7 @@ export default function ConfirmacionPage() {
         borderRadius: '12px', padding: '2rem', margin: '2.5rem 0', textAlign: 'left',
       }}>
         <p style={{ fontWeight: 700, fontSize: '1.25rem', color: 'var(--color-amber)' }}>
-          Pedido {lastOrder.code}
+          {t('pedidoCodigo', { codigo: lastOrder.code })}
         </p>
         <div style={{ height: '1px', background: 'rgba(135,43,19,0.15)', margin: '1.25rem 0' }} />
         {lastOrder.items.map((item, index) => (
@@ -55,7 +55,7 @@ export default function ConfirmacionPage() {
         ))}
         <div style={{ height: '1px', background: 'rgba(135,43,19,0.15)', margin: '1rem 0' }} />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-          <span style={{ fontWeight: 700, fontSize: '1.125rem', color: 'var(--color-brown)' }}>Total</span>
+          <span style={{ fontWeight: 700, fontSize: '1.125rem', color: 'var(--color-brown)' }}>{t('total')}</span>
           <span style={{ fontWeight: 700, fontSize: '1.25rem', color: 'var(--color-amber)' }}>{formatPrecio(lastOrder.total, idioma)}</span>
         </div>
       </div>

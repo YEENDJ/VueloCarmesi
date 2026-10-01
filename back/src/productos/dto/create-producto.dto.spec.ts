@@ -30,4 +30,12 @@ describe('CreateProductoDto', () => {
     const errores = await validate(dto)
     expect(errores.length).toBeGreaterThan(0)
   })
+
+  // Desde la pasarela el dinero se guarda en pesos enteros: un decimal debe
+  // salir como error de validación, no llegar a Prisma y romper con un 500.
+  it('rechaza un precio con decimales', async () => {
+    const dto = plainToInstance(CreateProductoDto, { ...BASE, precio: 22000.5 })
+    const errores = await validate(dto)
+    expect(errores.map(e => e.property)).toContain('precio')
+  })
 })

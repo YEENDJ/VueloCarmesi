@@ -1,5 +1,5 @@
 import {
-  IsString, IsNumber, IsOptional, IsIn, IsArray, Min, MaxLength, ArrayMaxSize,
+  IsString, IsInt, IsNumber, IsOptional, IsIn, IsArray, Min, MaxLength, ArrayMaxSize,
 } from 'class-validator'
 
 /** Mismo tope que en experiencias, por la misma razón: peso de la ficha. */
@@ -18,7 +18,8 @@ export class CreateProductoDto {
 
   @IsOptional() @IsString() descripcionLarga?: string
 
-  @IsNumber() @Min(0) precio: number
+  // Entero, igual que en experiencias.
+  @IsInt({ message: 'El precio va en pesos enteros, sin decimales' }) @Min(0) precio: number
   @IsNumber() @Min(0) stock: number
   @IsString() categoria: string
 

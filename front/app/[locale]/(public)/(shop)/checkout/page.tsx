@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Link } from '@/lib/i18n/navigation'
@@ -8,6 +8,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCart, setLastOrder } from '@/lib/cart/store'
 import { checkoutSchema, type CheckoutFormValues } from '@/lib/cart/checkout-schema'
 import { formatPrecio } from '@/lib/format'
+import {
+  crearPago, guardarPagoPendiente, leerPagoPendiente, obtenerEstadoPago, olvidarPagoPendiente,
+  useConfigPagos, vistaDe,
+} from '@/lib/pagos'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 
@@ -19,6 +23,49 @@ export default function CheckoutPage() {
   const router = useRouter()
   const { items, cartTotal, clearCart } = useCart()
   const [submitError, setSubmitError] = useState('')
+  const pagos = useConfigPagos()
+  // El pedido ya creado cuyo pago no se pudo abrir. Si el cliente vuelve a
+  // pulsar, se reintenta solo el pago: crear otro pedido apartaría el stock
+  // dos veces.
+  const [pedidoSinPagar, setPedidoSinPagar] = useState<string | null>(null)
+  // Un pago que quedó en curso de una visita anterior (ver leerPagoPendiente).
+  const [pagoEnCurso, setPagoEnCurso] = useState<string | null>(null)
+  // Mientras el navegador se va a la pasarela, el botón no vuelve a
+  // habilitarse: un segundo clic abriría otro intento.
+  const [redirigiendo, setRedirigiendo] = useState(false)
+
+  // Quien pagó y cerró la pestaña sin volver a la página de resultado
+  // encontraría aquí su carrito lleno con lo que ya compró. Se pregunta cómo
+  // terminó ese pago antes de dejarlo comprar otra vez.
+  useEffect(() => {
+    const referencia = leerPagoPendiente()
+    if (!referencia) return
+    obtenerEstadoPago(referencia).then(e => {
+      const vista = vistaDe(e)
+      if (vista === 'aprobado' || vista === 'revision') {
+        clearCart()
+        olvidarPagoPendiente()
+      } else if (vista === 'pendiente') {
+        setPagoEnCurso(referencia)
+      } else {
+        olvidarPagoPendiente()
+      }
+    }).catch(() => { /* sin respuesta: el checkout funciona igual */ })
+  }, [clearCart])
+
+  /** Abre la pasarela para un pedido ya creado. El carrito no se toca: se vacía al aprobarse. */
+  const irAPagar = async (pedidoId: string) => {
+    try {
+      const intento = await crearPago({ pedidoId }, idioma)
+      guardarPagoPendiente(intento.referencia)
+      setRedirigiendo(true)
+      window.location.assign(intento.url)
+    } catch {
+      setPedidoSinPagar(pedidoId)
+      throw new Error(t('errorAbrirPago'))
+    }
+  }
+
   const {
     register, handleSubmit, formState: { errors, isSubmitting },
   } = useForm<CheckoutFormValues>({ resolver: zodResolver(checkoutSchema) })
@@ -26,6 +73,10 @@ export default function CheckoutPage() {
   const onSubmit = async (data: CheckoutFormValues) => {
     setSubmitError('')
     try {
+      if (pedidoSinPagar) {
+        await irAPagar(pedidoSinPagar)
+        return
+      }
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pedidos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -47,6 +98,12 @@ export default function CheckoutPage() {
         items: items.map(i => ({ nombre: i.nombre, q: i.q, subtotal: i.precio * i.q })),
         total: cartTotal,
       })
+      // El backend decide si se cobra en línea: si el pedido nace esperando
+      // pago, va a la pasarela. Si no, el flujo manual de siempre.
+      if (pedido.estado === 'pendiente_pago') {
+        await irAPagar(pedido.id)
+        return
+      }
       clearCart()
       router.push('/checkout/confirmacion')
     } catch (err) {
@@ -85,12 +142,30 @@ export default function CheckoutPage() {
           <input id="website" type="text" tabIndex={-1} autoComplete="off" {...register('website')} />
         </div>
 
-        {submitError && <p style={{ color: 'var(--color-crimson)', fontSize: '0.9rem' }}>{submitError}</p>}
+        {pagoEnCurso && (
+          <p role="status" style={{
+            fontSize: '0.9rem', color: 'var(--color-brown)', background: 'rgba(253,195,0,.18)',
+            border: '1px solid var(--color-amber)', borderRadius: '8px', padding: '12px 16px', margin: 0,
+          }}>
+            {t.rich('pagoAnteriorEnCurso', {
+              ver: texto => (
+                <Link
+                  href={{ pathname: '/checkout/resultado', query: { ref: pagoEnCurso } }}
+                  style={{ color: 'var(--color-crimson)', fontWeight: 700, display: 'inline-block', padding: '10px 0', minHeight: 44 }}
+                >
+                  {texto}
+                </Link>
+              ),
+            })}
+          </p>
+        )}
 
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting
+        {submitError && <p role="alert" style={{ color: 'var(--color-crimson)', fontSize: '0.9rem' }}>{submitError}</p>}
+
+        <Button type="submit" disabled={isSubmitting || redirigiendo} style={{ minHeight: 44 }}>
+          {isSubmitting || redirigiendo
             ? t('procesando')
-            : t('confirmar', { total: formatPrecio(cartTotal, idioma) })}
+            : t(pagos?.activo ? 'pagar' : 'confirmar', { total: formatPrecio(cartTotal, idioma) })}
         </Button>
         {/* El aviso ya decía «aceptas nuestras condiciones de venta», pero no
             llevaba a ninguna parte. Ahora enlaza los dos textos que el
@@ -137,7 +212,7 @@ export default function CheckoutPage() {
           <span style={{ fontWeight: 700, fontSize: '1.375rem', color: 'var(--color-amber)' }}>{formatPrecio(cartTotal, idioma)}</span>
         </div>
         <p style={{ fontSize: '0.75rem', color: 'rgba(255,234,202,0.6)', marginTop: '1rem' }}>
-          {t('coordinamosMetodo')}
+          {t(pagos?.activo ? 'pagoEnLinea' : 'coordinamosMetodo')}
         </p>
       </div>
     </section>

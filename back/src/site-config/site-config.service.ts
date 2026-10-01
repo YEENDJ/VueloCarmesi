@@ -1,7 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { TraduccionService } from '../traduccion/traduccion.service'
 import { IDIOMA_ORIGEN } from '../traduccion/campos'
+import { CLAVE_ABONO, porcentajeAbonoValido } from '../pagos/abono'
 
 /**
  * Las claves de SiteConfig que son texto y hay que traducir.
@@ -88,6 +89,14 @@ export class SiteConfigService {
    * de caché del panel encuentre los dos idiomas ya guardados.
    */
   async patch(data: Record<string, string>): Promise<Record<string, string>> {
+    // El resto de claves son texto libre; esta decide cuánto se cobra. Un
+    // «30%» guardado a ciegas haría que la reserva cobrara cero, así que se
+    // rechaza aquí y no al cobrar. Vacía vale: rige el 30 por defecto.
+    const abono = data[CLAVE_ABONO]
+    if (abono != null && abono.trim() !== '' && !porcentajeAbonoValido(abono)) {
+      throw new BadRequestException('El porcentaje de abono va sin símbolo, entero de 1 a 100')
+    }
+
     await Promise.all(
       Object.entries(data).map(([key, value]) =>
         this.prisma.siteConfig.upsert({

@@ -52,6 +52,10 @@ export const routing = defineRouting({
     '/experiencias/[slug]': { es: '/experiencias/[slug]', en: '/experiences/[slug]' },
     '/reservar/[slug]': { es: '/reservar/[slug]', en: '/book/[slug]' },
     '/reservar/confirmacion': { es: '/reservar/confirmacion', en: '/book/confirmation' },
+    // A donde vuelve el cliente desde la pasarela de pagos. El backend tiene
+    // estas dos rutas copiadas en back/src/pagos/pagos.service.ts (RETORNO):
+    // si cambian aquí, cambian allá.
+    '/reservar/resultado': { es: '/reservar/resultado', en: '/book/result' },
 
     // Tienda
     '/tienda': { es: '/tienda', en: '/shop' },
@@ -59,6 +63,7 @@ export const routing = defineRouting({
     '/carrito': { es: '/carrito', en: '/cart' },
     '/checkout': { es: '/checkout', en: '/checkout' },
     '/checkout/confirmacion': { es: '/checkout/confirmacion', en: '/checkout/confirmation' },
+    '/checkout/resultado': { es: '/checkout/resultado', en: '/checkout/result' },
 
     // Políticas
     '/politicas': { es: '/politicas', en: '/policies' },

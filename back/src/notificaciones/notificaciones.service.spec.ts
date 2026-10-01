@@ -244,3 +244,98 @@ describe('NotificacionesService.enviarNuevaSolicitudGrupo', () => {
     expect(mockTelegram.send).toHaveBeenCalledTimes(1)
   })
 })
+
+describe('NotificacionesService: correos del cobro en línea', () => {
+  let service: NotificacionesService
+  const email = {
+    ...mockEmail,
+    templatePagoRechazado: jest.fn().mockReturnValue('<html-rechazo>'),
+    templatePagoEnRevision: jest.fn().mockReturnValue('<html-revision>'),
+  }
+  const reserva = {
+    id: 'res_abc123', nombre: 'Luis', email: 'luis@example.com', telefono: '3007654321',
+    experiencia: { nombre: 'Ruta del cacao' }, fecha: new Date('2026-10-20'), cantidadPersonas: 2,
+    total: 200000, porcentajeAbono: 30,
+  }
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        NotificacionesService,
+        { provide: EmailService, useValue: email },
+        { provide: TelegramService, useValue: mockTelegram },
+        { provide: PrismaService, useValue: mockPrisma },
+      ],
+    }).compile()
+    service = module.get(NotificacionesService)
+    jest.clearAllMocks()
+    mockPrisma.siteConfig.findUnique.mockResolvedValue({ value: 'admin@vuelocarmesi.com' })
+  })
+
+  it('pedido sin pago en línea: el acuse sigue diciendo que se coordina el pago', async () => {
+    await service.enviarConfirmacionPedido(pedido)
+
+    expect(email.templateConfirmacionPedido.mock.calls[0][0].notaPago).toContain('una vez confirmemos el pago')
+    expect(email.send.mock.calls[0][1]).toBe('Recibimos tu pedido — Vuelo Carmesí')
+  })
+
+  it('pedido pagado: el acuse dice que el pago llegó, y Telegram y el admin también', async () => {
+    await service.enviarConfirmacionPedido(pedido, { monto: 55000 })
+
+    const vars = email.templateConfirmacionPedido.mock.calls[0][0]
+    expect(vars.notaPago).toContain('Recibimos tu pago de $55.000')
+    expect(vars.notaPago).not.toContain('confirmemos el pago')
+    expect(email.send.mock.calls[0][1]).toContain('Pago recibido')
+    expect(mockTelegram.send.mock.calls[0][0]).toContain('Pagado en línea: $55.000')
+    expect(email.templateAlertaAdmin.mock.calls[0][0].filas).toContain('Pagado en línea')
+  })
+
+  it('reserva sin pago en línea: sin filas de abono', async () => {
+    await service.enviarConfirmacionReserva(reserva)
+
+    expect(email.templateConfirmacionReserva.mock.calls[0][0].filasPago).toBe('')
+  })
+
+  it('reserva con abono: total, abono con su porcentaje y saldo, desde la reserva', async () => {
+    await service.enviarConfirmacionReserva(reserva, { monto: 60000 })
+
+    const vars = email.templateConfirmacionReserva.mock.calls[0][0]
+    expect(vars.filasPago).toContain('$200.000')
+    expect(vars.filasPago).toContain('$60.000 (30 %)')
+    expect(vars.filasPago).toContain('$140.000')
+    expect(vars.notaPago).toContain('Recibimos tu abono')
+    expect(mockTelegram.send.mock.calls[0][0]).toContain('Saldo el día: $140.000')
+  })
+
+  it('reserva de antes de la pasarela, sin total: no inventa un saldo', async () => {
+    await service.enviarConfirmacionReserva({ ...reserva, total: null }, { monto: 60000 })
+
+    const vars = email.templateConfirmacionReserva.mock.calls[0][0]
+    expect(vars.filasPago).toContain('$60.000')
+    expect(vars.filasPago).not.toContain('Saldo')
+  })
+
+  it('pago rechazado: enlace a la página de resultado con la referencia y el plazo en hora de Colombia', async () => {
+    await service.enviarPagoRechazado({
+      tipo: 'reserva', nombre: 'Luis', email: 'luis@example.com',
+      referencia: 'VC-R-ABC123-1F2E3D', monto: 60000, venceEn: new Date('2026-10-01T20:30:00Z'),
+    })
+
+    const vars = email.templatePagoRechazado.mock.calls[0][0]
+    expect(vars.urlReintento).toMatch(/\/reservar\/resultado\?ref=VC-R-ABC123-1F2E3D$/)
+    expect(vars.monto).toBe('$60.000')
+    expect(vars.vence).toContain('3:30') // 20:30 UTC son las 3:30 p. m. en Bogotá
+    expect(email.send).toHaveBeenCalledWith('luis@example.com', expect.stringContaining('no se completó'), '<html-rechazo>')
+  })
+
+  it('pago en revisión: le da al cliente el código corto que cita por WhatsApp', async () => {
+    await service.enviarPagoEnRevisionCliente({
+      tipo: 'pedido', id: 'ped_xyz789', nombre: '<b>Ana</b>', email: 'ana@example.com', monto: 55000,
+    })
+
+    const vars = email.templatePagoEnRevision.mock.calls[0][0]
+    expect(vars.codigo).toBe('VC-XYZ789')
+    expect(vars.nombre).not.toContain('<b>')
+    expect(email.send.mock.calls[0][1]).toContain('#VC-XYZ789')
+  })
+})

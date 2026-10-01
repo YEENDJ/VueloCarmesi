@@ -2,10 +2,21 @@
 import { useState } from 'react'
 import type { AdminPedido, EstadoPedido } from '@/lib/admin/types'
 import StatusBadge from './StatusBadge'
+import PagosLista from './PagosLista'
+import AvisoRevision from './AvisoRevision'
 import { updateEstadoPedido } from '@/lib/admin/api'
+import { esDePrueba } from '@/lib/admin/pagos'
 import { formatPrecio } from '@/lib/format'
 
-const ESTADOS: EstadoPedido[] = ['pendiente', 'enviado', 'entregado', 'cancelado']
+/**
+ * Los que se eligen a mano. `pagado` es para un pago que llegó por fuera
+ * (transferencia). Los de la pasarela —esperando pago, vencido, revisar— no
+ * se eligen: los pone el cobro en línea.
+ */
+const ESTADOS: EstadoPedido[] = ['pendiente', 'pagado', 'enviado', 'entregado', 'cancelado']
+
+/** Ya devolvieron sus unidades: el backend no deja sacarlos de ahí. */
+const FINALES: EstadoPedido[] = ['cancelado', 'expirado']
 
 export default function PedidoDrawer({
   pedido, onClose, onUpdated,
@@ -16,13 +27,19 @@ export default function PedidoDrawer({
 }) {
   const [estado, setEstado] = useState<EstadoPedido>(pedido.estado)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
   async function aplicar() {
     if (estado === pedido.estado) return
     setSaving(true)
-    const updated = await updateEstadoPedido(pedido.id, estado)
-    onUpdated(updated)
-    setSaving(false)
+    setError('')
+    try {
+      onUpdated(await updateEstadoPedido(pedido.id, estado))
+    } catch {
+      setError('No se pudo cambiar el estado. Recarga la página e intenta de nuevo.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -34,12 +51,21 @@ export default function PedidoDrawer({
               Pedido #{pedido.id.slice(-6).toUpperCase()}
             </div>
             <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-cream)' }}>{pedido.nombre}</div>
-            <div style={{ marginTop: 6 }}><StatusBadge estado={pedido.estado} /></div>
+            <div style={{ marginTop: 6, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              <StatusBadge estado={pedido.estado} />
+              {esDePrueba(pedido) && <StatusBadge estado="prueba" />}
+            </div>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'rgba(255,234,202,.7)', fontSize: 20, cursor: 'pointer', padding: 4 }}>✕</button>
         </div>
 
         <div className="admin-drawer-body">
+          {pedido.estado === 'requiere_revision' && <AvisoRevision tipo="pedido" />}
+          {pedido.estado === 'pendiente_pago' && pedido.venceEn && (
+            <Field label="Esperando pago hasta">
+              {new Date(pedido.venceEn).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Bogota' })}
+            </Field>
+          )}
           <Field label="Fecha">{new Date(pedido.createdAt).toLocaleDateString('es-CO', { day: '2-digit', month: 'long', year: 'numeric' })}</Field>
           <Field label="Dirección de envío">{pedido.direccion}, {pedido.ciudad} (CP {pedido.codigoPostal})</Field>
           <Field label="Teléfono">{pedido.telefono}</Field>
@@ -64,24 +90,40 @@ export default function PedidoDrawer({
               {formatPrecio(pedido.total)}
             </span>
           </div>
+
+          <PagosLista pagos={pedido.pagos} />
         </div>
 
-        <div className="admin-drawer-footer">
-          <select
-            className="admin-select"
-            value={estado}
-            onChange={e => setEstado(e.target.value as EstadoPedido)}
-            style={{ flex: 1 }}
-          >
-            {ESTADOS.map(e => <option key={e} value={e}>{e.charAt(0).toUpperCase() + e.slice(1)}</option>)}
-          </select>
-          <button className="btn-primary" onClick={aplicar} disabled={saving || estado === pedido.estado}>
-            {saving ? '…' : 'Aplicar'}
-          </button>
-        </div>
+        {!FINALES.includes(pedido.estado) && (
+          <div className="admin-drawer-footer" style={{ flexWrap: 'wrap' }}>
+            {error && <div role="alert" style={{ width: '100%', fontSize: 13, color: 'var(--status-revision-txt)' }}>{error}</div>}
+            <select
+              className="admin-select"
+              value={estado}
+              onChange={e => setEstado(e.target.value as EstadoPedido)}
+              style={{ flex: 1, minWidth: 0, minHeight: 44 }}
+            >
+              {/* El estado actual, aunque no se pueda elegir a mano: sin él, el
+                  select mostraría «Pendiente» para un pedido que espera pago. */}
+              {!ESTADOS.includes(pedido.estado) && (
+                <option value={pedido.estado} disabled>{ETIQUETAS[pedido.estado]}</option>
+              )}
+              {ESTADOS.map(e => <option key={e} value={e}>{ETIQUETAS[e]}</option>)}
+            </select>
+            <button className="btn-primary" onClick={aplicar} disabled={saving || estado === pedido.estado} style={{ minHeight: 44 }}>
+              {saving ? '…' : 'Aplicar'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
+}
+
+const ETIQUETAS: Record<EstadoPedido, string> = {
+  pendiente: 'Pendiente', pagado: 'Pagado', enviado: 'Enviado', entregado: 'Entregado',
+  cancelado: 'Cancelado', pendiente_pago: 'Esperando pago', expirado: 'Vencido',
+  requiere_revision: 'Revisar',
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {

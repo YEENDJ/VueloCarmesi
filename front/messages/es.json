@@ -167,7 +167,17 @@
     "cierreTexto": "No pierdas la oportunidad de vivir una experiencia agroecológica inolvidable. Desde {precio} por persona · {duracion}",
     "hastaPersonas": "Hasta {n} personas",
     "cuando": "Cuándo",
-    "desde": "Desde"
+    "desde": "Desde",
+    "pago": {
+      "titulo": "Resumen del pago",
+      "total": "Total ({n, plural, one {# persona} other {# personas}})",
+      "hoy": "Pagas hoy ({porcentaje} %)",
+      "saldo": "Saldo el día de la actividad",
+      "enviar": "Continuar al pago · {monto}",
+      "nota": "Te apartamos el cupo por 30 minutos mientras pagas.",
+      "lateral": "Al reservar pagas en línea el {porcentaje} % del total; el resto, el día de la actividad.",
+      "errorAbrir": "Tu reserva quedó apartada, pero no pudimos abrir la página de pago. Vuelve a intentarlo en un momento."
+    }
   },
   "aviturismoAviso": {
     "titulo": "Guía de aviturismo en la finca",
@@ -379,7 +389,12 @@
       "errorTelefono": "Ingresa un teléfono válido",
       "errorDireccion": "Ingresa tu dirección",
       "errorCiudad": "Ingresa tu ciudad",
-      "errorCodigoPostal": "Ingresa tu código postal"
+      "errorCodigoPostal": "Ingresa tu código postal",
+      "pagar": "Pagar {total}",
+      "pagoEnLinea": "Pagas en línea en la página segura de nuestra pasarela. Te apartamos los productos por 30 minutos mientras terminas.",
+      "errorAbrirPago": "Tu pedido quedó apartado, pero no pudimos abrir la página de pago. Vuelve a intentarlo en un momento.",
+      "pagoAnteriorEnCurso": "Tienes un pago esperando la confirmación de tu banco. <ver>Ver cómo va</ver>",
+      "pedidoCodigo": "Pedido {codigo}"
     },
     "quitarUno": "Quitar uno",
     "agregarUno": "Agregar uno",
@@ -1357,5 +1372,38 @@
   "whatsappFlotante": {
     "aria": "Escríbenos por WhatsApp",
     "rotulo": "¿Dudas? Te respondemos"
+  },
+  "pagos": {
+    "resultado": {
+      "cargando": "Consultando tu pago…",
+      "referencia": "Referencia de pago: {referencia}",
+      "aprobadoPedidoTitulo": "¡Pago recibido!",
+      "aprobadoPedidoTexto": "Tu pedido está pagado. Te enviamos un correo con los detalles y te avisamos cuando salga el envío.",
+      "aprobadoReservaTitulo": "¡Reserva pagada!",
+      "aprobadoReservaTexto": "Recibimos tu abono de {monto}. Te escribimos pronto para confirmar tu lugar.",
+      "saldoReserva": "El saldo de {saldo} se paga el día de la actividad.",
+      "pendienteTitulo": "Estamos confirmando tu pago",
+      "pendienteTexto": "Tu banco todavía no responde. Suele tardar unos minutos: no cierres esta página.",
+      "pendienteLargo": "Tu banco está tardando más de lo normal. No hace falta que esperes aquí: te escribimos al correo en cuanto se confirme.",
+      "consultar": "Consultar otra vez",
+      "rechazadoTitulo": "El pago no se completó",
+      "rechazadoTexto": "Tu banco no aprobó el pago y no se te cobró nada. Puedes intentarlo de nuevo con otro medio de pago.",
+      "apartadoHasta": "Te guardamos lo apartado hasta las {hora}.",
+      "reintentar": "Intentar de nuevo",
+      "reintentando": "Abriendo el pago…",
+      "errorReintentar": "No pudimos abrir el pago. Inténtalo de nuevo en un momento.",
+      "vencidoTitulo": "El tiempo para pagar venció",
+      "vencidoPedidoTexto": "Liberamos los productos que te habíamos apartado y no se te cobró nada. Tu carrito sigue ahí para volver a intentarlo.",
+      "vencidoReservaTexto": "Liberamos el cupo y no se te cobró nada. Puedes volver a reservar cuando quieras.",
+      "irCarrito": "Volver al carrito",
+      "irExperiencias": "Ver experiencias",
+      "revisionTitulo": "Recibimos tu pago",
+      "revisionTexto": "Hay algo que tenemos que revisar a mano antes de confirmarte. Te escribimos muy pronto; no tienes que hacer nada.",
+      "noEncontradoTitulo": "No encontramos este pago",
+      "noEncontradoTexto": "Puede que el enlace esté incompleto. Si pagaste, escríbenos por WhatsApp con tu correo y lo buscamos.",
+      "errorRed": "No pudimos consultar tu pago. Revisa tu conexión y vuelve a intentarlo.",
+      "volverInicio": "Volver al inicio",
+      "volverTienda": "Volver a la tienda"
+    }
   }
 }

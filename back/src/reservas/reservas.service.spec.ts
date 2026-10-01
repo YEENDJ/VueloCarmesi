@@ -1,8 +1,10 @@
 import { Test } from '@nestjs/testing'
-import { BadRequestException, NotFoundException } from '@nestjs/common'
+import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common'
 import { ReservasService } from './reservas.service'
 import { PrismaService } from '../prisma.service'
 import { NotificacionesService } from '../notificaciones/notificaciones.service'
+import { PagosService } from '../pagos/pagos.service'
+import { PAGOS_PANEL } from '../pagos/panel'
 import { hoyBogota, sumarDias } from './fecha-reserva.util'
 
 const mockPrisma = {
@@ -16,7 +18,16 @@ const mockPrisma = {
     update: jest.fn(),
     delete: jest.fn(),
   },
+  pago: {
+    count: jest.fn(),
+  },
+  siteConfig: {
+    findUnique: jest.fn(),
+  },
 }
+
+// Sin pasarela por defecto: es el flujo que hay hoy en producción.
+const mockPagos = { activo: false }
 
 const mockNotificaciones = {
   enviarConfirmacionReserva: jest.fn().mockResolvedValue(undefined),
@@ -46,6 +57,7 @@ describe('ReservasService.cambiarEstado', () => {
         ReservasService,
         { provide: PrismaService, useValue: mockPrisma },
         { provide: NotificacionesService, useValue: mockNotificaciones },
+        { provide: PagosService, useValue: mockPagos },
       ],
     }).compile()
     service = module.get(ReservasService)
@@ -80,7 +92,7 @@ describe('ReservasService.cambiarEstado', () => {
     expect(mockPrisma.reserva.update).toHaveBeenCalledWith({
       where: { id: '1' },
       data: { estado: 'confirmada' },
-      include: { experiencia: { select: { id: true, nombre: true } } },
+      include: { experiencia: { select: { id: true, nombre: true } }, pagos: PAGOS_PANEL },
     })
     expect(result.estado).toBe('confirmada')
     await new Promise(r => setImmediate(r))
@@ -138,12 +150,57 @@ describe('ReservasService.create', () => {
         ReservasService,
         { provide: PrismaService, useValue: mockPrisma },
         { provide: NotificacionesService, useValue: mockNotificaciones },
+        { provide: PagosService, useValue: mockPagos },
       ],
     }).compile()
     service = module.get(ReservasService)
     jest.clearAllMocks()
-    mockPrisma.experiencia.findUnique.mockResolvedValue({ capacidad: 12, archivada: false })
+    mockPrisma.experiencia.findUnique.mockResolvedValue({ capacidad: 12, archivada: false, precio: 95000 })
     mockPrisma.reserva.create.mockResolvedValue({ ...reservaBase, estado: 'pendiente' })
+    mockPrisma.siteConfig.findUnique.mockResolvedValue(null)
+    mockPagos.activo = false
+  })
+
+  it('guarda el total ofrecido aunque no haya pasarela, y sigue el flujo manual', async () => {
+    await service.create(dto)
+    const data = mockPrisma.reserva.create.mock.calls[0][0].data
+    expect(data.total).toBe(190000)
+    expect(data.estado).toBeUndefined()
+    expect(data.montoAbono).toBeUndefined()
+    expect(mockNotificaciones.enviarConfirmacionReserva).toHaveBeenCalled()
+  })
+
+  it('con pasarela congela el porcentaje y el abono, y espera el pago para avisar', async () => {
+    mockPagos.activo = true
+    mockPrisma.siteConfig.findUnique.mockResolvedValue({ key: 'reservas_abono_porcentaje', value: '40' })
+    mockPrisma.reserva.create.mockResolvedValue({ ...reservaBase, estado: 'pendiente_pago' })
+    await service.create(dto)
+    const data = mockPrisma.reserva.create.mock.calls[0][0].data
+    expect(data).toMatchObject({ total: 190000, porcentajeAbono: 40, montoAbono: 76000, estado: 'pendiente_pago' })
+    expect(data.venceEn).toBeInstanceOf(Date)
+    expect(mockNotificaciones.enviarConfirmacionReserva).not.toHaveBeenCalled()
+  })
+
+  it('sin porcentaje configurado cobra el 30', async () => {
+    mockPagos.activo = true
+    await service.create(dto)
+    expect(mockPrisma.reserva.create.mock.calls[0][0].data).toMatchObject({ porcentajeAbono: 30, montoAbono: 57000 })
+  })
+
+  it('con un porcentaje dañado en la base cobra el 30, nunca cero', async () => {
+    mockPagos.activo = true
+    mockPrisma.siteConfig.findUnique.mockResolvedValue({ key: 'reservas_abono_porcentaje', value: '30%' })
+    await service.create(dto)
+    expect(mockPrisma.reserva.create.mock.calls[0][0].data).toMatchObject({ porcentajeAbono: 30, montoAbono: 57000 })
+  })
+
+  it('una experiencia de precio cero no pasa por la pasarela', async () => {
+    mockPagos.activo = true
+    mockPrisma.experiencia.findUnique.mockResolvedValue({ capacidad: 12, archivada: false, precio: 0 })
+    await service.create(dto)
+    const data = mockPrisma.reserva.create.mock.calls[0][0].data
+    expect(data.estado).toBeUndefined()
+    expect(data.total).toBe(0)
   })
 
   it('crea la reserva sin pasarle el honeypot a Prisma', async () => {
@@ -183,5 +240,36 @@ describe('ReservasService.create', () => {
   it('responde 404 si la experiencia está archivada', async () => {
     mockPrisma.experiencia.findUnique.mockResolvedValue({ capacidad: 12, archivada: true })
     await expect(service.create(dto)).rejects.toThrow(NotFoundException)
+  })
+})
+
+describe('ReservasService.remove', () => {
+  let service: ReservasService
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        ReservasService,
+        { provide: PrismaService, useValue: mockPrisma },
+        { provide: NotificacionesService, useValue: mockNotificaciones },
+        { provide: PagosService, useValue: mockPagos },
+      ],
+    }).compile()
+    service = module.get(ReservasService)
+    jest.clearAllMocks()
+    mockPrisma.reserva.findUnique.mockResolvedValue(reservaBase)
+  })
+
+  it('borra una reserva sin pagos', async () => {
+    mockPrisma.pago.count.mockResolvedValue(0)
+    await service.remove('1')
+    expect(mockPrisma.reserva.delete).toHaveBeenCalledWith({ where: { id: '1' } })
+  })
+
+  it('no borra una reserva con pagos: el cobro es registro de un reclamo', async () => {
+    mockPrisma.pago.count.mockResolvedValue(1)
+    await expect(service.remove('1')).rejects.toThrow(ConflictException)
+    expect(mockPrisma.pago.count).toHaveBeenCalledWith({ where: { reservaId: '1' } })
+    expect(mockPrisma.reserva.delete).not.toHaveBeenCalled()
   })
 })

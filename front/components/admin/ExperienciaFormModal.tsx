@@ -216,7 +216,7 @@ export default function ExperienciaFormModal({
             <Seccion titulo="Datos prácticos" />
             <div className="admin-form-row-3">
               <FormRow label="Precio ($) *">
-                <input className="admin-input" type="number" min={0} value={form.precio} onChange={e => set('precio', e.target.value)} placeholder="95000" />
+                <input className="admin-input" type="number" min={0} step={1} value={form.precio} onChange={e => set('precio', e.target.value)} placeholder="95000" />
               </FormRow>
               <FormRow label="Duración *">
                 <input className="admin-input" value={form.duracion} onChange={e => set('duracion', e.target.value)} placeholder="4 horas" />

@@ -60,4 +60,12 @@ export class EmailService {
   templateReservaCancelada(vars: Record<string, string>): string {
     return this.tpl('reserva-cancelada', vars)
   }
+
+  templatePagoRechazado(vars: Record<string, string>): string {
+    return this.tpl('pago-rechazado', vars)
+  }
+
+  templatePagoEnRevision(vars: Record<string, string>): string {
+    return this.tpl('pago-en-revision', vars)
+  }
 }
