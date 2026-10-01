@@ -4,12 +4,21 @@ import type { AdminReserva, EstadoReserva } from '@/lib/admin/types'
 import { getReservas, updateEstadoReserva } from '@/lib/admin/api'
 import StatusBadge from '@/components/admin/StatusBadge'
 import ReservaDrawer from '@/components/admin/ReservaDrawer'
+import { esDePrueba, requiereRevision } from '@/lib/admin/pagos'
 
-const FILTROS = ['todas', 'pendientes', 'confirmadas', 'canceladas'] as const
+const FILTROS = ['todas', 'pendientes', 'confirmadas', 'canceladas', 'revisar'] as const
 type Filtro = typeof FILTROS[number]
 
 const FILTRO_ESTADO: Record<Filtro, EstadoReserva | null> = {
   todas: null, pendientes: 'pendiente', confirmadas: 'confirmada', canceladas: 'cancelada',
+  revisar: 'requiere_revision',
+}
+
+/** Las que se eligen a mano en la tabla. Las demás las pone el cobro en línea. */
+const ELEGIBLES: EstadoReserva[] = ['pendiente', 'confirmada', 'cancelada']
+const ETIQUETA: Record<EstadoReserva, string> = {
+  pendiente: 'Pendiente', confirmada: 'Confirmada', cancelada: 'Cancelada',
+  pendiente_pago: 'Esperando pago', expirada: 'Vencida', requiere_revision: 'Revisar',
 }
 
 export default function ReservasPage() {
@@ -53,6 +62,7 @@ export default function ReservasPage() {
   }, [reservas, filtro, modoFecha, mes, fechaDesde, fechaHasta])
 
   const hayFiltroFecha = modoFecha === 'mes' ? !!mes : !!(fechaDesde || fechaHasta)
+  const porRevisar = useMemo(() => reservas.filter(requiereRevision).length, [reservas])
 
   function limpiarFecha() {
     setMes(''); setFechaDesde(''); setFechaHasta('')
@@ -117,8 +127,14 @@ export default function ReservasPage() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 20 }}>
         <div className="admin-pills" style={{ margin: 0 }}>
           {FILTROS.map(f => (
-            <button key={f} className={`admin-pill${filtro === f ? ' active' : ''}`} onClick={() => setFiltro(f)}>
+            <button
+              key={f}
+              className={`admin-pill${filtro === f ? ' active' : ''}`}
+              onClick={() => setFiltro(f)}
+              style={f === 'revisar' && porRevisar > 0 && filtro !== f ? { color: 'var(--status-revision-txt)', fontWeight: 700 } : undefined}
+            >
               {f.charAt(0).toUpperCase() + f.slice(1)}
+              {f === 'revisar' && porRevisar > 0 && ` (${porRevisar})`}
             </button>
           ))}
         </div>
@@ -249,10 +265,15 @@ export default function ReservasPage() {
                   </td>
                   <td style={{ minWidth: 140, maxWidth: 200 }}>{r.experiencia?.nombre ?? r.experienciaId}</td>
                   <td style={{ textAlign: 'center' }}>{r.cantidadPersonas}</td>
-                  <td><StatusBadge estado={r.estado} /></td>
+                  <td>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                      <StatusBadge estado={r.estado} />
+                      {esDePrueba(r) && <StatusBadge estado="prueba" />}
+                    </div>
+                  </td>
                   <td>
                     <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', alignItems: 'center' }}>
-                      {r.estado !== 'cancelada' && (
+                      {r.estado !== 'cancelada' && r.estado !== 'expirada' && (
                         <select
                           className="admin-select"
                           style={{ fontSize: 12, padding: '5px 8px', width: 'auto' }}
@@ -260,9 +281,10 @@ export default function ReservasPage() {
                           disabled={changing === r.id}
                           onChange={e => handleSelectChange(r, e.target.value as EstadoReserva)}
                         >
-                          <option value="pendiente">Pendiente</option>
-                          <option value="confirmada">Confirmada</option>
-                          <option value="cancelada">Cancelada</option>
+                          {!ELEGIBLES.includes(r.estado) && (
+                            <option value={r.estado} disabled>{ETIQUETA[r.estado]}</option>
+                          )}
+                          {ELEGIBLES.map(e => <option key={e} value={e}>{ETIQUETA[e]}</option>)}
                         </select>
                       )}
                       <button className="btn-secondary btn-sm" onClick={() => setSelected(r)}>Detalle</button>

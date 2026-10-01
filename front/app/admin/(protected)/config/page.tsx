@@ -386,6 +386,44 @@ export default function ConfigPage() {
           </div>
         </div>
 
+        {/* Sección: Reservas y pagos */}
+        <div style={{ background: '#fff', borderRadius: 14, padding: 32, boxShadow: '0 2px 8px rgba(135,43,19,.06)' }}>
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 24, color: 'var(--color-brown)' }}>
+            Reservas y pagos
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div className="admin-field-label">Porcentaje de abono al reservar</div>
+            <input
+              className="admin-input"
+              type="number"
+              inputMode="numeric"
+              min={1}
+              max={100}
+              step={1}
+              value={config.reservas_abono_porcentaje ?? ''}
+              onChange={e => set('reservas_abono_porcentaje', e.target.value)}
+              placeholder="30"
+              style={{ maxWidth: 160 }}
+            />
+            <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginTop: 6, maxWidth: '72ch', lineHeight: 1.5 }}>
+              Lo que se cobra en línea al reservar; el resto se paga el día de la actividad.
+              Solo el número, de 1 a 100: 100 cobra la reserva completa. Vacío cobra el 30.
+              Un cambio vale para las reservas nuevas: las que ya existen conservan el
+              porcentaje con que se hicieron.
+            </div>
+          </div>
+          <div style={{ marginTop: 24 }}>
+            <button
+              className="btn-primary"
+              onClick={() => guardar(['reservas_abono_porcentaje'])}
+              disabled={saving === 'reservas_abono_porcentaje'}
+              style={{ minHeight: 44 }}
+            >
+              {saving === 'reservas_abono_porcentaje' ? 'Guardando…' : 'Guardar porcentaje'}
+            </button>
+          </div>
+        </div>
+
         {/* Sección: Notificaciones */}
         <div style={{ background: '#fff', borderRadius: 14, padding: 32, boxShadow: '0 2px 8px rgba(135,43,19,.06)' }}>
           <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 24, color: 'var(--color-brown)' }}>

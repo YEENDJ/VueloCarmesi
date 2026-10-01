@@ -7,6 +7,7 @@ import StatusBadge from '@/components/admin/StatusBadge'
 import ReservasChart from '@/components/admin/ReservasChart'
 import Link from 'next/link'
 import { formatPrecio } from '@/lib/format'
+import { cuentaEnCifras, cuentaEnIngresos, esDePrueba, requiereRevision } from '@/lib/admin/pagos'
 
 export default function AdminOverviewPage() {
   const [reservas, setReservas] = useState<AdminReserva[]>([])
@@ -33,15 +34,21 @@ export default function AdminOverviewPage() {
   const mesActual = now.getMonth()
   const anioActual = now.getFullYear()
 
+  // Fuera de las cifras: lo que esperó pago y no lo tuvo (un carrito
+  // abandonado en la pasarela no es un pedido) y lo pagado en el sandbox, que
+  // cae en la misma base que lo real. Ver lib/admin/pagos.ts.
   const reservasMes = reservas.filter(r => {
     const d = new Date(r.createdAt)
-    return d.getMonth() === mesActual && d.getFullYear() === anioActual
+    return d.getMonth() === mesActual && d.getFullYear() === anioActual && cuentaEnCifras(r)
   })
   const pedidosMes = pedidos.filter(p => {
     const d = new Date(p.createdAt)
-    return d.getMonth() === mesActual && d.getFullYear() === anioActual
+    return d.getMonth() === mesActual && d.getFullYear() === anioActual && cuentaEnCifras(p)
   })
-  const ingresosMes = pedidosMes.reduce((s, p) => s + p.total, 0)
+  const ingresosMes = pedidosMes.filter(cuentaEnIngresos).reduce((s, p) => s + p.total, 0)
+  const pedidosRevisar = pedidos.filter(requiereRevision).length
+  const reservasRevisar = reservas.filter(requiereRevision).length
+  const porRevisar = pedidosRevisar + reservasRevisar
   const stockBajo = productos.filter(p => p.stock > 0 && p.stock < 5).length
   const cotizacionesNuevas = solicitudes.filter(s => s.estado === 'nueva').length
   const mensajesNuevos = contactos.filter(c => c.estado === 'nuevo').length
@@ -74,6 +81,15 @@ export default function AdminOverviewPage() {
         <StatCard label="Pedidos del mes" value={pedidosMes.length} icon="📦" />
         <StatCard label="Ingresos estimados" value={formatPrecio(ingresosMes)} icon="💰" />
         <StatCard label="Stock bajo" value={stockBajo} icon="⚠️" alerta={stockBajo > 0} />
+        {/* Solo aparece cuando hay algo: es dinero de un cliente esperando una decisión. */}
+        {porRevisar > 0 && (
+          <Link
+            href={pedidosRevisar > 0 ? '/admin/pedidos' : '/admin/reservas'}
+            style={{ flex: 1, minWidth: 180, display: 'flex', textDecoration: 'none', color: 'inherit' }}
+          >
+            <StatCard label="Pagos por revisar" value={porRevisar} icon="🚨" alerta />
+          </Link>
+        )}
         <Link href="/admin/grupos" style={{ flex: 1, minWidth: 180, display: 'flex', textDecoration: 'none', color: 'inherit' }}>
           <StatCard label="Cotizaciones nuevas" value={cotizacionesNuevas} icon="🏫" alerta={cotizacionesNuevas > 0} />
         </Link>
@@ -101,7 +117,10 @@ export default function AdminOverviewPage() {
                 <div style={{ fontSize: 13, fontWeight: 700 }}>{r.nombre}</div>
                 <div style={{ fontSize: 12, color: 'var(--admin-text-muted)' }}>{new Date(r.fecha).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}</div>
               </div>
-              <StatusBadge estado={r.estado} />
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'flex-end' }}>
+                <StatusBadge estado={r.estado} />
+                {esDePrueba(r) && <StatusBadge estado="prueba" />}
+              </div>
             </div>
           ))}
         </div>
@@ -118,7 +137,10 @@ export default function AdminOverviewPage() {
                 <div style={{ fontSize: 13, fontWeight: 700 }}>{p.nombre}</div>
                 <div style={{ fontSize: 12, color: 'var(--admin-text-muted)' }}>{formatPrecio(p.total)}</div>
               </div>
-              <StatusBadge estado={p.estado} />
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'flex-end' }}>
+                <StatusBadge estado={p.estado} />
+                {esDePrueba(p) && <StatusBadge estado="prueba" />}
+              </div>
             </div>
           ))}
         </div>

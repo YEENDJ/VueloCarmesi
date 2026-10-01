@@ -1,5 +1,30 @@
-export type EstadoReserva = 'pendiente' | 'confirmada' | 'cancelada'
-export type EstadoPedido  = 'pendiente' | 'enviado' | 'entregado' | 'cancelado'
+/**
+ * `pendiente_pago`, `expirada` y `requiere_revision` los pone la pasarela de
+ * pagos, no el panel: ver docs/superpowers/specs/2026-09-25-pasarela-pagos-design.md.
+ */
+export type EstadoReserva =
+  | 'pendiente' | 'confirmada' | 'cancelada'
+  | 'pendiente_pago' | 'expirada' | 'requiere_revision'
+export type EstadoPedido =
+  | 'pendiente' | 'pagado' | 'enviado' | 'entregado' | 'cancelado'
+  | 'pendiente_pago' | 'expirado' | 'requiere_revision'
+
+/** Un intento de cobro en línea. Un pedido o una reserva pueden tener varios. */
+export interface AdminPago {
+  id: string
+  referencia: string
+  monto: number
+  /** pendiente | aprobado | rechazado | anulado | expirado | error */
+  estado: string
+  /** tarjeta, pse, nequi… lo que reporte la pasarela. */
+  metodo: string | null
+  /** Por qué lo rechazó la pasarela, en sus palabras. */
+  motivo: string | null
+  /** `prueba` = sandbox: no es dinero real y no cuenta en las cifras. */
+  modo: 'prueba' | 'produccion' | string
+  proveedor: string
+  createdAt: string
+}
 
 export interface AdminReserva {
   id: string
@@ -13,6 +38,12 @@ export interface AdminReserva {
   estado: EstadoReserva
   createdAt: string
   experiencia?: { id: string; nombre: string }
+  /** Congelados al crearla. Nulos en las reservas de antes de la pasarela. */
+  total?: number | null
+  porcentajeAbono?: number | null
+  montoAbono?: number | null
+  venceEn?: string | null
+  pagos?: AdminPago[]
 }
 
 export interface AdminExperiencia {
@@ -71,6 +102,8 @@ export interface AdminPedido {
   estado: EstadoPedido
   createdAt: string
   items: ItemPedido[]
+  venceEn?: string | null
+  pagos?: AdminPago[]
 }
 
 /** Mismo recorrido que `ESTADOS_SOLICITUD` en el DTO del backend. */

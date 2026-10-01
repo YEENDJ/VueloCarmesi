@@ -18,6 +18,18 @@ const CONFIG: Record<string, { bg: string; txt: string; label: string }> = {
   // Mensajes de contacto: el mismo ámbar para lo que espera respuesta.
   nuevo:       { bg: 'var(--status-pendiente-bg)',  txt: 'var(--status-pendiente-txt)',  label: 'Nuevo' },
   respondido:  { bg: 'var(--status-confirmada-bg)', txt: 'var(--status-confirmada-txt)', label: 'Respondido' },
+  // Pedidos y reservas con cobro en línea.
+  pendiente_pago:    { bg: 'var(--status-pendiente-bg)',  txt: 'var(--status-pendiente-txt)',  label: 'Esperando pago' },
+  pagado:            { bg: 'var(--status-confirmada-bg)', txt: 'var(--status-confirmada-txt)', label: 'Pagado' },
+  expirado:          { bg: 'var(--status-cancelada-bg)',  txt: 'var(--status-cancelada-txt)',  label: 'Vencido' },
+  expirada:          { bg: 'var(--status-cancelada-bg)',  txt: 'var(--status-cancelada-txt)',  label: 'Vencida' },
+  requiere_revision: { bg: 'var(--status-revision-bg)',   txt: 'var(--status-revision-txt)',   label: 'Revisar' },
+  // Intentos de pago (`pendiente` y `expirado` ya están arriba).
+  aprobado:    { bg: 'var(--status-confirmada-bg)', txt: 'var(--status-confirmada-txt)', label: 'Aprobado' },
+  rechazado:   { bg: 'var(--status-cancelada-bg)',  txt: 'var(--status-cancelada-txt)',  label: 'Rechazado' },
+  anulado:     { bg: 'var(--status-revision-bg)',   txt: 'var(--status-revision-txt)',   label: 'Anulado' },
+  error:       { bg: 'var(--status-cancelada-bg)',  txt: 'var(--status-cancelada-txt)',  label: 'Error' },
+  prueba:      { bg: 'var(--status-prueba-bg)',     txt: 'var(--status-prueba-txt)',     label: 'Prueba' },
 }
 
 export default function StatusBadge({ estado }: { estado: Estado }) {

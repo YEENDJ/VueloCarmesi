@@ -5,12 +5,14 @@ import { getPedidos } from '@/lib/admin/api'
 import StatusBadge from '@/components/admin/StatusBadge'
 import PedidoDrawer from '@/components/admin/PedidoDrawer'
 import { formatPrecio } from '@/lib/format'
+import { esDePrueba, requiereRevision } from '@/lib/admin/pagos'
 
-const FILTROS = ['todos', 'pendientes', 'enviados', 'entregados', 'cancelados'] as const
+const FILTROS = ['todos', 'pendientes', 'pagados', 'enviados', 'entregados', 'cancelados', 'revisar'] as const
 type Filtro = typeof FILTROS[number]
 
 const FILTRO_ESTADO: Record<Filtro, EstadoPedido | null> = {
-  todos: null, pendientes: 'pendiente', enviados: 'enviado', entregados: 'entregado', cancelados: 'cancelado',
+  todos: null, pendientes: 'pendiente', pagados: 'pagado', enviados: 'enviado',
+  entregados: 'entregado', cancelados: 'cancelado', revisar: 'requiere_revision',
 }
 
 export default function PedidosPage() {
@@ -27,6 +29,7 @@ export default function PedidosPage() {
     const estado = FILTRO_ESTADO[filtro]
     return estado ? pedidos.filter(p => p.estado === estado) : pedidos
   }, [pedidos, filtro])
+  const porRevisar = useMemo(() => pedidos.filter(requiereRevision).length, [pedidos])
 
   function handleUpdated(updated: AdminPedido) {
     setPedidos(prev => prev.map(p => p.id === updated.id ? updated : p))
@@ -44,8 +47,14 @@ export default function PedidosPage() {
 
       <div className="admin-pills" style={{ marginBottom: 20 }}>
         {FILTROS.map(f => (
-          <button key={f} className={`admin-pill${filtro === f ? ' active' : ''}`} onClick={() => setFiltro(f)}>
+          <button
+            key={f}
+            className={`admin-pill${filtro === f ? ' active' : ''}`}
+            onClick={() => setFiltro(f)}
+            style={f === 'revisar' && porRevisar > 0 && filtro !== f ? { color: 'var(--status-revision-txt)', fontWeight: 700 } : undefined}
+          >
             {f.charAt(0).toUpperCase() + f.slice(1)}
+            {f === 'revisar' && porRevisar > 0 && ` (${porRevisar})`}
           </button>
         ))}
       </div>
@@ -87,7 +96,12 @@ export default function PedidosPage() {
                   <td style={{ textAlign: 'right', color: 'var(--color-amber)', fontWeight: 700 }}>
                     {formatPrecio(p.total)}
                   </td>
-                  <td><StatusBadge estado={p.estado} /></td>
+                  <td>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                      <StatusBadge estado={p.estado} />
+                      {esDePrueba(p) && <StatusBadge estado="prueba" />}
+                    </div>
+                  </td>
                   <td style={{ textAlign: 'right' }}>
                     <button className="btn-secondary btn-sm" onClick={() => setSelected(p)}>Ver detalle</button>
                   </td>
