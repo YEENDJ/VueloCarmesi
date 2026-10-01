@@ -29,6 +29,8 @@ const CONFIG: Record<string, { bg: string; txt: string; label: string }> = {
   rechazado:   { bg: 'var(--status-cancelada-bg)',  txt: 'var(--status-cancelada-txt)',  label: 'Rechazado' },
   anulado:     { bg: 'var(--status-revision-bg)',   txt: 'var(--status-revision-txt)',   label: 'Anulado' },
   error:       { bg: 'var(--status-cancelada-bg)',  txt: 'var(--status-cancelada-txt)',  label: 'Error' },
+  // Marca junto al estado de una reserva: el abono ya se cobró en línea.
+  abono_pagado: { bg: 'var(--status-confirmada-bg)', txt: 'var(--status-confirmada-txt)', label: 'Abono pagado' },
   prueba:      { bg: 'var(--status-prueba-bg)',     txt: 'var(--status-prueba-txt)',     label: 'Prueba' },
 }
 

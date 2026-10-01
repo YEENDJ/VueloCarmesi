@@ -4,7 +4,7 @@ import type { AdminReserva, EstadoReserva } from '@/lib/admin/types'
 import { getReservas, updateEstadoReserva } from '@/lib/admin/api'
 import StatusBadge from '@/components/admin/StatusBadge'
 import ReservaDrawer from '@/components/admin/ReservaDrawer'
-import { esDePrueba, requiereRevision } from '@/lib/admin/pagos'
+import { esDePrueba, requiereRevision, tienePagoAprobado } from '@/lib/admin/pagos'
 
 const FILTROS = ['todas', 'pendientes', 'confirmadas', 'canceladas', 'revisar'] as const
 type Filtro = typeof FILTROS[number]
@@ -268,6 +268,7 @@ export default function ReservasPage() {
                   <td>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                       <StatusBadge estado={r.estado} />
+                      {tienePagoAprobado(r) && <StatusBadge estado="abono_pagado" />}
                       {esDePrueba(r) && <StatusBadge estado="prueba" />}
                     </div>
                   </td>

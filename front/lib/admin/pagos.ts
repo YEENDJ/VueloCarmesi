@@ -33,6 +33,15 @@ export function cuentaEnIngresos(r: ConPagos): boolean {
   return cuentaEnCifras(r) && r.estado !== 'cancelado' && r.estado !== 'cancelada'
 }
 
+/**
+ * Si ya entró dinero por la pasarela. Una reserva con el abono pagado sigue en
+ * `pendiente` —espera que la finca la confirme, como en el flujo manual—, y
+ * sin esta marca en la lista no se distingue de una que nadie ha pagado.
+ */
+export function tienePagoAprobado(r: ConPagos): boolean {
+  return !!r.pagos?.some(p => p.estado === 'aprobado')
+}
+
 /** La bandeja de lo que necesita a una persona: dinero de por medio y algo que decidir. */
 export function requiereRevision(r: ConPagos): boolean {
   return r.estado === 'requiere_revision'

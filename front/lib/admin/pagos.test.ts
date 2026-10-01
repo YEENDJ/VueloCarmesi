@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { cuentaEnCifras, cuentaEnIngresos, esDePrueba, nombreMetodo, requiereRevision } from './pagos'
+import { cuentaEnCifras, cuentaEnIngresos, esDePrueba, nombreMetodo, requiereRevision, tienePagoAprobado } from './pagos'
 import type { AdminPago } from './types'
 
 const pago = (modo: string, estado = 'aprobado'): AdminPago => ({
@@ -62,5 +62,17 @@ describe('requiereRevision y nombreMetodo', () => {
     expect(nombreMetodo('card')).toBe('Tarjeta')
     expect(nombreMetodo('daviplata')).toBe('daviplata')
     expect(nombreMetodo(null)).toBe('—')
+  })
+})
+
+describe('tienePagoAprobado', () => {
+  it('una reserva pendiente con el abono cobrado se marca como pagada', () => {
+    expect(tienePagoAprobado({ estado: 'pendiente', pagos: [pago('prueba', 'rechazado'), pago('prueba')] })).toBe(true)
+  })
+
+  it('sin pagos, o solo con intentos fallidos o anulados, no', () => {
+    expect(tienePagoAprobado({ estado: 'pendiente' })).toBe(false)
+    expect(tienePagoAprobado({ estado: 'pendiente_pago', pagos: [pago('prueba', 'rechazado')] })).toBe(false)
+    expect(tienePagoAprobado({ estado: 'requiere_revision', pagos: [pago('produccion', 'anulado')] })).toBe(false)
   })
 })
