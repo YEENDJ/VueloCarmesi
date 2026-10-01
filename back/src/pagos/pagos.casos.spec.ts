@@ -454,6 +454,52 @@ describe('Pagos: otras defensas', () => {
     expect(e.prisma.t.pedido[0].estado).toBe('pendiente_pago')
   })
 
+  it('un evento auténtico con la referencia de otro pedido no lo da por pagado', async () => {
+    const e = montar()
+    e.pedido()
+    const { referencia } = await e.pagos.crearIntento({ pedidoId: 'ped1' }, T0)
+    // Un aprobado auténtico de otro pago, reenviado con esta referencia. La
+    // pasarela falsa firma el cuerpo entero; aquí se firma a mano para simular
+    // lo que la firma de Wompi no cubre.
+    const alterado = Buffer.from(JSON.stringify({
+      referencia, proveedorTxId: 'tx-de-otro-pedido', estado: 'aprobado', monto: 100000, payload: {},
+    }))
+
+    await e.pagos.procesarWebhook(alterado, { [CABECERA_FIRMA_FALSA]: e.proveedor.firmar(alterado) })
+
+    expect(e.pagoDe(referencia).estado).toBe('pendiente')
+    expect(e.prisma.t.pedido[0].estado).toBe('pendiente_pago')
+  })
+
+  it('el webhook aplica lo que dice la pasarela, no lo que trae el evento', async () => {
+    const e = montar()
+    e.pedido()
+    const { referencia } = await e.pagos.crearIntento({ pedidoId: 'ped1' }, T0)
+    e.proveedor.simular(referencia, 'rechazado', 100000, { proveedorTxId: 'tx-1' })
+    const dice = Buffer.from(JSON.stringify({
+      referencia, proveedorTxId: 'tx-1', estado: 'aprobado', monto: 100000, payload: {},
+    }))
+
+    await e.pagos.procesarWebhook(dice, { [CABECERA_FIRMA_FALSA]: e.proveedor.firmar(dice) })
+
+    expect(e.pagoDe(referencia).estado).toBe('rechazado')
+    expect(e.prisma.t.pedido[0].estado).toBe('pendiente_pago')
+  })
+
+  it('si la pasarela no responde, el webhook falla para que lo reintente', async () => {
+    const e = montar()
+    e.pedido()
+    const { referencia } = await e.pagos.crearIntento({ pedidoId: 'ped1' }, T0)
+    const { body, firma } = e.proveedor.simular(referencia, 'aprobado', 100000)
+    jest.spyOn(e.proveedor, 'consultarTransaccion').mockRejectedValueOnce(new Error('timeout'))
+
+    await expect(e.pagos.procesarWebhook(body, { [CABECERA_FIRMA_FALSA]: firma })).rejects.toThrow('timeout')
+    expect(e.prisma.t.pedido[0].estado).toBe('pendiente_pago')
+
+    await e.pagos.procesarWebhook(body, { [CABECERA_FIRMA_FALSA]: firma }) // el reintento
+    expect(e.prisma.t.pedido[0].estado).toBe('pagado')
+  })
+
   it('un monto distinto al esperado no da el pedido por pagado', async () => {
     const e = montar()
     e.pedido()

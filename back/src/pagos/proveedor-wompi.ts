@@ -38,6 +38,13 @@ interface EventoWompi {
   timestamp?: number
 }
 
+/**
+ * Lo mínimo que tiene que cubrir la firma de un evento. La lista de campos
+ * firmados viene en el propio evento: sin este piso, alguien podría armarla con
+ * otros campos y reutilizar el checksum de un evento viejo.
+ */
+const PROPIEDADES_FIRMADAS = ['transaction.id', 'transaction.status', 'transaction.amount_in_cents']
+
 const ESTADOS: Record<TransaccionWompi['status'], EventoPago['estado']> = {
   PENDING: 'pendiente',
   APPROVED: 'aprobado',
@@ -129,6 +136,7 @@ export class ProveedorWompi implements ProveedorPagos {
     const recibido = evento.signature?.checksum ?? (typeof cabecera === 'string' ? cabecera : undefined)
     const propiedades = evento.signature?.properties
     if (!recibido || !Array.isArray(propiedades) || evento.timestamp == null) throw new FirmaInvalidaError()
+    if (!PROPIEDADES_FIRMADAS.every(req => propiedades.includes(req))) throw new FirmaInvalidaError()
 
     const valores = propiedades.map(ruta => valorEn(evento.data, ruta))
     if (valores.some(v => v === undefined)) throw new FirmaInvalidaError()
