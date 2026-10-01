@@ -146,6 +146,10 @@ export default function ResultadoPago({
     errorRed: { titulo: t('errorRed'), cuerpo: '' },
   }
   const { titulo, cuerpo } = textos[pantalla]
+  // Mientras la página sigue preguntando sola. Pasados los dos minutos deja de
+  // consultar, y ahí la animación mentiría.
+  const consultando = pantalla === 'cargando' || (pantalla === 'pendiente' && !esperaLarga)
+  const claseIcono = consultando ? 'pago-latido' : pantalla === 'aprobado' || pantalla === 'revision' ? 'pago-exito' : undefined
 
   return (
     <section style={{ backgroundColor: 'var(--color-cream)', minHeight: '70svh' }}>
@@ -159,12 +163,13 @@ export default function ResultadoPago({
       >
         <div
           aria-hidden="true"
+          className={consultando ? 'pago-anillo' : undefined}
           style={{
             width: '80px', height: '80px', borderRadius: '50%', backgroundColor: fondo,
             display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px',
           }}
         >
-          <Icono size={40} strokeWidth={2.5} color={trazo} className={pantalla === 'pendiente' ? 'pago-latido' : undefined} />
+          <Icono size={40} strokeWidth={2.5} color={trazo} className={claseIcono} />
         </div>
 
         {/* aria-live: el título cambia solo mientras se consulta, y quien usa
@@ -188,6 +193,18 @@ export default function ResultadoPago({
             </p>
           )}
         </div>
+
+        {consultando && (
+          <>
+            {pantalla === 'pendiente' && (
+              <p style={{ fontWeight: 700, color: 'var(--color-brown)', margin: '20px auto 0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+                {t('verificando')}
+                <span className="pago-puntos" aria-hidden="true"><span /><span /><span /></span>
+              </p>
+            )}
+            <div className="pago-barra" aria-hidden="true" />
+          </>
+        )}
 
         {pantalla === 'aprobado' && !esPedido && saldo > 0 && (
           <p style={{ fontWeight: 700, color: 'var(--color-brown)', margin: '16px auto 0', maxWidth: '44ch' }}>
@@ -236,8 +253,17 @@ export default function ResultadoPago({
               {reintentando ? t('reintentando') : t('reintentar')}
             </Button>
           )}
-          {(pantalla === 'errorRed' || (pantalla === 'pendiente' && esperaLarga)) && (
-            <Button onClick={volverAConsultar} style={{ minHeight: 44 }}>{t('consultar')}</Button>
+          {/* Mientras está pendiente el botón está siempre: si el sondeo se
+              quedó corto o la página no se enteró, el cliente no tiene que
+              recargar. Secundario mientras la página consulta sola. */}
+          {(pantalla === 'errorRed' || pantalla === 'pendiente') && (
+            <Button
+              onClick={volverAConsultar}
+              variant={pantalla === 'pendiente' && !esperaLarga ? 'outline' : undefined}
+              style={{ minHeight: 44 }}
+            >
+              {t('consultar')}
+            </Button>
           )}
           {pantalla === 'vencido' && (
             esPedido

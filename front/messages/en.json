@@ -1385,6 +1385,7 @@
       "pendienteTitulo": "We’re confirming your payment",
       "pendienteTexto": "Your bank hasn’t replied yet. It usually takes a few minutes, so please keep this page open.",
       "pendienteLargo": "Your bank is taking longer than usual. No need to wait here: we’ll email you as soon as it’s confirmed.",
+      "verificando": "Checking your payment",
       "consultar": "Check again",
       "rechazadoTitulo": "The payment didn’t go through",
       "rechazadoTexto": "Your bank didn’t approve the payment and you weren’t charged. You can try again with another payment method.",
