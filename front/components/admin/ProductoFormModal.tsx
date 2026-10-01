@@ -145,7 +145,7 @@ export default function ProductoFormModal({
 
             <div className="admin-form-row-3">
               <FormRow label="Precio ($) *">
-                <input className="admin-input" type="number" min={0} value={form.precio} onChange={e => set('precio', e.target.value)} />
+                <input className="admin-input" type="number" min={0} step={1} value={form.precio} onChange={e => set('precio', e.target.value)} />
               </FormRow>
               <FormRow label="Stock inicial">
                 <input className="admin-input" type="number" min={0} value={form.stock} onChange={e => set('stock', e.target.value)} />

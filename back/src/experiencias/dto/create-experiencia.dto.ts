@@ -1,5 +1,5 @@
 import {
-  IsString, IsNumber, IsBoolean, IsOptional, IsArray, IsNotEmpty,
+  IsString, IsInt, IsNumber, IsBoolean, IsOptional, IsArray, IsNotEmpty,
   Min, MaxLength, ArrayMaxSize, ArrayMinSize,
 } from 'class-validator'
 
@@ -25,7 +25,9 @@ export class CreateExperienciaDto {
   @IsString() @IsNotEmpty() descripcionLarga: string
 
   @IsString() @IsNotEmpty() duracion: string
-  @IsNumber() @Min(0) precio: number
+  // Entero: es lo que guarda la base desde la pasarela de pagos, y un decimal
+  // acá llegaba a Prisma como un 500 en vez de un error que se pueda leer.
+  @IsInt({ message: 'El precio va en pesos enteros, sin decimales' }) @Min(0) precio: number
   @IsNumber() @Min(1) capacidad: number
 
   // El primer elemento es la portada. `imagen` no se acepta desde fuera: la

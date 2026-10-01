@@ -1,5 +1,5 @@
 import {
-  IsString, IsNumber, IsOptional, IsIn, IsArray, Min, MaxLength, ArrayMaxSize,
+  IsString, IsInt, IsNumber, IsOptional, IsIn, IsArray, Min, MaxLength, ArrayMaxSize,
 } from 'class-validator'
 import { MAX_IMAGENES, MAX_META } from './create-producto.dto'
 
@@ -7,7 +7,7 @@ export class UpdateProductoDto {
   @IsOptional() @IsString() nombre?: string
   @IsOptional() @IsString() @MaxLength(MAX_META) descripcion?: string
   @IsOptional() @IsString() descripcionLarga?: string
-  @IsOptional() @IsNumber() @Min(0) precio?: number
+  @IsOptional() @IsInt({ message: 'El precio va en pesos enteros, sin decimales' }) @Min(0) precio?: number
   @IsOptional() @IsNumber() @Min(0) stock?: number
   @IsOptional() @IsString() categoria?: string
 

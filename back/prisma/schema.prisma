@@ -20,7 +20,8 @@ model Experiencia {
   // El relato. Es el texto principal de la ficha y se escribe en párrafos.
   descripcionLarga String                  @default("")
   duracion         String
-  precio           Float
+  /// Pesos enteros, sin decimales. Ver el comentario de `Pago.monto`.
+  precio           Int
   capacidad        Int
   // Prácticos: opcionales, la ficha absorbe su ausencia sin verse incompleta.
   horarios         String                  @default("")
@@ -54,8 +55,28 @@ model Reserva {
   email            String
   telefono         String
   notas            String?
+  /// pendiente | pendiente_pago | confirmada | cancelada | expirada | requiere_revision
+  ///
+  /// `pendiente` es el flujo manual de antes de la pasarela: el admin la
+  /// confirma a mano. Las que se cobran en línea nacen en `pendiente_pago`.
   estado           String      @default("pendiente")
+
+  /// Lo que se le ofreció al cliente, congelado al crear la reserva: si el
+  /// precio de la experiencia o el porcentaje de abono cambian después, esta
+  /// reserva conserva sus cifras y el saldo del día queda exacto.
+  ///
+  /// Nulos en las reservas de antes de la pasarela. Rellenarlas con el precio
+  /// de hoy sería inventar lo que se les cobró.
+  total            Int?
+  porcentajeAbono  Int?
+  montoAbono       Int?
+  /// Hasta cuándo se sostiene sin un pago aprobado. Nulo si no espera pago.
+  venceEn          DateTime?
+
   createdAt        DateTime    @default(now())
+  pagos            Pago[]
+
+  @@index([estado, venceEn])
 }
 
 model Producto {
@@ -66,7 +87,8 @@ model Producto {
   // description, opcional y con respaldo desde la larga.
   descripcion      String               @default("")
   descripcionLarga String               @default("")
-  precio           Float
+  /// Pesos enteros.
+  precio           Int
   stock            Int
   // imagenes[0] es la portada; `imagen` queda sincronizada por el service.
   imagen           String               @default("")
@@ -86,10 +108,26 @@ model Pedido {
   direccion    String
   ciudad       String
   codigoPostal String
-  total        Float
+  total        Int
+  /// pendiente | pendiente_pago | pagado | enviado | entregado | cancelado | expirado | requiere_revision
+  ///
+  /// `pendiente` es el flujo manual de antes de la pasarela, donde el pago se
+  /// coordinaba por fuera. Los pedidos cobrados en línea nacen en `pendiente_pago`.
   estado       String       @default("pendiente")
+  /// Hasta cuándo se aparta el stock sin un pago aprobado. Nulo si no espera pago.
+  venceEn      DateTime?
+  /// Si las unidades de este pedido están descontadas del inventario.
+  ///
+  /// Con los estados de la pasarela ya no alcanza con mirar el estado: un
+  /// pedido `expirado` ya las devolvió, uno `requiere_revision` puede tenerlas
+  /// o no según por qué llegó ahí. Devolver stock mirando solo el estado las
+  /// devolvía dos veces. Quien devuelve las unidades lo pone en false.
+  stockApartado Boolean     @default(true)
   createdAt    DateTime     @default(now())
   items        ItemPedido[]
+  pagos        Pago[]
+
+  @@index([estado, venceEn])
 }
 
 model ItemPedido {
@@ -99,7 +137,57 @@ model ItemPedido {
   productoId String
   producto   Producto @relation(fields: [productoId], references: [id])
   cantidad   Int
-  precio     Float
+  /// Precio unitario en pesos enteros, copiado al crear el pedido.
+  precio     Int
+}
+
+/// Un intento de cobro sobre un pedido o una reserva.
+///
+/// Uno por intento, no uno por pedido: si el banco rechaza, el cliente
+/// reintenta con otro método y eso es un `Pago` nuevo con otra referencia,
+/// mientras el pedido conserva el stock apartado. Pertenece a un pedido **o** a
+/// una reserva, nunca a los dos: lo garantiza un CHECK en la migración.
+///
+/// Diseño y casos de fallo en docs/superpowers/specs/2026-09-25-pasarela-pagos-design.md.
+model Pago {
+  id            String   @id @default(cuid())
+  /// La que se le envía a la pasarela. Única y nunca reutilizada.
+  referencia    String   @unique
+  pedidoId      String?
+  /// Restrict: un cobro no se borra con su pedido. Es el registro que
+  /// responde un reclamo o un contracargo meses después.
+  pedido        Pedido?  @relation(fields: [pedidoId], references: [id], onDelete: Restrict)
+  reservaId     String?
+  reserva       Reserva? @relation(fields: [reservaId], references: [id], onDelete: Restrict)
+  /// Pesos enteros, copiado al crear el intento y nunca recalculado. Las
+  /// pasarelas firman el monto: con Float, un redondeo rompía la firma o
+  /// cobraba un peso de menos.
+  monto         Int
+  moneda        String   @default("COP")
+  /// El adaptador que lo creó: 'falso' en pruebas, luego el de la pasarela.
+  proveedor     String
+  /// Id de la transacción en la pasarela. Llega con el primer evento; único
+  /// para que el mismo webhook dos veces no se aplique dos veces.
+  proveedorTxId String?  @unique
+  /// pendiente | aprobado | rechazado | anulado | expirado | error
+  ///
+  /// Solo avanza: un rechazo que llega tarde no deshace una aprobación.
+  estado        String   @default("pendiente")
+  /// tarjeta | pse | nequi | bancolombia | ..., tal como lo reporte la pasarela.
+  metodo        String?
+  /// Motivo del rechazo, para el panel.
+  motivo        String?
+  /// prueba | produccion. La base es una sola: sin esto, los pagos del sandbox
+  /// se mezclan con los reales en el panel y en las cifras.
+  modo          String
+  /// Último evento crudo de la pasarela, para responder un reclamo.
+  payload       Json     @default("{}")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([estado, createdAt])
+  @@index([pedidoId])
+  @@index([reservaId])
 }
 
 model Contacto {

@@ -1,5 +1,5 @@
 import {
-  IsString, IsNumber, IsBoolean, IsOptional, IsArray, Min, MaxLength, ArrayMaxSize,
+  IsString, IsInt, IsNumber, IsBoolean, IsOptional, IsArray, Min, MaxLength, ArrayMaxSize,
 } from 'class-validator'
 import { MAX_IMAGENES, MAX_META } from './create-experiencia.dto'
 
@@ -18,7 +18,7 @@ export class UpdateExperienciaDto {
   @IsOptional() @IsString() @MaxLength(MAX_META) descripcion?: string
   @IsOptional() @IsString() descripcionLarga?: string
   @IsOptional() @IsString() duracion?: string
-  @IsOptional() @IsNumber() @Min(0) precio?: number
+  @IsOptional() @IsInt({ message: 'El precio va en pesos enteros, sin decimales' }) @Min(0) precio?: number
   @IsOptional() @IsNumber() @Min(1) capacidad?: number
 
   // `imagen` no se acepta: la deriva el service de imagenes[0].
