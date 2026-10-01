@@ -11,10 +11,14 @@ const CONFIG: ConfigWompi = {
 
 const sha256 = (s: string) => createHash('sha256').update(s).digest('hex')
 
-function webhook(transaction: Record<string, unknown>, secreto = CONFIG.secretoEventos) {
+function webhook(
+  transaction: Record<string, unknown>,
+  secreto = CONFIG.secretoEventos,
+  properties = ['transaction.id', 'transaction.status', 'transaction.amount_in_cents'],
+) {
   const timestamp = 1727800000
-  const properties = ['transaction.id', 'transaction.status', 'transaction.amount_in_cents']
-  const checksum = sha256(`${transaction.id}${transaction.status}${transaction.amount_in_cents}${timestamp}${secreto}`)
+  const valor = (ruta: string) => ruta.split('.').reduce<any>((o, k) => o?.[k], { transaction })
+  const checksum = sha256(`${properties.map(valor).join('')}${timestamp}${secreto}`)
   const body = {
     event: 'transaction.updated',
     data: { transaction },
@@ -128,6 +132,13 @@ describe('ProveedorWompi', () => {
     it('rechaza un evento alterado después de firmado', () => {
       const alterado = Buffer.from(webhook(TX).toString().replace('15000000', '100'))
       expect(() => wompi.verificarWebhook(alterado, {})).toThrow(FirmaInvalidaError)
+    })
+
+    it('rechaza una firma que no cubre el id, el estado y el monto aunque sea auténtica', () => {
+      // Bien firmada con el secreto real, pero solo sobre la referencia: con
+      // esto se podría reutilizar el checksum de otro evento.
+      const body = webhook(TX, CONFIG.secretoEventos, ['transaction.reference'])
+      expect(() => wompi.verificarWebhook(body, {})).toThrow(FirmaInvalidaError)
     })
 
     it('rechaza basura', () => {

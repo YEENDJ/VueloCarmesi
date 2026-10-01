@@ -155,11 +155,37 @@ export class PagosService {
     }
   }
 
-  /** Webhook: verifica la firma y aplica. `FirmaInvalidaError` sube al controller. */
+  /**
+   * Webhook: verifica la firma y luego le pregunta a la pasarela. Lo que se
+   * aplica es lo que responde su API, no lo que trae el evento.
+   *
+   * La firma de Wompi cubre el id, el estado y el monto de la transacción, pero
+   * no la referencia, que es justo lo que dice a qué pedido pertenece. Quien
+   * consiguiera un evento aprobado auténtico podría reenviarlo con la
+   * referencia de otro pedido del mismo monto. Consultando por la referencia
+   * con la llave privada, que nunca sale del servidor, el evento queda en un
+   * aviso de «algo cambió».
+   *
+   * `FirmaInvalidaError` sube al controller (401). Si la consulta falla, el
+   * error también sube: el controller responde 500 y la pasarela reintenta.
+   */
   async procesarWebhook(rawBody: Buffer, headers: Record<string, string | string[] | undefined>) {
     if (!this.proveedor) throw new NotFoundException()
     const evento = this.proveedor.verificarWebhook(rawBody, headers)
-    await this.aplicarEvento(evento)
+    const confirmado = await this.proveedor.consultarTransaccion(evento.referencia)
+    if (!confirmado) {
+      this.logger.warn(
+        `Webhook de ${evento.referencia} (${evento.proveedorTxId}): la pasarela no tiene transacciones con esa referencia. Se ignora`,
+      )
+      return
+    }
+    if (confirmado.proveedorTxId !== evento.proveedorTxId || confirmado.estado !== evento.estado) {
+      this.logger.warn(
+        `Webhook de ${evento.referencia}: decía ${evento.proveedorTxId} «${evento.estado}» y la pasarela dice ` +
+        `${confirmado.proveedorTxId} «${confirmado.estado}». Se aplica lo de la pasarela`,
+      )
+    }
+    await this.aplicarEvento(confirmado)
   }
 
   /**

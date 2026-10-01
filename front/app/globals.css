@@ -1621,10 +1621,192 @@ a.contacto-canal:hover {
   align-items: start;
 }
 
+/* La tarjeta de «Estás reservando» acompaña el scroll del formulario. Es el
+   ítem de la cuadrícula el que se fija —align-self: start para que no se
+   estire a la altura de la fila— y 88px la deja debajo del navbar. */
+.reserva-summary {
+  position: sticky;
+  top: 88px;
+  align-self: start;
+}
+
+/* En escritorio el desglose del pago lo da la tarjeta fija; este del
+   formulario aparece solo cuando la tarjeta sube por encima (≤1023px). */
+.reserva-pago-form {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .form-row-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Campos de formulario — uno solo para checkout y reserva
+   ─────────────────────────────────────────────────────────
+   Antes cada formulario tenía el suyo: el checkout con borde marrón sólido y
+   etiquetas de 16px, la reserva con el texto escrito en negrita y sin foco
+   visible (un `outline: none` en línea anulaba el :focus-visible global).
+   Viven aquí y no en estilos en línea porque hover, foco y error son
+   pseudo-clases que el inline no puede declarar. */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.campo-etiqueta {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-brown);
+}
+
+.campo-requerido {
+  color: var(--color-crimson);
+}
+
+.campo-nota {
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+/* 40px y 15px en escritorio: con 46–48px los campos se veían inflados. En
+   móvil sube a 42px y 16px (ver el bloque MÓVIL): por debajo de 16px iOS
+   hace zoom al enfocar el campo. */
+.campo-control {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(135, 43, 19, 0.28);
+  border-radius: 8px;
+  background-color: #fffdf8;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  color: #5a1d0d;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.campo-control::placeholder {
+  color: rgba(135, 43, 19, 0.5);
+}
+
+.campo-control:hover {
+  border-color: rgba(135, 43, 19, 0.5);
+}
+
+/* El halo reemplaza al outline: se ve igual con mouse y con teclado. */
+.campo-control:focus {
+  outline: none;
+  border-color: var(--color-crimson);
+  box-shadow: 0 0 0 3px rgba(213, 19, 18, 0.15);
+}
+
+.campo-control[aria-invalid='true'] {
+  border-color: var(--color-crimson);
+  background-color: #fff8f6;
+}
+
+textarea.campo-control {
+  height: auto;
+  min-height: 84px;
+  padding: 10px 12px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+select.campo-control {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 36px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23872b13' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+/* Safari centra la fecha dentro del campo; el resto la alinea a la izquierda. */
+.campo-control::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+.campo-ayuda {
+  font-size: 13px;
+  color: rgba(135, 43, 19, 0.78);
+}
+
+.campo-error {
+  font-size: 13px;
+  font-weight: 700;
+  color: #b0100f;
+}
+
+/* Tarjeta y grupos del formulario: «1 Datos de contacto», «2 Datos de entrega». */
+.form-tarjeta {
+  background-color: #fff6e4;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(135, 43, 19, 0.12);
+  padding: clamp(20px, 4vw, 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.form-grupo {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* El legend no es un hijo flex del fieldset, así que su separación con el
+   primer campo la da su margen y no el gap. */
+.form-grupo-titulo {
+  padding: 0;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-brown);
+}
+
+.form-grupo-num {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--color-brown);
+  color: var(--color-cream);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+/* Resumen plegable del checkout: solo en móvil, donde el lateral queda
+   debajo del formulario y nadie lo ve antes de pagar. */
+.checkout-resumen-movil {
+  display: none;
+}
+
+.checkout-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -1739,8 +1921,11 @@ a.contacto-canal:hover {
   .reserva-summary {
     order: -1;
   }
-  .reserva-summary > div {
-    position: static !important;
+  .reserva-summary {
+    position: static;
+  }
+  .reserva-pago-form {
+    display: flex;
   }
 }
 
@@ -1798,6 +1983,23 @@ a.contacto-canal:hover {
 
   .form-row-2 {
     grid-template-columns: 1fr;
+  }
+
+  .campo-control {
+    height: 42px;
+    font-size: 16px;
+  }
+
+  .form-tarjeta {
+    gap: 28px;
+  }
+
+  .checkout-resumen-movil {
+    display: block;
+  }
+
+  .checkout-aside {
+    display: none;
   }
 
   .shop-aside {

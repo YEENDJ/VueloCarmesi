@@ -5,7 +5,7 @@ import StatusBadge from './StatusBadge'
 import PagosLista from './PagosLista'
 import AvisoRevision from './AvisoRevision'
 import { updateEstadoReserva } from '@/lib/admin/api'
-import { esDePrueba } from '@/lib/admin/pagos'
+import { esDePrueba, tienePagoAprobado } from '@/lib/admin/pagos'
 import { formatPrecio } from '@/lib/format'
 
 export default function ReservaDrawer({
@@ -53,6 +53,7 @@ export default function ReservaDrawer({
             </div>
             <div style={{ marginTop: 6, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               <StatusBadge estado={reserva.estado} />
+              {tienePagoAprobado(reserva) && <StatusBadge estado="abono_pagado" />}
               {esDePrueba(reserva) && <StatusBadge estado="prueba" />}
             </div>
           </div>
@@ -83,7 +84,7 @@ export default function ReservaDrawer({
                 <>
                   <Field label={`Abono en línea${reserva.porcentajeAbono != null ? ` (${reserva.porcentajeAbono} %)` : ''}`}>
                     {formatPrecio(reserva.montoAbono)}
-                    {reserva.pagos?.some(p => p.estado === 'aprobado') ? ' · pagado' : ' · sin pagar'}
+                    {tienePagoAprobado(reserva) ? ' · pagado' : ' · sin pagar'}
                   </Field>
                   <Field label="Saldo el día de la actividad">
                     {formatPrecio(Math.max(reserva.total - reserva.montoAbono, 0))}

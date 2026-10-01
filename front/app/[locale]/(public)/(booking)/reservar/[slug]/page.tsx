@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getExperienciaBySlug } from '@/lib/api/experiencias'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import ReservaForm from '@/components/booking/ReservaForm'
+import { ReservaPersonasProvider, ResumenReservaVivo } from '@/components/booking/ResumenReserva'
 import MigaSuperior from '@/components/layout/MigaSuperior'
 import { notFound } from 'next/navigation'
 import { formatPrecio } from '@/lib/format'
@@ -82,7 +83,9 @@ export default async function ReservarPage({
           </p>
         </div>
 
-        {/* Two-column grid */}
+        {/* Two-column grid. El proveedor comparte las personas elegidas en el
+            formulario con el resumen de la tarjeta. */}
+        <ReservaPersonasProvider>
         <div className="reserva-grid">
 
           {/* Left — form card */}
@@ -100,12 +103,12 @@ export default async function ReservarPage({
             </div>
           </div>
 
-          {/* Right — sticky summary */}
+          {/* Right — summary. Lo fijo va en .reserva-summary (globals.css), no
+              en este div: dentro de un contenedor de su misma altura el sticky
+              no tenía recorrido y la tarjeta se iba con el scroll. */}
           <div className="reserva-summary">
             <div
               style={{
-                position: 'sticky',
-                top: '88px',
                 backgroundColor: 'var(--color-brown)',
                 borderRadius: '12px',
                 padding: '32px',
@@ -174,6 +177,8 @@ export default async function ReservarPage({
                 </p>
               </div>
 
+              <ResumenReservaVivo precio={exp.precio} pagos={pagos} />
+
               <div style={{ borderTop: '1px solid rgba(253,195,0,.3)', paddingTop: '16px' }}>
                 <p
                   style={{
@@ -191,6 +196,7 @@ export default async function ReservarPage({
           </div>
 
         </div>
+        </ReservaPersonasProvider>
       </div>
     </div>
   )

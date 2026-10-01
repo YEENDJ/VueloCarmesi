@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import type { Producto } from '@/lib/types'
 import ProductoCard from '@/components/shop/ProductoCard'
+import { disponiblesPrimero } from '@/lib/orden-productos'
 
 /**
  * El valor interno del filtro «todas las categorías».
@@ -28,8 +29,8 @@ export default function TiendaGrid({ productos }: { productos: Producto[] }) {
   const [filtro, setFiltro] = useState(TODOS)
 
   const filtrados = useMemo(() => {
-    if (filtro === TODOS) return productos
-    return productos.filter(p => p.categoria === filtro)
+    const lista = filtro === TODOS ? productos : productos.filter(p => p.categoria === filtro)
+    return disponiblesPrimero(lista)
   }, [productos, filtro])
 
   // Sin productos no hay nada que filtrar: la barra de categorías sobra y solo
