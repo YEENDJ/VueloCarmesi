@@ -22,7 +22,6 @@ export const checkoutSchema = z.object({
   telefono: z.string().trim().regex(TELEFONO_REGEX, 'errorTelefono'),
   direccion: z.string().trim().min(5, 'errorDireccion').max(200, 'errorDireccion'),
   ciudad: z.string().trim().min(2, 'errorCiudad').max(100, 'errorCiudad'),
-  codigoPostal: z.string().trim().min(3, 'errorCodigoPostal').max(20, 'errorCodigoPostal'),
   // Honeypot: los humanos nunca lo llenan. Mismo patrón que el backend.
   website: z.string().optional(),
 })

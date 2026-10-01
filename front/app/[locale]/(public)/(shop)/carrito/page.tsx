@@ -33,7 +33,16 @@ export default function CarritoPage() {
           {items.map(item => (
             <div key={item.productoId} className="cart-row">
               <div className="cart-row-media">
-                <span style={{ fontSize: '1.75rem' }}>🍫</span>
+                {/* El emoji queda para ítems guardados sin foto (productos sin
+                    imagen o carritos viejos en localStorage). alt vacío: el
+                    nombre ya está escrito al lado. */}
+                {item.imagen
+                  // eslint-disable-next-line @next/next/no-img-element
+                  ? <img src={item.imagen} alt=""
+                         width={160} height={160} loading="lazy" decoding="async"
+                         style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                  : <span style={{ fontSize: '1.75rem' }}>🍫</span>
+                }
               </div>
               <div className="cart-row-info">
                 <p style={{ fontWeight: 700, color: 'var(--color-brown)' }}>{item.nombre}</p>

@@ -54,10 +54,13 @@ export class CreatePedidoDto {
   @Length(2, 100, { message: 'La ciudad debe tener entre 2 y 100 caracteres' })
   ciudad: string
 
+  // El checkout ya no lo pide. Sigue aceptándose para no rechazar los pedidos
+  // de un front viejo mientras Vercel y Render se ponen al día.
+  @IsOptional()
   @Transform(trim)
   @IsString()
-  @Length(3, 20, { message: 'El código postal debe tener entre 3 y 20 caracteres' })
-  codigoPostal: string
+  @MaxLength(20, { message: 'El código postal no puede tener más de 20 caracteres' })
+  codigoPostal?: string
 
   @IsArray()
   @ArrayMinSize(1, { message: 'El pedido no tiene productos' })

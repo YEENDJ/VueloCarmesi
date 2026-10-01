@@ -133,7 +133,6 @@ export default function CheckoutPage() {
         <h3 style={{ color: 'var(--color-brown)', marginBottom: 0, fontSize: 'var(--fs-h3)' }}>{t('datosEntrega')}</h3>
         <Input label={t('direccion')} error={errors.direccion?.message && t(errors.direccion.message)} {...register('direccion')} />
         <Input label={t('ciudad')} error={errors.ciudad?.message && t(errors.ciudad.message)} {...register('ciudad')} />
-        <Input label={t('codigoPostal')} error={errors.codigoPostal?.message && t(errors.codigoPostal.message)} {...register('codigoPostal')} />
 
         {/* Honeypot: fuera de pantalla, sin tabulación y sin autocompletado. Los
             humanos no lo ven; los bots lo llenan y el backend los descarta. */}

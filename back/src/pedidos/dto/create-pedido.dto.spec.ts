@@ -20,13 +20,16 @@ describe('CreatePedidoDto', () => {
     expect(errores).toHaveLength(0)
   })
 
-  it('rechaza si falta teléfono, ciudad o código postal', async () => {
+  it('rechaza si falta teléfono o ciudad', async () => {
     const sinTelefono = plainToInstance(CreatePedidoDto, { ...BASE, telefono: undefined })
     const sinCiudad = plainToInstance(CreatePedidoDto, { ...BASE, ciudad: undefined })
-    const sinCP = plainToInstance(CreatePedidoDto, { ...BASE, codigoPostal: undefined })
     expect((await validate(sinTelefono)).length).toBeGreaterThan(0)
     expect((await validate(sinCiudad)).length).toBeGreaterThan(0)
-    expect((await validate(sinCP)).length).toBeGreaterThan(0)
+  })
+
+  it('acepta el pedido sin código postal', async () => {
+    const sinCP = plainToInstance(CreatePedidoDto, { ...BASE, codigoPostal: undefined })
+    expect(await validate(sinCP)).toHaveLength(0)
   })
 
   const erroresDe = async (data: Record<string, unknown>) =>

@@ -110,7 +110,7 @@ export class PedidosService {
           telefono,
           direccion,
           ciudad,
-          codigoPostal,
+          codigoPostal: codigoPostal || null,
           total,
           // Con pasarela, el pedido aparta el stock solo por un rato: si no se
           // paga, el vencimiento lo devuelve. Un total de cero no pasa por la

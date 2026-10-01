@@ -234,7 +234,7 @@ export class NotificacionesService {
   /** Con `pago`, el pedido se cobró en línea y el acuse ya no habla de coordinar el pago. */
   async enviarConfirmacionPedido(pedido: {
     id: string; nombre: string; email: string
-    direccion: string; ciudad: string; codigoPostal: string; total: number
+    direccion: string; ciudad: string; codigoPostal?: string | null; total: number
     items: ItemPedido[]
   }, pago?: PagoRecibido): Promise<void> {
     // Escapados por lo mismo que en la reserva: nombre y dirección los escribe

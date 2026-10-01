@@ -3,7 +3,7 @@ import { checkoutSchema } from './checkout-schema'
 
 const VALID = {
   nombre: 'Ana Pérez', email: 'ana@example.com', telefono: '3001234567',
-  direccion: 'Calle 10 # 5-30', ciudad: 'Medellín', codigoPostal: '050001',
+  direccion: 'Calle 10 # 5-30', ciudad: 'Medellín',
 }
 
 describe('checkoutSchema', () => {
@@ -26,7 +26,6 @@ describe('checkoutSchema', () => {
   it('rechaza campos de entrega vacíos', () => {
     expect(checkoutSchema.safeParse({ ...VALID, direccion: '' }).success).toBe(false)
     expect(checkoutSchema.safeParse({ ...VALID, ciudad: '' }).success).toBe(false)
-    expect(checkoutSchema.safeParse({ ...VALID, codigoPostal: '' }).success).toBe(false)
   })
 
   it('rechaza teléfono con letras aunque tenga 7 caracteres', () => {
