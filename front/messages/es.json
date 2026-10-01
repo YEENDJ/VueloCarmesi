@@ -1385,6 +1385,7 @@
       "pendienteTitulo": "Estamos confirmando tu pago",
       "pendienteTexto": "Tu banco todavía no responde. Suele tardar unos minutos: no cierres esta página.",
       "pendienteLargo": "Tu banco está tardando más de lo normal. No hace falta que esperes aquí: te escribimos al correo en cuanto se confirme.",
+      "verificando": "Revisando tu pago",
       "consultar": "Consultar otra vez",
       "rechazadoTitulo": "El pago no se completó",
       "rechazadoTexto": "Tu banco no aprobó el pago y no se te cobró nada. Puedes intentarlo de nuevo con otro medio de pago.",
