@@ -46,6 +46,26 @@ function fechaEnLetras(fecha: Date | string): string {
  */
 const NOMBRES_SIN_FICHA: Record<string, string> = { 'a-medida': 'A medida' }
 
+/** Una fila más de la tabla del acuse de reserva, con el mismo estilo que las otras. */
+function filaReservaHtml(label: string, value: string): string {
+  return `<tr><td style="padding:10px 0;border-bottom:1px solid #F0D6A8;color:#872B13;font-weight:bold">${label}</td><td style="padding:10px 0;border-bottom:1px solid #F0D6A8;color:#5C3317">${value}</td></tr>`
+}
+
+/** «3 de octubre de 2026, 4:15 p. m.», en hora de Colombia: hasta cuándo se aparta. */
+function fechaHoraColombia(fecha: Date | string): string {
+  return new Date(fecha).toLocaleString('es-CO', {
+    dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Bogota',
+  })
+}
+
+/** El número corto que el cliente ve en pantalla y cita por WhatsApp. */
+const codigoCorto = (id: string) => `VC-${id.slice(-6).toUpperCase()}`
+
+/** Lo que se cobró en línea, cuando lo hubo. Sin esto, el aviso es del flujo manual. */
+export interface PagoRecibido {
+  monto: number
+}
+
 @Injectable()
 export class NotificacionesService {
   private readonly logger = new Logger(NotificacionesService.name)
@@ -86,6 +106,12 @@ export class NotificacionesService {
     })
   }
 
+  /** El correo al que el cliente puede escribir, el mismo que usa el acuse de confirmación. */
+  private async getContactoNegocio(): Promise<string> {
+    const row = await this.prisma.siteConfig.findUnique({ where: { key: 'contacto_negocio' } })
+    return row?.value || 'hola@vuelocarmesi.com'
+  }
+
   /** Solo manda el aviso si hay un correo de admin configurado. */
   private async alertarAdmin(asunto: string, vars: Record<string, string>): Promise<void> {
     const destino = await this.getAdminEmail()
@@ -93,11 +119,17 @@ export class NotificacionesService {
     await this.email.send(destino, asunto, this.email.templateAlertaAdmin(vars))
   }
 
+  /**
+   * Con `pago`, la reserva se cobró en línea: el acuse repite total, abono y
+   * saldo tal como quedaron congelados en la reserva, no los de la
+   * configuración de hoy, que el admin pudo cambiar después.
+   */
   async enviarConfirmacionReserva(reserva: {
     id: string; nombre: string; email: string; telefono: string
     experiencia?: { nombre: string } | null
     fecha: Date; cantidadPersonas: number
-  }): Promise<void> {
+    total?: number | null; porcentajeAbono?: number | null
+  }, pago?: PagoRecibido): Promise<void> {
     const expNombre = reserva.experiencia?.nombre ?? 'Experiencia'
     const fechaStr = fechaEnLetras(reserva.fecha)
     // Todo lo que escribió el visitante va escapado antes de entrar al HTML.
@@ -108,9 +140,29 @@ export class NotificacionesService {
     const email = escapeHtml(reserva.email)
     const experiencia = escapeHtml(expNombre)
 
+    // El saldo sale de la reserva: total menos lo que se abonó. Sin total (una
+    // reserva de antes de la pasarela) no se inventa un saldo.
+    const total = reserva.total ?? null
+    const saldo = pago && total != null ? Math.max(total - pago.monto, 0) : null
+    const pctStr = reserva.porcentajeAbono != null ? ` (${reserva.porcentajeAbono} %)` : ''
+    const filasPago = pago
+      ? [
+          ...(total != null ? [filaReservaHtml('Total', formatPrecio(total))] : []),
+          filaReservaHtml('Abono pagado', `${formatPrecio(pago.monto)}${pctStr}`),
+          ...(saldo != null ? [filaReservaHtml('Saldo el día de la actividad', formatPrecio(saldo))] : []),
+        ].join('')
+      : ''
+    const notaPago = pago
+      ? 'Recibimos tu abono. Te confirmamos la reserva y los detalles de llegada lo antes posible por este mismo correo.'
+      : 'Te confirmamos los detalles de llegada y pago lo antes posible por este mismo correo.'
+    const lineaPagoTelegram = pago
+      ? `\n✅ Abono pagado en línea: ${formatPrecio(pago.monto)}${pctStr}` +
+        (saldo != null ? `\nSaldo el día: ${formatPrecio(saldo)}` : '')
+      : ''
+
     await this.enviarPorSeparado(`Reserva ${reserva.id}`, {
       telegram: () => this.telegram.send(
-        `📅 <b>Nueva Reserva</b>\nNombre: ${escapeHtml(reserva.nombre)}\nEmail: ${escapeHtml(reserva.email)}\nCelular: ${escapeHtml(reserva.telefono)}\nExperiencia: ${escapeHtml(expNombre)}\nFecha: ${fechaStr}\nPersonas: ${reserva.cantidadPersonas}`,
+        `📅 <b>Nueva Reserva</b>\nNombre: ${escapeHtml(reserva.nombre)}\nEmail: ${escapeHtml(reserva.email)}\nCelular: ${escapeHtml(reserva.telefono)}\nExperiencia: ${escapeHtml(expNombre)}\nFecha: ${fechaStr}\nPersonas: ${reserva.cantidadPersonas}${lineaPagoTelegram}`,
       ),
       'correo al cliente': () => this.email.send(
         reserva.email,
@@ -121,6 +173,8 @@ export class NotificacionesService {
           fecha: fechaStr,
           cantidadPersonas: String(reserva.cantidadPersonas),
           email,
+          filasPago,
+          notaPago,
         }),
       ),
       'correo al admin': () => this.alertarAdmin(`[Reserva] Nueva: ${reserva.nombre}`, {
@@ -131,17 +185,58 @@ export class NotificacionesService {
           filaHtml('Experiencia', experiencia),
           filaHtml('Fecha', fechaStr),
           filaHtml('Personas', String(reserva.cantidadPersonas)),
+          ...(pago ? [filaHtml('Pago', `Abono en línea · ${formatPrecio(pago.monto)}${pctStr}`)] : []),
+          ...(saldo != null ? [filaHtml('Saldo el día', formatPrecio(saldo))] : []),
         ].join(''),
         adminUrl: `${ADMIN_URL}/admin/reservas`,
       }),
     })
   }
 
+  /**
+   * Algo del cobro en línea que necesita a una persona: un pago aprobado
+   * después de vencer sin stock, un cobro doble, una anulación. Solo al admin.
+   * Al cliente, si el dinero le llegó a la finca, le escribe
+   * `enviarPagoEnRevisionCliente` sin prometer cómo se resolverá: eso lo
+   * decide una persona.
+   */
+  async alertarPago(aviso: {
+    motivo: string
+    requiereRevision: boolean
+    tipo: 'pedido' | 'reserva'
+    id: string; nombre: string; email: string; telefono: string
+    referencia: string; monto: number
+  }): Promise<void> {
+    const titulo = aviso.requiereRevision ? '⚠️ Pago en revisión' : '⚠️ Aviso de pago'
+    const que = aviso.tipo === 'pedido' ? 'Pedido' : 'Reserva'
+    const seccion = aviso.tipo === 'pedido' ? 'pedidos' : 'reservas'
+
+    await this.enviarPorSeparado(`Pago ${aviso.referencia}`, {
+      telegram: () => this.telegram.send(
+        `<b>${titulo}</b>\n${escapeHtml(aviso.motivo)}\n\n${que}: ${aviso.id}\nReferencia: ${escapeHtml(aviso.referencia)}\nMonto: ${formatPrecio(aviso.monto)}\nCliente: ${escapeHtml(aviso.nombre)}\nCelular: ${escapeHtml(aviso.telefono)}`,
+      ),
+      'correo al admin': () => this.alertarAdmin(`[Pago] ${aviso.motivo}`, {
+        tipo: titulo,
+        filas: [
+          filaHtml('Qué pasó', escapeHtml(aviso.motivo)),
+          filaHtml(que, aviso.id),
+          filaHtml('Referencia', escapeHtml(aviso.referencia)),
+          filaHtml('Monto', formatPrecio(aviso.monto)),
+          filaHtml('Cliente', escapeHtml(aviso.nombre)),
+          filaHtml('Email', escapeHtml(aviso.email)),
+          filaHtml('Celular', escapeHtml(aviso.telefono)),
+        ].join(''),
+        adminUrl: `${ADMIN_URL}/admin/${seccion}`,
+      }),
+    })
+  }
+
+  /** Con `pago`, el pedido se cobró en línea y el acuse ya no habla de coordinar el pago. */
   async enviarConfirmacionPedido(pedido: {
     id: string; nombre: string; email: string
     direccion: string; ciudad: string; codigoPostal: string; total: number
     items: ItemPedido[]
-  }): Promise<void> {
+  }, pago?: PagoRecibido): Promise<void> {
     // Escapados por lo mismo que en la reserva: nombre y dirección los escribe
     // el visitante. Los productos ya salen escapados de tablaItemsHtml.
     const nombre = escapeHtml(pedido.nombre)
@@ -150,19 +245,24 @@ export class NotificacionesService {
     const itemsTableCliente = tablaItemsHtml(pedido.items, 'cliente')
     const itemsTableAdmin = tablaItemsHtml(pedido.items, 'admin')
     const lineasItems = lineasItemsTexto(pedido.items)
+    const notaPago = pago
+      ? `Recibimos tu pago de ${formatPrecio(pago.monto)}. Te avisamos por este correo cuando despachemos tu pedido.`
+      : 'Te enviaremos los datos de despacho una vez confirmemos el pago.'
 
     await this.enviarPorSeparado(`Pedido ${pedido.id}`, {
       telegram: () => this.telegram.send(
-        `🛒 <b>Nuevo Pedido</b>\nNombre: ${escapeHtml(pedido.nombre)}\nEmail: ${escapeHtml(pedido.email)}\n\n${escapeHtml(lineasItems)}\n\nTotal: ${formatPrecio(pedido.total)}`,
+        `🛒 <b>Nuevo Pedido</b>\nNombre: ${escapeHtml(pedido.nombre)}\nEmail: ${escapeHtml(pedido.email)}\n\n${escapeHtml(lineasItems)}\n\nTotal: ${formatPrecio(pedido.total)}` +
+          (pago ? `\n✅ Pagado en línea: ${formatPrecio(pago.monto)}` : ''),
       ),
       'correo al cliente': () => this.email.send(
         pedido.email,
-        `Recibimos tu pedido — Vuelo Carmesí`,
+        pago ? `Pago recibido: tu pedido — Vuelo Carmesí` : `Recibimos tu pedido — Vuelo Carmesí`,
         this.email.templateConfirmacionPedido({
           nombre,
           id: pedido.id,
           direccion: direccionCompleta,
           itemsTable: itemsTableCliente,
+          notaPago,
         }),
       ),
       'correo al admin': () => this.alertarAdmin(`[Pedido] Nuevo: ${pedido.nombre}`, {
@@ -172,11 +272,58 @@ export class NotificacionesService {
           filaHtml('Nombre', nombre),
           filaHtml('Email', email),
           filaHtml('Dirección', direccionCompleta),
+          ...(pago ? [filaHtml('Pago', `Pagado en línea · ${formatPrecio(pago.monto)}`)] : []),
           itemsTableAdmin,
         ].join(''),
         adminUrl: `${ADMIN_URL}/admin/pedidos`,
       }),
     })
+  }
+
+  /**
+   * «Tu pago no se completó», con el enlace para reintentar. Solo debe salir
+   * si todavía se puede reintentar: quien lo llama comprueba que el pedido o
+   * la reserva sigan esperando pago y no hayan vencido.
+   *
+   * El enlace lleva a la página de resultado, que ya tiene el botón de
+   * reintento. Va en español, como el resto de los correos.
+   */
+  async enviarPagoRechazado(aviso: {
+    tipo: 'pedido' | 'reserva'
+    nombre: string; email: string
+    referencia: string; monto: number; venceEn: Date
+  }): Promise<void> {
+    const ruta = aviso.tipo === 'pedido' ? '/checkout/resultado' : '/reservar/resultado'
+    const urlReintento = `${ADMIN_URL}${ruta}?ref=${encodeURIComponent(aviso.referencia)}`
+    const html = this.email.templatePagoRechazado({
+      nombre: escapeHtml(aviso.nombre),
+      que: aviso.tipo,
+      monto: formatPrecio(aviso.monto),
+      vence: fechaHoraColombia(aviso.venceEn),
+      urlReintento: escapeHtml(urlReintento),
+      contacto: escapeHtml(await this.getContactoNegocio()),
+    })
+    await this.email.send(aviso.email, 'Tu pago no se completó — Vuelo Carmesí', html)
+  }
+
+  /**
+   * Al cliente cuyo pago llegó pero cuyo pedido o reserva quedó en revisión
+   * (el caso 5 del spec y parecidos). Le confirma que el dinero está y que lo
+   * contactan; no promete reponer ni reembolsar, porque eso lo decide una persona.
+   */
+  async enviarPagoEnRevisionCliente(aviso: {
+    tipo: 'pedido' | 'reserva'
+    id: string; nombre: string; email: string; monto: number
+  }): Promise<void> {
+    const codigo = codigoCorto(aviso.id)
+    const html = this.email.templatePagoEnRevision({
+      nombre: escapeHtml(aviso.nombre),
+      que: aviso.tipo,
+      monto: formatPrecio(aviso.monto),
+      codigo,
+      contacto: escapeHtml(await this.getContactoNegocio()),
+    })
+    await this.email.send(aviso.email, `Recibimos tu pago (#${codigo}) — Vuelo Carmesí`, html)
   }
 
   async enviarNuevoContacto(contacto: {
