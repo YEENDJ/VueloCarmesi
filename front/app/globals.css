@@ -5382,11 +5382,15 @@ select.campo-control {
   flex-direction: column;
   gap: 10px;
 }
+/* Rótulo de ancho fijo y texto en el resto: así todos los textos arrancan en
+   la misma columna sin importar su largo. En pantallas angostas el texto baja
+   debajo del rótulo en vez de apretarse. */
 .grp-paso {
   min-width: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(92px, 100%), auto));
+  display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
+  text-align: left;
   gap: 4px 14px;
   padding: 11px 14px;
   background: #fff;
@@ -5394,6 +5398,7 @@ select.campo-control {
   border-radius: 10px;
 }
 .grp-paso-rotulo {
+  flex: 0 0 92px;
   min-width: 0;
   font-size: 11px;
   font-weight: 700;
@@ -5402,6 +5407,7 @@ select.campo-control {
   color: var(--color-orange);
 }
 .grp-paso-texto {
+  flex: 1 1 200px;
   min-width: 0;
   font-size: clamp(0.9rem, 2.3vw, 0.97rem);
   line-height: 1.6;

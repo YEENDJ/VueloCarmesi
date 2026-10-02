@@ -111,9 +111,9 @@ const PERFILES = [
   {
     clave: 'colegio',
     Icono: School,
-    foto: '/images/personas/grupo-mural.jpg',
+    foto: '/images/personas/colegio-mural-aves.jpg',
     ancho: 1280,
-    alto: 960,
+    alto: 957,
     foco: 'center 40%',
     credito: false,
   },
@@ -150,7 +150,7 @@ const AUTORIZACION = [
   'autorizacion1', 'autorizacion2', 'autorizacion3', 'autorizacion4',
 ] as const
 const PASOS = ['paso1', 'paso2', 'paso3', 'paso4'] as const
-const PREGUNTAS = ['1', '2', '3', '4', '5', '6', '7', '8'] as const
+const PREGUNTAS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'] as const
 
 /**
  * Datos estructurados.
