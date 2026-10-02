@@ -224,11 +224,21 @@ const AJUSTES: Ajuste[] = [
  * 18: aquellas caían unos 240 m al oeste y la hoja se corrigió para que el PDF,
  * el mapa embebido y este texto apunten los tres al mismo sitio.
  */
-const PUNTO_ENCUENTRO = [
-  'Finca La Fortuna, vereda Brisas del Tonoa, Cubarral (Meta).',
+const DETALLES_ENCUENTRO = [
   'Coordenadas: 3.7537786, -73.8743938',
   'Parqueadero para 4 automóviles y 1 bus.',
   'Llega 15 minutos antes de la hora acordada.',
+]
+
+const PUNTO_ENCUENTRO = [
+  'Finca Agroturística Vuelo Carmesí, vereda Brisas del Tonoa, Cubarral (Meta).',
+  ...DETALLES_ENCUENTRO,
+].join('\n')
+
+/** El que escribía este script cuando la finca se llamaba Finca La Fortuna. */
+const PUNTO_ENCUENTRO_ANTERIOR = [
+  'Finca La Fortuna, vereda Brisas del Tonoa, Cubarral (Meta).',
+  ...DETALLES_ENCUENTRO,
 ].join('\n')
 
 /**
@@ -247,6 +257,7 @@ const PUNTOS_A_HEREDAR = [
   'Finca la Fortuna, Vereda Brisas del Tonoa',
   'Finca la Fortuna, Vereda Brisas del Tonoa, Cubarral Meta',
   'Finca La Fortuna, Vereda Brisas del Tonoa, Cubarral, Meta',
+  PUNTO_ENCUENTRO_ANTERIOR,
 ]
 
 /**

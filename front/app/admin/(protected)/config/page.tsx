@@ -211,7 +211,7 @@ export default function ConfigPage() {
                 rows={2}
                 value={config.punto_encuentro ?? ''}
                 onChange={e => set('punto_encuentro', e.target.value)}
-                placeholder="Finca La Fortuna, Vereda Brisas del Tonoa, Cubarral, Meta"
+                placeholder="Finca Agroturística Vuelo Carmesí, Vereda Brisas del Tonoa, Cubarral, Meta"
                 style={{ resize: 'vertical' }}
               />
               <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginTop: 4 }}>
