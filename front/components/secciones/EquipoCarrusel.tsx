@@ -19,13 +19,13 @@ interface Miembro {
 // Los nombres propios no se traducen; todo lo demás sale del catálogo.
 const EQUIPO: Miembro[] = [
   { nombre: 'Cristian Enciso', clave: 'cristian', cargo: 'cofundador',
-    foto: '/images/personas/cristian-enciso.jpg', foco: 'center 20%', parrafos: 3 },
+    foto: '/images/personas/cristian-enciso-telescopio.jpg', foco: 'center 30%', parrafos: 3 },
   { nombre: 'María Umaña', clave: 'maria', cargo: 'cofundadora',
     foto: '/images/personas/maria-umana.jpg', foco: 'center 28%', parrafos: 2 },
   { nombre: 'Orlando Enciso', clave: 'orlando', cargo: 'cofundador',
-    foto: '/images/personas/orlando-enciso.jpg', foco: 'center 25%', parrafos: 4 },
+    foto: '/images/personas/orlando-enciso-cacao.jpg', foco: 'center 35%', parrafos: 4 },
   { nombre: 'Yuri Enciso', clave: 'yuri', cargo: 'cofundadora',
-    foto: '/images/personas/yuri-enciso.jpg', foco: 'center 25%', parrafos: 4 },
+    foto: '/images/personas/yuri-enciso-cacao.jpg', foco: 'center 30%', parrafos: 4 },
   { nombre: 'Yeison Enciso', clave: 'yeison', cargo: 'desarrollador', parrafos: 2 },
 ]
 

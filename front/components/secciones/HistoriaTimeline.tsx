@@ -17,7 +17,7 @@ const HISTORIA: Bloque[] = [
   { clave: 'origen', imagen: '/images/cacao/cacaotal.jpg', icono: '🌱', parrafos: 2 },
   { clave: 'tecnificacion', imagen: '/images/cacao/cacaotal-mazorcas-rojas.jpg', icono: '🔧', parrafos: 1 },
   { clave: 'aprendizaje', imagen: '/images/aves/tangara-azul.jpg', icono: '🦜', parrafos: 1 },
-  { clave: 'pausa', imagen: '', icono: '🕰️', parrafos: 1 },
+  { clave: 'pausa', imagen: '/images/personas/recorrido-cacaotal-pandemia.jpg', icono: '🕰️', parrafos: 1 },
   { clave: 'camino', imagen: '/images/personas/equipo-cacao.jpg', icono: '🥾', parrafos: 1 },
   { clave: 'idea', imagen: '/images/personas/familia.jpg', icono: '💡', parrafos: 1 },
   { clave: 'apertura', imagen: '/images/personas/grupo-mural.jpg', icono: '🚪', parrafos: 1 },
