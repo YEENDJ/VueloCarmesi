@@ -18,6 +18,7 @@
  */
 export const NOMBRES_PROPIOS = [
   'Vuelo Carmesí',
+  'Finca Agroturística Vuelo Carmesí',
   'Finca La Fortuna',
   'Vereda Brisas del Tonoa',
   'Cubarral',

@@ -96,6 +96,11 @@ para revisión. Se pueden eliminar una vez verificado que la web y el portafolio
 | `personas/corporativos.jpg` | Grupo corporativo |
 | `personas/turistas.jpg` | Turistas en el sendero |
 | `personas/grupo-mural.jpg` | Grupo numeroso posando frente al mural del colibrí |
+| `personas/recorrido-cacaotal-pandemia.jpg` | Cinco personas con tapabocas revisando mazorcas en el cacaotal (2020) |
+| `personas/colegio-mural-aves.jpg` | Grupo escolar numeroso con el equipo de la finca frente al mural de aves |
+| `personas/cristian-enciso-telescopio.jpg` | Cristian Enciso sonriente con el telescopio, frente al aviso de Vuelo Carmesí (vertical) |
+| `personas/orlando-enciso-cacao.jpg` | Orlando Enciso con camiseta de Vuelo Carmesí, junto a un árbol de cacao con mazorcas (vertical) |
+| `personas/yuri-enciso-cacao.jpg` | Yuri Enciso con sombrero y polo vinotinto de Vuelo Carmesí, bajo los árboles de cacao (vertical) |
 
 ## Lugar
 

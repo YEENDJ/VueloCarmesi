@@ -47,10 +47,14 @@ export const CONTACTO = {
   /** Para enlazar: sin espacios, como lo piden tel: y wa.me */
   telefonoE164: NUMERO_E164,
   whatsapp: `https://wa.me/${NUMERO_E164.replace(/\D/g, '')}`,
-  direccion: 'Finca La Fortuna, Vereda Brisas del Tonoa',
+  direccion: 'Finca Agroturística Vuelo Carmesí, Vereda Brisas del Tonoa',
   municipio: 'Cubarral, Meta, Colombia',
   direccionCompleta:
-    'Finca La Fortuna, Vereda Brisas del Tonoa, Cubarral, Meta, Colombia',
+    'Finca Agroturística Vuelo Carmesí, Vereda Brisas del Tonoa, Cubarral, Meta, Colombia',
+  // Sin el nombre de la finca: los textos legales ya la nombran como sujeto
+  // («La Finca Agroturística Vuelo Carmesí, con domicilio en …») y con
+  // `direccionCompleta` el nombre saldría dos veces en la misma frase.
+  domicilio: 'Vereda Brisas del Tonoa, Cubarral, Meta, Colombia',
   // Las tres piezas sueltas de `municipio`. Hacen falta porque un PostalAddress
   // de schema.org no acepta «Cubarral, Meta, Colombia» en un solo campo: pide
   // localidad, region y pais por separado, y el pais en ISO 3166-1 de dos

@@ -47,7 +47,7 @@ const PALABRAS =
  * se pinta en la versión española.
  */
 const PERMITIDO = [
-  /Vuelo Carmes/i, /Finca La Fortuna/i, /Brisas del Tonoa/i, /Cubarral/i, /Sumapaz/i,
+  /Vuelo Carmes/i, /Finca Agrotur[ií]stica Vuelo Carmes/i, /Finca La Fortuna/i, /Brisas del Tonoa/i, /Cubarral/i, /Sumapaz/i,
   /Ariari/i, /Villavicencio/i, /Acac[íi]as/i, /Guamal/i, /Morena Roja/i, /Limon[áa]tica/i,
   /ARICAO|CARAO|MUJARI|Paradiso|Rinc[óo]n|Sue[ñn]o salvaje/i, /El Ed[ée]n/i,
   /Cristian|Mar[íi]a Uma[ñn]a|Orlando|Yuri|Yeison|Enciso/i,

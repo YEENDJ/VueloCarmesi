@@ -30,7 +30,7 @@
   "sitio": {
     "titulo": "Vuelo Carmesí",
     "descripcion": "Experiencias agroecológicas con sabor a cacao",
-    "ogAlt": "Cacaotal de la finca con mazorcas rojas maduras en el árbol"
+    "ogAlt": "Cultivo de cacao de la finca con mazorcas rojas maduras en el árbol"
   },
   "noEncontrado": {
     "titulo": "Esta página no existe",
@@ -47,7 +47,7 @@
     "titulo": "Seis razones para conocernos",
     "origen": {
       "titulo": "Cacao de origen",
-      "texto": "Conoces el cacao desde que nace en el árbol. 1.300 plantas con trazabilidad, 12 variedades nativas y un proceso que puedes seguir con tus propios ojos."
+      "texto": "Conoces el cacao desde que nace en el árbol. 1.200 plantas con trazabilidad, 8 variedades nativas y un proceso que puedes seguir con tus propios ojos."
     },
     "sostenible": {
       "titulo": "Producción sostenible",
@@ -73,11 +73,11 @@
   "pruebaSocial": {
     "kicker": "Nuestro impacto",
     "titulo": "Cientos de personas ya confiaron en nosotros",
-    "bajada": "Desde 2023, instituciones, organizaciones y familias han elegido Vuelo Carmesí para vivir el cacao desde su raíz.",
+    "bajada": "Desde 2021, instituciones, organizaciones y familias han elegido Vuelo Carmesí para vivir el cacao desde su raíz.",
     "organizaciones": "Organizaciones que han visitado nuestra finca",
     "personas": {
       "etiqueta": "personas atendidas",
-      "detalle": "desde 2023"
+      "detalle": "desde 2021"
     },
     "instituciones": {
       "etiqueta": "instituciones educativas",
@@ -337,8 +337,7 @@
       "categoria": "Categoría",
       "disponibles": "Disponibles",
       "unidades": "{n} unidades",
-      "avalBpa": "Buenas Prácticas Agrícolas · ICA",
-      "avalMarca": "Marca registrada ante la SIC"
+      "avalBpa": "Buenas Prácticas Agrícolas · ICA"
     },
     "panel": {
       "sinStock": "Sin stock por ahora",
@@ -454,7 +453,7 @@
     },
     "kicker": "Grupos e instituciones",
     "h1": "Salidas pedagógicas y jornadas corporativas en una finca de cacao",
-    "lead": "Ya recibimos a <b>692 personas desde 2023</b>, entre ellas 8 instituciones educativas y 7 organizaciones. Todas las jornadas incluyen guianza y póliza de asistencia y riesgos.",
+    "lead": "Ya recibimos a <b>692 personas desde 2021</b>, entre ellas 8 instituciones educativas y 9 organizaciones. Todas las jornadas incluyen guianza y póliza de asistencia y riesgos.",
     "indiceAria": "Apartados de esta página",
     "apartados": {
       "clientes": "Quiénes ya vinieron",
@@ -479,8 +478,8 @@
     },
     "clientes": {
       "titulo": "Quiénes ya vinieron",
-      "texto": "No es una promesa: es el registro de tres años de operación. Estas son las instituciones y organizaciones que ya hicieron su jornada en la finca.",
-      "personas": "personas atendidas desde 2023",
+      "texto": "No es una promesa: es el registro de cinco años de operación. Estas son las instituciones y organizaciones que ya hicieron su jornada en la finca.",
+      "personas": "personas atendidas desde 2021",
       "educativas": "Instituciones educativas",
       "organizaciones": "Organizaciones y gremios"
     },
@@ -577,12 +576,12 @@
       "accesoTitulo": "Acceso del grupo",
       "acceso1": "<b>Vía pavimentada hasta la finca.</b> Entra cualquier vehículo, incluidos bus y van.",
       "acceso2": "Parqueadero para 4 automóviles y 1 bus.",
-      "acceso3": "Punto de encuentro: Finca La Fortuna, vereda Brisas del Tonoa, Cubarral (Meta).",
+      "acceso3": "Punto de encuentro: Finca Agroturística Vuelo Carmesí, vereda Brisas del Tonoa, Cubarral (Meta).",
       "acceso4": "Llegada 15 minutos antes de la hora acordada.",
       "terrenoTitulo": "Terreno y clima",
       "terreno1": "<b>Altura:</b> 600 a 850 msnm.",
       "terreno2": "<b>Clima:</b> cálido húmedo, 24 a 30 °C; seco de diciembre a marzo.",
-      "terreno3": "<b>Mejor franja:</b> aves de 5:30 a 8:00 a. m. · cacao de 9:00 a. m. a 1:00 p. m.",
+      "terreno3": "<b>Mejor franja:</b> aves de 5:30 a 8:00 a. m. · cacao de 9:00 a. m. a 12:00 p. m. y de 2:00 a 5:00 p. m.",
       "terreno4": "<b>Exigencia física:</b> baja a media, senderos de tierra.",
       "llevarTitulo": "Qué debe llevar el grupo",
       "llevar1": "Ropa de manga larga",
@@ -635,14 +634,14 @@
     },
     "faq": {
       "titulo": "Preguntas frecuentes",
-      "p1": "¿Pueden recibir un grupo de 40 personas el mismo día?",
-      "r1": "Sí. Los grupos grandes se atienden por rotación de subgrupos, cada uno con su guía, de modo que nadie hace el recorrido en un grupo de cuarenta. Escríbenos con el número exacto y te confirmamos la disponibilidad para la fecha que necesitas.",
+      "p1": "¿Pueden recibir grupos de 30 personas?",
+      "r1": "Sí. En cada jornada, de mañana o de tarde, el grupo se divide en dos subgrupos de 15 personas que hacen el recorrido al mismo tiempo, cada uno con su guía. Escríbenos con el número exacto y te confirmamos la disponibilidad para la fecha que necesitas.",
       "p2": "¿Entra el bus hasta la finca?",
       "r2": "Sí. La vía está pavimentada hasta la finca y entra cualquier vehículo, incluidos bus y van. El parqueadero tiene espacio para 4 automóviles y 1 bus.",
       "p3": "¿Qué pasa si llueve?",
       "r3": "La jornada se hace igual: el recorrido es al aire libre pero hay zonas cubiertas para el proceso del cacao, el refrigerio y la chocoterapia. Por eso pedimos impermeable o poncho entre las cosas que debe llevar el grupo.",
       "p4": "¿Facturan a nombre del colegio o la empresa?",
-      "r4": "Sí. Marca la casilla de facturación en el formulario e incluye el NIT: la cotización sale con los datos tributarios que necesita tu área de compras.",
+      "r4": "Sí. Marca la casilla de facturación en el formulario e incluye el NIT. Emitimos factura física de talonario, no electrónica, a nombre de la institución; si tu área de compras exige factura electrónica, cuéntanos antes de reservar.",
       "p5": "¿Qué cubre la póliza?",
       "r5": "Todas las jornadas incluyen póliza de asistencia y riesgos para cada participante. Si tu institución necesita el detalle de la cobertura por escrito, lo enviamos junto con la cotización.",
       "p6": "¿Con cuánta anticipación hay que reservar?",
@@ -650,7 +649,19 @@
       "p7": "¿Hay opción de almuerzo?",
       "r7": "Sí, como servicio adicional. El almuerzo de campo no está incluido en ningún plan y se cotiza según el tamaño del grupo.",
       "p8": "¿Se puede combinar avistamiento de aves con la experiencia del cacao?",
-      "r8": "Sí, es el plan de jornada completa: el avistamiento arranca al amanecer y la experiencia cacaotera va en la mañana, con desayuno y refrigerio en la misma jornada."
+      "r8": "Sí, es el plan de jornada completa: el avistamiento arranca al amanecer y la experiencia cacaotera va en la mañana, con desayuno y refrigerio en la misma jornada.",
+      "p9": "¿Se necesita ser experto en aves para ir al plan de observación de aves?",
+      "r9": "No, el recorrido está diseñado para todo nivel: el guía ajusta la explicación según si el grupo son principiantes o birders con experiencia.",
+      "p10": "Si soy vegetariano, ¿hay opción de almuerzo para mí?",
+      "r10": "Sí, tenemos opción de almuerzo vegetariano; solo avísanos al momento de reservar para tenerlo listo para tu grupo.",
+      "p11": "¿Es seguro viajar a la zona por orden público?",
+      "r11": "Sí. Cubarral y el Ariari llevan años siendo zona de turismo activo y tránsito normal, sin los problemas de orden público que la región tuvo en el pasado. Recibimos visitantes de todo el país durante todo el año sin inconvenientes de seguridad.",
+      "p12": "¿Hay guía bilingüe disponible para visitantes extranjeros?",
+      "r12": "Sí, contamos con guía bilingüe en inglés; recomendamos solicitarlo al momento de la reserva para confirmar su disponibilidad en la fecha de tu visita.",
+      "p13": "¿El sendero en la finca es apto para adultos mayores?",
+      "r13": "El recorrido tiene tramos de terreno irregular y pendientes suaves, por lo que recomendamos consultarnos antes de reservar: podemos ajustar la ruta o el ritmo según la condición física del grupo, aunque no está adaptado para personas con movilidad muy reducida.",
+      "p14": "¿Necesito binoculares o cámara propia para ir a observar aves?",
+      "r14": "No es necesario: el precio del recorrido incluye el préstamo de binoculares. Si tienes los tuyos, igual te recomendamos llevarlos para aprovechar aún más la experiencia."
     },
     "formulario": {
       "titulo": "Pide la cotización de tu grupo",
@@ -947,7 +958,7 @@
       "aviso": "Confirmar el pedido en la tienda no es un pago: es una solicitud. Revisamos que haya existencias, te escribimos para acordar el medio de pago y el envío, y solo ahí la compra queda en firme. Hasta ese momento no se te cobra nada y puedes echarte atrás sin costo.",
       "vendedorTitulo": "Quién vende",
       "v1": "Los productos de esta tienda los vende la Finca Agroturística Vuelo Carmesí, prestador de servicios turísticos inscrito en el Registro Nacional de Turismo con el número 179868 y con domicilio en {direccion}.",
-      "v2": "Para cualquier asunto sobre tu pedido el canal es el correo {email} o el teléfono {telefono}.",
+      "v2": "Para cualquier asunto sobre tu pedido el canal es el correo {email} o el teléfono 311 580 0975.",
       "v3": "Estas condiciones aplican a los productos de la tienda. Las experiencias en la finca tienen sus propias reglas de reserva, pago y cancelación.",
       "vendedorEnlace": "Ver la política de cancelación de reservas",
       "pedidoTitulo": "Cómo se hace un pedido",
@@ -1027,7 +1038,7 @@
       "compromiso": "La Finca Agroturística Vuelo Carmesí es una finca cacaotera familiar en Cubarral, Meta, que abrió sus puertas al turismo. Nos comprometemos a que recibir visitantes no vaya en contra de lo que hace posible la finca: el suelo, el agua, el bosque y las personas que la trabajan. Esta política recoge ese compromiso en los tres ámbitos de las Normas Técnicas Sectoriales de Turismo Sostenible —ambiental, sociocultural y económico—, aplica a todas nuestras experiencias y obliga a todo el equipo.",
       "ambientalTitulo": "Compromiso ambiental",
       "am1": "Cultivar sin agroquímicos, con manejo agroecológico y las Buenas Prácticas Agrícolas certificadas por el ICA.",
-      "am2": "Conservar las especies nativas de la finca y el material genético del cacao de la región: doce variedades que mantenemos en producción.",
+      "am2": "Conservar las especies nativas de la finca y el material genético del cacao de la región: 8 variedades que mantenemos en producción.",
       "am3": "Proteger las fuentes hídricas del predio y la vegetación que las acompaña.",
       "am4": "Usar de forma eficiente el agua y la energía, y reducir, separar y aprovechar los residuos de la operación y del beneficio del cacao.",
       "am5": "Mantener los recorridos por los senderos establecidos y con grupos pequeños, para no presionar la fauna ni el suelo.",
@@ -1071,8 +1082,8 @@
     "sosResumen": {
       "cifraCultivo": "Sin agroquímicos",
       "cultivo": "manejo agroecológico y Buenas Prácticas Agrícolas certificadas por el ICA",
-      "cifraTerritorio": "Compras locales",
-      "territorio": "el equipo y los proveedores son de la vereda y del municipio",
+      "cifraTerritorio": "Compras en la región",
+      "territorio": "el equipo es de la vereda y compramos primero a productores del municipio y de la región",
       "cifraRevision": "Revisión anual",
       "revision": "de esta política y de sus indicadores, para fijar las metas del año siguiente"
     },
@@ -1088,7 +1099,7 @@
   "nosotros": {
     "metaTitulo": "Sobre nosotros",
     "metaDescripcion": "La historia de Vuelo Carmesí: 40 años de cacao en Cubarral, Meta, y el paso de un cultivo tradicional a una finca agroecológica abierta a visitantes.",
-    "metaOgAlt": "El equipo de Vuelo Carmesí en la finca La Fortuna, en Cubarral (Meta)",
+    "metaOgAlt": "El equipo en la Finca Agroturística Vuelo Carmesí, en Cubarral (Meta)",
     "secciones": {
       "origen": "El origen",
       "historia": "Nuestra historia",
@@ -1097,9 +1108,9 @@
       "mision": "Misión y valores",
       "misionBajada": "Cultivar cacao con respeto, transformarlo con pasión y compartirlo con honestidad.",
       "hogar": "Nuestro hogar",
-      "finca": "Finca La Fortuna",
+      "finca": "Finca Agroturística Vuelo Carmesí",
       "donde": "Dónde estamos",
-      "delaMata": "De la mata al chocolate",
+      "delaMata": "De la planta al chocolate",
       "proceso": "Nuestro proceso",
       "personas": "Las personas detrás",
       "equipo": "El equipo",
@@ -1137,7 +1148,7 @@
       "rotulo": "Cómo llegar · Desde Bogotá",
       "tramo1": "Bogotá – Villavicencio (Vía al Llano)",
       "tramo2": "Villavicencio – Cubarral (pavimentada, por Acacías y Guamal)",
-      "tramo3": "Cubarral – Finca La Fortuna (pavimentada)",
+      "tramo3": "Cubarral – Finca Agroturística Vuelo Carmesí (pavimentada)",
       "acceso": "Entra autos, motos y buses · vía pavimentada",
       "parqueadero": "Parqueadero para 4 autos + 1 bus",
       "trazarRuta": "Trazar mi ruta",
@@ -1162,7 +1173,7 @@
     "proceso": {
       "genetico": {
         "titulo": "Conservación del material genético",
-        "texto": "Conservamos 12 variedades de cacao de la región —entre ellas FEAR5 y FSV41—, parte de la historia productiva de nuestro territorio.",
+        "texto": "Conservamos 8 variedades de cacao de la región —entre ellas FEAR5 y FSV41—, parte de la historia productiva de nuestro territorio.",
         "alt": "Mazorcas de cacao madurando en el árbol"
       },
       "cosecha": {
@@ -1264,7 +1275,7 @@
       "etiqueta": "La transformación",
       "titulo": "Tecnificar el cultivo",
       "t1": "En 2006, comenzó una nueva etapa. Decidimos transformar la manera de producir: se eliminó el café que compartía espacio con el cacao y se inició un proceso de tecnificación del cultivo, incorporando variedades de cacao con mejores características productivas.",
-      "alt": "Mazorcas rojas del cultivo de cacao tecnificado"
+      "alt": "Mazorcas color carmesí del cultivo de cacao tecnificado"
     },
     "aprendizaje": {
       "anyo": "Años de aprendizaje",
@@ -1278,7 +1289,7 @@
       "etiqueta": "La pausa",
       "titulo": "Detenernos a mirar",
       "t1": "Y entonces llegó 2020. La pandemia nos obligó a detenernos y mirar nuestro entorno de una manera diferente. Nos hizo pensar que todo aquello que durante años habíamos considerado parte de nuestra vida cotidiana podía convertirse también en una experiencia para compartir con otras personas.",
-      "alt": ""
+      "alt": "Recorriendo el cultivo de cacao en tiempos de pandemia"
     },
     "camino": {
       "anyo": "Desde 2012",
@@ -1314,7 +1325,7 @@
     "meta": {
       "titulo": "Finca de cacao y visitas en Cubarral, Meta",
       "descripcion": "Finca agroecológica de cacao en Cubarral, Meta, a menos de dos horas de Villavicencio. Cosecha, fermentación y cata guiadas, aviturismo y visitas de grupo.",
-      "ogAlt": "Cacaotal de la finca con mazorcas rojas maduras en el árbol"
+      "ogAlt": "Cultivo de cacao de la finca con mazorcas rojas maduras en el árbol"
     },
     "heroTitulo": "Experiencias agroecológicas\ncon sabor a cacao.",
     "heroSubtitulo": "Cosechamos, fermentamos y degustamos junto a ti. Conoce el cacao desde su raíz, en una finca llena de vida y tradición.",

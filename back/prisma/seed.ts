@@ -45,7 +45,7 @@ async function main() {
       // en vez de con ocho casillas en blanco que nadie sabe qué llevaban.
       { key: 'impacto_personas', value: '692' },
       { key: 'impacto_instituciones', value: '8' },
-      { key: 'impacto_organizaciones', value: '7' },
+      { key: 'impacto_organizaciones', value: '9' },
       { key: 'impacto_familias', value: '28' },
       { key: 'impacto_extranjeros', value: '15' },
       { key: 'impacto_familias_directas', value: '2' },

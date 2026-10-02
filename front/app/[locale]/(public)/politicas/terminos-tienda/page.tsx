@@ -298,7 +298,7 @@ export default async function PoliticaTerminosTiendaPage({
                   {parrafos.map(clave => (
                     <p key={clave}>
                       {t(clave, {
-                        direccion: CONTACTO.direccionCompleta,
+                        direccion: CONTACTO.domicilio,
                         email: CONTACTO.email,
                         telefono: CONTACTO.telefono,
                       })}

@@ -207,7 +207,7 @@ export default async function PoliticaDatosPersonalesPage({
         </span>
         <p>
           {t('responsable', {
-            direccion: CONTACTO.direccionCompleta,
+            direccion: CONTACTO.domicilio,
             email: CONTACTO.email,
             telefono: CONTACTO.telefono,
           })}

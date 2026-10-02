@@ -47,7 +47,7 @@
     "titulo": "Six reasons to visit",
     "origen": {
       "titulo": "Single-origin cacao",
-      "texto": "You meet the cacao from the moment it is born on the tree. 1,300 traceable plants, 12 native varieties, and a process you can follow with your own eyes."
+      "texto": "You meet the cacao from the moment it is born on the tree. 1,200 traceable plants, 8 native varieties, and a process you can follow with your own eyes."
     },
     "sostenible": {
       "titulo": "Sustainable farming",
@@ -73,11 +73,11 @@
   "pruebaSocial": {
     "kicker": "Our impact",
     "titulo": "Hundreds of people have already trusted us",
-    "bajada": "Since 2023, institutions, organizations and families have chosen Vuelo Carmesí to experience cacao from the root up.",
+    "bajada": "Since 2021, institutions, organizations and families have chosen Vuelo Carmesí to experience cacao from the root up.",
     "organizaciones": "Organizations that have visited our farm",
     "personas": {
       "etiqueta": "people hosted",
-      "detalle": "since 2023"
+      "detalle": "since 2021"
     },
     "instituciones": {
       "etiqueta": "educational institutions",
@@ -337,8 +337,7 @@
       "categoria": "Category",
       "disponibles": "In stock",
       "unidades": "{n} units",
-      "avalBpa": "Good Agricultural Practices · ICA",
-      "avalMarca": "Trademark registered with SIC"
+      "avalBpa": "Good Agricultural Practices · ICA"
     },
     "panel": {
       "sinStock": "Out of stock for now",
@@ -454,7 +453,7 @@
     },
     "kicker": "Groups and institutions",
     "h1": "School field trips and corporate days at a cacao farm",
-    "lead": "We have hosted <b>692 people since 2023</b>, including 8 educational institutions and 7 organisations. Every visit includes a specialised guide and accident insurance.",
+    "lead": "We have hosted <b>692 people since 2021</b>, including 8 educational institutions and 9 organisations. Every visit includes a specialised guide and accident insurance.",
     "indiceAria": "Sections on this page",
     "apartados": {
       "clientes": "Who has come",
@@ -479,8 +478,8 @@
     },
     "clientes": {
       "titulo": "Who has come",
-      "texto": "Not a promise: it is the record of three years of operation. These are the institutions and organisations that have already run their visit at the farm.",
-      "personas": "people hosted since 2023",
+      "texto": "Not a promise: it is the record of five years of operation. These are the institutions and organisations that have already run their visit at the farm.",
+      "personas": "people hosted since 2021",
       "educativas": "Educational institutions",
       "organizaciones": "Organisations and trade bodies"
     },
@@ -577,12 +576,12 @@
       "accesoTitulo": "Group access",
       "acceso1": "<b>Paved road all the way to the farm.</b> Any vehicle can reach it, including buses and vans.",
       "acceso2": "Parking for 4 cars and 1 bus.",
-      "acceso3": "Meeting point: Finca La Fortuna, vereda Brisas del Tonoa, Cubarral (Meta).",
+      "acceso3": "Meeting point: Finca Agroturística Vuelo Carmesí, vereda Brisas del Tonoa, Cubarral (Meta).",
       "acceso4": "Arrive 15 minutes before the agreed time.",
       "terrenoTitulo": "Terrain and climate",
       "terreno1": "<b>Elevation:</b> 600 to 850 m.",
       "terreno2": "<b>Climate:</b> warm and humid, 24 to 30 °C; dry season from December to March.",
-      "terreno3": "<b>Best window:</b> birds 5:30 to 8:00 a.m. · cacao 9:00 a.m. to 1:00 p.m.",
+      "terreno3": "<b>Best window:</b> birds 5:30 to 8:00 a.m. · cacao 9:00 a.m. to 12:00 p.m. and 2:00 to 5:00  p.m.",
       "terreno4": "<b>Physical demand:</b> low to moderate, dirt trails.",
       "llevarTitulo": "What the group should bring",
       "llevar1": "Long-sleeved clothing",
@@ -635,14 +634,14 @@
     },
     "faq": {
       "titulo": "Frequently asked questions",
-      "p1": "Can you host a group of 40 people on the same day?",
-      "r1": "Yes. Large groups are handled by rotating subgroups, each with its own guide, so nobody does the tour in a group of forty. Write to us with the exact number and we will confirm availability for the date you need.",
+      "p1": "Can you host groups of 30 people?",
+      "r1": "Yes. In each session, morning or afternoon, the group is split into two subgroups of 15 people who do the tour at the same time, each with its own guide. Write to us with the exact number and we will confirm availability for the date you need.",
       "p2": "Can a bus reach the farm?",
       "r2": "Yes. The road is paved all the way to the farm and any vehicle can reach it, including buses and vans. The car park has room for 4 cars and 1 bus.",
       "p3": "What happens if it rains?",
       "r3": "The visit goes ahead: the tour is outdoors but there are covered areas for the cacao processing, the snack and the chocotherapy. That is why we ask the group to bring a rain jacket or poncho.",
       "p4": "Do you invoice in the school's or company's name?",
-      "r4": "Yes. Tick the invoicing box on the form and include the tax ID: the quote comes with the tax details your procurement team needs.",
+      "r4": "Yes. Tick the invoicing box on the form and include the tax ID. We issue a paper invoice from a printed invoice book, not an electronic one, in the institution's name; if your procurement team requires electronic invoicing, let us know before booking.",
       "p5": "What does the insurance cover?",
       "r5": "Every visit includes accident and assistance insurance for each participant. If your institution needs the cover detailed in writing, we send it with the quote.",
       "p6": "How far in advance should we book?",
@@ -650,7 +649,19 @@
       "p7": "Is lunch available?",
       "r7": "Yes, as an add-on. The country lunch is not included in any plan and is quoted by group size.",
       "p8": "Can birdwatching be combined with the cacao experience?",
-      "r8": "Yes, that is the full-day plan: birdwatching starts at dawn and the cacao experience runs through the morning, with breakfast and a snack on the same day."
+      "r8": "Yes, that is the full-day plan: birdwatching starts at dawn and the cacao experience runs through the morning, with breakfast and a snack on the same day.",
+      "p9": "Do I need to be a bird expert to join the birdwatching plan?",
+      "r9": "No, the tour is designed for every level: the guide adapts the explanation depending on whether the group are beginners or experienced birders.",
+      "p10": "If I am vegetarian, is there a lunch option for me?",
+      "r10": "Yes, we have a vegetarian lunch option; just let us know when you book so we can have it ready for your group.",
+      "p11": "Is it safe to travel to the area?",
+      "r11": "Yes. Cubarral and the Ariari region have been an active tourism area with normal traffic for years, without the public-order problems the region had in the past. We welcome visitors from all over the country all year round without any security incidents.",
+      "p12": "Is a bilingual guide available for international visitors?",
+      "r12": "Yes, we have an English-speaking guide; we recommend requesting it when you book to confirm availability on the date of your visit.",
+      "p13": "Is the farm trail suitable for older adults?",
+      "r13": "The tour has stretches of uneven ground and gentle slopes, so we recommend checking with us before booking: we can adjust the route or the pace to the group's physical condition, although it is not adapted for people with very limited mobility.",
+      "p14": "Do I need my own binoculars or camera for birdwatching?",
+      "r14": "No need: the tour price includes binocular loan. If you have your own, we still recommend bringing them to get even more out of the experience."
     },
     "formulario": {
       "titulo": "Request a quote for your group",
@@ -947,7 +958,7 @@
       "aviso": "Confirming an order in the shop is not a payment: it is a request. We check stock, write to you to agree on the payment method and shipping, and only then is the purchase final. Until that moment nothing is charged and you can walk away at no cost.",
       "vendedorTitulo": "Who is selling",
       "v1": "The products in this shop are sold by Finca Agroturística Vuelo Carmesí, a tourism provider listed in the National Tourism Registry under number 179868, located at {direccion}.",
-      "v2": "For anything about your order, the channel is {email} or {telefono}.",
+      "v2": "For anything about your order, the channel is {email} or 311 580 0975.",
       "v3": "These terms apply to shop products. Experiences at the farm have their own booking, payment and cancellation rules.",
       "vendedorEnlace": "See the booking cancellation policy",
       "pedidoTitulo": "How an order works",
@@ -1027,7 +1038,7 @@
       "compromiso": "Finca Agroturística Vuelo Carmesí is a family cacao farm in Cubarral, Meta, that opened its doors to tourism. We commit to making sure that receiving visitors never works against what makes the farm possible: the soil, the water, the forest and the people who work it. This policy sets out that commitment across the three areas of Colombia's Sustainable Tourism Sectoral Standards —environmental, sociocultural and economic—, applies to all our experiences and binds the whole team.",
       "ambientalTitulo": "Environmental commitment",
       "am1": "Growing without agrochemicals, with agroecological management and Good Agricultural Practices certified by the ICA.",
-      "am2": "Conserving the farm's native species and the genetic material of the region's cacao: twelve varieties we keep in production.",
+      "am2": "Conserving the farm's native species and the genetic material of the region's cacao: 8 varieties we keep in production.",
       "am3": "Protecting the water sources on the property and the vegetation around them.",
       "am4": "Using water and energy efficiently, and reducing, separating and reusing the waste from the operation and from cacao processing.",
       "am5": "Keeping tours on the established trails and in small groups, so as not to put pressure on wildlife or soil.",
@@ -1071,8 +1082,8 @@
     "sosResumen": {
       "cifraCultivo": "No agrochemicals",
       "cultivo": "agroecological management and Good Agricultural Practices certified by the ICA",
-      "cifraTerritorio": "Local sourcing",
-      "territorio": "the team and the suppliers come from the village and the municipality",
+      "cifraTerritorio": "Regional sourcing",
+      "territorio": "the team comes from the village, and we buy first from producers in the municipality and the region",
       "cifraRevision": "Annual review",
       "revision": "of this policy and its indicators, to set the following year's targets"
     },
@@ -1088,7 +1099,7 @@
   "nosotros": {
     "metaTitulo": "About us",
     "metaDescripcion": "The story of Vuelo Carmesí: 40 years of cacao in Cubarral, Meta, and the shift from a traditional crop to an agroecological farm open to visitors.",
-    "metaOgAlt": "The Vuelo Carmesí team at Finca La Fortuna in Cubarral, Meta",
+    "metaOgAlt": "The team at Finca Agroturística Vuelo Carmesí in Cubarral, Meta",
     "secciones": {
       "origen": "The origin",
       "historia": "Our story",
@@ -1097,9 +1108,9 @@
       "mision": "Mission and values",
       "misionBajada": "Grow cacao with respect, transform it with passion and share it honestly.",
       "hogar": "Our home",
-      "finca": "Finca La Fortuna",
+      "finca": "Finca Agroturística Vuelo Carmesí",
       "donde": "Where we are",
-      "delaMata": "From tree to chocolate",
+      "delaMata": "From plant to chocolate",
       "proceso": "Our process",
       "personas": "The people behind it",
       "equipo": "The team",
@@ -1137,7 +1148,7 @@
       "rotulo": "Getting here · From Bogotá",
       "tramo1": "Bogotá – Villavicencio (the Vía al Llano highway)",
       "tramo2": "Villavicencio – Cubarral (paved, via Acacías and Guamal)",
-      "tramo3": "Cubarral – Finca La Fortuna (paved)",
+      "tramo3": "Cubarral – Finca Agroturística Vuelo Carmesí (paved)",
       "acceso": "Cars, motorbikes and coaches · paved road",
       "parqueadero": "Parking for 4 cars + 1 coach",
       "trazarRuta": "Get directions",
@@ -1162,7 +1173,7 @@
     "proceso": {
       "genetico": {
         "titulo": "Conserving the genetic material",
-        "texto": "We conserve 12 cacao varieties from the region — among them FEAR5 and FSV41 — part of the productive history of this land.",
+        "texto": "We conserve 8 cacao varieties from the region — among them FEAR5 and FSV41 — part of the productive history of this land.",
         "alt": "Cacao pods ripening on the tree"
       },
       "cosecha": {
@@ -1264,7 +1275,7 @@
       "etiqueta": "The change",
       "titulo": "Modernising the crop",
       "t1": "In 2006 a new stage began. We decided to transform the way we farmed: the coffee sharing space with the cacao was removed and we started modernising the crop, bringing in cacao varieties with better yields.",
-      "alt": "Red pods from the modernised cacao crop"
+      "alt": "Crimson pods from the modernised cacao crop"
     },
     "aprendizaje": {
       "anyo": "Years of learning",
@@ -1278,7 +1289,7 @@
       "etiqueta": "The pause",
       "titulo": "Stopping to look",
       "t1": "And then came 2020. The pandemic forced us to stop and look at our surroundings differently. It made us realise that everything we had considered part of our everyday life for years could also become an experience to share with other people.",
-      "alt": ""
+      "alt": "Walking the cacao grove during the pandemic"
     },
     "camino": {
       "anyo": "Since 2012",
