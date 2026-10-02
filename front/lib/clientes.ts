@@ -35,6 +35,8 @@ export const ORGANIZACIONES = [
   'Limpal Colombia',
   'Más Meta',
   'Ecopetrol',
+  'ICA',
+  'AGROSAVIA',
 ] as const
 
 /**

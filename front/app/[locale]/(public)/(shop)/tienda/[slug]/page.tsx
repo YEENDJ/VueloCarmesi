@@ -85,7 +85,12 @@ export async function generateStaticParams({
   }
 }
 
-const AVALES = ['avalBpa', 'avalMarca'] as const
+/*
+ * Solo avales que cubren al producto. La marca está registrada en la SIC en la
+ * clase 39 de Niza (servicios turísticos), no en la 30 (cacao y chocolate):
+ * mostrarla acá daría a entender un registro que el producto no tiene.
+ */
+const AVALES = ['avalBpa'] as const
 
 /** Saca el contenido del nombre ("… x 375 ml") para mostrarlo como dato duro. */
 function contenidoDelNombre(nombre: string): string | null {

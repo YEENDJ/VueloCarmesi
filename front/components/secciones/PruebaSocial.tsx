@@ -26,7 +26,7 @@ interface Props {
 const STATS = [
   { clave: 'impacto_personas', respaldo: '692', t: 'personas' },
   { clave: 'impacto_instituciones', respaldo: '8', t: 'instituciones' },
-  { clave: 'impacto_organizaciones', respaldo: '7', t: 'organizacionesCifra' },
+  { clave: 'impacto_organizaciones', respaldo: '9', t: 'organizacionesCifra' },
   { clave: 'impacto_familias', respaldo: '28', t: 'familias' },
   { clave: 'impacto_extranjeros', respaldo: '15', t: 'extranjeros' },
 ]

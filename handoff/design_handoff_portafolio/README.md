@@ -88,7 +88,7 @@ Con una base clara en 19 láminas, tres recursos dan ritmo:
 |---|--------|-----------|
 | 01 | Portada | Marca, título, bajada, los dos públicos |
 | 02 | Bienvenidos | Carta de apertura y cita destacada |
-| 03 | Nuestra historia | Creada en 2023 en Cubarral, Meta + 4 cifras productivas |
+| 03 | Nuestra historia | Creada en 2021 en Cubarral, Meta + 4 cifras productivas |
 | 04 | Misión y visión | Dos tarjetas contrastadas |
 | 05 | Por qué elegirnos | Seis diferenciales numerados |
 | 06 | Nuestros públicos | Cliente directo vs. canal aliado |
@@ -110,7 +110,7 @@ Con una base clara en 19 láminas, tres recursos dan ritmo:
 
 ## Datos del negocio incorporados
 
-**Producción:** 1,3 hectáreas · 1.300 plantas aprox. · 900 kilos/año · 12 variedades de cacao (predominan FEAR5 y FSV41).
+**Producción:** 1,2 hectáreas · 1.200 plantas aprox. · 850 kilos/año · 8 variedades de cacao (predominan FEAR5 y FSV41).
 
 **Impacto social:** 2 familias beneficiadas directamente · 8 indirectamente · 6 empleos por obra realizada.
 
@@ -118,9 +118,9 @@ Con una base clara en 19 láminas, tres recursos dan ritmo:
 
 | Servicio | Duración | Grupo | Valor |
 |----------|----------|-------|-------|
-| Experiencia cacaotera | 3 horas | 2 a 12 | $70.000 |
-| Avistamiento de aves | Media jornada | 2 a 8 | $80.000 |
-| Aves + experiencia cacaotera | Jornada | 2 a 8 | $150.000 |
+| Experiencia cacaotera | 3 horas | 2 a 12 | $80.000 |
+| Avistamiento de aves | Media jornada | 2 a 8 | $90.000 |
+| Aves + experiencia cacaotera | Jornada | 2 a 8 | $160.000 |
 | Mascarilla + refrigerio (complemento) | — | — | $30.000 |
 | Jornadas corporativas y escolares | A medida | A convenir | Cotización |
 
