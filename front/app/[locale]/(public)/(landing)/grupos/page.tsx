@@ -585,20 +585,6 @@ export default async function GruposPage({
               <p className="grp-card-texto">{facturacion}</p>
             </>
           )}
-
-          {/* El portafolio ya existe y ya está publicado: es literalmente lo que
-              un coordinador adjunta a una solicitud de aprobación interna. */}
-          <div className="grp-aviso grp-aviso--pdf">
-            <span className="grp-aviso-rotulo">
-              <FileText size={15} strokeWidth={2} aria-hidden="true" />
-              {t('menores.portafolioTitulo')}
-            </span>
-            <span className="grp-aviso-texto">{t('menores.portafolio')}</span>
-            <a className="grp-boton grp-boton--fantasma" href="/portafolio" target="_blank" rel="noopener noreferrer">
-              {t('menores.portafolioEnlace')}
-              <ExternalLink size={16} strokeWidth={2} aria-hidden="true" />
-            </a>
-          </div>
         </article>
 
         {/* ── Cómo se reserva ── */}

@@ -614,10 +614,7 @@
       "autorizacion4": "Contact details of the parents or legal guardians",
       "guiaTitulo": "Supervision",
       "guia": "One guide per subgroup, with the school's teachers accompanying throughout the visit.",
-      "facturacionTitulo": "Invoicing",
-      "portafolioTitulo": "The document your institution files",
-      "portafolio": "The full portfolio, as a PDF: details of each experience, accreditations, policies and rates. It is what you attach to an internal approval request.",
-      "portafolioEnlace": "Download the portfolio"
+      "facturacionTitulo": "Invoicing"
     },
     "pasos": {
       "titulo": "How to book",

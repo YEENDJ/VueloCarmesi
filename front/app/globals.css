@@ -5372,7 +5372,6 @@ select.campo-control {
   color: var(--color-brown);
   overflow-wrap: anywhere;
 }
-.grp-aviso--pdf .grp-boton { margin-top: 10px; align-self: flex-start; }
 
 /* ── Los cuatro pasos ── */
 .grp-timeline {

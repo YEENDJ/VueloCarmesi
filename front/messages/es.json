@@ -614,10 +614,7 @@
       "autorizacion4": "Datos de contacto de los padres o representantes legales",
       "guiaTitulo": "Acompañamiento",
       "guia": "Un guía por subgrupo, con los docentes del colegio acompañando en todo el recorrido.",
-      "facturacionTitulo": "Facturación",
-      "portafolioTitulo": "El documento que archiva la institución",
-      "portafolio": "El portafolio completo, en PDF: fichas de cada experiencia, avales, políticas y tarifario. Es lo que se adjunta a una solicitud de aprobación interna.",
-      "portafolioEnlace": "Descargar el portafolio"
+      "facturacionTitulo": "Facturación"
     },
     "pasos": {
       "titulo": "Cómo se reserva",
