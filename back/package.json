@@ -23,7 +23,8 @@
     "traducciones:estado": "ts-node scripts/estado-traducciones.ts",
     "traducciones:ver": "ts-node scripts/ver-textos.ts",
     "traducciones:rellenar": "ts-node scripts/rellenar-traducciones.ts",
-    "traducciones:siteconfig": "ts-node scripts/rellenar-siteconfig.ts"
+    "traducciones:siteconfig": "ts-node scripts/rellenar-siteconfig.ts",
+    "correo:probar": "ts-node scripts/probar-correo.ts"
   },
   "prisma": {
     "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"
