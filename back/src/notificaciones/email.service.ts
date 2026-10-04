@@ -1,20 +1,28 @@
 import { Injectable } from '@nestjs/common'
-import * as nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 import * as fs from 'fs'
 import * as path from 'path'
 
+/**
+ * Los correos salen por la API de Resend (HTTPS), no por SMTP: Render bloquea
+ * los puertos SMTP salientes en el plan gratuito y con Gmail no salía nada.
+ *
+ * `EMAIL_FROM` tiene que ser de un dominio verificado en Resend. Sin eso,
+ * Resend solo entrega al correo del dueño de la cuenta y al cliente no le
+ * llega nada; fue lo que hizo abandonar Resend la primera vez.
+ */
 @Injectable()
 export class EmailService {
-  private readonly from = process.env.EMAIL_FROM ?? process.env.GMAIL_USER ?? ''
-  private readonly transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_APP_PASSWORD,
-    },
-  })
+  private readonly from = process.env.EMAIL_FROM ?? 'Vuelo Carmesí <hola@vuelocarmesi.com>'
+  private readonly replyTo = process.env.EMAIL_REPLY_TO || undefined
+  // Perezoso: `new Resend()` lanza si falta la clave, y eso tumbaría el arranque
+  // del backend entero en vez de solo los correos.
+  private resend: Resend | null = null
+
+  private cliente(): Resend {
+    if (!process.env.RESEND_API_KEY) throw new Error('Falta RESEND_API_KEY: no se puede enviar el correo')
+    return (this.resend ??= new Resend(process.env.RESEND_API_KEY))
+  }
 
   private tpl(name: string, vars: Record<string, string>): string {
     const candidates = [
@@ -30,7 +38,12 @@ export class EmailService {
   }
 
   async send(to: string, subject: string, html: string): Promise<void> {
-    await this.transporter.sendMail({ from: this.from, to, subject, html })
+    // Resend v6 no lanza: devuelve `{ error }`. Hay que lanzarlo aquí para que
+    // `enviarPorSeparado` lo registre; si no, el fallo pasaría como un envío bueno.
+    const { error } = await this.cliente().emails.send({
+      from: this.from, to, subject, html, replyTo: this.replyTo,
+    })
+    if (error) throw new Error(`Resend rechazó el correo a ${to}: ${error.name} — ${error.message}`)
   }
 
   templateConfirmacionReserva(vars: Record<string, string>): string {

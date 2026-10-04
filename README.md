@@ -233,6 +233,9 @@ cada paquete lista cuáles hacen falta.
 | `NEXT_PUBLIC_SITE_URL` | Vercel | Los `hreflang` y `canonical` salen con URLs relativas y la indexación bilingüe no sirve. |
 | `NEXT_PUBLIC_API_URL` | Vercel | El front no encuentra el backend. |
 | `DATABASE_URL` | Render | — |
+| `RESEND_API_KEY` | Render | No sale ningún correo (ni al cliente ni al admin). Cada fallo queda en el log como `falló «correo al cliente»`; Telegram sigue saliendo. |
+| `EMAIL_FROM` | Render | Usa `Vuelo Carmesí <hola@vuelocarmesi.com>`. Tiene que ser de un dominio verificado en Resend: si no, Resend solo entrega al dueño de la cuenta. |
+| `EMAIL_REPLY_TO` | Render | Las respuestas de los clientes van a la dirección de `EMAIL_FROM`. |
 | `ADMIN_PASSWORD` | Vercel | Nadie puede entrar al panel. |
 | `ADMIN_SESSION_SECRET` | Vercel | El login responde «el panel no está configurado». Firma la cookie de sesión; cambiarla cierra todas las sesiones. |
 | `ADMIN_API_KEY` | Vercel **y** Render, con el mismo valor | El panel entra pero todo responde 401. Es la clave con la que el puente del front (`app/api/admin/`) le habla al backend; el navegador nunca la ve. |
