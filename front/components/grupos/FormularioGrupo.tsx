@@ -14,6 +14,7 @@ import {
 } from '@/lib/schemas/solicitud-grupo'
 import { CONTACTO, whatsappCon } from '@/lib/contacto'
 import AvisoDatos from '@/components/ui/AvisoDatos'
+import { useDespertarBackend } from '@/lib/despertar-backend'
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 
@@ -32,6 +33,7 @@ const MAX_MENSAJE = 1000
  * patrón que `lib/cart/checkout-schema.ts`.
  */
 export default function FormularioGrupo() {
+  useDespertarBackend()
   const t = useTranslations('grupos.formulario')
   const tw = useTranslations('whatsapp')
 
