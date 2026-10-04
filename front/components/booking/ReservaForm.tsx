@@ -15,6 +15,7 @@ import { fechaMinima, fechaMaximaReserva } from '@/lib/schemas/comunes'
 import type { Experiencia } from '@/lib/types'
 import { formatPrecio } from '@/lib/format'
 import { calcularAbono, crearPago, type ConfigPagos } from '@/lib/pagos'
+import { useDespertarBackend } from '@/lib/despertar-backend'
 
 export default function ReservaForm({
   experiencia,
@@ -24,6 +25,7 @@ export default function ReservaForm({
   /** Si el sitio cobra en línea y con qué porcentaje. Lo lee la página en el servidor. */
   pagos: ConfigPagos
 }) {
+  useDespertarBackend()
   const t = useTranslations('reserva')
   const tg = useTranslations('grupos.aviso')
   const idioma = useLocale()

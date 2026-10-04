@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { LIMITES_FORMULARIOS } from './common/limite-formularios'
 import { PrismaService } from './prisma.service'
+import { AppController } from './app.controller'
 import { ExperienciasModule } from './experiencias/experiencias.module'
 import { ReservasModule } from './reservas/reservas.module'
 import { ProductosModule } from './productos/productos.module'
@@ -29,6 +30,7 @@ import { PagosModule } from './pagos/pagos.module'
     TraduccionModule,
     PagosModule,
   ],
+  controllers: [AppController],
   providers: [PrismaService],
 })
 export class AppModule {}

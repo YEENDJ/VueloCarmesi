@@ -1,12 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get } from '@nestjs/common'
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  /**
+   * Lo llaman las páginas con formulario al abrirse, para que Render despierte
+   * mientras el cliente escribe (front/lib/despertar-backend.ts). No toca la
+   * base ni el límite de envíos: tiene que responder rápido y sin costo.
+   */
+  @Get('salud')
+  salud() {
+    return { ok: true }
   }
 }

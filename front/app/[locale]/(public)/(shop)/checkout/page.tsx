@@ -15,8 +15,10 @@ import {
 } from '@/lib/pagos'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
+import { useDespertarBackend } from '@/lib/despertar-backend'
 
 export default function CheckoutPage() {
+  useDespertarBackend()
   const idioma = useLocale()
 
   const t = useTranslations('tienda.checkout')

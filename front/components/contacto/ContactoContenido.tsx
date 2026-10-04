@@ -21,6 +21,7 @@ import { CONTACTO, REDES, whatsappCon } from "@/lib/contacto";
 import AvisoGrupos from "@/components/grupos/AvisoGrupos";
 import { Link } from "@/lib/i18n/navigation";
 import { radicado, ZONA_RADICADO } from "@/lib/radicado";
+import { useDespertarBackend } from "@/lib/despertar-backend";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
@@ -50,6 +51,7 @@ const RED_LINKS = [
  * /tienda hace con TiendaGrid.
  */
 export default function ContactoContenido() {
+  useDespertarBackend();
   const t = useTranslations("contacto");
   const tw = useTranslations("whatsapp");
 
