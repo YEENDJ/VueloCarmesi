@@ -169,9 +169,16 @@ export default function ProductosPage() {
           onSaved={async saved => {
             setProductos(prev => {
               const idx = prev.findIndex(p => p.id === saved.id)
-              return idx >= 0 ? prev.map(p => p.id === saved.id ? saved : p) : [saved, ...prev]
+              // Ver experiencias/page.tsx: se funde para no perder `slugs`.
+              return idx >= 0 ? prev.map(p => p.id === saved.id ? { ...p, ...saved } : p) : [saved, ...prev]
             })
             setModal(undefined)
+            await revalidateProductos()
+          }}
+          onSlugCambiado={async actualizado => {
+            // Ver experiencias/page.tsx: el modal sigue abierto y se refresca.
+            setProductos(prev => prev.map(p => p.id === actualizado.id ? { ...p, ...actualizado } : p))
+            setModal(prev => (prev && prev !== 'new' ? { ...prev, ...actualizado } : prev))
             await revalidateProductos()
           }}
         />

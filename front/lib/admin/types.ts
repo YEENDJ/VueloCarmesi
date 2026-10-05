@@ -66,6 +66,8 @@ export interface AdminExperiencia {
   destacada: boolean
   archivada: boolean
   createdAt: string
+  /** Slug por idioma. Lo trae la lectura pública; el PATCH de la ficha no. */
+  slugs?: Record<string, string>
 }
 
 export interface AdminProducto {
@@ -81,6 +83,8 @@ export interface AdminProducto {
   categoria: string
   badge?: 'Nuevo' | 'Destacado' | null
   createdAt: string
+  /** Ver AdminExperiencia.slugs. */
+  slugs?: Record<string, string>
 }
 
 export interface ItemPedido {

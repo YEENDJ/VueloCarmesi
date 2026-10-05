@@ -3,6 +3,7 @@ import { useState } from 'react'
 import type { AdminProducto } from '@/lib/admin/types'
 import { createProducto, updateProducto } from '@/lib/admin/api'
 import ImagesUploader from './ImagesUploader'
+import DireccionWeb from './DireccionWeb'
 
 const CATEGORIAS = ['chocolates', 'despensa', 'cafe', 'regalos', 'hogar']
 
@@ -26,10 +27,13 @@ export default function ProductoFormModal({
   producto,
   onClose,
   onSaved,
+  onSlugCambiado,
 }: {
   producto: AdminProducto | null
   onClose: () => void
   onSaved: (p: AdminProducto) => void
+  /** Ver ExperienciaFormModal: se guarda en el acto y no cierra el modal. */
+  onSlugCambiado: (p: AdminProducto) => void
 }) {
   const isEdit = !!producto
   const [form, setForm] = useState<FormData>(
@@ -112,6 +116,11 @@ export default function ProductoFormModal({
             <FormRow label="Nombre *">
               <input className="admin-input" value={form.nombre} onChange={e => set('nombre', e.target.value)} placeholder="Ej: Chocolate Negro 70%" />
             </FormRow>
+            {isEdit && (
+              <FormRow label="Dirección web">
+                <DireccionWeb entidad="producto" ficha={producto!} onCambiado={onSlugCambiado} />
+              </FormRow>
+            )}
 
             <FormRow
               label="Descripción corta *"

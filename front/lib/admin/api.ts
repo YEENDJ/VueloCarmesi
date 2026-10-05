@@ -81,6 +81,36 @@ export function deleteProducto(id: string): Promise<void> {
   return fetch(`${ADMIN}/productos/${id}`, { method: 'DELETE' }).then(() => undefined)
 }
 
+// ── Dirección web (slug) ───────────────────────────────────
+/**
+ * Cambia a propósito la URL de una ficha en un idioma. Ruta propia en el
+ * backend: el PATCH de la ficha ya no toca el slug, ni siquiera al renombrar.
+ *
+ * El motivo del rechazo se pasa entero —«ya es o fue de otra ficha»—, porque
+ * acá un «API error 409» no le dice a nadie qué escribir en su lugar.
+ */
+export async function cambiarSlug<T>(
+  entidad: 'experiencia' | 'producto',
+  id: string,
+  slug: string,
+  idioma: string,
+): Promise<T> {
+  const res = await fetch(`${ADMIN}/${entidad === 'experiencia' ? 'experiencias' : 'productos'}/${id}/slug`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ slug, idioma }),
+  })
+  if (!res.ok) {
+    const motivo = await res.json().then(
+      (d: { message?: string | string[] }) =>
+        Array.isArray(d.message) ? d.message.join('. ') : d.message,
+      () => undefined,
+    )
+    throw new Error(motivo || `No se pudo cambiar la dirección (${res.status})`)
+  }
+  return res.json()
+}
+
 // ── Pedidos ────────────────────────────────────────────────
 export function getPedidos(): Promise<AdminPedido[]> {
   return fetch(`${ADMIN}/pedidos`).then(checked)

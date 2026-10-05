@@ -24,6 +24,8 @@ const PERMITIDAS: Record<Metodo, RegExp[]> = {
     new RegExp(`^reservas/${ID}$`), new RegExp(`^reservas/${ID}/estado$`),
     new RegExp(`^pedidos/${ID}$`),
     new RegExp(`^experiencias/${ID}$`), new RegExp(`^productos/${ID}$`),
+    // Cambio explícito de URL de una ficha: ruta aparte del PATCH normal.
+    new RegExp(`^experiencias/${ID}/slug$`), new RegExp(`^productos/${ID}/slug$`),
     new RegExp(`^solicitudes-grupo/${ID}/estado$`),
     new RegExp(`^contacto/${ID}/estado$`),
   ],
