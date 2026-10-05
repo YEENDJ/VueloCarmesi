@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { SLUGS_EXPERIENCIAS_LEGADOS, SLUGS_PRODUCTOS_LEGADOS } from '@/lib/slugs-legados'
 
 /**
  * El sitemap se prueba con catálogo de mentira: lo que se verifica no es el
@@ -101,5 +102,18 @@ describe('sitemap.xml', () => {
       expect(url === SITIO || url.startsWith(`${SITIO}/`), url).toBe(true)
     }
     expect(new Set(urls).size, 'hay URLs duplicadas').toBe(urls.length)
+  })
+
+  // Las fichas salen de `slug`/`slugs` del catálogo, que son solo los
+  // vigentes. Un slug anterior responde 308, y listar URLs que redirigen es lo
+  // que Search Console marca como «Página con redirección».
+  it('solo lista slugs vigentes, nunca los del historial', () => {
+    const viejos = [
+      ...Object.keys(SLUGS_EXPERIENCIAS_LEGADOS).map(s => `/experiencias/${encodeURIComponent(s)}`),
+      ...Object.keys(SLUGS_PRODUCTOS_LEGADOS).map(s => `/tienda/${encodeURIComponent(s)}`),
+    ]
+    for (const viejo of viejos) {
+      expect(urls.some(u => u.endsWith(viejo)), viejo).toBe(false)
+    }
   })
 })

@@ -98,12 +98,20 @@ export default async function ExperienciaDetallePage({
 
   const exp = await getExperienciaBySlug(slug, locale)
   if (!exp) {
+    // Respaldo: los slugs viejos ya los resuelve el backend con su historial
+    // (llegan aquí como una ficha con otro slug y caen en el 308 de abajo).
+    // La lista fija solo cubre la ventana en que el backend aún no lo tenga.
     const destino = destinoLegado(SLUGS_EXPERIENCIAS_LEGADOS, slug)
     if (destino) permanentRedirect(`/experiencias/${destino}`)
     notFound()
   }
 
   // Cada ficha vive en una sola URL por idioma.
+  //
+  // Esto también cubre las URLs viejas: si el slug cambió desde el panel, el
+  // backend encuentra la ficha por su historial y la devuelve con el slug de
+  // hoy, que no coincide con el de la URL. Así la dirección anterior hace 308
+  // a la nueva —en español y en inglés— y no pierde lo que ya posicionaba.
   //
   // El backend resuelve el slug en cualquiera de los dos —hace falta, para que
   // un enlace compartido antes de existir el inglés siga funcionando—, pero eso

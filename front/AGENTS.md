@@ -111,3 +111,20 @@ El front está en **Vercel** (`www.vuelocarmesi.com`) y el backend en **Render**
 - **Un cambio correcto puede tardar en verse:** 60 s las experiencias y
   productos, 300 s la configuración. Guardar Configuración desde el panel ya
   invalida su caché al momento; experiencias y productos todavía no.
+
+## URLs de las fichas: el slug no se mueve solo
+
+El slug de una experiencia o de un producto nace al crearla y **renombrar no lo
+cambia**, ni en español ni en inglés. Antes se regeneraba con el nombre y cada
+corrección de una tilde dejaba en 404 lo que Google tenía indexado.
+
+- Para cambiar una URL está **«Dirección web»** en el modal de edición del
+  panel. Va por su propia ruta (`PATCH /experiencias/:id/slug`,
+  `PATCH /productos/:id/slug`) y guarda la anterior en el historial de la base.
+- Una URL vieja la resuelve el backend con ese historial y devuelve la ficha
+  con su slug de hoy; la página ve que no coincide y responde **308** a la
+  nueva. No hace falta tocar nada en el front.
+- `lib/slugs-legados.ts` está **congelado**: es solo respaldo para la ventana
+  de despliegue. No le agregues parejas.
+- `SLUGS_CON_AVISTAMIENTO` y `EXPERIENCIAS_COTIZABLES` comparan el slug
+  literal: si cambias a propósito uno de esos, actualízalos.

@@ -1,4 +1,15 @@
 /**
+ * RESPALDO CONGELADO. No agregues parejas: el historial de URLs vive ahora en
+ * la base (tablas ExperienciaSlugAnterior y ProductoSlugAnterior), y la
+ * migración 20261005000000_historial_slugs ya copió allí todo lo de abajo.
+ * El backend resuelve un slug viejo devolviendo la ficha con su slug vigente,
+ * y la página redirige con 308 sin pasar por este archivo.
+ *
+ * Se queda por la ventana de despliegue: front y backend salen por separado
+ * (ver AGENTS.md), y mientras el front nuevo hable con un backend sin
+ * historial, esto es lo único que evita que estas URLs vuelvan a dar 404.
+ * Se puede borrar cuando el backend con historial lleve un tiempo publicado.
+ *
  * URLs viejas que ya no existen, y adónde van ahora.
  *
  * Los slugs originales se guardaron sin normalizar —mayúsculas, espacios, uno
@@ -12,9 +23,8 @@
  * distinta según cómo llegue la petición. Comparar la cadena ya decodificada no
  * tiene ese problema.
  *
- * Si vuelves a renombrar una ficha desde el panel, el backend genera el slug
- * nuevo y la URL anterior deja de existir: agrega la pareja acá si esa URL
- * llegó a compartirse.
+ * Renombrar una ficha ya no cambia su URL. Para cambiarla está «Dirección web»
+ * en el panel, que deja la anterior en el historial de la base.
  */
 
 export const SLUGS_EXPERIENCIAS_LEGADOS: Record<string, string> = {

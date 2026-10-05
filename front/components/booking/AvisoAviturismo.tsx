@@ -21,8 +21,9 @@ import { Binoculars } from 'lucide-react'
  * aviso viene a cuento: en la de la mascarilla de cacao sería ruido.
  *
  * Se comparan por slug y no por el nombre porque el nombre lo edita el panel;
- * el slug es la URL y no cambia sin una redirección de por medio
- * (ver `lib/slugs-legados.ts`).
+ * el slug es la URL y renombrar no lo mueve. Si se cambia a propósito con
+ * «Dirección web» del panel, hay que actualizarlo aquí: la URL vieja redirige,
+ * pero esta comparación es con el slug literal.
  */
 export const SLUGS_CON_AVISTAMIENTO = ['avistamiento-de-aves', 'experiencia-aves-cacao']
 
