@@ -13,3 +13,23 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# Caché de un año para las fotos, sellos y fuentes de public/. Es la misma regla
+# que next.config.ts (ver allí por qué `immutable` y por qué hay que cambiar el
+# nombre del archivo para reemplazar una imagen), pero Netlify no la aplica a
+# los archivos estáticos: le mandaba `max-age=0` al navegador, que revalidaba
+# cada imagen en cada visita, y cada revalidación cuenta como petición.
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/certificaciones/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
