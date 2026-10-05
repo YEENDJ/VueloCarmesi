@@ -35,17 +35,26 @@ export const SLUGS_EXPERIENCIAS_LEGADOS: Record<string, string> = {
 }
 
 export const SLUGS_PRODUCTOS_LEGADOS: Record<string, string> = {
-  'chocolates': 'chocolate-aricao-100-x-125-gramos',
+  'chocolates': 'chocolate-aricao-x-125-gramos',
   'vino-de-cafe-x-375ml': 'vino-de-cafe-x-375-ml',
   'vino-de-mucilago-de-cacao-x-375ml': 'vino-de-mucilago-de-cacao-x-375-ml',
-  'chocolatina': 'chocolatina-aricao-100-85-y-50-x-60-gramos',
-  'chocolatina CARAO': 'chocolatina-carao-70-y-80-x-50-gramos',
+  'chocolatina': 'chocolatina-aricao-x-60-gramos',
+  'chocolatina CARAO': 'chocolatina-carao-70-gramos',
   'Mascarilla de cacao': 'mascarilla-de-cacao',
-  'Chocolate ARICAO ': 'chocolate-aricao-100-x-500-gramos',
-  'chocolate ARICAO': 'chocolate-aricao-100-x-250-gramos',
-  'mermelada de mucilago': 'mermelada-de-mucilago-de-cacao-x-150-y-200-gramos',
+  'Chocolate ARICAO ': 'chocolate-aricao-x-500-gramos',
+  'chocolate ARICAO': 'chocolate-aricao-x-250-gramos',
+  'mermelada de mucilago': 'mermelada-de-mucilago-de-cacao-x-200-gramos',
   'grageas-x-70-gramos': 'grageas-mujari-x-70-gramos',
   'destilado-de-cacao-paradiso-x-300ml': 'destilado-de-cacao-paradiso-x-300-ml',
+  // La generación intermedia: los seis de arriba que apuntaban aquí se
+  // renombraron otra vez y estos destinos también daban 404. Ver la migración
+  // 20261005010000_historial_slugs_productos_renombrados.
+  'chocolate-aricao-100-x-125-gramos': 'chocolate-aricao-x-125-gramos',
+  'chocolate-aricao-100-x-250-gramos': 'chocolate-aricao-x-250-gramos',
+  'chocolate-aricao-100-x-500-gramos': 'chocolate-aricao-x-500-gramos',
+  'chocolatina-aricao-100-85-y-50-x-60-gramos': 'chocolatina-aricao-x-60-gramos',
+  'chocolatina-carao-70-y-80-x-50-gramos': 'chocolatina-carao-70-gramos',
+  'mermelada-de-mucilago-de-cacao-x-150-y-200-gramos': 'mermelada-de-mucilago-de-cacao-x-200-gramos',
 }
 
 /**
