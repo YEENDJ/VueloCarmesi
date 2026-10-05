@@ -7,9 +7,7 @@
  *
  * Se excluye todo lo que no es el sitio público. El panel vive en español y no
  * tiene segmento [locale]: si el proxy lo tocara, intentaría reescribir /admin
- * a /es/admin y el panel dejaría de existir. `api` es servidor puro, y
- * `portafolio` es el HTML estático que sirve el rewrite de next.config — un
- * prefijo de idioma ahí rompería el enlace que ya se comparte.
+ * a /es/admin y el panel dejaría de existir. `api` es servidor puro.
  *
  * El último tramo deja fuera cualquier cosa con extensión: las fotos de
  * public/, las fuentes y el favicon no necesitan negociación de idioma.
@@ -21,4 +19,4 @@
  * un error: un matcher que no casa no falla, simplemente no hace nada, así que
  * el sitio entero devolvía 404 con la consola limpia. De ahí el test de al lado.
  */
-export const MATCHER_IDIOMA = '/((?!api|admin|portafolio|_next|_vercel|.*\\..*).*)'
+export const MATCHER_IDIOMA = '/((?!api|admin|_next|_vercel|.*\\..*).*)'

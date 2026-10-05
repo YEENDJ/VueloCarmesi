@@ -30,7 +30,7 @@ vuelo-carmesi/
   front/          → Next.js 16 App Router
     public/images/  → biblioteca de fotos (ver docs/catalogo-fotos.md)
   back/           → NestJS REST API
-  portafolio/     → portafolio comercial: fuente + generador (se publica en /portafolio)
+  portafolio/     → portafolio comercial: fuente + generador (solo local, no se publica en la web)
   docs/           → Specs, catálogo de fotos, reportes de Lighthouse
   assets/originales/ → originales de cámara, sin versionar
   Material de apoyo/ → Fuentes y recursos de marca

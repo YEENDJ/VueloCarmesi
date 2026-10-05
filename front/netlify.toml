@@ -13,12 +13,3 @@
 
 [build.environment]
   NODE_VERSION = "22"
-
-# La URL corta del portafolio. En Vercel la resuelve el rewrite de
-# next.config.ts, pero en Netlify los rewrites de Next no pueden apuntar a
-# archivos de public/: aquí la sirve el CDN directamente.
-[[redirects]]
-  from = "/portafolio"
-  to = "/portafolio/index.html"
-  status = 200
-  force = true

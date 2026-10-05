@@ -29,7 +29,7 @@ Medido en Vercel del 5 de septiembre al 5 de octubre de 2026:
 
 ## Fase 1 — Código (hecho en el PR de la migración)
 
-- `front/netlify.toml`: build del monorepo, Node 22, salto de builds que no tocan el front y la URL corta `/portafolio`. En Netlify, los rewrites de `next.config.ts` no pueden apuntar a archivos de `public/`, así que la sirve el CDN.
+- `front/netlify.toml`: build del monorepo, Node 22 y salto de builds que no tocan el front.
 - `back/src/main.ts`: `CORS_ORIGENES_EXTRA` deja que el `*.netlify.app` use los formularios mientras se prueba.
 
 ## Fase 2 — Crear el sitio y probarlo (sin tocar el dominio)
@@ -60,7 +60,6 @@ Medido en Vercel del 5 de septiembre al 5 de octubre de 2026:
    - [ ] Portada, experiencias, una ficha, tienda y grupos, en `/es` y `/en`
    - [ ] Formularios de contacto, grupos y reserva: llega el acuse y el aviso de Telegram
    - [ ] Checkout hasta la pantalla de Wompi (**no pagar** en producción)
-   - [ ] `/portafolio` abre el portafolio
    - [ ] Panel: login, editar una experiencia y ver el cambio en la ficha pública (revalidación)
    - [ ] Panel: subir una imagen
    - [ ] Cron: `curl -H "Authorization: Bearer <CRON_SECRET>" https://<sitio>.netlify.app/api/cron/pagos` responde sin 401
