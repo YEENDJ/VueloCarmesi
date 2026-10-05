@@ -29,7 +29,7 @@ export type TipoSolicitante = (typeof TIPOS_SOLICITANTE)[number]
  * Las experiencias que se pueden marcar, como slugs.
  *
  * Slugs y no nombres: el nombre lo edita el panel y se traduce, el slug es la
- * URL y no cambia sin una redirección de por medio (`lib/slugs-legados.ts`).
+ * URL y no cambia nunca: nace al crear la ficha y renombrar no lo mueve.
  * `a-medida` no es una experiencia del catálogo — es la opción de quien quiere
  * algo que todavía no existe, y es la que más vende en este segmento.
  */

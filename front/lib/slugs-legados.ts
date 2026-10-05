@@ -1,4 +1,15 @@
 /**
+ * RESPALDO CONGELADO. No agregues parejas: el historial de URLs vive ahora en
+ * la base (tablas ExperienciaSlugAnterior y ProductoSlugAnterior), y la
+ * migración 20261005000000_historial_slugs ya copió allí todo lo de abajo.
+ * El backend resuelve un slug viejo devolviendo la ficha con su slug vigente,
+ * y la página redirige con 308 sin pasar por este archivo.
+ *
+ * Se queda por la ventana de despliegue: front y backend salen por separado
+ * (ver AGENTS.md), y mientras el front nuevo hable con un backend sin
+ * historial, esto es lo único que evita que estas URLs vuelvan a dar 404.
+ * Se puede borrar cuando el backend con historial lleve un tiempo publicado.
+ *
  * URLs viejas que ya no existen, y adónde van ahora.
  *
  * Los slugs originales se guardaron sin normalizar —mayúsculas, espacios, uno
@@ -12,9 +23,8 @@
  * distinta según cómo llegue la petición. Comparar la cadena ya decodificada no
  * tiene ese problema.
  *
- * Si vuelves a renombrar una ficha desde el panel, el backend genera el slug
- * nuevo y la URL anterior deja de existir: agrega la pareja acá si esa URL
- * llegó a compartirse.
+ * Renombrar una ficha ya no cambia su URL, y no hay ninguna vía para cambiarla:
+ * esta lista no va a crecer.
  */
 
 export const SLUGS_EXPERIENCIAS_LEGADOS: Record<string, string> = {
@@ -25,17 +35,26 @@ export const SLUGS_EXPERIENCIAS_LEGADOS: Record<string, string> = {
 }
 
 export const SLUGS_PRODUCTOS_LEGADOS: Record<string, string> = {
-  'chocolates': 'chocolate-aricao-100-x-125-gramos',
+  'chocolates': 'chocolate-aricao-x-125-gramos',
   'vino-de-cafe-x-375ml': 'vino-de-cafe-x-375-ml',
   'vino-de-mucilago-de-cacao-x-375ml': 'vino-de-mucilago-de-cacao-x-375-ml',
-  'chocolatina': 'chocolatina-aricao-100-85-y-50-x-60-gramos',
-  'chocolatina CARAO': 'chocolatina-carao-70-y-80-x-50-gramos',
+  'chocolatina': 'chocolatina-aricao-x-60-gramos',
+  'chocolatina CARAO': 'chocolatina-carao-70-gramos',
   'Mascarilla de cacao': 'mascarilla-de-cacao',
-  'Chocolate ARICAO ': 'chocolate-aricao-100-x-500-gramos',
-  'chocolate ARICAO': 'chocolate-aricao-100-x-250-gramos',
-  'mermelada de mucilago': 'mermelada-de-mucilago-de-cacao-x-150-y-200-gramos',
+  'Chocolate ARICAO ': 'chocolate-aricao-x-500-gramos',
+  'chocolate ARICAO': 'chocolate-aricao-x-250-gramos',
+  'mermelada de mucilago': 'mermelada-de-mucilago-de-cacao-x-200-gramos',
   'grageas-x-70-gramos': 'grageas-mujari-x-70-gramos',
   'destilado-de-cacao-paradiso-x-300ml': 'destilado-de-cacao-paradiso-x-300-ml',
+  // La generación intermedia: los seis de arriba que apuntaban aquí se
+  // renombraron otra vez y estos destinos también daban 404. Ver la migración
+  // 20261005010000_historial_slugs_productos_renombrados.
+  'chocolate-aricao-100-x-125-gramos': 'chocolate-aricao-x-125-gramos',
+  'chocolate-aricao-100-x-250-gramos': 'chocolate-aricao-x-250-gramos',
+  'chocolate-aricao-100-x-500-gramos': 'chocolate-aricao-x-500-gramos',
+  'chocolatina-aricao-100-85-y-50-x-60-gramos': 'chocolatina-aricao-x-60-gramos',
+  'chocolatina-carao-70-y-80-x-50-gramos': 'chocolatina-carao-70-gramos',
+  'mermelada-de-mucilago-de-cacao-x-150-y-200-gramos': 'mermelada-de-mucilago-de-cacao-x-200-gramos',
 }
 
 /**

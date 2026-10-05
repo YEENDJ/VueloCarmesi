@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { TraduccionService } from './traduccion.service'
-import { toSlug, slugUnico } from '../common/slug'
+import { HistorialSlugs, type EntidadConSlug } from '../slugs/historial-slugs.service'
 import { capitalizarNombre } from '../common/nombre'
 import {
   TEXTO_EXPERIENCIA,
@@ -33,6 +33,7 @@ export class SincronizadorTraduccion {
   constructor(
     private prisma: PrismaService,
     private traduccion: TraduccionService,
+    private slugs: HistorialSlugs,
   ) {}
 
   /**
@@ -103,9 +104,6 @@ export class SincronizadorTraduccion {
         continue
       }
 
-      // El slug inglés se deriva del nombre ya traducido, no se traduce aparte.
-      // Si el nombre no cambió, `res.campos.nombre` no viene y se conserva el
-      // slug que ya había: cambiarlo romperia el enlace que alguien compartió.
       // Se normaliza la caja tambien en el idioma de destino. DeepL copia la
       // del original —un «AVISTAMIENTO DE AVES» salia al ingles como
       // «BIRDWATCHING»— asi que corregir solo el español dejaria la mitad del
@@ -114,9 +112,7 @@ export class SincronizadorTraduccion {
       const nombreNuevo = res.campos.nombre
         ? capitalizarNombre(res.campos.nombre as string)
         : undefined
-      const slug = nombreNuevo
-        ? await this.slugLibreTraduccion('experiencia', idioma, nombreNuevo, previa?.id)
-        : previa?.slug
+      const slug = await this.slugEstable('experiencia', id, previa, nombreNuevo)
 
       const datos = {
         ...res.campos,
@@ -176,9 +172,7 @@ export class SincronizadorTraduccion {
       const nombreNuevo = res.campos.nombre
         ? capitalizarNombre(res.campos.nombre as string)
         : undefined
-      const slug = nombreNuevo
-        ? await this.slugLibreTraduccion('producto', idioma, nombreNuevo, previa?.id)
-        : previa?.slug
+      const slug = await this.slugEstable('producto', id, previa, nombreNuevo)
 
       const datos = {
         ...res.campos,
@@ -196,27 +190,25 @@ export class SincronizadorTraduccion {
   }
 
   /**
-   * Slug libre dentro del mismo idioma.
+   * El slug de la traducción: nace con la primera y después no se mueve.
    *
-   * La unicidad es por (idioma, slug): dos experiencias distintas no pueden
-   * compartir /en/experiences/cacao-trail. `ignorarId` evita que una ficha
-   * choque consigo misma al reeditarse.
+   * Se deriva del nombre ya traducido, no se traduce aparte. Antes se
+   * regeneraba cada vez que el nombre inglés cambiaba —y cambia solo, cada vez
+   * que alguien corrige el español y DeepL lo vuelve a traducir—, así que la
+   * URL inglesa moría sin que nadie la hubiera tocado. Ahora se cambia solo con
+   * la acción explícita del panel, que deja la anterior en el historial.
+   *
+   * Una traducción vieja sin slug lo recibe aquí, del nombre que llegue o del
+   * que ya tenía.
    */
-  private slugLibreTraduccion(
-    entidad: 'experiencia' | 'producto',
-    idioma: string,
-    nombre: string,
-    ignorarId?: string,
-  ): Promise<string> {
-    const tabla =
-      entidad === 'experiencia'
-        ? this.prisma.experienciaTraduccion
-        : this.prisma.productoTraduccion
-
-    return slugUnico(toSlug(nombre), async slug => {
-      const dueno = await (tabla as { findUnique: (a: unknown) => Promise<{ id: string } | null> })
-        .findUnique({ where: { idioma_slug: { idioma, slug } }, select: { id: true } })
-      return dueno !== null && dueno.id !== ignorarId
-    })
+  private async slugEstable(
+    entidad: EntidadConSlug,
+    id: string,
+    previa: { slug: string; nombre: string } | null,
+    nombreNuevo: string | undefined,
+  ): Promise<string | undefined> {
+    if (previa?.slug) return previa.slug
+    const nombre = nombreNuevo ?? previa?.nombre
+    return nombre ? this.slugs.libre(entidad, nombre, id) : undefined
   }
 }

@@ -111,3 +111,19 @@ El front está en **Vercel** (`www.vuelocarmesi.com`) y el backend en **Render**
 - **Un cambio correcto puede tardar en verse:** 60 s las experiencias y
   productos, 300 s la configuración. Guardar Configuración desde el panel ya
   invalida su caché al momento; experiencias y productos todavía no.
+
+## URLs de las fichas: el slug no cambia nunca
+
+El slug de una experiencia o de un producto nace al crearla y **no se mueve**:
+ni al renombrar, ni en inglés cuando DeepL retraduce el nombre, ni desde el
+panel, que no tiene opción para cambiarlo. Antes se regeneraba con el nombre y
+cada corrección de una tilde dejaba en 404 lo que Google tenía indexado.
+
+- Las URLs viejas de aquella época están en el historial de la base
+  (`ExperienciaSlugAnterior`, `ProductoSlugAnterior`). El backend las resuelve
+  y devuelve la ficha con su slug de hoy; la página ve que no coincide y
+  responde **308** a la vigente.
+- `lib/slugs-legados.ts` está **congelado**: es solo respaldo para la ventana
+  de despliegue. No le agregues parejas.
+- Si algún día hiciera falta corregir un slug, no basta con un UPDATE en la
+  base: hay que guardar el anterior en el historial, o esa URL pasa a 404.

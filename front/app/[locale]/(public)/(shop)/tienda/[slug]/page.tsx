@@ -116,7 +116,7 @@ export default async function ProductoDetallePage({
     getTranslations('sitio'),
   ])
   if (!producto) {
-    // Ver la ficha de experiencia: rescate de slugs viejos antes del 404.
+    // Ver la ficha de experiencia: respaldo del historial de slugs del backend.
     const destino = destinoLegado(SLUGS_PRODUCTOS_LEGADOS, slug)
     if (destino) permanentRedirect(`/tienda/${destino}`)
     notFound()
