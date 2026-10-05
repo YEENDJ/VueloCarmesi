@@ -33,9 +33,8 @@ describe('matcher del proxy de idioma', () => {
     expect(pasa('/admin/experiencias')).toBe(false)
   })
 
-  it('excluye la API y el portafolio estático', () => {
+  it('excluye la API', () => {
     expect(pasa('/api/admin/login')).toBe(false)
-    expect(pasa('/portafolio')).toBe(false)
   })
 
   it('excluye los archivos con extensión', () => {

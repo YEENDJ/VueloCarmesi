@@ -25,5 +25,5 @@ export default createMiddleware(routing)
  * invertida va doblada.
  */
 export const config = {
-  matcher: ['/((?!api|admin|portafolio|_next|_vercel|.*\\..*).*)'],
+  matcher: ['/((?!api|admin|_next|_vercel|.*\\..*).*)'],
 }

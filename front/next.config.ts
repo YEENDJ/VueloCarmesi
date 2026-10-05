@@ -28,16 +28,6 @@ const nextConfig: NextConfig = {
   // versión atacar.
   poweredByHeader: false,
 
-  // El portafolio comercial es un único HTML estático en public/portafolio: 21 hojas
-  // A4 horizontales con las fuentes y las imágenes incrustadas. Al no pedir ningún
-  // asset relativo, el rewrite es seguro y deja la URL corta para compartirlo.
-  // Se genera con portafolio/generar-pdf.py — no editar el HTML de salida.
-  async rewrites() {
-    return [
-      { source: '/portafolio', destination: '/portafolio/index.html' },
-    ];
-  },
-
   // Lo que hay en public/ lo sirve Next con `max-age=0, must-revalidate`, así que
   // cada foto del sitio se revalida en cada carga: un 304 por imagen y por visita,
   // aunque el archivo no haya cambiado desde que se subió al repositorio.

@@ -25,9 +25,14 @@ async function bootstrap() {
     transform: true,
   }))
   const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:3000'
+  // Orígenes de más, separados por coma: el front publicado en otro dominio
+  // mientras se prueba (p. ej. el `*.netlify.app` antes de mover el dominio).
+  // Vacío en el día a día; si se deja puesto, ese dominio también puede usar
+  // los formularios, nada más.
+  const extra = (process.env.CORS_ORIGENES_EXTRA ?? '').split(',').map(o => o.trim()).filter(Boolean)
   app.enableCors({
     // acepta el dominio con y sin www: son orígenes distintos para CORS
-    origin: [frontendUrl, frontendUrl.replace('://', '://www.')],
+    origin: [frontendUrl, frontendUrl.replace('://', '://www.'), ...extra],
     // Sin credenciales: ninguna petición del navegador al backend lleva cookies.
     // El panel habla por el puente del front, de servidor a servidor.
     credentials: false,

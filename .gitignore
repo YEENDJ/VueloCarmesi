@@ -149,7 +149,7 @@ pr-descriptions/
 
 # Portafolio: fuente, generador y salida quedan fuera del repo por ahora.
 # OJO: la fuente existe unicamente en el disco local — no hay copia en git.
-# Y /portafolio responde 404 en produccion mientras la salida no se versione.
+# La web ya no lo publica: la ruta /portafolio se retiro.
 /portafolio/
 front/public/portafolio/
 
