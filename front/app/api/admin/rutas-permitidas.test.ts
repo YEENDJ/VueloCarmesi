@@ -13,8 +13,6 @@ describe('rutas que reenvía el puente del panel', () => {
     expect(rutaPermitida('GET', 'contacto')).toBe(true)
     expect(rutaPermitida('PATCH', 'contacto/abc123/estado')).toBe(true)
     expect(rutaPermitida('DELETE', 'contacto/abc123')).toBe(true)
-    expect(rutaPermitida('PATCH', 'experiencias/abc123/slug')).toBe(true)
-    expect(rutaPermitida('PATCH', 'productos/abc123/slug')).toBe(true)
   })
 
   it('no reenvía rutas que no están en la lista', () => {
@@ -30,7 +28,6 @@ describe('rutas que reenvía el puente del panel', () => {
     // la clave de admin sin necesitarla.
     expect(rutaPermitida('POST', 'contacto')).toBe(false)
     expect(rutaPermitida('DELETE', 'contacto')).toBe(false)
-    expect(rutaPermitida('POST', 'experiencias/abc123/slug')).toBe(false)
   })
 
   it('no se deja engañar con rutas relativas ni pegadas', () => {

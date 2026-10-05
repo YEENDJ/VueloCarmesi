@@ -5,7 +5,6 @@ import { createExperiencia, updateExperiencia } from '@/lib/admin/api'
 import Toggle from './Toggle'
 import ImagesUploader from './ImagesUploader'
 import ListaEditable from './ListaEditable'
-import DireccionWeb from './DireccionWeb'
 
 /** Donde Google recorta la meta description. Mismo tope que valida el backend. */
 const MAX_META = 160
@@ -52,13 +51,10 @@ export default function ExperienciaFormModal({
   experiencia,
   onClose,
   onSaved,
-  onSlugCambiado,
 }: {
   experiencia: AdminExperiencia | null
   onClose: () => void
   onSaved: (e: AdminExperiencia) => void
-  /** Se guarda en el acto y no cierra el modal: es una acción aparte del «Guardar». */
-  onSlugCambiado: (e: AdminExperiencia) => void
 }) {
   const isEdit = !!experiencia
   const [form, setForm] = useState<FormData>(
@@ -179,12 +175,6 @@ export default function ExperienciaFormModal({
             <FormRow label="Nombre *">
               <input className="admin-input" value={form.nombre} onChange={e => set('nombre', e.target.value)} placeholder="Ej: Ruta del Cacao" />
             </FormRow>
-            {/* Solo al editar: al crear, la dirección sale del nombre. */}
-            {isEdit && (
-              <FormRow label="Dirección web">
-                <DireccionWeb entidad="experiencia" ficha={experiencia!} onCambiado={onSlugCambiado} />
-              </FormRow>
-            )}
             <FormRow
               label="Descripción para buscadores"
               ayuda="El texto que Google muestra bajo el título. Vacío = se toma del relato"

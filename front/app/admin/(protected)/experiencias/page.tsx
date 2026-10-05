@@ -51,20 +51,9 @@ export default function ExperienciasPage() {
   async function handleSaved(saved: AdminExperiencia) {
     setExperiencias(prev => {
       const idx = prev.findIndex(e => e.id === saved.id)
-      // Se funde con la fila previa: el PATCH devuelve la ficha sin `slugs`, y
-      // reemplazarla entera dejaba el bloque de dirección sin la URL inglesa.
-      return idx >= 0 ? prev.map(e => e.id === saved.id ? { ...e, ...saved } : e) : [saved, ...prev]
+      return idx >= 0 ? prev.map(e => e.id === saved.id ? saved : e) : [saved, ...prev]
     })
     setModal(undefined)
-    await revalidateExperiencias()
-  }
-
-  // El modal sigue abierto: se refresca la ficha que muestra para que la URL
-  // nueva aparezca en el acto. La revalidación invalida todo /[locale], con lo
-  // que la ficha deja de servirse cacheada en la URL vieja y pasa a redirigir.
-  async function handleSlugCambiado(actualizada: AdminExperiencia) {
-    setExperiencias(prev => prev.map(e => e.id === actualizada.id ? { ...e, ...actualizada } : e))
-    setModal(prev => (prev && prev !== 'new' ? { ...prev, ...actualizada } : prev))
     await revalidateExperiencias()
   }
 
@@ -164,7 +153,6 @@ export default function ExperienciasPage() {
           experiencia={modal === 'new' ? null : modal}
           onClose={() => setModal(undefined)}
           onSaved={handleSaved}
-          onSlugCambiado={handleSlugCambiado}
         />
       )}
 

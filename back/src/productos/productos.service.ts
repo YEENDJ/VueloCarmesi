@@ -8,7 +8,6 @@ import { capitalizarNombre } from '../common/nombre'
 import { portadaDe } from '../common/portada'
 import { CreateProductoDto } from './dto/create-producto.dto'
 import { UpdateProductoDto } from './dto/update-producto.dto'
-import { CambiarSlugDto } from '../slugs/cambiar-slug.dto'
 
 const CAMPOS_PRODUCTO = [...TEXTO_PRODUCTO, ...LISTA_PRODUCTO]
 
@@ -30,7 +29,8 @@ export class ProductosService {
 
   /**
    * Ver experiencias.service: resuelve el slug en cualquiera de los idiomas y,
-   * si no es vigente, en el historial, para que la ficha redirija con 308.
+   * si no es vigente, en el historial de URLs viejas, para que la ficha
+   * redirija con 308.
    */
   async findBySlug(slug: string, idioma = IDIOMA_ORIGEN) {
     const porOriginal = await this.prisma.producto.findUnique({
@@ -86,8 +86,8 @@ export class ProductosService {
       throw new BadRequestException('El stock no puede ser negativo')
     }
     const data: UpdateProductoDto = { ...dto }
-    // Ver experiencias.service: renombrar no toca el slug. La URL se cambia
-    // solo con `cambiarSlug`, que deja la anterior redirigiendo.
+    // Ver experiencias.service: renombrar no toca el slug, y no hay otra vía
+    // para cambiarlo.
     if (dto.nombre !== undefined) {
       data.nombre = capitalizarNombre(dto.nombre)
     }
@@ -100,17 +100,6 @@ export class ProductosService {
     // Un PATCH de solo stock no gasta ni una llamada: no cambió ningún texto.
     await this.traduccion.producto(id)
     return actualizado
-  }
-
-  /** Ver experiencias.service: cambio explícito de URL, con la vieja en el historial. */
-  async cambiarSlug(id: string, dto: CambiarSlugDto) {
-    await this.findById(id)
-    await this.slugs.cambiar('producto', id, dto.idioma ?? IDIOMA_ORIGEN, dto.slug)
-    const fila = await this.prisma.producto.findUniqueOrThrow({
-      where: { id },
-      include: { traducciones: true },
-    })
-    return aplicarTraduccion(fila, IDIOMA_ORIGEN, CAMPOS_PRODUCTO)
   }
 
   async remove(id: string) {

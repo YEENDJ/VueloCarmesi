@@ -23,8 +23,8 @@
  * distinta según cómo llegue la petición. Comparar la cadena ya decodificada no
  * tiene ese problema.
  *
- * Renombrar una ficha ya no cambia su URL. Para cambiarla está «Dirección web»
- * en el panel, que deja la anterior en el historial de la base.
+ * Renombrar una ficha ya no cambia su URL, y no hay ninguna vía para cambiarla:
+ * esta lista no va a crecer.
  */
 
 export const SLUGS_EXPERIENCIAS_LEGADOS: Record<string, string> = {

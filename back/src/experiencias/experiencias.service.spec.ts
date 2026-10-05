@@ -9,7 +9,6 @@ const mockPrisma = {
   experiencia: {
     findMany: jest.fn(),
     findUnique: jest.fn(),
-    findUniqueOrThrow: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -31,7 +30,6 @@ const mockTraduccion = {
 const mockSlugs = {
   libre: jest.fn(),
   duenoAnterior: jest.fn(),
-  cambiar: jest.fn(),
 }
 
 async function crearServicio() {
@@ -152,31 +150,5 @@ describe('ExperienciasService.findBySlug', () => {
     mockPrisma.experienciaTraduccion.findFirst.mockResolvedValue(null)
     mockSlugs.duenoAnterior.mockResolvedValue(null)
     await expect(service.findBySlug('no-existe')).rejects.toBeInstanceOf(NotFoundException)
-  })
-})
-
-describe('ExperienciasService.cambiarSlug', () => {
-  let service: ExperienciasService
-
-  beforeEach(async () => {
-    service = await crearServicio()
-    mockPrisma.experiencia.findUnique.mockResolvedValue(FICHA)
-  })
-
-  it('delega en el historial y devuelve la ficha con los slugs de los dos idiomas', async () => {
-    mockSlugs.cambiar.mockResolvedValue('ruta-del-cacao-y-cafe')
-    mockPrisma.experiencia.findUniqueOrThrow.mockResolvedValue({ ...FICHA, slug: 'ruta-del-cacao-y-cafe' })
-
-    const res = await service.cambiarSlug('exp1', { slug: 'ruta-del-cacao-y-cafe' })
-
-    // Sin idioma = español.
-    expect(mockSlugs.cambiar).toHaveBeenCalledWith('experiencia', 'exp1', 'es', 'ruta-del-cacao-y-cafe')
-    expect(res.slugs).toEqual({ es: 'ruta-del-cacao-y-cafe', en: 'cacao-trail' })
-  })
-
-  it('pasa el idioma cuando se cambia el inglés', async () => {
-    mockPrisma.experiencia.findUniqueOrThrow.mockResolvedValue(FICHA)
-    await service.cambiarSlug('exp1', { slug: 'cacao-route', idioma: 'en' })
-    expect(mockSlugs.cambiar).toHaveBeenCalledWith('experiencia', 'exp1', 'en', 'cacao-route')
   })
 })

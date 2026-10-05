@@ -8,7 +8,6 @@ import { capitalizarNombre } from '../common/nombre'
 import { portadaDe } from '../common/portada'
 import { CreateExperienciaDto } from './dto/create-experiencia.dto'
 import { UpdateExperienciaDto } from './dto/update-experiencia.dto'
-import { CambiarSlugDto } from '../slugs/cambiar-slug.dto'
 
 /** Los campos que la lectura funde con la traducción: texto y listas juntos. */
 const CAMPOS_EXPERIENCIA = [...TEXTO_EXPERIENCIA, ...LISTA_EXPERIENCIA]
@@ -39,10 +38,10 @@ export class ExperienciasService {
    * slug español bajo /en: si solo mirásemos el slug del idioma pedido, ese
    * enlace daría 404 justo cuando alguien lo acaba de reenviar a un amigo.
    *
-   * Si no es un slug vigente se busca entre los anteriores, y la ficha vuelve
-   * con su slug de hoy. La página compara ese slug con el de la URL y, como no
-   * coinciden, responde 308 a la buena: la URL vieja conserva su
-   * posicionamiento en vez de caer en un 404.
+   * Si no es un slug vigente se busca entre los anteriores —las URLs viejas de
+   * antes de que el slug fuera fijo—, y la ficha vuelve con su slug de hoy. La
+   * página compara ese slug con el de la URL y, como no coinciden, responde 308
+   * a la buena: la URL vieja conserva su posicionamiento en vez de caer en 404.
    */
   async findBySlug(slug: string, idioma = IDIOMA_ORIGEN) {
     const porOriginal = await this.prisma.experiencia.findUnique({
@@ -106,8 +105,8 @@ export class ExperienciasService {
     const data: UpdateExperienciaDto = { ...dto }
     // Renombrar NO toca el slug. Antes se regeneraba con el nombre y cada
     // corrección de una tilde mataba la URL que Google ya tenía indexada y los
-    // enlaces que circulaban por WhatsApp. Cambiar la URL es ahora una acción
-    // aparte, `cambiarSlug`, que además deja la vieja redirigiendo.
+    // enlaces que circulaban por WhatsApp. El slug nace al crear la ficha y no
+    // hay ninguna vía para cambiarlo: una URL que ya posiciona no se toca.
     if (dto.nombre !== undefined) {
       data.nombre = capitalizarNombre(dto.nombre)
     }
@@ -123,23 +122,6 @@ export class ExperienciasService {
     // no hay nada que traducir y esto vuelve sin salir a la red.
     await this.traduccion.experiencia(id)
     return actualizada
-  }
-
-  /**
-   * Cambia a propósito la URL de la ficha en un idioma. La anterior queda en
-   * el historial y sigue resolviendo, así que el front la redirige con un 308.
-   *
-   * Devuelve la ficha en español con `slugs` de los dos idiomas, que es lo que
-   * el panel necesita para mostrar las URLs que quedaron.
-   */
-  async cambiarSlug(id: string, dto: CambiarSlugDto) {
-    await this.findById(id)
-    await this.slugs.cambiar('experiencia', id, dto.idioma ?? IDIOMA_ORIGEN, dto.slug)
-    const fila = await this.prisma.experiencia.findUniqueOrThrow({
-      where: { id },
-      include: { traducciones: true },
-    })
-    return aplicarTraduccion(fila, IDIOMA_ORIGEN, CAMPOS_EXPERIENCIA)
   }
 
   async remove(id: string) {

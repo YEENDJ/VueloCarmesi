@@ -108,10 +108,11 @@ export default async function ExperienciaDetallePage({
 
   // Cada ficha vive en una sola URL por idioma.
   //
-  // Esto también cubre las URLs viejas: si el slug cambió desde el panel, el
-  // backend encuentra la ficha por su historial y la devuelve con el slug de
-  // hoy, que no coincide con el de la URL. Así la dirección anterior hace 308
-  // a la nueva —en español y en inglés— y no pierde lo que ya posicionaba.
+  // Esto también cubre las URLs viejas, las de cuando renombrar cambiaba el
+  // slug: el backend encuentra la ficha por su historial y la devuelve con el
+  // slug de hoy, que no coincide con el de la URL. Así la dirección anterior
+  // hace 308 a la vigente —en español y en inglés— y no pierde lo que ya
+  // posicionaba.
   //
   // El backend resuelve el slug en cualquiera de los dos —hace falta, para que
   // un enlace compartido antes de existir el inglés siga funcionando—, pero eso

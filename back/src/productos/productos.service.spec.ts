@@ -8,7 +8,6 @@ import { HistorialSlugs } from '../slugs/historial-slugs.service'
 const mockPrisma = {
   producto: {
     findUnique: jest.fn(),
-    findUniqueOrThrow: jest.fn(),
     update: jest.fn(),
   },
   productoTraduccion: {
@@ -16,7 +15,7 @@ const mockPrisma = {
   },
 }
 const mockTraduccion = { producto: jest.fn().mockResolvedValue(undefined) }
-const mockSlugs = { libre: jest.fn(), duenoAnterior: jest.fn(), cambiar: jest.fn() }
+const mockSlugs = { libre: jest.fn(), duenoAnterior: jest.fn() }
 
 const PRODUCTO = {
   id: 'p1',
@@ -60,15 +59,5 @@ describe('ProductosService: slug estable', () => {
 
     expect((await service.findBySlug('vino-de-cafe-x-375ml')).slug).toBe('vino-de-cafe-x-375-ml')
     expect((await service.findBySlug('vino-de-cafe-x-375ml', 'en')).slug).toBe('coffee-wine-x-375-ml')
-  })
-
-  it('cambiarSlug delega en el historial con la entidad producto', async () => {
-    mockPrisma.producto.findUnique.mockResolvedValue(PRODUCTO)
-    mockPrisma.producto.findUniqueOrThrow.mockResolvedValue(PRODUCTO)
-
-    const res = await service.cambiarSlug('p1', { slug: 'coffee-wine', idioma: 'en' })
-
-    expect(mockSlugs.cambiar).toHaveBeenCalledWith('producto', 'p1', 'en', 'coffee-wine')
-    expect(res.slugs.es).toBe('vino-de-cafe-x-375-ml')
   })
 })
