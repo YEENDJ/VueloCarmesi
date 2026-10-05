@@ -69,14 +69,16 @@ builds antes de mergear, para que el merge a `main` no dispare un deploy pagado.
    - [ ] `/portafolio` responde 404
    - [ ] Portada cacheada: la segunda petición a `/` trae `Cache-Status: … hit`
    - [ ] Una imagen de `/images/` trae `Cache-Control: public, max-age=31536000, immutable`
-   - [ ] Panel: login, editar una experiencia y ver el cambio en la ficha y en la portada **al recargar**. Lo mismo con un producto y con Configuración (foto del hero). Si tarda, anotar cuánto: el respaldo es `revalidate = 60`
-   - [ ] Panel: subir una imagen
+
+   El panel **no** se puede probar todavía: las listas de experiencias y productos las pide el navegador directo al backend (`lib/admin/api.ts`), y el CORS de Render aún no acepta el dominio de la preview. Se queda en «Cargando…». Va en el paso 7.
 4. **Detener los builds de Netlify:** *Project configuration → Build & deploy → Continuous deployment → Build settings → Configure → **Stop builds***. La preview ya construida sigue disponible.
 5. **Mergear el PR.** Se despliegan Vercel (el sitio real, que también gana las páginas estáticas) y Render (el CORS). Netlify no construye nada.
    - [ ] En `www.vuelocarmesi.com` (Vercel): editar algo en el panel y verlo al recargar
 6. **En Render:** `CORS_ORIGENES_EXTRA=https://deploy-preview-<N>--peppy-meringue-52cfd3.netlify.app` y guardar con redeploy.
 7. **Probar en la preview lo que usa el backend.** Todo es real: misma base, mismos correos, mismo Telegram.
    - [ ] Formularios de contacto, grupos y reserva: llega el acuse y el aviso de Telegram
+   - [ ] Panel: login, editar una experiencia y ver el cambio en la ficha y en la portada **al recargar**. Lo mismo con un producto y con Configuración (foto del hero). Si tarda, anotar cuánto: el respaldo es `revalidate = 60`. Deshacer los cambios de prueba
+   - [ ] Panel: subir una imagen
    - [ ] Checkout hasta la pantalla de Wompi (**no pagar**)
    - [ ] Cron: `curl -H "Authorization: Bearer <CRON_SECRET de Netlify>" https://deploy-preview-<N>--peppy-meringue-52cfd3.netlify.app/api/cron/pagos` responde sin 401
 
