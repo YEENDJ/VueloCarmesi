@@ -43,6 +43,7 @@ model Experiencia {
   createdAt        DateTime                @default(now())
   reservas         Reserva[]
   traducciones     ExperienciaTraduccion[]
+  slugsAnteriores  ExperienciaSlugAnterior[]
 }
 
 model Reserva {
@@ -98,6 +99,7 @@ model Producto {
   createdAt        DateTime             @default(now())
   itemsPedido      ItemPedido[]
   traducciones     ProductoTraduccion[]
+  slugsAnteriores  ProductoSlugAnterior[]
 }
 
 model Pedido {
@@ -329,4 +331,46 @@ model ProductoTraduccion {
   @@unique([productoId, idioma])
   @@unique([idioma, slug])
   @@index([idioma])
+}
+
+/// Un slug que esta experiencia tuvo y ya no tiene.
+///
+/// El slug es la URL pública, y una URL que alguien compartió o que Google ya
+/// indexó no puede pasar a 404 porque se corrigió una errata. Cada vez que el
+/// slug cambia —solo desde la acción explícita del panel, nunca por renombrar—
+/// el anterior se guarda acá, y `findBySlug` lo usa para devolver la ficha con
+/// su slug vigente: la página ve que no coincide con la URL y responde 308.
+///
+/// Por idioma porque el inglés tiene su propio slug y puede cambiar por su
+/// lado. Único por (idioma, slug), igual que la traducción: una URL vieja
+/// apunta a una sola ficha.
+///
+/// Cascade al borrar la ficha: una URL de algo que ya no existe tiene que dar
+/// 404, no redirigir a nada.
+model ExperienciaSlugAnterior {
+  id            String      @id @default(cuid())
+  experienciaId String
+  experiencia   Experiencia @relation(fields: [experienciaId], references: [id], onDelete: Cascade)
+  /// 'es' para el slug de `Experiencia`, 'en' para el de su traducción.
+  idioma        String
+  slug          String
+  creadoEn      DateTime    @default(now())
+
+  @@unique([idioma, slug])
+  @@index([slug])
+  @@index([experienciaId])
+}
+
+/// Un slug que este producto tuvo y ya no tiene. Mismas reglas que ExperienciaSlugAnterior.
+model ProductoSlugAnterior {
+  id         String   @id @default(cuid())
+  productoId String
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  idioma     String
+  slug       String
+  creadoEn   DateTime @default(now())
+
+  @@unique([idioma, slug])
+  @@index([slug])
+  @@index([productoId])
 }

@@ -14,6 +14,7 @@ import { UploadsModule } from './uploads/uploads.module'
 import { SiteConfigModule } from './site-config/site-config.module'
 import { TraduccionModule } from './traduccion/traduccion.module'
 import { PagosModule } from './pagos/pagos.module'
+import { SlugsModule } from './slugs/slugs.module'
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PagosModule } from './pagos/pagos.module'
     SiteConfigModule,
     TraduccionModule,
     PagosModule,
+    SlugsModule,
   ],
   controllers: [AppController],
   providers: [PrismaService],
