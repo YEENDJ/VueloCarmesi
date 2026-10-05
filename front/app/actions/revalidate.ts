@@ -27,6 +27,14 @@ async function exigirSesion() {
 // nunca llegaron a cachear un fetch etiquetado, incluidas las que dejaron un 404
 // guardado cuando el slug todavía no existía.
 //
+// Va sobre el layout `/[locale]`, no sobre rutas sueltas. revalidatePath recibe
+// la estructura de archivos, y las páginas viven bajo `[locale]`: las rutas que
+// había antes (`/experiencias`, `/`) no casaban con ninguna página. Daba igual
+// mientras todo el sitio se generaba en cada visita; desde que las páginas
+// públicas son estáticas con revalidación, el respaldo tiene que acertar. El
+// sitio es chico y cada página se rehace recién cuando alguien la visita, así
+// que invalidar todo el árbol público no cuesta nada que se note.
+//
 // refresh limpia la caché del router en el cliente. Sin esto el propio admin
 // puede navegar al sitio público y seguir viendo la versión anterior, servida
 // desde su caché de cliente aunque el servidor ya tenga la nueva.
@@ -34,28 +42,22 @@ async function exigirSesion() {
 export async function revalidateExperiencias() {
   await exigirSesion()
   updateTag('experiencias')
-  revalidatePath('/experiencias', 'page')
-  revalidatePath('/experiencias/[slug]', 'page')
-  revalidatePath('/reservar/[slug]', 'page')
-  revalidatePath('/', 'page') // la portada lista las destacadas
+  revalidatePath('/[locale]', 'layout')
   refresh()
 }
 
 export async function revalidateProductos() {
   await exigirSesion()
   updateTag('productos')
-  revalidatePath('/tienda', 'page')
-  revalidatePath('/tienda/[slug]', 'page')
+  revalidatePath('/[locale]', 'layout')
   refresh()
 }
 
 export async function revalidateSiteConfig() {
   await exigirSesion()
   updateTag('site-config')
-  revalidatePath('/', 'page') // hero_image y about_image viven en la portada
-  // La ficha de experiencia también lee de acá —punto de encuentro, resumen de
-  // cancelación, WhatsApp—, y es una ruta de detalle: si su fetch etiquetado
-  // nunca llegó a cachear, el tag no la alcanza y el admin guarda sin ver nada.
-  revalidatePath('/experiencias/[slug]', 'page')
+  // La portada (hero_image, about_image) y la ficha de experiencia (punto de
+  // encuentro, resumen de cancelación, WhatsApp) leen de acá.
+  revalidatePath('/[locale]', 'layout')
   refresh()
 }

@@ -61,7 +61,8 @@ Medido en Vercel del 5 de septiembre al 5 de octubre de 2026:
    - [ ] Portada, experiencias, una ficha, tienda y grupos, en `/es` y `/en`
    - [ ] Formularios de contacto, grupos y reserva: llega el acuse y el aviso de Telegram
    - [ ] Checkout hasta la pantalla de Wompi (**no pagar** en producción)
-   - [ ] Panel: login, editar una experiencia y ver el cambio en la ficha pública (revalidación)
+   - [ ] Panel: login, editar una experiencia y ver el cambio en la ficha pública **y en la portada** en menos de un minuto (revalidación). Lo mismo con un producto y con Configuración (foto del hero)
+   - [ ] Portada cacheada: la segunda petición a `/` trae `Cache-Status: "Netlify Durable"; hit` o `"Netlify Edge"; hit`
    - [ ] Panel: subir una imagen
    - [ ] Cron: `curl -H "Authorization: Bearer <CRON_SECRET>" https://<sitio>.netlify.app/api/cron/pagos` responde sin 401
    - [ ] Cabeceras: `curl -I https://<sitio>.netlify.app/es` trae `Content-Security-Policy`; `curl -I` a una imagen de `/images/` trae `max-age=31536000, immutable`
