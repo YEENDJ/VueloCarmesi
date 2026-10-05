@@ -3,11 +3,12 @@ import { PrismaService } from '../prisma.service'
 import { SincronizadorTraduccion } from '../traduccion/sincronizador.service'
 import { aplicarTraduccion } from '../traduccion/aplicar-traduccion'
 import { IDIOMA_ORIGEN, TEXTO_PRODUCTO, LISTA_PRODUCTO } from '../traduccion/campos'
-import { toSlug, slugUnico } from '../common/slug'
+import { HistorialSlugs } from '../slugs/historial-slugs.service'
 import { capitalizarNombre } from '../common/nombre'
 import { portadaDe } from '../common/portada'
 import { CreateProductoDto } from './dto/create-producto.dto'
 import { UpdateProductoDto } from './dto/update-producto.dto'
+import { CambiarSlugDto } from '../slugs/cambiar-slug.dto'
 
 const CAMPOS_PRODUCTO = [...TEXTO_PRODUCTO, ...LISTA_PRODUCTO]
 
@@ -16,6 +17,7 @@ export class ProductosService {
   constructor(
     private prisma: PrismaService,
     private traduccion: SincronizadorTraduccion,
+    private slugs: HistorialSlugs,
   ) {}
 
   async findAll(idioma = IDIOMA_ORIGEN) {
@@ -26,7 +28,10 @@ export class ProductosService {
     return filas.map(f => aplicarTraduccion(f, idioma, CAMPOS_PRODUCTO))
   }
 
-  /** Ver experiencias.service: resuelve el slug en cualquiera de los idiomas. */
+  /**
+   * Ver experiencias.service: resuelve el slug en cualquiera de los idiomas y,
+   * si no es vigente, en el historial, para que la ficha redirija con 308.
+   */
   async findBySlug(slug: string, idioma = IDIOMA_ORIGEN) {
     const porOriginal = await this.prisma.producto.findUnique({
       where: { slug },
@@ -39,6 +44,15 @@ export class ProductosService {
       include: { producto: { include: { traducciones: true } } },
     })
     if (traduccion) return aplicarTraduccion(traduccion.producto, idioma, CAMPOS_PRODUCTO)
+
+    const duenoAnterior = await this.slugs.duenoAnterior('producto', slug)
+    if (duenoAnterior) {
+      const vigente = await this.prisma.producto.findUnique({
+        where: { id: duenoAnterior },
+        include: { traducciones: true },
+      })
+      if (vigente) return aplicarTraduccion(vigente, idioma, CAMPOS_PRODUCTO)
+    }
 
     throw new NotFoundException(`Producto '${slug}' no encontrado`)
   }
@@ -55,7 +69,7 @@ export class ProductosService {
       data: {
         ...dto,
         nombre,
-        slug: await this.slugLibre(nombre),
+        slug: await this.slugs.libre('producto', nombre),
         // Ver experiencias.service: la portada se deriva, no se edita aparte.
         imagen: portadaDe(dto.imagenes),
       },
@@ -71,12 +85,11 @@ export class ProductosService {
     if (dto.stock !== undefined && dto.stock < 0) {
       throw new BadRequestException('El stock no puede ser negativo')
     }
-    const data: UpdateProductoDto & { slug?: string } = { ...dto }
-    // El slug se regenera al cambiar el nombre: es la única vía para corregir
-    // uno mal formado ahora que el panel no lo edita. Ojo, cambia la URL pública.
+    const data: UpdateProductoDto = { ...dto }
+    // Ver experiencias.service: renombrar no toca el slug. La URL se cambia
+    // solo con `cambiarSlug`, que deja la anterior redirigiendo.
     if (dto.nombre !== undefined) {
       data.nombre = capitalizarNombre(dto.nombre)
-      data.slug = await this.slugLibre(data.nombre, id)
     }
     // Un PATCH de solo stock no debe tocar la portada; solo si viene galería.
     if (dto.imagenes !== undefined) {
@@ -89,19 +102,19 @@ export class ProductosService {
     return actualizado
   }
 
+  /** Ver experiencias.service: cambio explícito de URL, con la vieja en el historial. */
+  async cambiarSlug(id: string, dto: CambiarSlugDto) {
+    await this.findById(id)
+    await this.slugs.cambiar('producto', id, dto.idioma ?? IDIOMA_ORIGEN, dto.slug)
+    const fila = await this.prisma.producto.findUniqueOrThrow({
+      where: { id },
+      include: { traducciones: true },
+    })
+    return aplicarTraduccion(fila, IDIOMA_ORIGEN, CAMPOS_PRODUCTO)
+  }
+
   async remove(id: string) {
     await this.findById(id)
     return this.prisma.producto.delete({ where: { id } })
-  }
-
-  /** `ignorarId` evita que un registro choque consigo mismo al editarse. */
-  private slugLibre(nombre: string, ignorarId?: string) {
-    return slugUnico(toSlug(nombre), async slug => {
-      const dueno = await this.prisma.producto.findUnique({
-        where: { slug },
-        select: { id: true },
-      })
-      return dueno !== null && dueno.id !== ignorarId
-    })
   }
 }

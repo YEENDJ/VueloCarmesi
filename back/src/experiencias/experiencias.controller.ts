@@ -4,6 +4,7 @@ import { ExperienciasService } from './experiencias.service'
 import { CreateExperienciaDto } from './dto/create-experiencia.dto'
 import { UpdateExperienciaDto } from './dto/update-experiencia.dto'
 import { idiomaValido } from '../traduccion/campos'
+import { CambiarSlugDto } from '../slugs/cambiar-slug.dto'
 
 @Controller('experiencias')
 export class ExperienciasController {
@@ -18,5 +19,7 @@ export class ExperienciasController {
   @Get(':id')         findOne(@Param('id') id: string)                                 { return this.service.findById(id) }
   @UseGuards(AdminGuard) @Post()             create(@Body() dto: CreateExperienciaDto)                        { return this.service.create(dto) }
   @UseGuards(AdminGuard) @Patch(':id')       update(@Param('id') id: string, @Body() dto: UpdateExperienciaDto) { return this.service.update(id, dto) }
+  // La URL pública se cambia aparte, nunca de rebote al editar la ficha.
+  @UseGuards(AdminGuard) @Patch(':id/slug')  cambiarSlug(@Param('id') id: string, @Body() dto: CambiarSlugDto) { return this.service.cambiarSlug(id, dto) }
   @UseGuards(AdminGuard) @Delete(':id')      remove(@Param('id') id: string)                                  { return this.service.remove(id) }
 }

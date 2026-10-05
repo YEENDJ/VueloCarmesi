@@ -20,6 +20,7 @@ import 'dotenv/config'
 import { PrismaService } from '../src/prisma.service'
 import { TraduccionService } from '../src/traduccion/traduccion.service'
 import { SincronizadorTraduccion } from '../src/traduccion/sincronizador.service'
+import { HistorialSlugs } from '../src/slugs/historial-slugs.service'
 
 const PRUEBA = process.argv.includes('--prueba')
 /**
@@ -40,7 +41,7 @@ async function main() {
     process.exit(1)
   }
 
-  const sincronizador = new SincronizadorTraduccion(prisma, traduccion)
+  const sincronizador = new SincronizadorTraduccion(prisma, traduccion, new HistorialSlugs(prisma))
 
   const [experiencias, productos] = await Promise.all([
     prisma.experiencia.findMany({
