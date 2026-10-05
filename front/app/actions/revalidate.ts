@@ -1,6 +1,6 @@
 'use server'
 import { cookies } from 'next/headers'
-import { updateTag, revalidatePath, refresh } from 'next/cache'
+import { updateTag, revalidateTag, revalidatePath, refresh } from 'next/cache'
 import { COOKIE_SESION, sesionValida } from '@/lib/admin/sesion'
 
 /**
@@ -35,29 +35,38 @@ async function exigirSesion() {
 // sitio es chico y cada página se rehace recién cuando alguien la visita, así
 // que invalidar todo el árbol público no cuesta nada que se note.
 //
+// revalidateTag con `{ expire: 0 }` va además de updateTag, no en su lugar, y
+// es por Netlify. Medido en una Deploy Preview: tras guardar, la caché
+// «Durable» de su CDN siguió sirviendo la página vieja hasta cumplir sus 60 s
+// (45 a 80 s de demora), mientras en Vercel el cambio salía al momento. El
+// adaptador de Netlify purga su CDN en revalidateTag, la API clásica; updateTag
+// es nueva de Next 16. `{ expire: 0 }` es la forma de revalidateTag que no
+// sirve contenido stale, la misma semántica que updateTag. En Vercel es
+// redundante y no cambia nada.
+//
 // refresh limpia la caché del router en el cliente. Sin esto el propio admin
 // puede navegar al sitio público y seguir viendo la versión anterior, servida
 // desde su caché de cliente aunque el servidor ya tenga la nueva.
+function invalidar(tag: string) {
+  updateTag(tag)
+  revalidateTag(tag, { expire: 0 })
+  revalidatePath('/[locale]', 'layout')
+  refresh()
+}
 
 export async function revalidateExperiencias() {
   await exigirSesion()
-  updateTag('experiencias')
-  revalidatePath('/[locale]', 'layout')
-  refresh()
+  invalidar('experiencias')
 }
 
 export async function revalidateProductos() {
   await exigirSesion()
-  updateTag('productos')
-  revalidatePath('/[locale]', 'layout')
-  refresh()
+  invalidar('productos')
 }
 
 export async function revalidateSiteConfig() {
   await exigirSesion()
-  updateTag('site-config')
   // La portada (hero_image, about_image) y la ficha de experiencia (punto de
   // encuentro, resumen de cancelación, WhatsApp) leen de acá.
-  revalidatePath('/[locale]', 'layout')
-  refresh()
+  invalidar('site-config')
 }
