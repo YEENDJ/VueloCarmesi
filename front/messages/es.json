@@ -216,11 +216,19 @@
     },
     "residentes": {
       "titulo": "Residentes · se observan todo el año",
-      "texto": "Las siete que están fotografiadas en la finca. Ninguna es endémica de Colombia: lo que ofrecen es fiabilidad, no rareza. El resto de las 180 está en la lista de eBird."
+      "texto": "{n, plural, one {La única especie fotografiada en la finca.} other {Las # especies fotografiadas en la finca.}} Ninguna es endémica de Colombia: lo que ofrecen es fiabilidad, no rareza. El resto de las 180 está en la lista de eBird.",
+      "paginacion": {
+        "anterior": "Anterior",
+        "siguiente": "Siguiente",
+        "irA": "Ir a la página {n}",
+        "estado": "Página {actual} de {total}"
+      },
+      "paginacionAria": "Páginas de especies residentes"
     },
     "migratoriasCard": {
       "titulo": "Migratorias boreales · octubre a abril",
-      "texto": "Bajan del hemisferio norte a pasar el invierno y se suman a la lista durante esos siete meses. Es la razón por la que la fecha de la visita no da igual."
+      "texto": "Bajan del hemisferio norte a pasar el invierno y se suman a la lista durante esos siete meses. Es la razón por la que la fecha de la visita no da igual.",
+      "paginacionAria": "Páginas de especies migratorias"
     },
     "cuando": {
       "titulo": "Cuándo venir",
@@ -292,15 +300,6 @@
       "titulo": "Aviturismo en Cubarral, Meta · 180 especies registradas",
       "descripcion": "Birdwatching en el piedemonte llanero: 180 especies en un hotspot público de eBird, entre 600 y 850 m s. n. m., con cacao en sombrío y corredores biológicos. Salidas guiadas de 5:30 a 8:00 a. m.",
       "ogAlt": "Pichí de collar (Pteroglossus castanotis) posado en una rama en la finca"
-    },
-    "alts": {
-      "aracari": "Pichí de collar posado en una rama, con el pecho amarillo y la banda roja",
-      "carpintero": "Carpintero real de cresta carmesí trepado en el tronco de un árbol",
-      "currucutu": "Currucutú de ojos amarillos mirando de frente a la cámara",
-      "tigana": "Tigana caminando entre la hierba a la orilla del agua",
-      "carriqui": "Carriquí violáceo posado entre el follaje",
-      "azulejo": "Azulejo palmero sobre una rama con el plumaje verde oliva",
-      "tangara": "Tángara urraca en blanco y negro posada en una rama"
     },
     "jsonld": {
       "nombre": "Aviturismo en Vuelo Carmesí"

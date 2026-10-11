@@ -216,11 +216,19 @@
     },
     "residentes": {
       "titulo": "Residents · seen year-round",
-      "texto": "The seven photographed on the farm. None is endemic to Colombia: what they offer is reliability, not rarity. The rest of the 180 are on the eBird list."
+      "texto": "{n, plural, one {The only species photographed on the farm.} other {The # species photographed on the farm.}} None is endemic to Colombia: what they offer is reliability, not rarity. The rest of the 180 are on the eBird list.",
+      "paginacion": {
+        "anterior": "Previous",
+        "siguiente": "Next",
+        "irA": "Go to page {n}",
+        "estado": "Page {actual} of {total}"
+      },
+      "paginacionAria": "Resident species pages"
     },
     "migratoriasCard": {
       "titulo": "Boreal migrants · October to April",
-      "texto": "They come down from the northern hemisphere to winter here and join the list for those seven months. That is why the date of your visit matters."
+      "texto": "They come down from the northern hemisphere to winter here and join the list for those seven months. That is why the date of your visit matters.",
+      "paginacionAria": "Migrant species pages"
     },
     "cuando": {
       "titulo": "When to come",
@@ -292,15 +300,6 @@
       "titulo": "Birding in Cubarral, Meta · 180 species recorded",
       "descripcion": "Birdwatching in the Llanos foothills: 180 species at a public eBird hotspot, between 600 and 850 m above sea level, among shade-grown cacao and wildlife corridors. Guided walks 5:30 to 8:00 a.m.",
       "ogAlt": "Chestnut-eared Aracari (Pteroglossus castanotis) perched on a branch at the farm"
-    },
-    "alts": {
-      "aracari": "Chestnut-eared Aracari perched on a branch, yellow breast and red band visible",
-      "carpintero": "Crimson-crested Woodpecker climbing a tree trunk",
-      "currucutu": "Ferruginous Pygmy-Owl looking straight at the camera with yellow eyes",
-      "tigana": "Sunbittern walking through grass at the water's edge",
-      "carriqui": "Violaceous Jay perched among the foliage",
-      "azulejo": "Palm Tanager on a branch with olive-green plumage",
-      "tangara": "Magpie Tanager, black and white, perched on a branch"
     },
     "jsonld": {
       "nombre": "Birdwatching at Vuelo Carmesí"

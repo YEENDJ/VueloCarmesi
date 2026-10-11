@@ -4263,53 +4263,204 @@ select.campo-control {
    Cada ficha es foto + nombre científico + nombre en inglés + nombre local. El
    orden no es decorativo: el científico y el inglés son por los que llega
    buscando este visitante, y el local es el que usa quien vive acá.
-   El min() del minmax es lo que da una columna a 320 px en vez de desbordar. */
+
+   Fichas verticales 4:5 con la foto a sangre y los nombres sobre un degradado:
+   el ave es la protagonista y el formato retrato es el de una lámina de guía
+   de campo.
+
+   En móvil van en carrusel con scroll-snap y no apiladas: siete retratos uno
+   debajo de otro son casi tres pantallas de scroll antes de llegar a las
+   migratorias. Cada ficha mide el 72 % para que asome la siguiente y se
+   entienda que la fila sigue. Desde 600 px pasan a rejilla con flex-wrap
+   centrado, para que la última fila incompleta (7 = 4 + 3) quede en el medio
+   y no colgando a la izquierda. */
 .avi-especies {
   list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
-  gap: clamp(14px, 2.5vw, 20px);
+  display: flex;
+  gap: clamp(12px, 2.5vw, 18px);
   margin: 0;
-  padding: 0;
+  padding: 0 0 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
 }
 .avi-especie {
+  position: relative;
+  flex: 0 0 72%;
+  min-width: 0;
+  /* aspect-ratio reserva el hueco antes de que baje la foto: sin él la lista
+     entera salta cuando cargan las siete. */
+  aspect-ratio: 4 / 5;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(135, 43, 19, 0.08);
+  box-shadow: 0 1px 2px rgba(135, 43, 19, 0.08), 0 8px 22px rgba(135, 43, 19, 0.1);
+  scroll-snap-align: start;
+  transition: box-shadow 200ms ease;
+}
+/* Solo sombra al pasar por encima: la ficha no es clicable (ver .avi-card). */
+.avi-especie:hover {
+  box-shadow: 0 1px 2px rgba(135, 43, 19, 0.1), 0 14px 32px rgba(135, 43, 19, 0.18);
+}
+/* Filete claro por dentro: separa la foto del fondo crema sin un borde duro. */
+.avi-especie::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  pointer-events: none;
+}
+/* Las de otras páginas de la galería (ver GaleriaAves). Explícito porque una
+   regla de display en .avi-especie le ganaría al [hidden] del navegador. */
+.avi-especie[hidden] {
+  display: none;
+}
+@media (min-width: 600px) {
+  .avi-especies {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-bottom: 0;
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
+  .avi-especie {
+    flex-basis: calc((100% - 2 * clamp(12px, 2.5vw, 18px)) / 3);
+  }
+}
+@media (min-width: 1000px) {
+  .avi-especie {
+    flex-basis: calc((100% - 3 * clamp(12px, 2.5vw, 18px)) / 4);
+  }
+}
+.avi-especie-foto {
+  position: absolute;
+  inset: 0;
+}
+/* El degradado ocupa solo el tercio inferior: lo justo para que el texto
+   claro se lea sobre cualquier fondo (el cielo blanco del pichí incluido) sin
+   oscurecer el ave. */
+.avi-especie-nombres {
+  position: absolute;
+  inset: auto 0 0;
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
-}
-/* aspect-ratio reserva el hueco antes de que baje la foto: sin él la lista
-   entera salta cuando cargan las siete. */
-.avi-especie-foto {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  margin-bottom: 8px;
-  border-radius: 10px;
-  overflow: hidden;
-  background: rgba(135, 43, 19, 0.06);
+  padding: clamp(40px, 8vw, 56px) clamp(12px, 2.5vw, 16px) clamp(12px, 2.5vw, 16px);
+  background: linear-gradient(
+    to top,
+    rgba(48, 14, 5, 0.92) 0%,
+    rgba(48, 14, 5, 0.7) 45%,
+    rgba(48, 14, 5, 0) 100%
+  );
+  color: var(--color-cream);
 }
 .avi-especie-cientifico {
   min-width: 0;
-  font-size: clamp(0.86rem, 2.2vw, 0.92rem);
-  line-height: 1.35;
-  color: var(--color-brown);
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 2.4vw, 1.05rem);
+  font-weight: 700;
+  line-height: 1.25;
   overflow-wrap: anywhere;
 }
 .avi-especie-ingles {
   min-width: 0;
-  font-size: clamp(0.82rem, 2.1vw, 0.88rem);
+  font-size: clamp(0.8rem, 2vw, 0.86rem);
   font-weight: 700;
   line-height: 1.35;
-  color: var(--color-crimson);
+  /* Oro y no crimson: sobre el degradado oscuro el rojo se apaga. */
+  color: var(--color-gold);
   overflow-wrap: anywhere;
 }
 .avi-especie-local {
   min-width: 0;
-  font-size: clamp(0.78rem, 2vw, 0.83rem);
+  font-size: clamp(0.76rem, 1.9vw, 0.82rem);
   line-height: 1.35;
-  opacity: 0.6;
+  opacity: 0.8;
   overflow-wrap: anywhere;
+}
+
+/* La navbar es sticky: al cambiar de página la galería sube hasta aquí, y sin
+   margen la primera fila quedaba debajo de la franja crimson. */
+.avi-especies {
+  scroll-margin-top: clamp(80px, 10vw, 100px);
+}
+
+/* ── Paginación de especies ──
+   Solo aparece con más de ocho residentes. Mismo lenguaje que los chips del
+   índice: píldoras con borde, crimson al activar. */
+.avi-paginacion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: clamp(16px, 3vw, 22px);
+}
+.avi-paginacion-numeros {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+}
+.avi-paginacion-boton,
+.avi-paginacion-numero {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px solid rgba(135, 43, 19, 0.18);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-brown);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.avi-paginacion-boton {
+  padding: 0 14px;
+}
+.avi-paginacion-boton:hover:not(:disabled),
+.avi-paginacion-numero:hover,
+.avi-paginacion-numero[aria-current='page'] {
+  background: var(--color-crimson);
+  border-color: var(--color-crimson);
+  color: var(--color-cream);
+}
+.avi-paginacion-boton:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+/* En móvil «Anterior»/«Siguiente» se quedan solo con la flecha: con los
+   números al lado, el texto partía la fila en dos. */
+.avi-paginacion-texto {
+  display: none;
+}
+@media (min-width: 600px) {
+  .avi-paginacion-texto {
+    display: inline;
+  }
+}
+/* Texto solo para lector de pantalla (el anuncio de «Página 2 de 3»). */
+.avi-solo-lector {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ── Migratorias ──
@@ -4345,6 +4496,47 @@ select.campo-control {
   min-width: 0;
   opacity: 0.6;
   font-size: clamp(0.78rem, 2vw, 0.83rem);
+}
+/* .avi-pill declara display:flex, que le gana al [hidden] del navegador: sin
+   esto la paginación de migratorias no ocultaba nada. */
+.avi-pill[hidden] {
+  display: none;
+}
+
+/* Sección de migratorias dentro del apartado de especies (ver GaleriaAves).
+   Filete arriba para separarla de la rejilla de fotos sin abrir otro recuadro. */
+.avi-migratorias {
+  min-width: 0;
+  margin-top: clamp(22px, 4vw, 32px);
+  padding-top: clamp(18px, 3.5vw, 26px);
+  border-top: 1px solid rgba(135, 43, 19, 0.1);
+  /* Destino del chip «Migratorias» del índice, bajo la navbar sticky. */
+  scroll-margin-top: clamp(80px, 10vw, 100px);
+}
+.avi-migratorias-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin-bottom: 10px;
+}
+.avi-migratorias-titulo {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.02rem, 3vw, 1.18rem);
+  line-height: 1.25;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+/* Disco más chico que el de los apartados: es una subsección, no un apartado
+   nuevo, y con el mismo tamaño competía con el título de arriba. Es decorativo
+   (aria-hidden), así que bajar de 44px no afecta el área táctil. */
+.avi-icono--chico {
+  width: 34px;
+  height: 34px;
+}
+.avi-pills {
+  scroll-margin-top: clamp(80px, 10vw, 100px);
 }
 
 /* ── Ventana de visita ──
