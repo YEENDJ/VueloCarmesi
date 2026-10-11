@@ -22,6 +22,8 @@ import {
 } from 'lucide-react'
 import { CONTACTO, MAPA, whatsappCon } from '@/lib/contacto'
 import { jsonLdHtml } from '@/lib/json-ld-html'
+import { getAves } from '@/lib/api/aves'
+import GaleriaAves from '@/components/aviturismo/GaleriaAves'
 import AvisoEscnna from '@/components/legal/AvisoEscnna'
 
 /**
@@ -112,117 +114,19 @@ const RESUMEN: { Icono: LucideIcon; clave: string }[] = [
   { Icono: CalendarRange, clave: 'ventana' },
 ]
 
-type Especie = {
-  /** El nombre por el que se busca en cualquier idioma. */
-  cientifico: string
-  /** El que escribe en Google el birder internacional. Es la razón de la página. */
-  ingles: string
-  local: string
-  foto: string
-  /** Medidas reales del archivo: van al `<img>` para que el HTML declare el ratio. */
-  ancho: number
-  alto: number
-  altKey: string
-  /** Encuadre: el marco es 4:3 y recorta (la tangara es vertical); esto evita cortar el pico. */
-  foco: string
-}
-
 /**
- * Las siete residentes que están fotografiadas EN la finca.
+ * Las especies salen del panel (Admin › Aves) desde octubre de 2026.
  *
- * La lista se armó sobre el archivo propio y no al revés: una foto tomada en el
- * hotspot prueba el avistamiento y una de banco de imágenes no prueba nada. Por
- * eso no son las siete «mejores» ni las más raras —ninguna es endémica de
- * Colombia y un birder lo nota de inmediato—: lo que vende acá es la
- * fiabilidad, se ven todo el año. Las 180 completas están en eBird, que es
- * donde se verifican.
+ * La regla que armó la lista sigue valiendo para lo que se agregue: las
+ * residentes llevan foto tomada EN la finca, porque una foto del hotspot prueba
+ * el avistamiento y una de banco de imágenes no prueba nada. Por eso no son las
+ * «mejores» ni las más raras —ninguna es endémica de Colombia y un birder lo
+ * nota de inmediato—: lo que vende acá es la fiabilidad, se ven todo el año.
+ * Las 180 completas están en eBird, que es donde se verifican.
  *
- * Las que faltan del catálogo de fotos (los tres colibríes y la tangara azul)
- * están marcadas «especie por confirmar» en docs/catalogo-fotos.md: publicar un
- * nombre científico equivocado ante este público cuesta más que no publicarlo.
+ * Las migratorias van sin foto por la misma regla: están registradas en el
+ * hotspot pero no hay archivo propio, y una foto prestada la rompería.
  */
-const RESIDENTES: Especie[] = [
-  {
-    cientifico: 'Pteroglossus castanotis',
-    ingles: 'Chestnut-eared Aracari',
-    local: 'Pichí de collar',
-    foto: '/images/aves/aracari.jpg',
-    ancho: 1152,
-    alto: 864,
-    altKey: 'aracari',
-    foco: 'center 45%',
-  },
-  {
-    cientifico: 'Campephilus melanoleucos',
-    ingles: 'Crimson-crested Woodpecker',
-    local: 'Carpintero real',
-    foto: '/images/aves/carpintero.jpg',
-    ancho: 1152,
-    alto: 864,
-    altKey: 'carpintero',
-    foco: 'center 33%',
-  },
-  {
-    cientifico: 'Glaucidium brasilianum',
-    ingles: 'Ferruginous Pygmy-Owl',
-    local: 'Currucutú común',
-    foto: '/images/aves/currucutu.jpg',
-    ancho: 1040,
-    alto: 780,
-    altKey: 'currucutu',
-    foco: 'center 34%',
-  },
-  {
-    cientifico: 'Eurypyga helias',
-    ingles: 'Sunbittern',
-    local: 'Tigana',
-    foto: '/images/aves/tigana.jpg',
-    ancho: 1280,
-    alto: 959,
-    altKey: 'tigana',
-    foco: 'center 40%',
-  },
-  {
-    cientifico: 'Cyanocorax violaceus',
-    ingles: 'Violaceous Jay',
-    local: 'Carriquí violáceo',
-    foto: '/images/aves/carriqui.jpg',
-    ancho: 1152,
-    alto: 864,
-    altKey: 'carriqui',
-    foco: 'center 88%',
-  },
-  {
-    cientifico: 'Thraupis palmarum',
-    ingles: 'Palm Tanager',
-    local: 'Azulejo palmero',
-    foto: '/images/aves/azulejo-palmero.jpg',
-    ancho: 1152,
-    alto: 864,
-    altKey: 'azulejo',
-    foco: 'center 88%',
-  },
-  {
-    cientifico: 'Cissopis leverianus',
-    ingles: 'Magpie Tanager',
-    local: 'Tangara urraca',
-    foto: '/images/aves/tangara-urraca.jpg',
-    ancho: 815,
-    alto: 1600,
-    altKey: 'tangara',
-    foco: 'center 30%',
-  },
-]
-
-/**
- * Migratorias boreales. Van sin foto a propósito: las dos están registradas en
- * el hotspot pero no hay archivo propio, y aquí una foto prestada rompería la
- * regla que sostiene toda la lista de arriba.
- */
-const MIGRATORIAS: Pick<Especie, 'cientifico' | 'ingles' | 'local'>[] = [
-  { cientifico: 'Piranga rubra', ingles: 'Summer Tanager', local: 'Piranga roja' },
-  { cientifico: 'Setophaga ruticilla', ingles: 'American Redstart', local: 'Candelita norteña' },
-]
 
 /**
  * La ventana de visita, como escala y no como párrafo: la pregunta que trae a
@@ -294,6 +198,12 @@ export default async function AviturismoPage({
   // El resumen para birders extranjeros va en inglés dentro de la página en
   // español: quien lo lee escribe en inglés, así que su mensaje también.
   const twEn = await getTranslations({ locale: 'en', namespace: 'whatsapp' })
+
+  const aves = await getAves(locale)
+  // Una residente sin foto no debería existir (el backend la rechaza), pero si
+  // llegara dejaría un marco vacío en la rejilla: se filtra por si acaso.
+  const residentes = aves.filter(a => a.tipo === 'residente' && a.imagen)
+  const migratorias = aves.filter(a => a.tipo === 'migratoria')
 
   // Etiquetas para el texto con marcado dentro. next-intl pide que el
   // componente diga cómo se pinta cada etiqueta; así el traductor mueve el
@@ -369,62 +279,18 @@ export default async function AviturismoPage({
             <h2 className="avi-card-titulo">{t('residentes.titulo')}</h2>
           </div>
           <p className="avi-card-texto">
-            {t('residentes.texto')}
+            {t('residentes.texto', { n: residentes.length })}
           </p>
 
-          <ul className="avi-especies">
-            {RESIDENTES.map(({ cientifico, ingles, local, foto, ancho, alto, altKey, foco }) => (
-              <li key={cientifico} className="avi-especie">
-                <div className="avi-especie-foto">
-                  {/* Medidas y no `fill`: `fill` pinta el <img> sin width/height.
-                      El marco ya reserva el 4:3; el 100% lo hace llenarlo. */}
-                  <Image
-                    src={foto}
-                    alt={t(`alts.${altKey}`)}
-                    width={ancho}
-                    height={alto}
-                    sizes="(min-width: 1100px) 260px, (min-width: 700px) 45vw, 90vw"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: foco }}
-                  />
-                </div>
-                {/* El científico manda y el inglés va justo debajo: son los dos
-                    nombres por los que llega buscando este visitante. */}
-                <b className="avi-especie-cientifico">
-                  <i>{cientifico}</i>
-                </b>
-                <span className="avi-especie-ingles">{ingles}</span>
-                <span className="avi-especie-local">{local}</span>
-              </li>
-            ))}
-          </ul>
+          {/* Residentes y, debajo, la sección de migratorias (#migratorias). */}
+          <GaleriaAves residentes={residentes} migratorias={migratorias} />
         </article>
 
-        {/* ── Migratorias ── */}
-        <article id="migratorias" className="avi-card">
-          <div className="avi-card-cabecera">
-            <span className="avi-icono" aria-hidden="true">
-              <CalendarRange size={22} strokeWidth={1.85} color="var(--color-orange)" />
-            </span>
-            <h2 className="avi-card-titulo">{t('migratoriasCard.titulo')}</h2>
-          </div>
-          <p className="avi-card-texto">
-            {t('migratoriasCard.texto')}
-          </p>
-          <ul className="avi-pills">
-            {MIGRATORIAS.map(({ cientifico, ingles, local }) => (
-              <li key={cientifico} className="avi-pill">
-                <b>
-                  <i>{cientifico}</i>
-                </b>
-                <span className="avi-pill-ingles">{ingles}</span>
-                <span className="avi-pill-local">{local}</span>
-              </li>
-            ))}
-          </ul>
-        </article>
-
-        {/* ── Cuándo venir ── */}
-        <article id="cuando" className="avi-card">
+        {/* ── Cuándo venir ──
+            A lo ancho: es una escala y se lee mejor en una fila. Además, desde
+            que las migratorias viven dentro del apartado de especies, sin esto
+            «El guía» quedaba solo en su fila con media rejilla vacía al lado. */}
+        <article id="cuando" className="avi-card avi-card--ancha">
           <div className="avi-card-cabecera">
             <span className="avi-icono" aria-hidden="true">
               <Sunrise size={22} strokeWidth={1.85} color="var(--color-orange)" />

@@ -413,3 +413,40 @@
     padding: 18px;
   }
 }
+
+/* ── Formulario de aves con vista previa ──
+   Móvil: la vista previa arriba (va primera en el DOM) y los campos debajo.
+   Escritorio: campos a la izquierda y la tarjeta a la derecha, fija mientras
+   el cuerpo del modal hace scroll, así se ve cambiar mientras se escribe. */
+.ave-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+.ave-form-campos {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.ave-form-previa {
+  min-width: 0;
+}
+.ave-form-tarjeta {
+  width: min(200px, 100%);
+}
+@media (min-width: 900px) {
+  .ave-form {
+    grid-template-columns: minmax(0, 1fr) 240px;
+    gap: 28px;
+    align-items: start;
+  }
+  .ave-form-previa {
+    order: 2;
+    position: sticky;
+    top: 0;
+  }
+  .ave-form-tarjeta {
+    width: 100%;
+  }
+}

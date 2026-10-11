@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { href: '/admin/reservas',     label: 'Reservas',      icon: '📅' },
   { href: '/admin/experiencias', label: 'Experiencias',  icon: '🌿' },
   { href: '/admin/productos',    label: 'Productos',     icon: '🍫' },
+  { href: '/admin/aves',         label: 'Aves',          icon: '🐦' },
   { href: '/admin/pedidos',      label: 'Pedidos',       icon: '📦' },
   { href: '/admin/grupos',       label: 'Grupos',        icon: '🏫' },
   { href: '/admin/mensajes',     label: 'Mensajes',      icon: '✉️' },

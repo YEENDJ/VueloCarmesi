@@ -86,3 +86,19 @@ export interface Pedido {
   email: string
   direccion: string
 }
+
+/** Una especie de la página de aviturismo. Ver el modelo `Ave` del backend. */
+export interface Ave {
+  id: string
+  cientifico: string
+  ingles: string
+  local: string
+  tipo: 'residente' | 'migratoria'
+  /** Cloudinary o ruta local (/images/aves/…). Vacía en las migratorias. */
+  imagen: string
+  /** object-position, «X% Y%»: dónde cae el ave en el recorte 4:5. */
+  foco: string
+  /** Ya en el idioma pedido: el backend lo resuelve. */
+  alt: string
+  orden: number
+}

@@ -1,7 +1,7 @@
 import type {
   AdminReserva, AdminExperiencia, AdminProducto, AdminPedido,
   EstadoReserva, EstadoPedido, AdminSolicitudGrupo, EstadoSolicitud,
-  AdminContacto, EstadoContacto,
+  AdminContacto, EstadoContacto, AdminAve,
 } from './types'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
@@ -79,6 +79,45 @@ export function updateProducto(id: string, data: Partial<AdminProducto>): Promis
 }
 export function deleteProducto(id: string): Promise<void> {
   return fetch(`${ADMIN}/productos/${id}`, { method: 'DELETE' }).then(() => undefined)
+}
+
+// ── Aves ───────────────────────────────────────────────────
+// Sin `idioma`: el panel recibe `alt` y `altEn` por separado.
+export function getAvesAdmin(): Promise<AdminAve[]> {
+  return fetch(`${BASE}/aves`, { cache: 'no-store' }).then(checked)
+}
+/** A diferencia de `checked`, devuelve el motivo del backend: «ya hay una especie con ese nombre». */
+async function conMotivo(r: Response) {
+  if (r.ok) return r.json()
+  const motivo = await r.json().then(
+    (d: { message?: string | string[] }) => (Array.isArray(d.message) ? d.message.join('. ') : d.message),
+    () => undefined,
+  )
+  throw new Error(motivo || `API error ${r.status}`)
+}
+export function createAve(data: Partial<AdminAve>): Promise<AdminAve> {
+  return fetch(`${ADMIN}/aves`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }).then(conMotivo)
+}
+export function updateAve(id: string, data: Partial<AdminAve>): Promise<AdminAve> {
+  return fetch(`${ADMIN}/aves/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }).then(conMotivo)
+}
+export function reordenarAves(ids: string[]): Promise<AdminAve[]> {
+  return fetch(`${ADMIN}/aves/orden`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ids }),
+  }).then(conMotivo)
+}
+export function deleteAve(id: string): Promise<void> {
+  return fetch(`${ADMIN}/aves/${id}`, { method: 'DELETE' }).then(checked).then(() => undefined)
 }
 
 // ── Pedidos ────────────────────────────────────────────────
