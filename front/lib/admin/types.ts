@@ -155,3 +155,17 @@ export interface OverviewData {
   ultimasReservas: AdminReserva[]
   ultimosPedidos: AdminPedido[]
 }
+
+export interface AdminAve {
+  id: string
+  cientifico: string
+  ingles: string
+  local: string
+  tipo: 'residente' | 'migratoria'
+  imagen: string
+  foco: string
+  alt: string
+  altEn: string
+  orden: number
+  createdAt: string
+}

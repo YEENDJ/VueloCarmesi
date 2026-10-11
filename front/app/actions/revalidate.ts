@@ -90,6 +90,11 @@ export async function revalidateProductos() {
   invalidar('productos')
 }
 
+export async function revalidateAves() {
+  await exigirSesion()
+  invalidar('aves')
+}
+
 export async function revalidateSiteConfig() {
   await exigirSesion()
   // La portada (hero_image, about_image) y la ficha de experiencia (punto de

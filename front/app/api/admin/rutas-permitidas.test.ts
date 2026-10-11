@@ -13,6 +13,10 @@ describe('rutas que reenvía el puente del panel', () => {
     expect(rutaPermitida('GET', 'contacto')).toBe(true)
     expect(rutaPermitida('PATCH', 'contacto/abc123/estado')).toBe(true)
     expect(rutaPermitida('DELETE', 'contacto/abc123')).toBe(true)
+    expect(rutaPermitida('POST', 'aves')).toBe(true)
+    expect(rutaPermitida('PATCH', 'aves/abc123')).toBe(true)
+    expect(rutaPermitida('PATCH', 'aves/orden')).toBe(true)
+    expect(rutaPermitida('DELETE', 'aves/abc123')).toBe(true)
   })
 
   it('no reenvía rutas que no están en la lista', () => {

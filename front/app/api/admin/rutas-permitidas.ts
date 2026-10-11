@@ -19,17 +19,20 @@ const PERMITIDAS: Record<Metodo, RegExp[]> = {
     /^solicitudes-grupo$/,
     /^contacto$/,
   ],
-  POST: [/^experiencias$/, /^productos$/],
+  POST: [/^experiencias$/, /^productos$/, /^aves$/],
   PATCH: [
     new RegExp(`^reservas/${ID}$`), new RegExp(`^reservas/${ID}/estado$`),
     new RegExp(`^pedidos/${ID}$`),
     new RegExp(`^experiencias/${ID}$`), new RegExp(`^productos/${ID}$`),
+    // `aves/orden` ya casaría con el patrón de id; va explícita para que se lea.
+    new RegExp(`^aves/${ID}$`), /^aves\/orden$/,
     new RegExp(`^solicitudes-grupo/${ID}/estado$`),
     new RegExp(`^contacto/${ID}/estado$`),
   ],
   DELETE: [
     new RegExp(`^reservas/${ID}$`), new RegExp(`^pedidos/${ID}$`),
     new RegExp(`^experiencias/${ID}$`), new RegExp(`^productos/${ID}$`),
+    new RegExp(`^aves/${ID}$`),
     new RegExp(`^solicitudes-grupo/${ID}$`),
     new RegExp(`^contacto/${ID}$`),
   ],
