@@ -15,6 +15,7 @@ import { SiteConfigModule } from './site-config/site-config.module'
 import { TraduccionModule } from './traduccion/traduccion.module'
 import { PagosModule } from './pagos/pagos.module'
 import { SlugsModule } from './slugs/slugs.module'
+import { AvesModule } from './aves/aves.module'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { SlugsModule } from './slugs/slugs.module'
     TraduccionModule,
     PagosModule,
     SlugsModule,
+    AvesModule,
   ],
   controllers: [AppController],
   providers: [PrismaService],

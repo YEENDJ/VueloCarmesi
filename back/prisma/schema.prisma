@@ -252,6 +252,40 @@ model SolicitudGrupo {
   @@index([estado, createdAt(sort: Desc)])
 }
 
+/// Una especie de la página de aviturismo (/aviturismo, /en/birding).
+///
+/// Los nombres no se traducen: el científico es universal, el inglés es
+/// justamente el que busca el birder extranjero y el local es el de la región.
+/// Lo único que cambia con el idioma es el texto alternativo de la foto, y por
+/// eso va en dos columnas y no en una tabla de traducción como las fichas.
+model Ave {
+  id         String   @id @default(cuid())
+  /// Único: es por donde se reconoce la especie, y dos filas con el mismo
+  /// nombre científico serían la misma ave publicada dos veces.
+  cientifico String   @unique
+  ingles     String
+  local      String
+  /// residente | migratoria
+  ///
+  /// Las residentes van en la rejilla con foto. Las migratorias en fichas de
+  /// texto: la regla de la página es que solo se publica foto tomada en la
+  /// finca, y de las migratorias no hay.
+  tipo       String   @default("residente")
+  /// URL de Cloudinary o ruta local (/images/aves/…). Vacía en las migratorias.
+  imagen     String   @default("")
+  /// object-position CSS, «X% Y%». El marco de la tarjeta es 4:5 y casi todas
+  /// las fotos son 4:3: esto dice dónde cae el ave para que el recorte no la corte.
+  foco       String   @default("50% 50%")
+  alt        String   @default("")
+  /// Lo rellena DeepL al guardar si el admin no lo escribe.
+  altEn      String   @default("")
+  /// Orden en la página, ascendente. Lo cambian las flechas del panel.
+  orden      Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@index([tipo, orden])
+}
+
 model SiteConfig {
   key       String   @id
   value     String
