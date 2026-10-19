@@ -81,8 +81,6 @@ export const solicitudGrupoSchema = z.object({
     .or(z.literal('')),
 
   experiencias: z.array(z.enum(EXPERIENCIAS_COTIZABLES)).optional(),
-  requiereFactura: z.boolean().optional(),
-  nit: z.string().trim().max(40, 'errorNit').optional().or(z.literal('')),
   mensaje: z.string().trim().max(1000, 'errorMensaje').optional().or(z.literal('')),
 
   // Honeypot: los humanos nunca lo llenan. Mismo patrón que el backend.
