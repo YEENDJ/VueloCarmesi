@@ -64,6 +64,12 @@ export const routing = defineRouting({
     '/checkout': { es: '/checkout', en: '/checkout' },
     '/checkout/confirmacion': { es: '/checkout/confirmacion', en: '/checkout/confirmation' },
     '/checkout/resultado': { es: '/checkout/resultado', en: '/checkout/result' },
+    // «Mi pedido»: el estado de una compra sin cuenta. El backend arma el
+    // enlace del correo con /mi-pedido/[token] (botonVerPedido en
+    // back/src/notificaciones/notificaciones.service.ts): si cambia aquí,
+    // cambia allá.
+    '/mi-pedido': { es: '/mi-pedido', en: '/my-order' },
+    '/mi-pedido/[token]': { es: '/mi-pedido/[token]', en: '/my-order/[token]' },
 
     // Políticas
     '/politicas': { es: '/politicas', en: '/policies' },
