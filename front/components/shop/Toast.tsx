@@ -1,6 +1,6 @@
 'use client'
 import { useTranslations } from 'next-intl'
-import { useToast } from '@/lib/cart/store'
+import { useToast, useMiniCarrito } from '@/lib/cart/store'
 
 /**
  * El aviso de «agregado al carrito».
@@ -12,7 +12,9 @@ import { useToast } from '@/lib/cart/store'
 export default function Toast() {
   const t = useTranslations('tienda.toast')
   const aviso = useToast()
-  if (!aviso) return null
+  // Con el mini-carrito abierto el aviso sobra: el panel ya muestra lo agregado.
+  const miniCarrito = useMiniCarrito()
+  if (!aviso || miniCarrito !== null) return null
 
   return (
     <div style={{

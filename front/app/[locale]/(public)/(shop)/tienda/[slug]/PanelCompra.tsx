@@ -52,7 +52,8 @@ export default function PanelCompra({ producto }: { producto: Producto }) {
   }
 
   const comprarAhora = () => {
-    addToCart(producto, cantidad)
+    // Sin mini-carrito: va directo al checkout y el panel solo estorbaría.
+    addToCart(producto, cantidad, { abrirMiniCarrito: false })
     router.push('/checkout')
   }
 

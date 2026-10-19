@@ -21,6 +21,12 @@ export interface LastOrder {
   code: string
   items: LastOrderItem[]
   total: number
+  /**
+   * Llave de la página «mi pedido» (/mi-pedido/[token]). Con ella el carrito
+   * vacío puede ofrecer «Ver estado» de la última compra. Opcional: los
+   * pedidos guardados antes de existir no la tienen.
+   */
+  token?: string
 }
 
 const CART_KEY = 'vuelo-carmesi:carrito'
@@ -39,6 +45,13 @@ let items: CartItem[] = []
 export type AvisoCarrito = { clave: 'agregado' | 'agregados'; nombre: string; n: number }
 
 let toast: AvisoCarrito | null = null
+/**
+ * El mini-carrito, el panel lateral que se abre al agregar: null si está
+ * cerrado, o lo que se acaba de agregar, que el panel muestra arriba. Guarda su
+ * propia copia y no lee el toast porque el toast se borra a los dos segundos.
+ * No se persiste: al recargar la página arranca cerrado.
+ */
+let miniCarrito: AvisoCarrito | null = null
 let lastOrder: LastOrder | null = null
 let toastTimer: ReturnType<typeof setTimeout> | null = null
 const listeners = new Set<() => void>()
@@ -121,7 +134,17 @@ export const MAX_POR_PRODUCTO = 99
 
 const tope = (stock: number) => Math.min(stock, MAX_POR_PRODUCTO)
 
-export function addToCart(producto: Producto, qty = 1): void {
+/**
+ * `abrirMiniCarrito`: al agregar se abre el panel lateral con el carrito y las
+ * sugerencias —es el momento en que el cliente está más dispuesto a sumar
+ * algo—. Lo apagan quienes ya están donde el panel sobra: el carrito mismo y
+ * «Comprar ahora», que salta directo al checkout.
+ */
+export function addToCart(
+  producto: Producto,
+  qty = 1,
+  { abrirMiniCarrito = true }: { abrirMiniCarrito?: boolean } = {},
+): void {
   if (producto.stock === 0) return
   const existing = items.find(item => item.productoId === producto.id)
   if (existing) {
@@ -139,11 +162,19 @@ export function addToCart(producto: Producto, qty = 1): void {
     }]
   }
   persistCart()
-  showToast({
+  const aviso: AvisoCarrito = {
     clave: qty > 1 ? 'agregados' : 'agregado',
     nombre: producto.nombre,
     n: qty,
-  })
+  }
+  showToast(aviso)
+  if (abrirMiniCarrito) miniCarrito = aviso
+  emit()
+}
+
+export function cerrarMiniCarrito(): void {
+  if (!miniCarrito) return
+  miniCarrito = null
   emit()
 }
 
@@ -186,6 +217,7 @@ export function getCartCount(): number { return items.reduce((sum, item) => sum 
 export function getCartTotal(): number { return items.reduce((sum, item) => sum + item.precio * item.q, 0) }
 export function getToast(): AvisoCarrito | null { return toast }
 export function getLastOrder(): LastOrder | null { return lastOrder }
+export function getMiniCarrito(): AvisoCarrito | null { return miniCarrito }
 
 function subscribe(listener: () => void): () => void {
   listeners.add(listener)
@@ -198,6 +230,7 @@ function getServerToast(): AvisoCarrito | null {
   return null
 }
 function getServerLastOrder() { return null }
+function getServerMiniCarrito(): AvisoCarrito | null { return null }
 
 export function useCart() {
   const snapshot = useSyncExternalStore(subscribe, getCartItems, getServerItems)
@@ -212,4 +245,8 @@ export function useToast(): AvisoCarrito | null {
 
 export function useLastOrder(): LastOrder | null {
   return useSyncExternalStore(subscribe, getLastOrder, getServerLastOrder)
+}
+
+export function useMiniCarrito(): AvisoCarrito | null {
+  return useSyncExternalStore(subscribe, getMiniCarrito, getServerMiniCarrito)
 }
