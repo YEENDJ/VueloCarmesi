@@ -96,25 +96,34 @@ export default function HistoriaTimeline() {
           <div key={`${t(`${bloque.clave}.anyo`)}-${i}`} className="historia-item">
             <div className="historia-linea" />
 
+            {/* Los márgenes del viewport van solo en vertical: un '-20%' a
+                secas encoge también el ancho, y lo que cae cerca de un borde
+                nunca llega a «entrar» y se queda en su estado inicial. */}
             <motion.div
               className="historia-nodo"
               initial={{ scale: 0, rotate: -45 }}
               whileInView={{ scale: 1, rotate: 0 }}
-              viewport={{ once: true, margin: '-20%' }}
+              viewport={{ once: true, margin: '-20% 0px' }}
               transition={{ type: 'spring', stiffness: 260, damping: 20 }}
             >
               <span>{bloque.icono}</span>
             </motion.div>
 
+            {/* En móvil el bloque es la tarjeta y .historia-carta pasa a
+                display: contents (globals.css): su animación no se ve ahí, y
+                la de la foto solo conserva la opacidad. */}
             <div className={invertido ? 'historia-bloque historia-bloque-invertido' : 'historia-bloque'}>
               <motion.div
                 className="historia-carta"
                 initial={{ opacity: 0, x: invertido ? -60 : 60, y: 40 }}
                 whileInView={{ opacity: 1, x: 0, y: 0 }}
-                viewport={{ once: true, margin: '-15%' }}
+                viewport={{ once: true, margin: '-15% 0px' }}
                 transition={{ duration: 0.7, ease: 'easeOut' }}
               >
                 <div className="historia-cabecera">
+                  {/* Solo en móvil, donde no hay línea central ni nodo: el
+                      mismo icono pasa a la tarjeta. Decorativo, como el nodo. */}
+                  <span className="historia-icono" aria-hidden="true">{bloque.icono}</span>
                   <span className="historia-anyo">{t(`${bloque.clave}.anyo`)}</span>
                   <span className="historia-etiqueta">{t(`${bloque.clave}.etiqueta`)}</span>
                 </div>
@@ -128,7 +137,7 @@ export default function HistoriaTimeline() {
                 className="historia-imagen"
                 initial={{ opacity: 0, x: invertido ? 60 : -60, y: 40 }}
                 whileInView={{ opacity: 1, x: 0, y: 0 }}
-                viewport={{ once: true, margin: '-15%' }}
+                viewport={{ once: true, margin: '-15% 0px' }}
                 transition={{ duration: 0.7, ease: 'easeOut', delay: 0.15 }}
               >
                 <BloqueImagen bloque={bloque} />

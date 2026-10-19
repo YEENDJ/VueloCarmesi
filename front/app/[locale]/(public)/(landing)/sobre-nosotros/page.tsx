@@ -185,10 +185,17 @@ export default async function SobreNosotrosPage({
   return (
     <>
       {/* ── Origen · Nuestra historia ── */}
+      {/* overflowX: las tarjetas de HistoriaTimeline entran desde ±60 px en X,
+          y mientras esperan su turno la de la columna derecha asoma fuera del
+          viewport: por debajo de ~1200 px eso le daba al body scroll
+          horizontal y una franja vacía a la derecha. `clip` y no `hidden`:
+          hidden convierte la sección en contenedor de scroll y la línea
+          animada con animation-timeline: view() dejaría de seguir la página. */}
       <section
         style={{
           backgroundColor: "var(--color-cream)",
           padding: "clamp(64px, 8vw, 100px) 24px",
+          overflowX: "clip",
         }}
       >
         <div style={{ maxWidth: "1080px", margin: "0 auto" }}>
