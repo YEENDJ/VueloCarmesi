@@ -11,7 +11,8 @@
     "irAlInicio": "Vuelo Carmesí — go to homepage",
     "abrirMenu": "Open menu",
     "cerrarMenu": "Close menu",
-    "cambiarIdioma": "Change language"
+    "cambiarIdioma": "Change language",
+    "miPedido": "My order"
   },
   "miga": {
     "aria": "Breadcrumb",
@@ -360,9 +361,24 @@
       "aCoordinar": "To be arranged",
       "total": "Total",
       "irCheckout": "Go to checkout",
-      "titulo": "Cart",
-      "vaciar": "🗑 Empty cart",
-      "quitar": "Remove {nombre} from cart"
+      "vaciar": "Empty cart",
+      "quitar": "Remove {nombre} from cart",
+      "sugerenciasTitulo": "Anything else?",
+      "sugerenciaAgregar": "Add {nombre} to cart",
+      "tituloConteo": "Your cart ({n})",
+      "porUnidad": "{precio} each",
+      "vaciarPregunta": "Empty the cart?",
+      "vaciarSi": "Yes, empty it",
+      "vaciarNo": "Cancel",
+      "vaciarTexto": "{n, plural, one {The product} other {All # products}} will be removed from your cart. This can't be undone.",
+      "envioCotiza": "Shipping: quoted for your city when we confirm the order.",
+      "pagoSeguro": "Secure payment with Wompi: card, Nequi, PSE and more",
+      "pagoSeguroLogo": "Secure payment with <wompi>Wompi</wompi>",
+      "tarjeta": "Card",
+      "mediosPago": "Accepted payment methods",
+      "ultimoPedido": "Your last order: {codigo}",
+      "verEstado": "Check its status",
+      "buscarPedido": "Looking for a previous order? <enlace>Look it up here</enlace>"
     },
     "checkout": {
       "vacio": "There are no products in your cart",
@@ -371,7 +387,6 @@
       "datosEntrega": "Delivery details",
       "condiciones": "By confirming you accept the <terminos>terms of sale</terminos> and the <datos>processing of your data</datos>.",
       "resumenPedido": "Your order summary",
-      "coordinamosMetodo": "We arrange the payment method when we confirm your order.",
       "errorPedido": "The order could not be processed",
       "errorDemasiados": "Too many orders in a row. Wait a few minutes and try again, or message us on WhatsApp.",
       "total": "Total",
@@ -394,7 +409,17 @@
       "pagoEnLinea": "We hold your items for 30 minutes while you finish.",
       "pagoSeguro": "Secure payment",
       "errorAbrirPago": "Your order is on hold, but we couldn’t open the payment page. Please try again in a moment.",
-      "pagoAnteriorEnCurso": "You have a payment waiting for your bank’s confirmation. <ver>Check its status</ver>",
+      "pagoAnteriorEnCurso": "You have a payment waiting for your bank’s confirmation. So we don’t charge you twice, you can pay for this order once the bank responds.",
+      "pagoAnteriorEnCursoHora": "Your payment from {hora} is still waiting for your bank’s confirmation. So we don’t charge you twice, you can pay for this order once the bank responds.",
+      "verComoVa": "Check its status",
+      "escribirWhatsapp": "Message us on WhatsApp",
+      "pagoRechazado": "Your bank declined your last payment. You haven’t been charged.",
+      "pagoRechazadoHora": "Your bank declined the payment from {hora}. You haven’t been charged.",
+      "pagoRechazadoApartado": "Your order {codigo} is on hold until {hora}. You can try paying again, with another bank or payment method, without filling in your details again.",
+      "pagoRechazadoCambio": "Since your cart changed, fill in your details below to place the order again.",
+      "reintentarPago": "Retry payment · {total}",
+      "reintentoVencido": "The time to pay for that order has run out. Fill in your details to place a new one.",
+      "faltanDatos": "Fill in your details to continue.",
       "pedidoCodigo": "Order {codigo}",
       "titulo": "Complete your purchase",
       "bajada": "Two steps and you’re done. We’ll get in touch to arrange delivery.",
@@ -412,6 +437,13 @@
     "toast": {
       "agregado": "{nombre} added to cart",
       "agregados": "{n} × {nombre} added"
+    },
+    "miniCarrito": {
+      "titulo": "Your cart",
+      "cerrar": "Close the cart",
+      "linea": "{q} × {precio}",
+      "verCarrito": "View cart",
+      "seguir": "Keep shopping"
     },
     "todos": "All"
   },
@@ -690,8 +722,6 @@
         "chocoterapia": "Chocotherapy and snack",
         "a-medida": "Something tailored, tell me the options"
       },
-      "requiereFactura": "We need an invoice in the institution's name",
-      "nit": "Tax ID (NIT)",
       "mensaje": "Anything else we should know?",
       "mensajePlaceholder": "Purpose of the trip, dietary restrictions, number of accompanying teachers…",
       "contador": "{n} of {max} characters",
@@ -710,9 +740,7 @@
       "errorPersonasMax": "For more than {max} people, please write to us directly.",
       "errorEdades": "That age range is too long.",
       "errorFecha": "The date must be later than today.",
-      "errorNit": "That tax ID is too long.",
-      "errorMensaje": "The message cannot be longer than {max} characters.",
-      "nitAyuda": "If you don't have it to hand, leave it blank: we will ask for it when we send the quote."
+      "errorMensaje": "The message cannot be longer than {max} characters."
     },
     "agencias": {
       "titulo": "Writing from a travel agency or operator?",
@@ -1288,7 +1316,7 @@
       "alt": "Walking the cacao grove during the pandemic"
     },
     "camino": {
-      "anyo": "Since 2012",
+      "anyo": "After the pandemic",
       "etiqueta": "A new path",
       "titulo": "The experience that found its place",
       "t1": "Cristian, one of the founders, had worked in tourism since 2012, mainly in adventure tourism. After the pandemic, that experience found a new path: bringing tourism to the farm and turning the countryside, the cacao and the nature around us into a close, genuine, family experience.",
@@ -1384,7 +1412,10 @@
     "aviturismo": "Hi! I saw the birding page on the Vuelo Carmesí website and I'd like information about birdwatching at the farm.",
     "grupos": "Hi! I saw the groups page on the Vuelo Carmesí website and I'd like information to get a quote for a group visit.",
     "grupoEnviado": "Hi! I just sent a quote request for {institucion} from the Vuelo Carmesí website and I'd like to follow up.",
-    "tienda": "Hi! I'm looking at the Vuelo Carmesí shop and I have a question about the products."
+    "tienda": "Hi! I'm looking at the Vuelo Carmesí shop and I have a question about the products.",
+    "pagoEnCurso": "Hi! I have a payment pending with my bank (order {codigo}, reference {referencia}) and I'd like to know its status or place a new order.",
+    "miPedido": "Hi! I’d like to know how my order from the Vuelo Carmesí shop is going.",
+    "pedido": "Hi! I have a question about my order {codigo}."
   },
   "escnna": {
     "aviso": "The sexual exploitation and abuse of children and adolescents are crimes in Colombia, punishable under criminal and administrative law (Law 679 of 2001 and Law 1336 of 2009). <politica>Our policy</politica>."
@@ -1426,5 +1457,77 @@
       "volverInicio": "Back to home",
       "volverTienda": "Back to the shop"
     }
+  },
+  "miPedido": {
+    "consultaTitulo": "Look up your order",
+    "consultaTexto": "Enter your order code and the email you used to buy. The code is in the confirmation email and starts with VC-.",
+    "codigo": "Order code",
+    "placeholderCodigo": "VC-AB12CD",
+    "email": "Email used for the order",
+    "placeholderEmail": "you@email.com",
+    "errorCodigo": "Enter the order code",
+    "errorEmail": "Enter a valid email",
+    "consultar": "View my order",
+    "consultando": "Searching…",
+    "noEncontrado": "We couldn’t find an order with that code and email. Check that they match the confirmation email.",
+    "demasiados": "You made a lot of lookups in a row. Wait a minute and try again.",
+    "errorRed": "We couldn’t look it up right now. Please try again in a moment.",
+    "ayudaWhatsapp": "Don’t have the email at hand? <whatsapp>Message us on WhatsApp</whatsapp>.",
+    "titulo": "Order {codigo}",
+    "hecho": "Placed on {fecha}",
+    "cargando": "Loading your order…",
+    "noEncontradoTitulo": "We couldn’t find this order",
+    "noEncontradoTexto": "The link may be incomplete. You can look it up with the code and your email.",
+    "buscarOtro": "Look up with code and email",
+    "reintentar": "Try again",
+    "irAPagar": "Go to payment",
+    "volverTienda": "Back to the shop",
+    "productos": "Products",
+    "total": "Total",
+    "cantidadPorPrecio": "{q} × {precio}",
+    "progreso": "Order progress",
+    "pasoActual": "current step",
+    "pasos": {
+      "recibido": "Received",
+      "pagado": "Paid",
+      "enviado": "Shipped",
+      "entregado": "Delivered"
+    },
+    "ayuda": "Something not right? <whatsapp>Message us on WhatsApp</whatsapp> and mention your code {codigo}.",
+    "estados": {
+      "pendiente": {
+        "titulo": "Order received",
+        "texto": "We’ll get in touch to arrange payment and delivery."
+      },
+      "pendiente_pago": {
+        "titulo": "Waiting for payment",
+        "texto": "Your order is on hold until {hora}. If it isn’t paid in time, the products are released."
+      },
+      "pagado": {
+        "titulo": "Payment received",
+        "texto": "We’re preparing your order. We’ll email you when it ships."
+      },
+      "enviado": {
+        "titulo": "On its way",
+        "texto": "Your order has shipped. It’ll be with you soon."
+      },
+      "entregado": {
+        "titulo": "Delivered",
+        "texto": "Your order has arrived. Thank you for your purchase!"
+      },
+      "cancelado": {
+        "titulo": "Order cancelled",
+        "texto": "This order was cancelled. If you have questions, message us."
+      },
+      "expirado": {
+        "titulo": "Expired without payment",
+        "texto": "The time to pay ran out and the products were released. You haven’t been charged."
+      },
+      "requiere_revision": {
+        "titulo": "Under review",
+        "texto": "We received your payment and are reviewing the order. We’ll contact you soon."
+      }
+    },
+    "verMiPedido": "View my order"
   }
 }

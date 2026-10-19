@@ -6,8 +6,21 @@ import { formatDireccionPedido } from './format-direccion.util'
 import { escapeHtml } from './escape-html.util'
 import { fechaHoraRecibido, radicado } from './radicado.util'
 import { tablaItemsHtml, lineasItemsTexto, formatPrecio, ItemPedido } from './format-items-pedido.util'
+import { codigoPedido } from '../pedidos/consulta.util'
 
 const ADMIN_URL = process.env.FRONTEND_URL ?? 'http://localhost:3000'
+
+/**
+ * «Ver mi pedido»: el enlace a la página pública del pedido. Sin cuenta, es
+ * la forma de volver a ver cómo va la compra desde cualquier dispositivo.
+ * La ruta es la de front/lib/i18n/routing.ts (/mi-pedido/[token]): si cambia
+ * allá, cambia aquí. Sin token (un pedido viejo) no hay botón.
+ */
+function botonVerPedido(token?: string | null): string {
+  if (!token) return ''
+  const url = `${ADMIN_URL}/mi-pedido/${encodeURIComponent(token)}`
+  return `<p style="margin:28px 0 0;text-align:center"><a href="${url}" style="display:inline-block;background:#D51312;color:#fff;font-family:Arial,sans-serif;font-weight:bold;font-size:15px;text-decoration:none;padding:14px 28px;border-radius:8px">Ver mi pedido</a></p>`
+}
 
 /**
  * Una fila «rótulo · valor» del aviso al administrador.
@@ -236,6 +249,7 @@ export class NotificacionesService {
     id: string; nombre: string; email: string
     direccion: string; ciudad: string; codigoPostal?: string | null; total: number
     items: ItemPedido[]
+    tokenConsulta?: string | null
   }, pago?: PagoRecibido): Promise<void> {
     // Escapados por lo mismo que en la reserva: nombre y dirección los escribe
     // el visitante. Los productos ya salen escapados de tablaItemsHtml.
@@ -259,7 +273,11 @@ export class NotificacionesService {
         pago ? `Pago recibido: tu pedido — Vuelo Carmesí` : `Recibimos tu pedido — Vuelo Carmesí`,
         this.email.templateConfirmacionPedido({
           nombre,
-          id: pedido.id,
+          // El código corto, el mismo que muestra el sitio y que pide
+          // «Consultar mi pedido». Antes iba el id completo, que no se parecía
+          // a nada de lo que el cliente veía en la página.
+          codigo: codigoPedido(pedido.id),
+          botonPedido: botonVerPedido(pedido.tokenConsulta),
           direccion: direccionCompleta,
           itemsTable: itemsTableCliente,
           notaPago,

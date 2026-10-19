@@ -55,6 +55,7 @@ const FUERA: readonly RutaFija[] = [
   '/checkout',
   '/checkout/confirmacion',
   '/checkout/resultado',
+  '/mi-pedido',
   '/reservar/confirmacion',
   '/reservar/resultado',
 ]

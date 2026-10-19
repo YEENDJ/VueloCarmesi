@@ -10,6 +10,14 @@ import { PagosService } from '../pagos/pagos.service'
 import { VencimientoService } from '../pagos/vencimiento.service'
 import { venceEnDesde } from '../pagos/config'
 import { devolverStock } from './stock.util'
+import { ConsultarPedidoDto } from './dto/consultar-pedido.dto'
+import { generarTokenConsulta, normalizarCodigo, vistaPublica } from './consulta.util'
+
+/** Lo que necesita la vista pública: productos y pagos, sin nada del cliente. */
+const CONSULTA_INCLUDE = {
+  items: { include: { producto: { select: { nombre: true, imagen: true, slug: true } } } },
+  pagos: { select: { referencia: true, estado: true, createdAt: true } },
+} as const
 
 @Injectable()
 export class PedidosService {
@@ -36,6 +44,45 @@ export class PedidosService {
     })
     if (!pedido) throw new NotFoundException()
     return pedido
+  }
+
+  /** La página «mi pedido» por su token. 404 si no existe: no dice nada más. */
+  async porToken(token: string) {
+    const pedido = await this.prisma.pedido.findUnique({
+      where: { tokenConsulta: token },
+      include: CONSULTA_INCLUDE,
+    })
+    if (!pedido) throw new NotFoundException()
+    return vistaPublica(pedido)
+  }
+
+  /**
+   * «Consultar mi pedido» con código y correo. Los dos tienen que coincidir:
+   * con solo el código, cualquiera podría recorrer pedidos ajenos probando
+   * combinaciones. Devuelve el token para abrir la página del pedido.
+   *
+   * Un pedido anterior a los tokens recibe el suyo aquí, la primera vez.
+   */
+  async consultar(dto: ConsultarPedidoDto): Promise<{ token: string }> {
+    const codigo = normalizarCodigo(dto.codigo)
+    // Mismo 404 para un código mal escrito y para uno que no existe: no se
+    // revela qué parte falló.
+    if (!codigo) throw new NotFoundException()
+
+    const pedido = await this.prisma.pedido.findFirst({
+      where: {
+        ...('id' in codigo ? { id: codigo.id } : { id: { endsWith: codigo.sufijo } }),
+        email: { equals: dto.email.trim(), mode: 'insensitive' },
+      },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, tokenConsulta: true },
+    })
+    if (!pedido) throw new NotFoundException()
+    if (pedido.tokenConsulta) return { token: pedido.tokenConsulta }
+
+    const token = generarTokenConsulta()
+    await this.prisma.pedido.update({ where: { id: pedido.id }, data: { tokenConsulta: token } })
+    return { token }
   }
 
   async create(dto: CreatePedidoDto) {
@@ -112,6 +159,8 @@ export class PedidosService {
           ciudad,
           codigoPostal: codigoPostal || null,
           total,
+          // Vuelve al checkout en la respuesta y va en el enlace del correo.
+          tokenConsulta: generarTokenConsulta(),
           // Con pasarela, el pedido aparta el stock solo por un rato: si no se
           // paga, el vencimiento lo devuelve. Un total de cero no pasa por la
           // pasarela (no hay qué cobrar) y sigue el flujo manual.

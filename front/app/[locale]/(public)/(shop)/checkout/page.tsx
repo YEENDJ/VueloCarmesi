@@ -1,27 +1,50 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useTranslations, useLocale } from 'next-intl'
-import { useRouter } from 'next/navigation'
-import { Link } from '@/lib/i18n/navigation'
+import { useTranslations, useLocale, useFormatter } from 'next-intl'
+// El router con idioma: el de next/navigation mandaba a /checkout/... sin el
+// prefijo /en y el visitante inglés terminaba en la página en español.
+import { Link, useRouter } from '@/lib/i18n/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCart, setLastOrder, type CartItem } from '@/lib/cart/store'
 import { checkoutSchema, type CheckoutFormValues } from '@/lib/cart/checkout-schema'
-import { ChevronDown, ShieldCheck } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import { formatPrecio } from '@/lib/format'
 import {
-  crearPago, guardarPagoPendiente, leerPagoPendiente, obtenerEstadoPago, olvidarPagoPendiente,
-  useConfigPagos, vistaDe,
+  crearPago, ErrorPago, guardarPagoPendiente, leerPagoPendiente, obtenerEstadoPago, olvidarPagoPendiente,
+  reintentarPago, useConfigPagos, vistaDe,
 } from '@/lib/pagos'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
+import PagoSeguro from '@/components/shop/PagoSeguro'
 import { useDespertarBackend } from '@/lib/despertar-backend'
+import { whatsappCon } from '@/lib/contacto'
+
+/** «14 oct, 3:42 p. m.»: cuándo se abrió un pago anterior, en hora de Colombia. */
+const HORA_CORTA = {
+  day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', timeZone: 'America/Bogota',
+} as const
+
+/** El pago de una visita anterior que el banco aún no responde. */
+interface PagoEnCurso {
+  referencia: string
+  creadoEn: string | null
+  codigo: string | null
+}
+
+/** El pago de una visita anterior que el banco rechazó, con su pedido aún apartado. */
+interface PagoRechazado extends PagoEnCurso {
+  venceEn: string | null
+  total: number | null
+}
 
 export default function CheckoutPage() {
   useDespertarBackend()
   const idioma = useLocale()
 
   const t = useTranslations('tienda.checkout')
+  const tw = useTranslations('whatsapp')
+  const formato = useFormatter()
 
   const router = useRouter()
   const { items, cartTotal, clearCart } = useCart()
@@ -32,7 +55,12 @@ export default function CheckoutPage() {
   // dos veces.
   const [pedidoSinPagar, setPedidoSinPagar] = useState<string | null>(null)
   // Un pago que quedó en curso de una visita anterior (ver leerPagoPendiente).
-  const [pagoEnCurso, setPagoEnCurso] = useState<string | null>(null)
+  const [pagoEnCurso, setPagoEnCurso] = useState<PagoEnCurso | null>(null)
+  // Un pago anterior que el banco rechazó: quien se fue de la pasarela antes
+  // de ver el resultado volvía aquí sin saber qué pasó, y al llenar los datos
+  // otra vez creaba un segundo pedido mientras el primero seguía apartado.
+  const [pagoRechazado, setPagoRechazado] = useState<PagoRechazado | null>(null)
+  const [reintentando, setReintentando] = useState(false)
   // Mientras el navegador se va a la pasarela, el botón no vuelve a
   // habilitarse: un segundo clic abriría otro intento.
   const [redirigiendo, setRedirigiendo] = useState(false)
@@ -40,21 +68,86 @@ export default function CheckoutPage() {
   // Quien pagó y cerró la pestaña sin volver a la página de resultado
   // encontraría aquí su carrito lleno con lo que ya compró. Se pregunta cómo
   // terminó ese pago antes de dejarlo comprar otra vez.
+  //
+  // El botón se bloquea solo si el banco ya tiene la transacción (PSE o Nequi
+  // en curso): un pedido nuevo podría terminar en dos cobros. Quien abrió la
+  // pasarela y la cerró sin pagar puede intentar de nuevo de inmediato. Se
+  // vuelve a preguntar cada 15 s, así el botón se libera solo cuando el banco
+  // responde, sin que el cliente tenga que recargar.
   useEffect(() => {
     const referencia = leerPagoPendiente()
     if (!referencia) return
-    obtenerEstadoPago(referencia).then(e => {
+    let vivo = true
+    let reloj: ReturnType<typeof setTimeout> | undefined
+
+    const consultar = () => obtenerEstadoPago(referencia).then(e => {
+      if (!vivo) return
       const vista = vistaDe(e)
-      if (vista === 'aprobado' || vista === 'revision') {
-        clearCart()
-        olvidarPagoPendiente()
-      } else if (vista === 'pendiente') {
-        setPagoEnCurso(referencia)
-      } else {
-        olvidarPagoPendiente()
+      const vencido = e.venceEn !== null && new Date(e.venceEn) <= new Date()
+      // Un backend sin `enCurso` deja la regla anterior: bloquear hasta que
+      // venza la reserva de 30 min.
+      const enCurso = e.enCurso ?? !vencido
+      if (vista === 'pendiente' && (enCurso || !vencido)) {
+        // Sin transacción todavía no bloquea, pero se sigue mirando: si la
+        // pasarela quedó abierta en otra pestaña y paga ahí, pasa a en curso.
+        setPagoEnCurso(enCurso ? { referencia, creadoEn: e.creadoEn ?? null, codigo: e.codigo } : null)
+        reloj = setTimeout(consultar, 15_000)
+        return
       }
-    }).catch(() => { /* sin respuesta: el checkout funciona igual */ })
-  }, [clearCart])
+      setPagoEnCurso(null)
+      // Rechazado con el pedido aún apartado (si hubiera vencido, vistaDe diría
+      // «vencido»). La referencia se conserva: con ella se reintenta el mismo
+      // pedido, y sigue ahí si el cliente recarga la página.
+      if (vista === 'rechazado') {
+        setPagoRechazado({
+          referencia, creadoEn: e.creadoEn ?? null, codigo: e.codigo, venceEn: e.venceEn, total: e.total,
+        })
+        return
+      }
+      // Ya pagó: antes se vaciaba el carrito aquí en silencio y el cliente
+      // veía «tu carrito está vacío» sin saber qué pasó con su compra. La
+      // página de resultado lo dice, muestra el pedido y vacía el carrito.
+      if (vista === 'aprobado' || vista === 'revision') {
+        router.replace({ pathname: '/checkout/resultado', query: { ref: referencia } })
+        return
+      }
+      olvidarPagoPendiente()
+    }).catch(() => {
+      // Sin respuesta no se bloquea a ciegas: el checkout funciona igual.
+      if (vivo) setPagoEnCurso(null)
+    })
+
+    consultar()
+    return () => { vivo = false; clearTimeout(reloj) }
+  }, [clearCart, router])
+
+  /**
+   * Un intento nuevo sobre el pedido cuyo pago se rechazó: los datos ya están
+   * en el pedido, no hay que llenarlos otra vez, y no se aparta stock dos veces.
+   */
+  const reintentarRechazado = async () => {
+    if (!pagoRechazado) return
+    setReintentando(true)
+    setSubmitError('')
+    try {
+      const intento = await reintentarPago(pagoRechazado.referencia, idioma)
+      // Una sola referencia en curso: la nueva reemplaza a la rechazada.
+      guardarPagoPendiente(intento.referencia)
+      setRedirigiendo(true)
+      window.location.assign(intento.url)
+    } catch (err) {
+      setReintentando(false)
+      // 409: venció mientras tanto o ya hay otro pago abierto. Ese pedido ya
+      // no se puede pagar: queda el formulario para hacer uno nuevo.
+      if (err instanceof ErrorPago && err.status === 409) {
+        olvidarPagoPendiente()
+        setPagoRechazado(null)
+        setSubmitError(t('reintentoVencido'))
+      } else {
+        setSubmitError(t('errorAbrirPago'))
+      }
+    }
+  }
 
   /** Abre la pasarela para un pedido ya creado. El carrito no se toca: se vacía al aprobarse. */
   const irAPagar = async (pedidoId: string) => {
@@ -70,8 +163,10 @@ export default function CheckoutPage() {
   }
 
   const {
-    register, handleSubmit, formState: { errors, isSubmitting },
-  } = useForm<CheckoutFormValues>({ resolver: zodResolver(checkoutSchema) })
+    register, handleSubmit, formState: { errors, isSubmitting, isValid },
+  // onTouched: el error de un campo aparece al salir de él, no con la primera
+  // tecla; isValid sí se recalcula a cada cambio para habilitar el botón.
+  } = useForm<CheckoutFormValues>({ resolver: zodResolver(checkoutSchema), mode: 'onTouched' })
 
   const onSubmit = async (data: CheckoutFormValues) => {
     setSubmitError('')
@@ -100,6 +195,8 @@ export default function CheckoutPage() {
         code: `#VC-${String(pedido.id).slice(-6).toUpperCase()}`,
         items: items.map(i => ({ nombre: i.nombre, q: i.q, subtotal: i.precio * i.q })),
         total: cartTotal,
+        // Para «Ver cómo va» en el carrito vacío y en la confirmación.
+        token: pedido.tokenConsulta ?? undefined,
       })
       // El backend decide si se cobra en línea: si el pedido nace esperando
       // pago, va a la pasarela. Si no, el flujo manual de siempre.
@@ -123,17 +220,60 @@ export default function CheckoutPage() {
     )
   }
 
-  const avisoPago = pagos?.activo ? t('pagoEnLinea') : t('coordinamosMetodo')
+  // Solo con la pasarela activa hay algo que avisar (la reserva de 30 min).
+  // Sin ella ya no se dice «coordinamos el método de pago»: se quitó a pedido.
+  const pagoEnLinea = Boolean(pagos?.activo)
+  // Sin todos los datos, o con un pago anterior aún sin respuesta, no se
+  // puede pagar; tampoco mientras se crea el pedido o se abre la pasarela.
+  const bloqueado = !isValid || Boolean(pagoEnCurso) || isSubmitting || redirigiendo
+  const reintentoPosible = Boolean(
+    pagoRechazado?.codigo && pagoRechazado.venceEn && pagoRechazado.total === cartTotal,
+  )
 
   return (
-    <section className="page-shell" style={{ maxWidth: '1000px' }}>
-      <header style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: 'clamp(24px, 4vw, 32px)' }}>
-        <h1 style={{ color: 'var(--color-brown)', fontSize: 'var(--fs-h1)', lineHeight: 1.15 }}>{t('titulo')}</h1>
-        <p style={{ fontSize: 'var(--fs-lead)', color: 'var(--color-brown)', opacity: 0.8 }}>{t('bajada')}</p>
-      </header>
+    // Sin maxWidth propio, como el carrito: el ancho de .page-shell es el del
+    // navbar, así el formulario alinea con el logo y los enlaces de arriba.
+    <section className="page-shell">
+      {/* Compacto, como en el carrito: a tamaño de portada empujaba el
+          formulario media pantalla hacia abajo. */}
+      <h1 className="cart-titulo">{t('titulo')}</h1>
 
-      {/* En móvil el lateral cae debajo del formulario y nadie lo veía antes
-          de pagar. Este resumen va arriba, abierto, y se puede plegar. */}
+      {/* Arriba de todo: es lo primero que tiene que leer quien vuelve de la
+          pasarela sin haber visto el resultado. */}
+      {pagoRechazado && (
+        <div role="alert" className="checkout-aviso checkout-aviso--rechazo">
+          <p className="checkout-aviso-titulo">
+            {pagoRechazado.creadoEn
+              ? t('pagoRechazadoHora', { hora: formato.dateTime(new Date(pagoRechazado.creadoEn), HORA_CORTA) })
+              : t('pagoRechazado')}
+          </p>
+          {/* Reintentar ese mismo pedido solo si el carrito no cambió: si no,
+              se cobraría lo que había antes y no lo que ve en pantalla. */}
+          {reintentoPosible ? (
+            <>
+              <p className="checkout-aviso-texto">
+                {t('pagoRechazadoApartado', {
+                  codigo: pagoRechazado.codigo!,
+                  hora: formato.dateTime(new Date(pagoRechazado.venceEn!), {
+                    hour: 'numeric', minute: '2-digit', timeZone: 'America/Bogota',
+                  }),
+                })}
+              </p>
+              <Button onClick={reintentarRechazado} disabled={reintentando || redirigiendo}
+                style={{ minHeight: 48, width: '100%', borderRadius: '8px', marginTop: '4px' }}>
+                {reintentando || redirigiendo
+                  ? t('procesando')
+                  : t('reintentarPago', { total: formatPrecio(pagoRechazado.total!, idioma) })}
+              </Button>
+            </>
+          ) : (
+            <p className="checkout-aviso-texto">{t('pagoRechazadoCambio')}</p>
+          )}
+        </div>
+      )}
+
+      {/* Hasta 1023px el lateral cae debajo del formulario y nadie lo veía
+          antes de pagar. Este resumen va arriba, abierto, y se puede plegar. */}
       <ResumenMovil items={items} total={cartTotal} idioma={idioma} />
 
       <div className="shop-columns">
@@ -173,98 +313,87 @@ export default function CheckoutPage() {
           </div>
 
           {pagoEnCurso && (
-            <p role="status" style={{
-              fontSize: '0.9rem', color: 'var(--color-brown)', background: 'rgba(253,195,0,.18)',
-              border: '1px solid var(--color-amber)', borderRadius: '8px', padding: '12px 16px', margin: 0,
-            }}>
-              {t.rich('pagoAnteriorEnCurso', {
-                ver: texto => (
-                  <Link
-                    href={{ pathname: '/checkout/resultado', query: { ref: pagoEnCurso } }}
-                    style={{ color: 'var(--color-crimson)', fontWeight: 700, display: 'inline-block', padding: '10px 0', minHeight: 44 }}
-                  >
-                    {texto}
-                  </Link>
-                ),
-              })}
-            </p>
+            <div role="status" className="checkout-aviso">
+              {/* Con la hora, para que se lea como algo real que está pasando
+                  con su banco y no como un error del sitio. */}
+              <p className="checkout-aviso-texto">
+                {pagoEnCurso.creadoEn
+                  ? t('pagoAnteriorEnCursoHora', {
+                      hora: formato.dateTime(new Date(pagoEnCurso.creadoEn), HORA_CORTA),
+                    })
+                  : t('pagoAnteriorEnCurso')}
+              </p>
+              {/* Dos salidas: mirar cómo va, o escribir para que lo revisen a
+                  mano en Wompi en vez de esperar. */}
+              <div className="checkout-aviso-acciones">
+                <Link
+                  href={{ pathname: '/checkout/resultado', query: { ref: pagoEnCurso.referencia } }}
+                  className="checkout-aviso-enlace"
+                >
+                  {t('verComoVa')}
+                </Link>
+                <a
+                  href={whatsappCon(tw('pagoEnCurso', {
+                    codigo: pagoEnCurso.codigo ?? pagoEnCurso.referencia, referencia: pagoEnCurso.referencia,
+                  }))}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="checkout-aviso-enlace"
+                >
+                  {t('escribirWhatsapp')}
+                </a>
+              </div>
+            </div>
           )}
 
-          {submitError && <p role="alert" style={{ color: 'var(--color-crimson)', fontSize: '0.9rem', margin: 0 }}>{submitError}</p>}
+          {submitError && <p role="alert" className="checkout-error">{submitError}</p>}
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {/* El aviso de pago, que en escritorio va en el lateral, aquí justo
-                antes del botón: en móvil el lateral no se muestra. */}
-            <p className="checkout-resumen-movil" style={{
-              fontSize: '13px', lineHeight: 1.5, color: 'var(--color-brown)', background: '#FFF0D6',
-              border: '1px solid rgba(245,156,0,.55)', borderRadius: '8px', padding: '12px', margin: 0,
-            }}>
-              {avisoPago}
-            </p>
-            <Button type="submit" disabled={isSubmitting || redirigiendo}
-              style={{ width: '100%', minHeight: 50, borderRadius: '8px', fontSize: '17px' }}>
+          <div className="checkout-cierre">
+            <Button type="submit" disabled={bloqueado}
+              style={{
+                width: '100%', minHeight: 50, borderRadius: '8px', fontSize: '17px',
+                cursor: bloqueado ? 'not-allowed' : 'pointer',
+              }}>
               {isSubmitting || redirigiendo
                 ? t('procesando')
-                : t(pagos?.activo ? 'pagar' : 'confirmar', { total: formatPrecio(cartTotal, idioma) })}
+                : t(pagoEnLinea ? 'pagar' : 'confirmar', { total: formatPrecio(cartTotal, idioma) })}
             </Button>
+            {/* Un botón apagado sin explicación parece roto. Si falta algún
+                dato, se dice aquí mismo; si lo frena un pago anterior, ya lo
+                explica el aviso de arriba. */}
+            {!isValid && !pagoEnCurso && (
+              <p className="checkout-falta">{t('faltanDatos')}</p>
+            )}
+            {/* Justo bajo el botón, que es donde se duda: con quién se paga y
+                cuánto aguarda el pedido. Antes iba en el lateral en escritorio
+                y en una caja aparte en móvil; ahora es un solo sitio para todos. */}
+            {pagoEnLinea && (
+              <div className="checkout-pago-seguro">
+                <PagoSeguro />
+                <p className="checkout-reserva">{t('pagoEnLinea')}</p>
+              </div>
+            )}
             {/* El aviso ya decía «aceptas nuestras condiciones de venta», pero no
                 llevaba a ninguna parte. Ahora enlaza los dos textos que el
                 comprador acepta al pulsar el botón —las condiciones de la tienda y
                 el tratamiento de sus datos—, que es lo que hace que la aceptación
                 sea informada y no una frase decorativa. */}
-            <p style={{ textAlign: 'center', fontSize: '0.8125rem', lineHeight: 1.5, color: 'rgba(135,43,19,0.78)', margin: 0 }}>
+            <p className="checkout-condiciones">
               {t.rich('condiciones', {
-                terminos: texto => (
-                  <Link href="/politicas/terminos-tienda" style={{ color: 'var(--color-crimson)', fontWeight: 700 }}>
-                    {texto}
-                  </Link>
-                ),
-                datos: texto => (
-                  <Link href="/politicas/datos-personales" style={{ color: 'var(--color-crimson)', fontWeight: 700 }}>
-                    {texto}
-                  </Link>
-                ),
+                terminos: texto => <Link href="/politicas/terminos-tienda">{texto}</Link>,
+                datos: texto => <Link href="/politicas/datos-personales">{texto}</Link>,
               })}
             </p>
           </div>
         </form>
 
-        {/* Sin `display` en línea: le ganaría a la regla que lo oculta en móvil. */}
-        <aside className="shop-aside checkout-aside" style={{
-          background: 'var(--color-brown)', borderRadius: '12px', padding: '28px',
-        }}>
-          <p style={{
-            fontWeight: 700, fontSize: '13px', letterSpacing: '3px', textTransform: 'uppercase',
-            color: 'var(--color-gold)', margin: 0,
-          }}>
-            {t('resumenPedido')}
-          </p>
+        {/* Misma tarjeta crema que el resumen del carrito: el cliente reconoce
+            el pedido que acaba de revisar. Sin `display` en línea: le ganaría
+            a la regla que lo oculta hasta 1023px. */}
+        <aside className="shop-aside checkout-aside">
+          <h2 className="cart-resumen-titulo">{t('resumenPedido')}</h2>
           <ListaResumen items={items} total={cartTotal} idioma={idioma} />
-          {pagos?.activo ? (
-            // El escudo dice «pago seguro» sin una frase más: el nombre accesible
-            // lo da `aria-label` para quien no ve el ícono.
-            <div style={{
-              display: 'flex', alignItems: 'flex-start', gap: '10px', background: 'rgba(255,234,202,.08)',
-              borderRadius: '8px', padding: '12px',
-            }}>
-              <ShieldCheck
-                role="img"
-                aria-label={t('pagoSeguro')}
-                size={20}
-                strokeWidth={1.75}
-                style={{ flexShrink: 0, color: 'var(--color-gold)' }}
-              >
-                <title>{t('pagoSeguro')}</title>
-              </ShieldCheck>
-              <p style={{ fontSize: '13px', lineHeight: 1.5, color: 'rgba(255,234,202,0.85)', margin: 0, minWidth: 0 }}>
-                {t('pagoEnLinea')}
-              </p>
-            </div>
-          ) : (
-            <p style={{ fontSize: '13px', lineHeight: 1.5, color: 'rgba(255,234,202,0.85)', margin: 0 }}>
-              {t('coordinamosMetodo')}
-            </p>
-          )}
+          <Link href="/carrito" className="checkout-editar">{t('editarCarrito')}</Link>
         </aside>
       </div>
     </section>
@@ -277,86 +406,70 @@ interface ResumenProps {
   idioma: string
 }
 
-/** Productos, envío y total. La comparten el lateral de escritorio y el resumen de móvil. */
+/** Productos, total y envío. La comparten el lateral de escritorio y el resumen de móvil. */
 function ListaResumen({ items, total, idioma }: ResumenProps) {
   const t = useTranslations('tienda.checkout')
   const tc = useTranslations('tienda.carrito')
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', color: 'var(--color-cream)' }}>
-      <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '14px' }}>
+    <div className="checkout-lista">
+      <ul className="checkout-items">
         {items.map(item => (
-          <li key={item.productoId} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{
-              width: 48, height: 48, flex: 'none', borderRadius: '8px', overflow: 'hidden',
-              background: 'var(--color-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
+          <li key={item.productoId} className="checkout-item">
+            <span className="checkout-item-media">
               {/* alt vacío: el nombre del producto está escrito al lado. */}
               {item.imagen
                 // eslint-disable-next-line @next/next/no-img-element
-                ? <img src={item.imagen} alt="" width={96} height={96} loading="lazy" decoding="async"
-                       style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                : <span aria-hidden="true" style={{ fontSize: '1.25rem' }}>🍫</span>}
+                ? <img src={item.imagen} alt="" width={96} height={96} loading="lazy" decoding="async" />
+                : <span aria-hidden="true">🍫</span>}
             </span>
-            <span style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              <span style={{ fontWeight: 700, fontSize: '15px' }}>{item.nombre}</span>
-              <span style={{ fontSize: '13px', color: 'rgba(255,234,202,.75)' }}>
+            <span className="checkout-item-info">
+              <span className="checkout-item-nombre">{item.nombre}</span>
+              <span className="checkout-item-detalle">
                 {t('cantidadPorPrecio', { q: item.q, precio: formatPrecio(item.precio, idioma) })}
               </span>
             </span>
-            <span style={{ fontWeight: 700, flex: 'none' }}>{formatPrecio(item.precio * item.q, idioma)}</span>
+            <span className="checkout-item-total">{formatPrecio(item.precio * item.q, idioma)}</span>
           </li>
         ))}
       </ul>
-      <div style={{ height: '1px', background: 'rgba(253,195,0,.35)' }} />
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', fontSize: '15px' }}>
-        <span>{tc('envio')}</span>
-        <span style={{ fontWeight: 700 }}>{tc('aCoordinar')}</span>
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '12px' }}>
-        <span style={{ fontWeight: 700, fontSize: '1.25rem' }}>{t('total')}</span>
-        <span style={{ fontWeight: 700, fontSize: '1.5rem', color: 'var(--color-gold)' }}>{formatPrecio(total, idioma)}</span>
+      {/* Como en el carrito: el envío no suma aquí, así que va en gris bajo el
+          total diciendo qué pasa con él, y no como una línea más del cálculo. */}
+      <div>
+        <div className="cart-resumen-total">
+          <span>{t('total')}</span>
+          <span className="cart-resumen-cifra">{formatPrecio(total, idioma)}</span>
+        </div>
+        <p className="cart-resumen-envio">{tc('envioCotiza')}</p>
       </div>
     </div>
   )
 }
 
-/** El resumen de arriba en móvil: abierto al entrar, para confirmar qué se paga antes de escribir los datos. */
+/** El resumen de arriba hasta 1023px: abierto al entrar, para confirmar qué se paga antes de escribir los datos. */
 function ResumenMovil({ items, total, idioma }: ResumenProps) {
   const t = useTranslations('tienda.checkout')
   const [abierto, setAbierto] = useState(true)
   const n = items.reduce((suma, item) => suma + item.q, 0)
   return (
-    <div className="checkout-resumen-movil" style={{
-      background: 'var(--color-brown)', color: 'var(--color-cream)', borderRadius: '12px',
-      marginBottom: '24px', overflow: 'hidden',
-    }}>
+    <div className="checkout-resumen-movil">
       <button
         type="button"
         onClick={() => setAbierto(a => !a)}
         aria-expanded={abierto}
         aria-controls="checkout-resumen-detalle"
-        style={{
-          width: '100%', minHeight: 56, padding: '0 16px', border: 0, background: 'transparent',
-          color: 'inherit', fontFamily: 'var(--font-body)', fontSize: '15px', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px',
-        }}
+        className="checkout-resumen-movil-boton"
       >
-        <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, minWidth: 0, textAlign: 'left' }}>
+        <span className="checkout-resumen-movil-rotulo">
           {t(abierto ? 'ocultarResumen' : 'verResumen', { n })}
           <ChevronDown size={16} strokeWidth={2.5} aria-hidden="true"
-            style={{ flex: 'none', color: 'var(--color-gold)', transform: abierto ? 'rotate(180deg)' : undefined, transition: 'transform .2s' }} />
+            className="checkout-resumen-movil-flecha" data-abierto={abierto} />
         </span>
-        <span style={{ fontWeight: 700, fontSize: '18px', color: 'var(--color-gold)', flex: 'none' }}>{formatPrecio(total, idioma)}</span>
+        <span className="cart-resumen-cifra">{formatPrecio(total, idioma)}</span>
       </button>
       {abierto && (
-        <div id="checkout-resumen-detalle" style={{ padding: '14px 16px 8px', borderTop: '1px solid rgba(253,195,0,.25)' }}>
+        <div id="checkout-resumen-detalle" className="checkout-resumen-movil-detalle">
           <ListaResumen items={items} total={total} idioma={idioma} />
-          <Link href="/carrito" style={{
-            display: 'inline-flex', alignItems: 'center', minHeight: 44, marginTop: '4px',
-            fontSize: '14px', fontWeight: 700, color: 'var(--color-gold)',
-          }}>
-            {t('editarCarrito')}
-          </Link>
+          <Link href="/carrito" className="checkout-editar">{t('editarCarrito')}</Link>
         </div>
       )}
     </div>

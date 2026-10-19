@@ -268,6 +268,22 @@ describe('Pagos: casos en que el pago no se completa', () => {
       .rejects.toThrow(ConflictException)
   })
 
+  it('caso 4 · el estado avisa al checkout si el banco tiene el pago en curso', async () => {
+    const e = montar()
+    e.pedido()
+    const { referencia } = await e.pagos.crearIntento({ pedidoId: 'ped1' }, T0)
+
+    // Abrió la pasarela y la cerró: no hay transacción, puede reintentar ya.
+    expect(await e.pagos.estadoPublico(referencia, T0)).toMatchObject({ estado: 'pendiente', enCurso: false })
+
+    await e.webhook(referencia, 'pendiente', 100000, { metodo: 'pse' })
+    expect(await e.pagos.estadoPublico(referencia, new Date(T0.getTime() + 2 * HORA)))
+      .toMatchObject({ estado: 'pendiente', enCurso: true })
+    // Pasado el tope deja de contar como en curso, igual que en el vencimiento.
+    expect(await e.pagos.estadoPublico(referencia, new Date(T0.getTime() + 25 * HORA)))
+      .toMatchObject({ enCurso: false })
+  })
+
   it('caso 4 · pasado el tope de 24 horas, vence igual', async () => {
     const e = montar()
     e.pedido()

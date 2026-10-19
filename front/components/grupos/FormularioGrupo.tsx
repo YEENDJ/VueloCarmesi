@@ -50,9 +50,8 @@ export default function FormularioGrupo() {
     defaultValues: { tipo: 'colegio', experiencias: [] },
   })
 
-  // El bloque de edades solo tiene sentido con menores de por medio, y el NIT
-  // solo si pidió factura. Mostrarlos siempre alarga el formulario con dos
-  // campos que la mayoría deja vacíos.
+  // El bloque de edades solo tiene sentido con menores de por medio: mostrarlo
+  // siempre alarga el formulario con un campo que la mayoría deja vacío.
   //
   // `useWatch` y no el `watch()` que devuelve useForm: ese último es una
   // función que el compilador de React no puede memoizar, así que deja el
@@ -60,7 +59,6 @@ export default function FormularioGrupo() {
   // además solo vuelve a pintar por el campo que observa, no por cada tecla
   // de cualquier campo del formulario.
   const tipo = useWatch({ control, name: 'tipo' })
-  const requiereFactura = useWatch({ control, name: 'requiereFactura' })
   const mensaje = useWatch({ control, name: 'mensaje' }) ?? ''
 
   const onSubmit = async (data: SolicitudGrupoFormValues) => {
@@ -71,14 +69,13 @@ export default function FormularioGrupo() {
         headers: { 'Content-Type': 'application/json' },
         // Los opcionales vacíos no se mandan: el DTO los valida con @IsOptional
         // y una cadena vacía en `fechaTentativa` no es una fecha ISO válida.
-        // Edades y NIT solo si su campo está a la vista: si alguien los llenó y
-        // luego cambió de colegio a empresa, o desmarcó la factura, el valor
-        // seguía en el formulario y llegaba a la cotización sin venir a cuento.
+        // Edades solo si su campo está a la vista: si alguien las llenó y luego
+        // cambió de colegio a empresa, el valor seguía en el formulario y
+        // llegaba a la cotización sin venir a cuento.
         body: JSON.stringify({
           ...data,
           cargo: data.cargo || undefined,
           edades: (data.tipo === 'colegio' && data.edades) || undefined,
-          nit: (data.requiereFactura && data.nit) || undefined,
           mensaje: data.mensaje || undefined,
           fechaTentativa: data.fechaTentativa || undefined,
         }),
@@ -273,31 +270,6 @@ export default function FormularioGrupo() {
           ))}
         </div>
       </fieldset>
-
-      <div className="grp-checks grp-checks--apilado">
-        <label className="grp-check">
-          <input type="checkbox" {...register('requiereFactura')} />
-          <span>{t('requiereFactura')}</span>
-        </label>
-      </div>
-
-      {requiereFactura && (
-        <div className="grp-campo">
-          <label htmlFor="nit">{t('nit')}</label>
-          {/* Opcional aunque haya factura: pedirlo como obligatorio frena la
-              solicitud de quien no lo tiene a mano, y se puede pedir al cotizar. */}
-          <input
-            id="nit"
-            type="text"
-            maxLength={40}
-            aria-describedby="ayuda-nit"
-            aria-invalid={!!errors.nit}
-            {...register('nit')}
-          />
-          <span id="ayuda-nit" className="grp-ayuda">{t('nitAyuda')}</span>
-          {errors.nit?.message && <span className="grp-error">{t(errors.nit.message)}</span>}
-        </div>
-      )}
 
       <div className="grp-campo">
         <label htmlFor="mensaje">{t('mensaje')}</label>

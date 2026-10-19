@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import {
   addToCart, inc, dec, remove, clearCart, setLastOrder,
   getCartItems, getCartCount, getCartTotal, getToast, getLastOrder,
+  getMiniCarrito, cerrarMiniCarrito,
 } from './store'
 import type { Producto } from '@/lib/types'
 
@@ -14,6 +15,7 @@ function makeProducto(overrides: Partial<Producto> = {}): Producto {
 }
 
 beforeEach(() => {
+  cerrarMiniCarrito()
   clearCart()
   setLastOrder(null)
   localStorage.clear()
@@ -58,6 +60,30 @@ describe('addToCart', () => {
     // español fijo para todo el mundo, que es justo el bug que hubo.
     addToCart(makeProducto({ nombre: 'Tableta' }), 1)
     expect(JSON.stringify(getToast())).not.toMatch(/agregado al carrito|added to cart/)
+  })
+})
+
+describe('mini-carrito', () => {
+  it('se abre al agregar, con lo que se acaba de agregar', () => {
+    addToCart(makeProducto(), 2)
+    expect(getMiniCarrito()).toEqual({ clave: 'agregados', nombre: 'Chocolate Negro 70%', n: 2 })
+  })
+
+  it('no se abre si quien agrega lo pide así', () => {
+    addToCart(makeProducto(), 1, { abrirMiniCarrito: false })
+    expect(getMiniCarrito()).toBeNull()
+    expect(getCartCount()).toBe(1)
+  })
+
+  it('no se abre con un producto agotado', () => {
+    addToCart(makeProducto({ stock: 0 }))
+    expect(getMiniCarrito()).toBeNull()
+  })
+
+  it('cerrarMiniCarrito lo cierra', () => {
+    addToCart(makeProducto())
+    cerrarMiniCarrito()
+    expect(getMiniCarrito()).toBeNull()
   })
 })
 
