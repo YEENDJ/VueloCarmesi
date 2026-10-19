@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { Test } from '@nestjs/testing'
-import { ConflictException } from '@nestjs/common'
+import { ConflictException, NotFoundException } from '@nestjs/common'
 import { PedidosService } from './pedidos.service'
 import { PrismaService } from '../prisma.service'
 import { NotificacionesService } from '../notificaciones/notificaciones.service'
@@ -24,7 +24,7 @@ const mockTx = {
 
 const mockPrisma = {
   $transaction: jest.fn((cb: (tx: typeof mockTx) => unknown) => cb(mockTx)),
-  pedido: { findUnique: jest.fn(), delete: jest.fn() },
+  pedido: { findUnique: jest.fn(), findFirst: jest.fn(), update: jest.fn(), delete: jest.fn() },
   pago: { count: jest.fn() },
 }
 
@@ -237,5 +237,78 @@ describe('PedidosService.remove', () => {
     await expect(service.remove('ped1')).rejects.toThrow(ConflictException)
     expect(mockPrisma.pago.count).toHaveBeenCalledWith({ where: { pedidoId: 'ped1' } })
     expect(mockPrisma.pedido.delete).not.toHaveBeenCalled()
+  })
+})
+
+describe('PedidosService: consulta pública «mi pedido»', () => {
+  let service: PedidosService
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        PedidosService,
+        { provide: PrismaService, useValue: mockPrisma },
+        { provide: NotificacionesService, useValue: mockNotificaciones },
+        { provide: PagosService, useValue: mockPagos },
+        { provide: VencimientoService, useValue: mockVencimiento },
+      ],
+    }).compile()
+    service = module.get(PedidosService)
+    jest.clearAllMocks()
+  })
+
+  it('crea el pedido con su token de consulta', async () => {
+    mockPrisma.$transaction.mockImplementation((cb: (tx: typeof mockTx) => unknown) => cb(mockTx))
+    mockTx.producto.findMany.mockResolvedValue([{ id: 'p1', nombre: 'Chocolate', precio: 1000, stock: 10 }])
+    mockTx.pedido.create.mockResolvedValue({ id: 'ped1', estado: 'pendiente' })
+    await service.create({ ...DATOS, items: [{ productoId: 'p1', cantidad: 1 }] } as never)
+    const token = mockTx.pedido.create.mock.calls[0][0].data.tokenConsulta
+    expect(token).toMatch(/^[A-Za-z0-9_-]{43}$/)
+  })
+
+  it('por token devuelve la vista sin datos del cliente', async () => {
+    mockPrisma.pedido.findUnique.mockResolvedValue({
+      id: 'cm0000000000000000ab12cd', estado: 'pagado', total: 5000, venceEn: null,
+      createdAt: new Date('2026-10-14T15:00:00Z'), nombre: 'Ana', email: 'ana@example.com',
+      telefono: '3001234567', direccion: 'Calle 10',
+      items: [{ cantidad: 2, precio: 2500, producto: { nombre: 'Chocolate', imagen: '', slug: 'chocolate' } }],
+      pagos: [{ referencia: 'VC-P-1', estado: 'aprobado', createdAt: new Date() }],
+    })
+    const vista = await service.porToken('tok')
+    expect(vista).toMatchObject({ codigo: 'VC-AB12CD', estado: 'pagado', total: 5000, referenciaPago: 'VC-P-1' })
+    expect(JSON.stringify(vista)).not.toMatch(/Ana|ana@example|3001234567|Calle 10/)
+  })
+
+  it('por token inexistente: 404', async () => {
+    mockPrisma.pedido.findUnique.mockResolvedValue(null)
+    await expect(service.porToken('nada')).rejects.toThrow(NotFoundException)
+  })
+
+  it('consulta con código corto y correo, sin distinguir mayúsculas', async () => {
+    mockPrisma.pedido.findFirst.mockResolvedValue({ id: 'cm0000000000000000ab12cd', tokenConsulta: 'tok' })
+    await expect(service.consultar({ codigo: '#vc-AB12CD', email: 'ANA@example.com' })).resolves.toEqual({ token: 'tok' })
+    expect(mockPrisma.pedido.findFirst.mock.calls[0][0].where).toEqual({
+      id: { endsWith: 'ab12cd' },
+      email: { equals: 'ANA@example.com', mode: 'insensitive' },
+    })
+  })
+
+  it('consulta con el id completo que traían los correos viejos', async () => {
+    mockPrisma.pedido.findFirst.mockResolvedValue({ id: 'cm0000000000000000ab12cd', tokenConsulta: 'tok' })
+    await service.consultar({ codigo: 'cm0000000000000000ab12cd', email: 'ana@example.com' })
+    expect(mockPrisma.pedido.findFirst.mock.calls[0][0].where.id).toBe('cm0000000000000000ab12cd')
+  })
+
+  it('a un pedido viejo sin token le crea uno la primera vez', async () => {
+    mockPrisma.pedido.findFirst.mockResolvedValue({ id: 'ped-viejo', tokenConsulta: null })
+    const { token } = await service.consultar({ codigo: 'VC-AB12CD', email: 'ana@example.com' })
+    expect(token).toMatch(/^[A-Za-z0-9_-]{43}$/)
+    expect(mockPrisma.pedido.update).toHaveBeenCalledWith({ where: { id: 'ped-viejo' }, data: { tokenConsulta: token } })
+  })
+
+  it('código o correo que no coinciden: el mismo 404, sin decir cuál', async () => {
+    mockPrisma.pedido.findFirst.mockResolvedValue(null)
+    await expect(service.consultar({ codigo: 'VC-AB12CD', email: 'otra@example.com' })).rejects.toThrow(NotFoundException)
+    await expect(service.consultar({ codigo: 'basura!!', email: 'ana@example.com' })).rejects.toThrow(NotFoundException)
   })
 })

@@ -126,6 +126,11 @@ model Pedido {
   /// o no según por qué llegó ahí. Devolver stock mirando solo el estado las
   /// devolvía dos veces. Quien devuelve las unidades lo pone en false.
   stockApartado Boolean     @default(true)
+  /// Llave de la página pública «mi pedido». Sin registro, es lo que deja al
+  /// cliente ver cómo va su compra: va en el enlace del correo y se entrega al
+  /// consultar con código y correo. Larga y aleatoria, no se puede adivinar.
+  /// Nula en los pedidos anteriores: se crea la primera vez que se consultan.
+  tokenConsulta String?     @unique
   createdAt    DateTime     @default(now())
   items        ItemPedido[]
   pagos        Pago[]
