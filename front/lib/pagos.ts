@@ -27,6 +27,14 @@ export interface EstadoPublico {
   venceEn: string | null
   total: number | null
   codigo: string | null
+  /**
+   * El banco tiene la transacción y no ha respondido (PSE o Nequi en curso),
+   * con el mismo tope de 24 h del backend. Opcional: un backend anterior a
+   * este campo no lo manda.
+   */
+  enCurso?: boolean
+  /** Cuándo se abrió este intento de pago (ISO). */
+  creadoEn?: string
 }
 
 export interface Intento {

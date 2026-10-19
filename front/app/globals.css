@@ -16,6 +16,49 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Texto solo para lectores de pantalla: fuera de la vista, pero en el árbol
+   de accesibilidad (display: none o visibility: hidden lo callarían). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Barras de scroll con la paleta: pulgar café sobre riel crema, en vez del
+   gris del sistema que desentonaba con el fondo. scrollbar-color se hereda,
+   así que esta sola regla alcanza también los scrolls internos (mini-carrito,
+   galerías, carruseles). Los ::-webkit-scrollbar son para Safari, que aún no
+   entiende scrollbar-color; Chrome y Firefox usan la propiedad estándar y los
+   ignoran. Solo en .sitio: el panel de administración tiene su propio fondo. */
+html.sitio {
+  scrollbar-color: rgba(135, 43, 19, 0.45) var(--color-cream);
+}
+html.sitio::-webkit-scrollbar,
+.sitio ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+html.sitio::-webkit-scrollbar-track,
+.sitio ::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+html.sitio::-webkit-scrollbar-thumb,
+.sitio ::-webkit-scrollbar-thumb {
+  background-color: rgba(135, 43, 19, 0.45);
+  border: 3px solid var(--color-cream);
+  border-radius: 999px;
+}
+html.sitio::-webkit-scrollbar-thumb:hover,
+.sitio ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(135, 43, 19, 0.7);
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--color-cream);
@@ -1797,16 +1840,264 @@ select.campo-control {
   letter-spacing: 0;
 }
 
-/* Resumen plegable del checkout: solo en móvil, donde el lateral queda
-   debajo del formulario y nadie lo ve antes de pagar. */
-.checkout-resumen-movil {
+/* ─────────────────────────────────────────────────────────
+   Checkout: mismo lenguaje que el carrito (tarjeta crema, total en ámbar,
+   envío en gris, «pago seguro» bajo el botón).
+   ───────────────────────────────────────────────────────── */
+
+/* Base móvil: el resumen va arriba, plegable, y el lateral no se muestra
+   (caería debajo del formulario, después del botón de pagar). Desde 1024px,
+   igual que el carrito, el lateral viaja fijo a la derecha. */
+.checkout-aside {
   display: none;
 }
 
-.checkout-aside {
+.checkout-resumen-movil {
+  margin-bottom: 24px;
+  background: var(--color-cream);
+  border: 1px solid rgba(135, 43, 19, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(135, 43, 19, 0.12);
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .checkout-resumen-movil {
+    display: none;
+  }
+
+  .checkout-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: var(--color-cream);
+    border: 1px solid rgba(135, 43, 19, 0.15);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 16px rgba(135, 43, 19, 0.16);
+  }
+
+  .checkout-aside .cart-resumen-titulo {
+    margin: 0;
+  }
+}
+
+.checkout-resumen-movil-boton {
+  width: 100%;
+  min-height: 56px;
+  padding: 0 16px;
+  border: 0;
+  background: transparent;
+  color: var(--color-brown);
+  font-family: var(--font-body);
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.checkout-resumen-movil-boton .cart-resumen-cifra {
+  flex: none;
+  font-weight: 700;
+}
+
+.checkout-resumen-movil-rotulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-weight: 700;
+  text-align: left;
+}
+
+.checkout-resumen-movil-flecha {
+  flex: none;
+  color: var(--color-amber);
+  transition: transform 0.2s;
+}
+.checkout-resumen-movil-flecha[data-abierto='true'] {
+  transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .checkout-resumen-movil-flecha { transition: none; }
+}
+
+.checkout-resumen-movil-detalle {
+  padding: 14px 16px 8px;
+  border-top: 1px solid rgba(135, 43, 19, 0.15);
+}
+
+/* Lista de productos y total, compartida por el lateral y el plegable. */
+.checkout-lista {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
+  color: var(--color-brown);
+}
+
+.checkout-items {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-bottom: 1px solid rgba(135, 43, 19, 0.15);
+}
+
+.checkout-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.checkout-item-media {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+.checkout-item-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.checkout-item-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.checkout-item-nombre {
+  font-weight: 700;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+.checkout-item-detalle {
+  font-size: 0.85rem;
+  opacity: 0.65;
+}
+.checkout-item-total {
+  flex: none;
+  font-weight: 700;
+}
+
+/* «Editar carrito»: antes solo existía en el plegable de móvil. */
+.checkout-editar {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: 44px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-crimson);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Pago anterior aún sin respuesta del banco. */
+.checkout-aviso {
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  color: var(--color-brown);
+  background: rgba(253, 195, 0, 0.18);
+  border: 1px solid var(--color-amber);
+  border-radius: 8px;
+}
+.checkout-aviso-texto {
+  margin: 0;
+}
+
+/* Pago anterior rechazado: va sobre el formulario, en tono de error, con su
+   propio botón para reintentar el mismo pedido. */
+.checkout-aviso--rechazo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+  background: rgba(213, 19, 18, 0.06);
+  border-color: rgba(213, 19, 18, 0.45);
+}
+.checkout-aviso-titulo {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-crimson);
+}
+/* «Ver cómo va» y «Escríbenos por WhatsApp»: en fila si caben, si no apiladas. */
+.checkout-aviso-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 20px;
+}
+.checkout-aviso-enlace {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+  color: var(--color-crimson);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.checkout-error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-crimson);
+}
+
+/* Botón de pagar y lo que se lee justo debajo. */
+.checkout-cierre {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkout-pago-seguro {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.checkout-pago-seguro .cart-pago-seguro,
+.checkout-pago-seguro .cart-pago-seguro-texto {
+  margin: 0;
+}
+/* Por qué el botón de pagar está apagado. */
+.checkout-falta {
+  margin: 0;
+  font-size: 0.85rem;
+  text-align: center;
+  color: rgba(135, 43, 19, 0.8);
+}
+
+.checkout-reserva {
+  margin: 0;
+  font-size: 0.8rem;
+  text-align: center;
+  color: rgba(135, 43, 19, 0.7);
+}
+
+.checkout-condiciones {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-align: center;
+  color: rgba(135, 43, 19, 0.78);
+}
+.checkout-condiciones a {
+  color: var(--color-crimson);
+  font-weight: 700;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -1866,6 +2157,15 @@ select.campo-control {
   flex: 1 1 140px;
   min-width: 0;
 }
+.cart-row-nombre {
+  font-weight: 700;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.cart-row-unitario {
+  opacity: 0.6;
+  font-size: 0.85rem;
+}
 
 .cart-row-total {
   font-weight: 700;
@@ -1878,18 +2178,586 @@ select.campo-control {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  flex: none;
+  width: 44px;
+  height: 44px;
   background: none;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1rem;
-  color: rgba(135, 43, 19, 0.5);
+  color: rgba(135, 43, 19, 0.75);
 }
 .cart-row-remove:hover {
   color: var(--color-crimson);
   background: rgba(213, 19, 18, 0.08);
+}
+
+/* «Seguir comprando» y «Vaciar carrito»: en móvil, dos columnas iguales en
+   una sola fila. Con flex-wrap se apilaban en cuanto el primero no dejaba
+   sitio al segundo, que en un celular es siempre. Desde 560px vuelven a sus
+   anchos naturales, uno a cada extremo. */
+.cart-acciones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 560px) {
+  .cart-acciones {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+}
+.cart-acciones {
+  align-items: center;
+}
+
+.cart-titulo {
+  margin: 0 0 clamp(1rem, 3vw, 1.5rem);
+  color: var(--color-brown);
+  font-size: clamp(1.6rem, 5vw, 2.25rem);
+  line-height: 1.15;
+}
+
+/* «Vaciar carrito» como enlace discreto; la confirmación es .cart-alerta. */
+.cart-vaciar {
+  min-height: 44px;
+  padding: 0 4px;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: rgba(135, 43, 19, 0.7);
+  background: none;
+  border: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  justify-self: end;
+}
+.cart-vaciar:hover {
+  color: var(--color-crimson);
+}
+/* Alerta de «¿Vaciar el carrito?»: un <dialog> modal centrado. */
+.cart-alerta {
+  width: min(400px, calc(100% - 32px));
+  max-width: 100%;
+  margin: auto;
+  padding: 0;
+  border: none;
+  border-radius: 14px;
+  background: var(--color-cream);
+  color: var(--color-brown);
+  box-shadow: 0 16px 48px rgba(40, 15, 5, 0.35);
+}
+.cart-alerta[open] {
+  animation: cart-alerta-entra 0.18s ease-out;
+}
+.cart-alerta::backdrop {
+  background: rgba(40, 15, 5, 0.5);
+}
+@keyframes cart-alerta-entra {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cart-alerta[open] { animation: none; }
+}
+.cart-alerta-marco {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(20px, 5vw, 28px);
+}
+.cart-alerta-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: rgba(213, 19, 18, 0.1);
+  color: var(--color-crimson);
+}
+.cart-alerta-titulo {
+  margin: 0 0 8px;
+  color: var(--color-brown);
+  font-size: clamp(1.25rem, 4vw, 1.4rem);
+}
+.cart-alerta-texto {
+  margin: 0 0 20px;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+.cart-alerta-botones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+.cart-alerta-boton {
+  min-height: 44px;
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-brown);
+  background: transparent;
+  border: 1.5px solid rgba(135, 43, 19, 0.35);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.cart-alerta-boton--peligro {
+  color: var(--color-cream);
+  background: var(--color-crimson);
+  border-color: var(--color-crimson);
+}
+.cart-alerta-boton:focus-visible {
+  outline: 2px solid var(--color-brown);
+  outline-offset: 2px;
+}
+
+.cart-resumen-titulo {
+  margin: 0 0 1rem;
+  color: var(--color-brown);
+  font-size: var(--fs-h3);
+}
+.cart-resumen-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--color-brown);
+}
+.cart-resumen-cifra {
+  font-size: clamp(1.4rem, 4vw, 1.6rem);
+  color: var(--color-amber);
+}
+.cart-resumen-envio {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: rgba(135, 43, 19, 0.65);
+}
+
+/* Bajo «Ir a pagar» (carrito y mini-carrito): PagoSeguro.tsx. */
+.cart-pago-seguro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0.6rem;
+}
+.cart-pago-seguro-texto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.8rem;
+  text-align: center;
+  color: rgba(135, 43, 19, 0.7);
+}
+.cart-pago-seguro-texto > svg {
+  flex: none;
+}
+
+/* Logos oficiales tal cual: sin filtros ni recolor, solo a una altura común
+   para que la fila se vea pareja. Envuelven a otra línea si no caben. */
+.cart-medios-pago {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cart-medios-pago > li {
+  display: flex;
+  align-items: center;
+}
+.cart-medios-pago img {
+  display: block;
+  height: 20px;
+  width: auto;
+  max-width: 96px;
+  object-fit: contain;
+}
+/* Mientras no estén los logos de Visa y Mastercard: ícono + rótulo, con el
+   mismo alto que los logos para que la fila quede alineada. */
+.cart-medio-tarjeta {
+  gap: 5px;
+  height: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: rgba(135, 43, 19, 0.8);
+}
+.cart-medio-tarjeta > svg {
+  flex: none;
+}
+/* El logo de Wompi dentro de la frase, a la altura de la letra. */
+.cart-pago-wompi {
+  display: inline-block;
+  height: 13px;
+  width: auto;
+  vertical-align: -1px;
+  margin-left: 2px;
+}
+
+/* Columna derecha del carrito: el resumen y, debajo, las sugerencias. En
+   escritorio quedan al lado del botón de checkout y se ven sin scroll.
+   Cuando la columna baja bajo los ítems (≤1023px), column-reverse pone las
+   sugerencias antes del resumen: quien baja a pagar pasa por ellas. */
+.cart-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 1023px) {
+  .cart-aside {
+    flex-direction: column-reverse;
+  }
+}
+
+/* Escritorio: la columna entera (.shop-aside) ya es sticky. Con el resumen
+   compacto y tres sugerencias cabe en la pantalla sin scroll propio. */
+
+/* Móvil y tablet: barra fija con el total y «Ir a pagar» mientras el resumen
+   (que aquí va al final) no está a la vista. Hermana de .ficha-prod-barra. */
+.cart-barra-pago {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--color-brown);
+  padding: 12px var(--contenido-margen);
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -4px 18px rgba(74, 23, 9, 0.28);
+  animation: ficha-barra-entra 180ms ease-out;
+}
+@media (min-width: 1024px) {
+  .cart-barra-pago { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cart-barra-pago { animation: none; }
+}
+
+.cart-barra-pago-total {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.cart-barra-pago-rotulo {
+  color: var(--color-cream);
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+.cart-barra-pago-cifra {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 5vw, 26px);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-gold);
+  overflow-wrap: anywhere;
+}
+
+/* «¿Te llevas algo más?»: hasta cinco filas compactas (foto, nombre, precio
+   y un botón + de 44px) para que quepan en los 320px de la columna. */
+.cart-sugerencias {
+  background: var(--color-cream);
+  border: 1px solid rgba(135, 43, 19, 0.15);
+  border-radius: 12px;
+  padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.cart-sugerencias-titulo {
+  color: var(--color-crimson);
+  font-size: clamp(1rem, 3vw, 1.1rem);
+  margin: 0 0 0.6rem;
+}
+
+.cart-sugerencias-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cart-sugerencia {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(135, 43, 19, 0.1);
+}
+
+.cart-sugerencia-media {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+.cart-sugerencia-media img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cart-sugerencia-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cart-sugerencia-nombre {
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  color: var(--color-brown);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cart-sugerencia-precio {
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--color-crimson);
+}
+
+.cart-sugerencia-agregar {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-cream);
+  background: var(--color-crimson);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.cart-sugerencia-agregar:hover {
+  filter: brightness(1.1);
+}
+.cart-sugerencia-agregar:focus-visible {
+  outline: 2px solid var(--color-brown);
+  outline-offset: 2px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Mini-carrito: panel lateral que se abre al agregar
+   ───────────────────────────────────────────────────────── */
+/* Un <dialog> en la capa superior, pegado al borde derecho. En móvil ocupa
+   todo el ancho; desde 440px se queda en 420px y deja ver la página detrás. */
+.mini-carrito {
+  position: fixed;
+  inset: 0 0 0 auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  width: min(420px, 100%);
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  background: var(--color-cream);
+  color: var(--color-brown);
+  box-shadow: -8px 0 32px rgba(40, 15, 5, 0.25);
+}
+.mini-carrito[open] {
+  animation: mini-carrito-entra 0.25s ease-out;
+}
+.mini-carrito::backdrop {
+  background: rgba(40, 15, 5, 0.45);
+}
+@keyframes mini-carrito-entra {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mini-carrito[open] {
+    animation: none;
+  }
+}
+
+/* La página de atrás no se desplaza mientras el panel está abierto. */
+html:has(.mini-carrito[open]) {
+  overflow: hidden;
+}
+
+.mini-carrito-marco {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mini-carrito-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px clamp(16px, 4vw, 24px);
+  border-bottom: 1px solid rgba(135, 43, 19, 0.12);
+}
+
+.mini-carrito-titulo {
+  margin: 0;
+  color: var(--color-brown);
+  font-size: clamp(1.25rem, 4vw, 1.4rem);
+}
+
+.mini-carrito-cerrar {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: var(--color-brown);
+  cursor: pointer;
+}
+.mini-carrito-cerrar:hover {
+  background: rgba(135, 43, 19, 0.08);
+}
+
+/* Lo único que se desplaza: cabecera y pie con los botones quedan fijos. */
+.mini-carrito-cuerpo {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 16px clamp(16px, 4vw, 24px);
+}
+
+.mini-carrito-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Misma medida que las filas de sugerencias (.cart-sugerencia): foto de
+   56px, 10px arriba y abajo, separador fino. Con fotos de 48 contra 56 los
+   productos que ya lleva se veían menores que los que se le ofrecen. */
+.mini-carrito-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+.mini-carrito-item + .mini-carrito-item {
+  border-top: 1px solid rgba(135, 43, 19, 0.1);
+}
+
+.mini-carrito-item-media {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+.mini-carrito-item-media img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mini-carrito-item-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.875rem;
+}
+
+.mini-carrito-item-nombre {
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.mini-carrito-item-precio {
+  opacity: 0.7;
+}
+
+/* Dentro del panel las sugerencias no llevan tarjeta propia: ya están sobre
+   el fondo crema del panel, y el borde doble se veía como una caja en otra. */
+.mini-carrito .cart-sugerencias {
+  margin-top: 16px;
+  padding: 16px 0 0;
+  border: none;
+  border-top: 2px solid var(--color-gold);
+  border-radius: 0;
+  background: none;
+}
+
+.mini-carrito-pie {
+  display: grid;
+  gap: 10px;
+  padding: 14px clamp(16px, 4vw, 24px) calc(14px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(135, 43, 19, 0.12);
+  box-shadow: 0 -6px 16px rgba(135, 43, 19, 0.08);
+}
+
+.mini-carrito-subtotal {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.mini-carrito-secundarias {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mini-carrito-seguir {
+  min-height: 44px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-brown);
+  background: none;
+  border: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
 
 /* ═════════════════════════════════════════════════════════
@@ -1994,14 +2862,6 @@ select.campo-control {
     gap: 28px;
   }
 
-  .checkout-resumen-movil {
-    display: block;
-  }
-
-  .checkout-aside {
-    display: none;
-  }
-
   .shop-aside {
     position: static;
     flex-basis: 100%;
@@ -2047,6 +2907,39 @@ select.campo-control {
   .cart-row-remove {
     grid-area: remove;
     justify-self: end;
+  }
+
+  /* Más livianos en celular: con botones de 44px y el nombre a 16px la fila
+     pesaba más que el producto. El − y el + se ven de 34px, pero un ::before
+     invisible extiende el área táctil a 44px, así que siguen igual de fáciles
+     de tocar. Solo en el carrito; la ficha de producto conserva los grandes. */
+  .cart-row-nombre {
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+  .cart-row-unitario {
+    font-size: 0.78rem;
+  }
+  .cart-row-total {
+    font-size: 0.95rem;
+  }
+  .cart-row-cantidad .qty {
+    gap: 6px;
+  }
+  .cart-row-cantidad .qty-btn {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+  }
+  .cart-row-cantidad .qty-btn::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+  }
+  .cart-row-cantidad .qty-valor {
+    min-width: 26px;
+    font-size: 0.95rem;
   }
 }
 
@@ -2512,8 +3405,12 @@ select.campo-control {
   align-items: center;
   justify-content: center;
 }
+/* Se ve apagado pero se distingue: con opacity 0.4 el «−» casi desaparecía
+   y parecía un hueco en la fila. */
 .qty-btn:disabled {
-  opacity: 0.4;
+  color: rgba(135, 43, 19, 0.35);
+  border-color: rgba(135, 43, 19, 0.2);
+  background-color: rgba(135, 43, 19, 0.04);
   cursor: not-allowed;
 }
 
@@ -3360,6 +4257,19 @@ select.campo-control {
 
 /* ─────────────────────────────────────────────────────────
    Línea de tiempo · Nuestra historia (sobre-nosotros)
+
+   Base móvil: sin riel. Cada hito es UNA tarjeta a todo el
+   ancho —cabecera con el icono en disco, el año y la etiqueta;
+   foto 16:9 y texto debajo—. Un riel lateral a 320px se comía
+   56px de un texto que ya va justo, y con los hitos apilados en
+   una sola columna el orden de lectura ya cuenta el recorrido.
+
+   La tarjeta la pinta .historia-bloque; .historia-carta se
+   vuelve `display: contents` para que su cabecera pueda ir
+   por encima de la foto con `order` sin duplicar el marcado.
+   El icono de la cabecera es solo de móvil: en escritorio el
+   mismo icono va en el nodo sobre la línea central.
+   Desde 901px vuelve la alternancia de dos columnas.
    ───────────────────────────────────────────────────────── */
 .historia-timeline {
   position: relative;
@@ -3367,15 +4277,9 @@ select.campo-control {
   margin: 0 auto;
 }
 
-.historia-linea {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 2px;
-  transform: translateX(-50%);
-  background:
-    linear-gradient(180deg, transparent, rgba(135, 43, 19, 0.18) 6%, rgba(135, 43, 19, 0.18) 94%, transparent);
+.historia-linea,
+.historia-nodo {
+  display: none;
 }
 
 .historia-linea::after {
@@ -3403,89 +4307,64 @@ select.campo-control {
 
 .historia-item {
   position: relative;
-  padding: clamp(24px, 4vw, 48px) 0;
-}
-
-.historia-nodo {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 52px;
-  height: 52px;
-  margin-left: -26px;
-  margin-top: -26px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--color-crimson), var(--color-orange));
-  box-shadow: 0 6px 18px rgba(135, 43, 19, 0.3);
-  border: 3px solid var(--color-cream);
-  z-index: 2;
-}
-
-.historia-nodo span {
-  font-size: 22px;
+  padding: 12px 0;
 }
 
 .historia-bloque {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(24px, 3vw, 40px);
-  align-items: center;
-}
-
-.historia-bloque > * {
-  min-width: 0;
-}
-
-.historia-bloque .historia-carta {
-  order: 1;
-  padding-right: clamp(24px, 4vw, 56px);
-}
-
-.historia-bloque .historia-imagen {
-  order: 2;
-}
-
-.historia-bloque-invertido .historia-carta {
-  order: 2;
-  padding-left: clamp(12px, 2vw, 24px);
-  padding-right: clamp(22px, 3vw, 32px);
-}
-
-.historia-bloque-invertido .historia-imagen {
-  order: 1;
-}
-
-.historia-carta {
+  grid-template-columns: minmax(0, 1fr);
   background: #fffdf7;
   border: 1px solid rgba(135, 43, 19, 0.1);
   border-radius: 16px;
-  padding: clamp(22px, 3vw, 30px);
+  overflow: hidden;
   box-shadow: 0 10px 30px rgba(135, 43, 19, 0.08);
 }
 
+.historia-carta {
+  display: contents;
+}
+
+/* Icono a la izquierda ocupando las dos filas; a su derecha el año
+   y, debajo, la etiqueta. Siempre en dos filas, y no en flex-wrap,
+   para que la etiqueta no salte de línea solo en algunos hitos. */
 .historia-cabecera {
+  order: 1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 2px;
+  padding: 16px 16px 12px;
+}
+
+/* El emoji suelto, sin disco: a 32px ya tiene peso propio junto al
+   año y la tarjeta queda más limpia que con un círculo degradado. */
+.historia-icono {
+  grid-row: span 2;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
+  justify-content: center;
+  font-size: 32px;
+  line-height: 1;
 }
 
 .historia-anyo {
   font-family: var(--font-display);
-  font-size: 26px;
+  font-size: 22px;
+  line-height: 32px;
   font-weight: 700;
   color: var(--color-orange);
   letter-spacing: 0.5px;
 }
 
 .historia-etiqueta {
+  justify-self: start;
   font-family: var(--font-body);
   font-weight: 700;
   font-size: 11px;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--color-crimson);
   background: rgba(135, 43, 19, 0.08);
@@ -3493,33 +4372,36 @@ select.campo-control {
   border-radius: 999px;
 }
 
+.historia-imagen {
+  order: 2;
+}
+
 .historia-carta h3 {
+  order: 3;
   font-family: var(--font-display);
-  font-size: clamp(22px, 2.4vw, 28px);
+  font-size: clamp(20px, 2.4vw, 28px);
   color: var(--color-crimson);
   line-height: 1.25;
-  margin-bottom: 14px;
+  margin: 16px 16px 10px;
 }
 
 .historia-carta p {
+  order: 3;
   font-family: var(--font-body);
   font-weight: 500;
   font-size: clamp(15px, 1.3vw, 16px);
-  line-height: 1.75;
+  line-height: 1.7;
   color: var(--color-brown);
   opacity: 0.92;
-  margin-bottom: 12px;
+  margin: 0 16px 12px;
 }
 
 .historia-carta p:last-child {
-  margin-bottom: 0;
+  margin-bottom: 18px;
 }
 
 .historia-media {
-  height: clamp(240px, 30vw, 360px);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 14px 34px rgba(135, 43, 19, 0.16);
+  aspect-ratio: 16 / 9;
 }
 
 .historia-media-sin-foto {
@@ -3530,7 +4412,6 @@ select.campo-control {
   gap: 10px;
   background:
     repeating-linear-gradient(135deg, #f0d6a8 0 14px, #e9cb97 14px 28px);
-  border: 1px solid rgba(135, 43, 19, 0.12);
 }
 
 .historia-sin-foto-icono {
@@ -3548,41 +4429,163 @@ select.campo-control {
   color: rgba(135, 43, 19, 0.45);
 }
 
+/* Solo móvil, y por eso en max-width: framer-motion hace entrar la
+   foto desde ±60px en X, pensado para las dos columnas. En una sola
+   columna eso la saca de la tarjeta, y framer escribe el transform
+   en línea, así que solo un !important lo anula; la opacidad que
+   anima framer sigue funcionando. La tarjeta entera sube con la
+   misma animation-timeline que el riel, y donde no hay soporte
+   simplemente aparece quieta. */
 @media (max-width: 900px) {
+  .historia-imagen {
+    transform: none !important;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .historia-bloque {
+        animation: historia-aparecer linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 60%;
+      }
+    }
+  }
+}
+
+@keyframes historia-aparecer {
+  from {
+    opacity: 0;
+    translate: 0 24px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (min-width: 901px) {
+  /* En dos columnas aparecen la línea central y sus nodos */
   .historia-linea {
-    left: 22px;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    background:
+      linear-gradient(180deg, transparent, rgba(135, 43, 19, 0.18) 6%, rgba(135, 43, 19, 0.18) 94%, transparent);
+  }
+
+  .historia-item {
+    padding: clamp(24px, 4vw, 48px) 0;
   }
 
   .historia-nodo {
-    left: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 50%;
     top: 50%;
-    width: 44px;
-    height: 44px;
-    margin-left: -22px;
-    margin-top: -22px;
+    width: 52px;
+    height: 52px;
+    margin-left: -26px;
+    margin-top: -26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-crimson), var(--color-orange));
+    box-shadow: 0 6px 18px rgba(135, 43, 19, 0.3);
+    border: 3px solid var(--color-cream);
+    z-index: 2;
   }
 
-  .historia-bloque,
-  .historia-bloque-invertido {
-    grid-template-columns: 1fr;
-    gap: 16px;
+  .historia-nodo span {
+    font-size: 22px;
   }
 
-  .historia-bloque .historia-carta,
+  .historia-icono {
+    display: none;
+  }
+
+  .historia-bloque {
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 3vw, 40px);
+    align-items: center;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+    box-shadow: none;
+  }
+
+  .historia-bloque > * {
+    min-width: 0;
+  }
+
+  .historia-carta {
+    display: block;
+    order: 1;
+    background: #fffdf7;
+    border: 1px solid rgba(135, 43, 19, 0.1);
+    border-radius: 16px;
+    padding: clamp(22px, 3vw, 30px);
+    padding-right: clamp(24px, 4vw, 56px);
+    box-shadow: 0 10px 30px rgba(135, 43, 19, 0.08);
+  }
+
+  .historia-imagen {
+    order: 2;
+  }
+
   .historia-bloque-invertido .historia-carta {
     order: 2;
-    padding: clamp(18px, 3vw, 24px);
-    margin-left: clamp(36px, 8vw, 60px);
+    padding-left: clamp(12px, 2vw, 24px);
+    padding-right: clamp(22px, 3vw, 32px);
   }
 
-  .historia-bloque .historia-imagen,
   .historia-bloque-invertido .historia-imagen {
     order: 1;
-    margin-left: clamp(36px, 8vw, 60px);
+  }
+
+  .historia-cabecera {
+    display: flex;
+    gap: 12px;
+    padding: 0;
+    margin-bottom: 14px;
+  }
+
+  .historia-anyo {
+    font-size: 26px;
+    line-height: normal;
+  }
+
+  .historia-etiqueta {
+    letter-spacing: 2px;
+  }
+
+  .historia-carta h3 {
+    margin: 0 0 14px;
+  }
+
+  .historia-carta p {
+    line-height: 1.75;
+    margin: 0 0 12px;
+  }
+
+  .historia-carta p:last-child {
+    margin-bottom: 0;
   }
 
   .historia-media {
-    height: 220px;
+    aspect-ratio: auto;
+    height: clamp(240px, 30vw, 360px);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 14px 34px rgba(135, 43, 19, 0.16);
+  }
+
+  .historia-media-sin-foto {
+    border: 1px solid rgba(135, 43, 19, 0.12);
   }
 }
 
@@ -6328,6 +7331,13 @@ select.campo-control {
    el «Reservar ahora». Desde 900px esas barras no existen. */
 @media (max-width: 899px) {
   body:has(.ficha-exp-barra, .ficha-prod-barra) .wa-flotante {
+    bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Lo mismo con la barra de pago del carrito, que existe hasta 1023px. */
+@media (max-width: 1023px) {
+  body:has(.cart-barra-pago) .wa-flotante {
     bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
 }

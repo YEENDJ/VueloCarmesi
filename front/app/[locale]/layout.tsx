@@ -99,7 +99,9 @@ export default async function LocaleLayout({
   const grafo = grafoDelSitio({ nombre: t('titulo'), descripcion: t('descripcion') })
 
   return (
-    <html lang={locale}>
+    // .sitio separa el sitio público del panel: los dos cargan globals.css, y
+    // lo que es de la marca (las barras de scroll, por ejemplo) no va al panel.
+    <html lang={locale} className="sitio">
       <head>
         {/* Las dos familias que se ven sin hacer scroll: Playfair en el <h1>
             del hero y Bellota en todo lo demás. Declaradas con @font-face en

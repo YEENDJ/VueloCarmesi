@@ -11,7 +11,8 @@
     "irAlInicio": "Vuelo Carmesí — ir al inicio",
     "abrirMenu": "Abrir menú",
     "cerrarMenu": "Cerrar menú",
-    "cambiarIdioma": "Cambiar idioma"
+    "cambiarIdioma": "Cambiar idioma",
+    "miPedido": "Mi pedido"
   },
   "miga": {
     "aria": "Ruta de navegación",
@@ -324,7 +325,7 @@
     "pasos": {
       "tienda": "Tienda",
       "carrito": "Carrito",
-      "checkout": "Checkout",
+      "checkout": "Pago",
       "confirmacion": "Confirmación"
     },
     "ficha": {
@@ -359,10 +360,25 @@
       "envio": "Envío",
       "aCoordinar": "A coordinar",
       "total": "Total",
-      "irCheckout": "Ir al checkout",
-      "titulo": "Carrito",
-      "vaciar": "🗑 Vaciar carrito",
-      "quitar": "Quitar {nombre} del carrito"
+      "irCheckout": "Ir a pagar",
+      "vaciar": "Vaciar carrito",
+      "quitar": "Quitar {nombre} del carrito",
+      "sugerenciasTitulo": "¿Te llevas algo más?",
+      "sugerenciaAgregar": "Agregar {nombre} al carrito",
+      "tituloConteo": "Tu carrito ({n})",
+      "porUnidad": "{precio} c/u",
+      "vaciarPregunta": "¿Vaciar el carrito?",
+      "vaciarSi": "Sí, vaciar",
+      "vaciarNo": "Cancelar",
+      "vaciarTexto": "{n, plural, one {Se quitará el producto} other {Se quitarán los # productos}} de tu carrito. Esta acción no se puede deshacer.",
+      "envioCotiza": "Envío: se cotiza según tu ciudad al confirmar el pedido.",
+      "pagoSeguro": "Pago seguro con Wompi: tarjeta, Nequi, PSE y más",
+      "pagoSeguroLogo": "Pago seguro con <wompi>Wompi</wompi>",
+      "tarjeta": "Tarjeta",
+      "mediosPago": "Medios de pago aceptados",
+      "ultimoPedido": "Tu último pedido: {codigo}",
+      "verEstado": "Ver cómo va",
+      "buscarPedido": "¿Buscas un pedido anterior? <enlace>Consúltalo aquí</enlace>"
     },
     "checkout": {
       "vacio": "No hay productos en tu carrito",
@@ -371,7 +387,6 @@
       "datosEntrega": "Datos de entrega",
       "condiciones": "Al confirmar aceptas las <terminos>condiciones de venta</terminos> y el <datos>tratamiento de tus datos</datos>.",
       "resumenPedido": "Resumen de tu pedido",
-      "coordinamosMetodo": "Coordinamos el método de pago al confirmar el pedido.",
       "errorPedido": "No se pudo procesar el pedido",
       "errorDemasiados": "Hiciste demasiados pedidos seguidos. Espera unos minutos y vuelve a intentarlo, o escríbenos por WhatsApp.",
       "total": "Total",
@@ -394,7 +409,17 @@
       "pagoEnLinea": "Te apartamos los productos por 30 minutos mientras terminas.",
       "pagoSeguro": "Pago seguro",
       "errorAbrirPago": "Tu pedido quedó apartado, pero no pudimos abrir la página de pago. Vuelve a intentarlo en un momento.",
-      "pagoAnteriorEnCurso": "Tienes un pago esperando la confirmación de tu banco. <ver>Ver cómo va</ver>",
+      "pagoAnteriorEnCurso": "Tienes un pago esperando la confirmación de tu banco. Para no cobrarte dos veces, podrás pagar este pedido cuando el banco responda.",
+      "pagoAnteriorEnCursoHora": "Tu pago del {hora} sigue esperando la confirmación de tu banco. Para no cobrarte dos veces, podrás pagar este pedido cuando el banco responda.",
+      "verComoVa": "Ver cómo va",
+      "escribirWhatsapp": "Escríbenos por WhatsApp",
+      "pagoRechazado": "Tu banco rechazó tu último pago. No se hizo ningún cobro.",
+      "pagoRechazadoHora": "Tu banco rechazó el pago del {hora}. No se hizo ningún cobro.",
+      "pagoRechazadoApartado": "Tu pedido {codigo} sigue apartado hasta las {hora}. Puedes intentar pagar otra vez, con otro banco o medio de pago, sin volver a llenar tus datos.",
+      "pagoRechazadoCambio": "Como tu carrito cambió, completa tus datos abajo para hacer el pedido de nuevo.",
+      "reintentarPago": "Reintentar el pago · {total}",
+      "reintentoVencido": "El tiempo para pagar ese pedido ya venció. Completa tus datos para hacer uno nuevo.",
+      "faltanDatos": "Completa tus datos para continuar.",
       "pedidoCodigo": "Pedido {codigo}",
       "titulo": "Finaliza tu compra",
       "bajada": "Dos pasos y listo. Te escribimos para coordinar el envío.",
@@ -412,6 +437,13 @@
     "toast": {
       "agregado": "{nombre} agregado al carrito",
       "agregados": "{n} × {nombre} agregados"
+    },
+    "miniCarrito": {
+      "titulo": "Tu carrito",
+      "cerrar": "Cerrar el carrito",
+      "linea": "{q} × {precio}",
+      "verCarrito": "Ver carrito",
+      "seguir": "Seguir comprando"
     },
     "todos": "Todos"
   },
@@ -690,8 +722,6 @@
         "chocoterapia": "Chocoterapia y refrigerio",
         "a-medida": "Algo a medida, cuéntenme opciones"
       },
-      "requiereFactura": "Necesitamos factura a nombre de la institución",
-      "nit": "NIT",
       "mensaje": "¿Algo más que debamos saber?",
       "mensajePlaceholder": "Objetivo de la salida, restricciones alimentarias, número de docentes acompañantes…",
       "contador": "{n} de {max} caracteres",
@@ -710,9 +740,7 @@
       "errorPersonasMax": "Para más de {max} personas, escríbenos directamente.",
       "errorEdades": "Las edades son demasiado largas.",
       "errorFecha": "La fecha debe ser posterior a hoy.",
-      "errorNit": "El NIT es demasiado largo.",
-      "errorMensaje": "El mensaje no puede superar {max} caracteres.",
-      "nitAyuda": "Si no lo tienes a mano, déjalo en blanco: te lo pedimos al enviar la cotización."
+      "errorMensaje": "El mensaje no puede superar {max} caracteres."
     },
     "agencias": {
       "titulo": "¿Escribes desde una agencia u operador?",
@@ -958,7 +986,7 @@
       "v3": "Estas condiciones aplican a los productos de la tienda. Las experiencias en la finca tienen sus propias reglas de reserva, pago y cancelación.",
       "vendedorEnlace": "Ver la política de cancelación de reservas",
       "pedidoTitulo": "Cómo se hace un pedido",
-      "p1": "Agregas productos al carrito y llenas el formulario del checkout con tus datos de contacto y de entrega.",
+      "p1": "Agregas productos al carrito y llenas el formulario de pago con tus datos de contacto y de entrega.",
       "p2": "Al confirmar recibes un correo con el detalle de lo que pediste. Ese correo acusa recibo de la solicitud; todavía no es la aceptación de la compra.",
       "p3": "Revisamos las existencias y te escribimos para acordar el medio de pago y el envío.",
       "p4": "La compra queda perfeccionada cuando confirmamos tu pedido y acordamos contigo el pago y el envío. Desde ahí corren los plazos de entrega y de garantía.",
@@ -977,7 +1005,7 @@
       "envioTitulo": "Envío y entrega",
       "e1": "Despachamos dentro de Colombia. El medio de envío, el costo y el tiempo de entrega dependen de la ciudad de destino y los acordamos contigo antes de despachar.",
       "e2": "El plazo de entrega empieza a contar desde que se confirma el pago, no desde que envías el formulario.",
-      "e3": "La dirección de entrega la escribes tú en el checkout. Si viene incompleta o equivocada y el envío se devuelve, el segundo despacho tiene costo.",
+      "e3": "La dirección de entrega la escribes tú en el formulario de pago. Si viene incompleta o equivocada y el envío se devuelve, el segundo despacho tiene costo.",
       "e4": "Al recibir, revisa el empaque delante de quien te entrega. Si llega roto o abierto, déjalo anotado en la guía y escríbenos el mismo día.",
       "retractoTitulo": "Retracto, reversión del pago y garantía",
       "re1": "El retracto se ejerce escribiéndonos a {email} dentro del plazo y devolviendo el producto en las mismas condiciones en que lo recibiste. El transporte de la devolución corre por tu cuenta, como lo prevé la ley; el resto del dinero te lo devolvemos completo.",
@@ -989,7 +1017,7 @@
       "rc2": "Si no quedas conforme, puedes acudir a la Superintendencia de Industria y Comercio, que es la autoridad de protección al consumidor en Colombia.",
       "rc3": "Estas condiciones se rigen por la ley colombiana, en particular por la Ley 1480 de 2011 —Estatuto del Consumidor— y por las normas sobre comercio electrónico y venta a distancia.",
       "datosTitulo": "Tus datos",
-      "da1": "Los datos que escribes en el checkout se usan para despachar el pedido y para los correos de la operación, y nada más. Qué recogemos, cuánto lo guardamos y cómo pedir que lo corrijamos o lo borremos está en la política de tratamiento de datos personales.",
+      "da1": "Los datos que escribes en el formulario de pago se usan para despachar el pedido y para los correos de la operación, y nada más. Qué recogemos, cuánto lo guardamos y cómo pedir que lo corrijamos o lo borremos está en la política de tratamiento de datos personales.",
       "datosEnlace": "Ver la política de tratamiento de datos personales",
       "dudas": "¿Dudas con un pedido?",
       "escribenos": "Escríbenos",
@@ -1288,7 +1316,7 @@
       "alt": "Recorriendo el cultivo de cacao en tiempos de pandemia"
     },
     "camino": {
-      "anyo": "Desde 2012",
+      "anyo": "Tras la pandemia",
       "etiqueta": "Un nuevo camino",
       "titulo": "La experiencia que encontró su lugar",
       "t1": "Cristian, uno de los fundadores, ya tenía experiencia en turismo desde 2012, principalmente en el turismo de aventura. Después de la pandemia, esa experiencia encontró un nuevo camino: llevar el turismo a la finca y convertir el campo, el cacao y la naturaleza en una experiencia cercana, auténtica y familiar.",
@@ -1384,7 +1412,10 @@
     "aviturismo": "¡Hola! Vi la página de aviturismo de Vuelo Carmesí y quiero información para ir a observar aves en la finca.",
     "grupos": "¡Hola! Vi la página de grupos de Vuelo Carmesí y quiero información para cotizar una visita en grupo.",
     "grupoEnviado": "¡Hola! Acabo de enviar la solicitud de cotización de {institucion} desde la página de Vuelo Carmesí y quiero hacerle seguimiento.",
-    "tienda": "¡Hola! Estoy viendo la tienda de Vuelo Carmesí y tengo una pregunta sobre los productos."
+    "tienda": "¡Hola! Estoy viendo la tienda de Vuelo Carmesí y tengo una pregunta sobre los productos.",
+    "pagoEnCurso": "¡Hola! Tengo un pago en revisión con mi banco (pedido {codigo}, referencia {referencia}) y quiero saber cómo va o hacer un pedido nuevo.",
+    "miPedido": "¡Hola! Quiero saber cómo va mi pedido de la tienda de Vuelo Carmesí.",
+    "pedido": "¡Hola! Tengo una pregunta sobre mi pedido {codigo}."
   },
   "escnna": {
     "aviso": "La explotación y el abuso sexual de niños, niñas y adolescentes son delitos en Colombia y se sancionan penal y administrativamente (Ley 679 de 2001 y Ley 1336 de 2009). <politica>Nuestra política</politica>."
@@ -1426,5 +1457,77 @@
       "volverInicio": "Volver al inicio",
       "volverTienda": "Volver a la tienda"
     }
+  },
+  "miPedido": {
+    "consultaTitulo": "Consulta tu pedido",
+    "consultaTexto": "Escribe el código de tu pedido y el correo con el que compraste. El código está en el correo de confirmación y empieza por VC-.",
+    "codigo": "Código del pedido",
+    "placeholderCodigo": "VC-AB12CD",
+    "email": "Correo de la compra",
+    "placeholderEmail": "tu@email.com",
+    "errorCodigo": "Escribe el código del pedido",
+    "errorEmail": "Ingresa un email válido",
+    "consultar": "Ver mi pedido",
+    "consultando": "Buscando…",
+    "noEncontrado": "No encontramos un pedido con ese código y ese correo. Revisa que sean los del correo de confirmación.",
+    "demasiados": "Hiciste muchas consultas seguidas. Espera un minuto y vuelve a intentarlo.",
+    "errorRed": "No pudimos consultar en este momento. Vuelve a intentarlo en un momento.",
+    "ayudaWhatsapp": "¿No tienes el correo a mano? <whatsapp>Escríbenos por WhatsApp</whatsapp>.",
+    "titulo": "Pedido {codigo}",
+    "hecho": "Hecho el {fecha}",
+    "cargando": "Cargando tu pedido…",
+    "noEncontradoTitulo": "No encontramos este pedido",
+    "noEncontradoTexto": "El enlace puede estar incompleto. Puedes buscarlo con el código y tu correo.",
+    "buscarOtro": "Consultar con código y correo",
+    "reintentar": "Volver a intentar",
+    "irAPagar": "Ir a pagar",
+    "volverTienda": "Volver a la tienda",
+    "productos": "Productos",
+    "total": "Total",
+    "cantidadPorPrecio": "{q} × {precio}",
+    "progreso": "Avance del pedido",
+    "pasoActual": "paso actual",
+    "pasos": {
+      "recibido": "Recibido",
+      "pagado": "Pagado",
+      "enviado": "Enviado",
+      "entregado": "Entregado"
+    },
+    "ayuda": "¿Algo no cuadra? <whatsapp>Escríbenos por WhatsApp</whatsapp> y cita tu código {codigo}.",
+    "estados": {
+      "pendiente": {
+        "titulo": "Pedido recibido",
+        "texto": "Te escribimos para coordinar el pago y el envío."
+      },
+      "pendiente_pago": {
+        "titulo": "Esperando el pago",
+        "texto": "Tu pedido está apartado hasta las {hora}. Si no se paga a tiempo, los productos se liberan."
+      },
+      "pagado": {
+        "titulo": "Pago recibido",
+        "texto": "Estamos preparando tu pedido. Te avisamos por correo cuando lo despachemos."
+      },
+      "enviado": {
+        "titulo": "En camino",
+        "texto": "Tu pedido ya salió. Pronto lo tendrás contigo."
+      },
+      "entregado": {
+        "titulo": "Entregado",
+        "texto": "Tu pedido llegó. ¡Gracias por tu compra!"
+      },
+      "cancelado": {
+        "titulo": "Pedido cancelado",
+        "texto": "Este pedido se canceló. Si tienes dudas, escríbenos."
+      },
+      "expirado": {
+        "titulo": "Venció sin pago",
+        "texto": "El tiempo para pagar pasó y los productos se liberaron. No se hizo ningún cobro."
+      },
+      "requiere_revision": {
+        "titulo": "En revisión",
+        "texto": "Recibimos tu pago y estamos revisando el pedido. Te contactamos pronto."
+      }
+    },
+    "verMiPedido": "Ver mi pedido"
   }
 }
