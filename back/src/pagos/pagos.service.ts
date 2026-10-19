@@ -195,7 +195,7 @@ export class PagosService {
    * Si el pago sigue pendiente le pregunta a la pasarela antes de responder, y
    * así el cliente no depende de que el webhook haya llegado (caso 6).
    */
-  async estadoPublico(referencia: string) {
+  async estadoPublico(referencia: string, ahora = new Date()) {
     let pago = await this.prisma.pago.findUnique({ where: { referencia } })
     if (!pago) throw new NotFoundException()
 
@@ -231,6 +231,13 @@ export class PagosService {
       total: dueno?.total ?? null,
       // El número corto que el cliente ve y cita por WhatsApp, #VC-XXXXXX.
       codigo: dueno ? `VC-${dueno.id.slice(-6).toUpperCase()}` : null,
+      // El banco ya tiene la transacción y no ha respondido (caso 4). Con esto
+      // el checkout distingue a quien cerró la pasarela sin pagar —puede
+      // intentar de nuevo ya— de quien tiene un PSE o Nequi en curso, que
+      // debe esperar para no pagar dos veces. Misma regla que el vencimiento.
+      enCurso: tienePagoEnCurso([pago], ahora),
+      // Desde cuándo espera, para decírselo al cliente con la hora.
+      creadoEn: pago.createdAt,
     }
   }
 
