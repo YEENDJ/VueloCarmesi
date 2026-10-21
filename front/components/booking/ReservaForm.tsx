@@ -16,6 +16,8 @@ import type { Experiencia } from '@/lib/types'
 import { formatPrecio } from '@/lib/format'
 import { calcularAbono, crearPago, type ConfigPagos } from '@/lib/pagos'
 import { useDespertarBackend } from '@/lib/despertar-backend'
+import { guardarUltimaReserva } from '@/lib/booking/ultima-reserva'
+import ModalPago from '@/components/booking/ModalPago'
 
 export default function ReservaForm({
   experiencia,
@@ -36,6 +38,11 @@ export default function ReservaForm({
   // reintenta solo el pago, sin crear otra reserva.
   const [reservaSinPagar, setReservaSinPagar] = useState<string | null>(null)
   const [redirigiendo, setRedirigiendo] = useState(false)
+  // Los datos ya validados, a la espera de que confirme en el aviso de pago.
+  const [porConfirmar, setPorConfirmar] = useState<ReservaFormValues | null>(null)
+  // `isSubmitting` solo cubre el submit del formulario; el envío que sale del
+  // aviso de pago corre fuera de él y necesita su propia marca.
+  const [enviando, setEnviando] = useState(false)
 
   const {
     register, handleSubmit, control, formState: { errors, isSubmitting },
@@ -77,8 +84,24 @@ export default function ReservaForm({
     }
   }
 
+  // Con cobro en línea, antes de crear la reserva se avisa a dónde va y cuánto
+  // paga: si cancela, no queda nada apartado.
   const onSubmit = async (data: ReservaFormValues) => {
+    if (cobra) setPorConfirmar(data)
+    else await enviar(data)
+  }
+
+  const enviar = async (data: ReservaFormValues) => {
     setError('')
+    setEnviando(true)
+    try {
+      await crearYSeguir(data)
+    } finally {
+      setEnviando(false)
+    }
+  }
+
+  const crearYSeguir = async (data: ReservaFormValues) => {
     if (reservaSinPagar) {
       await irAPagar(reservaSinPagar)
       return
@@ -96,6 +119,10 @@ export default function ReservaForm({
       })
       if (!res.ok) throw new Error(`POST /reservas respondió ${res.status}`)
       const reserva = await res.json()
+      // Para «Ver mi reserva» en la confirmación y en el resultado del pago.
+      if (reserva.tokenConsulta) {
+        guardarUltimaReserva({ codigo: `VC-${String(reserva.id).slice(-6).toUpperCase()}`, token: reserva.tokenConsulta })
+      }
       // El backend decide si se cobra: si la reserva nace esperando pago, va a
       // la pasarela; si no, el flujo manual de siempre.
       if (reserva.estado === 'pendiente_pago') {
@@ -283,23 +310,23 @@ export default function ReservaForm({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <button
           type="submit"
-          disabled={isSubmitting || redirigiendo}
+          disabled={isSubmitting || enviando || redirigiendo}
           style={{
             width: '100%',
             padding: '12px 24px',
             borderRadius: '8px',
             border: 'none',
             minHeight: '50px',
-            backgroundColor: isSubmitting || redirigiendo ? 'rgba(213,19,18,.6)' : 'var(--color-crimson)',
+            backgroundColor: isSubmitting || enviando || redirigiendo ? 'rgba(213,19,18,.6)' : 'var(--color-crimson)',
             color: 'var(--color-cream)',
             fontFamily: 'var(--font-body)',
             fontWeight: 700,
             fontSize: '17px',
-            cursor: isSubmitting || redirigiendo ? 'not-allowed' : 'pointer',
+            cursor: isSubmitting || enviando || redirigiendo ? 'not-allowed' : 'pointer',
             transition: 'background-color 0.2s',
           }}
         >
-          {isSubmitting || redirigiendo
+          {isSubmitting || enviando || redirigiendo
             ? t('campos.enviando')
             : cobra ? t('pago.enviar', { monto: formatPrecio(abono, idioma) }) : t('campos.enviar')}
         </button>
@@ -317,6 +344,16 @@ export default function ReservaForm({
         <AvisoDatos />
       </div>
 
+      {porConfirmar && (
+        <ModalPago
+          total={total}
+          abono={abono}
+          porcentaje={pagos.porcentajeAbono}
+          personas={personas}
+          onCancelar={() => setPorConfirmar(null)}
+          onContinuar={() => { const datos = porConfirmar; setPorConfirmar(null); enviar(datos) }}
+        />
+      )}
     </form>
   )
 }
