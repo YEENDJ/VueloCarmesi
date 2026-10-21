@@ -19,7 +19,9 @@ const mockTx = {
     create: jest.fn().mockResolvedValue({ id: 'ped1' }),
     update: jest.fn().mockResolvedValue({ id: 'ped1' }),
     updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+    delete: jest.fn(),
   },
+  itemPedido: { deleteMany: jest.fn() },
 }
 
 const mockPrisma = {
@@ -143,8 +145,8 @@ describe('PedidosService.create', () => {
 
 describe('PedidosService.update', () => {
   let service: PedidosService
-  const pedido = (estado: string) => ({
-    id: 'ped1', estado, items: [{ productoId: 'p1', cantidad: 2 }, { productoId: 'p2', cantidad: 1 }],
+  const pedido = (estado: string, pagos: { estado: string; proveedorTxId: string | null; createdAt: Date }[] = []) => ({
+    id: 'ped1', estado, items: [{ productoId: 'p1', cantidad: 2 }, { productoId: 'p2', cantidad: 1 }], pagos,
   })
 
   beforeEach(async () => {
@@ -174,7 +176,7 @@ describe('PedidosService.update', () => {
   })
 
   it('no toca el stock en los demás cambios de estado', async () => {
-    mockPrisma.pedido.findUnique.mockResolvedValue(pedido('pendiente'))
+    mockPrisma.pedido.findUnique.mockResolvedValue(pedido('pagado'))
     await service.update('ped1', { estado: 'enviado' })
     expect(mockTx.producto.update).not.toHaveBeenCalled()
     expect(mockTx.pedido.update).toHaveBeenCalled()
@@ -192,13 +194,45 @@ describe('PedidosService.update', () => {
 
   it('no reabre un pedido expirado', async () => {
     mockPrisma.pedido.findUnique.mockResolvedValue(pedido('expirado'))
-    await expect(service.update('ped1', { estado: 'pagado' })).rejects.toThrow('expirado')
+    await expect(service.update('ped1', { estado: 'pagado' })).rejects.toThrow('«Vencido»')
   })
 
   it('no reabre un pedido cancelado', async () => {
     mockPrisma.pedido.findUnique.mockResolvedValue(pedido('cancelado'))
-    await expect(service.update('ped1', { estado: 'pendiente' })).rejects.toThrow('cancelado')
+    await expect(service.update('ped1', { estado: 'pendiente' })).rejects.toThrow('«Cancelado»')
     expect(mockTx.pedido.update).not.toHaveBeenCalled()
+  })
+
+  it('no salta pasos: un pendiente no pasa a enviado sin estar pagado', async () => {
+    mockPrisma.pedido.findUnique.mockResolvedValue(pedido('pendiente'))
+    await expect(service.update('ped1', { estado: 'enviado' }))
+      .rejects.toThrow('El pedido está «Pendiente» y no puede pasar a «Enviado»')
+  })
+
+  it('un entregado no se cancela: las unidades ya salieron y no deben volver al stock', async () => {
+    mockPrisma.pedido.findUnique.mockResolvedValue(pedido('entregado'))
+    await expect(service.update('ped1', { estado: 'cancelado' })).rejects.toThrow('«Entregado»')
+    expect(mockTx.producto.update).not.toHaveBeenCalled()
+  })
+
+  it('enviado vuelve a pagado como corrección', async () => {
+    mockPrisma.pedido.findUnique.mockResolvedValue(pedido('enviado'))
+    await service.update('ped1', { estado: 'pagado' })
+    expect(mockTx.pedido.update).toHaveBeenCalled()
+  })
+
+  it('esperando pago no se marca pagado a mano con un pago en curso en el banco', async () => {
+    mockPrisma.pedido.findUnique.mockResolvedValue(
+      pedido('pendiente_pago', [{ estado: 'pendiente', proveedorTxId: 'tx1', createdAt: new Date() }]),
+    )
+    await expect(service.update('ped1', { estado: 'pagado' })).rejects.toThrow('pago en curso')
+    expect(mockTx.pedido.update).not.toHaveBeenCalled()
+  })
+
+  it('esperando pago sí se marca pagado a mano si pagó por fuera', async () => {
+    mockPrisma.pedido.findUnique.mockResolvedValue(pedido('pendiente_pago'))
+    await service.update('ped1', { estado: 'pagado' })
+    expect(mockTx.pedido.update).toHaveBeenCalled()
   })
 
   it('cancelar dos veces no devuelve el stock dos veces', async () => {
@@ -226,17 +260,38 @@ describe('PedidosService.remove', () => {
     mockPrisma.pedido.findUnique.mockResolvedValue({ id: 'ped1', items: [] })
   })
 
-  it('borra un pedido sin pagos', async () => {
+  it('borra un pedido sin pagos, con sus líneas', async () => {
     mockPrisma.pago.count.mockResolvedValue(0)
     await service.remove('ped1')
-    expect(mockPrisma.pedido.delete).toHaveBeenCalledWith({ where: { id: 'ped1' } })
+    expect(mockTx.itemPedido.deleteMany).toHaveBeenCalledWith({ where: { pedidoId: 'ped1' } })
+    expect(mockTx.pedido.delete).toHaveBeenCalledWith({ where: { id: 'ped1' } })
+  })
+
+  it('al borrar uno sin despachar, sus unidades vuelven a la tienda', async () => {
+    mockPrisma.pago.count.mockResolvedValue(0)
+    mockPrisma.pedido.findUnique.mockResolvedValue({
+      id: 'ped1', estado: 'pendiente', items: [{ productoId: 'p1', cantidad: 2 }],
+    })
+    await service.remove('ped1')
+    expect(mockTx.producto.update).toHaveBeenCalledWith({
+      where: { id: 'p1' }, data: { stock: { increment: 2 } },
+    })
+  })
+
+  it('al borrar uno entregado no devuelve unidades', async () => {
+    mockPrisma.pago.count.mockResolvedValue(0)
+    mockPrisma.pedido.findUnique.mockResolvedValue({
+      id: 'ped1', estado: 'entregado', items: [{ productoId: 'p1', cantidad: 2 }],
+    })
+    await service.remove('ped1')
+    expect(mockTx.producto.update).not.toHaveBeenCalled()
   })
 
   it('no borra un pedido con pagos: el cobro es registro de un reclamo', async () => {
     mockPrisma.pago.count.mockResolvedValue(2)
     await expect(service.remove('ped1')).rejects.toThrow(ConflictException)
     expect(mockPrisma.pago.count).toHaveBeenCalledWith({ where: { pedidoId: 'ped1' } })
-    expect(mockPrisma.pedido.delete).not.toHaveBeenCalled()
+    expect(mockTx.pedido.delete).not.toHaveBeenCalled()
   })
 })
 

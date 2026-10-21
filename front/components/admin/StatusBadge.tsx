@@ -3,6 +3,8 @@ type Estado = string
 const CONFIG: Record<string, { bg: string; txt: string; label: string }> = {
   pendiente:   { bg: 'var(--status-pendiente-bg)',  txt: 'var(--status-pendiente-txt)',  label: 'Pendiente' },
   confirmada:  { bg: 'var(--status-confirmada-bg)', txt: 'var(--status-confirmada-txt)', label: 'Confirmada' },
+  // Confirmada con la fecha ya pasada: no se guarda, se calcula (lib/admin/transiciones).
+  realizada:   { bg: 'var(--status-entregado-bg)',  txt: 'var(--status-entregado-txt)',  label: 'Realizada' },
   cancelada:   { bg: 'var(--status-cancelada-bg)',  txt: 'var(--status-cancelada-txt)',  label: 'Cancelada' },
   enviado:     { bg: 'var(--status-enviado-bg)',    txt: 'var(--status-enviado-txt)',    label: 'Enviado' },
   entregado:   { bg: 'var(--status-entregado-bg)',  txt: 'var(--status-entregado-txt)',  label: 'Entregado' },

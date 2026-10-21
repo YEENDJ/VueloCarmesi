@@ -8,5 +8,8 @@ export const PAGOS_PANEL = {
   select: {
     id: true, referencia: true, monto: true, estado: true, metodo: true,
     motivo: true, modo: true, proveedor: true, createdAt: true,
+    // Para saber si el banco tiene un pago en curso (pagos/estados.ts): el
+    // panel no deja marcar pagado ni cancelar mientras tanto.
+    proveedorTxId: true,
   },
 }

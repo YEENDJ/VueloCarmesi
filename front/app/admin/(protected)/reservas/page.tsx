@@ -1,24 +1,35 @@
 'use client'
 import { useState, useEffect, useMemo, useRef } from 'react'
 import type { AdminReserva, EstadoReserva } from '@/lib/admin/types'
-import { getReservas, updateEstadoReserva } from '@/lib/admin/api'
+import {
+  getReservas, getReserva, updateEstadoReserva, deleteReserva, getBloqueoBorrado, ErrorConMotivo,
+  type BloqueoBorrado,
+} from '@/lib/admin/api'
 import StatusBadge from '@/components/admin/StatusBadge'
 import ReservaDrawer from '@/components/admin/ReservaDrawer'
+import ConfirmModal, { AvisoModal, TrashIcon } from '@/components/admin/ConfirmModal'
+import {
+  opcionesEstado, contextoReserva, estadoVisible, estaRealizada, ETIQUETA_ESTADO,
+} from '@/lib/admin/transiciones'
 import { esDePrueba, requiereRevision, tienePagoAprobado } from '@/lib/admin/pagos'
+import { tomarVerDeLaUrl } from '@/lib/admin/ver-en-url'
+import { useAvisar, Cargando } from '@/components/admin/Avisos'
 
-const FILTROS = ['todas', 'pendientes', 'confirmadas', 'canceladas', 'revisar'] as const
+const FILTROS = ['todas', 'pendientes', 'confirmadas', 'realizadas', 'canceladas', 'revisar'] as const
 type Filtro = typeof FILTROS[number]
 
-const FILTRO_ESTADO: Record<Filtro, EstadoReserva | null> = {
-  todas: null, pendientes: 'pendiente', confirmadas: 'confirmada', canceladas: 'cancelada',
-  revisar: 'requiere_revision',
+/**
+ * Lo que muestra cada filtro, sobre el estado visible: «confirmadas» son las
+ * que están por venir y «realizadas» las confirmadas cuya fecha ya pasó.
+ */
+const FILTRO_ESTADO: Record<Filtro, string | null> = {
+  todas: null, pendientes: 'pendiente', confirmadas: 'confirmada', realizadas: 'realizada',
+  canceladas: 'cancelada', revisar: 'requiere_revision',
 }
 
-/** Las que se eligen a mano en la tabla. Las demás las pone el cobro en línea. */
-const ELEGIBLES: EstadoReserva[] = ['pendiente', 'confirmada', 'cancelada']
-const ETIQUETA: Record<EstadoReserva, string> = {
-  pendiente: 'Pendiente', confirmada: 'Confirmada', cancelada: 'Cancelada',
-  pendiente_pago: 'Esperando pago', expirada: 'Vencida', requiere_revision: 'Revisar',
+/** Sin la ficha (se eliminó) queda el nombre copiado al reservar. */
+function nombreExperiencia(r: AdminReserva) {
+  return r.experiencia?.nombre || r.experienciaNombre || 'Experiencia eliminada'
 }
 
 export default function ReservasPage() {
@@ -32,17 +43,47 @@ export default function ReservasPage() {
   const [fechaHasta, setFechaHasta] = useState('')
   const [selected, setSelected] = useState<AdminReserva | null>(null)
   const [changing, setChanging] = useState<string | null>(null)
+  // Confirmar a mano una que espera pago: pagó el abono por fuera. Se pregunta.
+  const [confirmarAbono, setConfirmarAbono] = useState<AdminReserva | null>(null)
+  const [reservaAEliminar, setReservaAEliminar] = useState<AdminReserva | null>(null)
+  const [bloqueo, setBloqueo] = useState<{ titulo: string; detalle: BloqueoBorrado } | null>(null)
+
+  // Primero se pregunta si algo lo impide, para no pedir confirmación de un
+  // borrado que no va a pasar. Si la consulta falla, se sigue a la confirmación:
+  // el DELETE vuelve a comprobarlo y el modal muestra el motivo.
+  async function pedirEliminar(r: AdminReserva) {
+    const detalle = await getBloqueoBorrado('reservas', r.id).catch(() => null)
+    if (detalle) setBloqueo({ titulo: `No se puede eliminar la reserva de ${r.nombre}`, detalle })
+    else setReservaAEliminar(r)
+  }
+
+  async function confirmarEliminar() {
+    if (!reservaAEliminar) return
+    // Si el backend lo rechaza (tiene pagos), lanza y el modal muestra el motivo.
+    await deleteReserva(reservaAEliminar.id)
+    setReservas(prev => prev.filter(r => r.id !== reservaAEliminar.id))
+    avisar('exito', `Reserva de ${reservaAEliminar.nombre} eliminada`)
+    setReservaAEliminar(null)
+  }
+  const avisar = useAvisar()
   const [cancelModal, setCancelModal] = useState<{ id: string; nombre: string } | null>(null)
   const [cancelMotivo, setCancelMotivo] = useState('')
 
   useEffect(() => {
-    getReservas().then(data => { setReservas(data); setLoading(false) })
+    getReservas().then(async data => {
+      setReservas(data)
+      setLoading(false)
+      const ver = tomarVerDeLaUrl()
+      if (!ver) return
+      const reserva = data.find(r => r.id === ver) ?? await getReserva(ver).catch(() => null)
+      if (reserva) setSelected(reserva)
+    })
   }, [])
 
   const lista = useMemo(() => {
     const estado = FILTRO_ESTADO[filtro]
     return reservas.filter(r => {
-      if (estado && r.estado !== estado) return false
+      if (estado && estadoVisible(r) !== estado) return false
       const fecha = new Date(r.fecha)
       fecha.setHours(0, 0, 0, 0)
       if (modoFecha === 'mes' && mes) {
@@ -88,9 +129,17 @@ export default function ReservasPage() {
 
   async function cambiarEstadoInline(id: string, estado: EstadoReserva, motivo?: string) {
     setChanging(id)
+    const nombre = reservas.find(r => r.id === id)?.nombre ?? ''
     try {
       const updated = await updateEstadoReserva(id, estado, motivo)
       handleUpdated(updated)
+      avisar('exito', `Reserva de ${nombre}: ahora ${ETIQUETA_ESTADO[estado]}`)
+    } catch (err) {
+      // Lo más común: la pasarela la cambió mientras la lista estaba abierta.
+      avisar('error', err instanceof ErrorConMotivo
+        ? `Reserva de ${nombre}: ${err.message}. Se actualizó con su estado actual.`
+        : `No se pudo cambiar la reserva de ${nombre}. Recarga la página e intenta de nuevo.`)
+      getReserva(id).then(handleUpdated).catch(() => {})
     } finally {
       setChanging(null)
     }
@@ -99,6 +148,8 @@ export default function ReservasPage() {
   function handleSelectChange(reserva: AdminReserva, nuevoEstado: EstadoReserva) {
     if (nuevoEstado === 'cancelada') {
       setCancelModal({ id: reserva.id, nombre: reserva.nombre })
+    } else if (nuevoEstado === 'confirmada' && reserva.estado === 'pendiente_pago') {
+      setConfirmarAbono(reserva)
     } else {
       cambiarEstadoInline(reserva.id, nuevoEstado)
     }
@@ -263,32 +314,49 @@ export default function ReservasPage() {
                     <div style={{ fontWeight: 700 }}>{r.nombre}</div>
                     <div style={{ fontSize: 12, color: 'var(--admin-text-muted)' }}>{r.telefono}</div>
                   </td>
-                  <td style={{ minWidth: 140, maxWidth: 200 }}>{r.experiencia?.nombre ?? r.experienciaId}</td>
+                  <td style={{ minWidth: 140, maxWidth: 200 }}>{nombreExperiencia(r)}</td>
                   <td style={{ textAlign: 'center' }}>{r.cantidadPersonas}</td>
                   <td>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-                      <StatusBadge estado={r.estado} />
+                      <StatusBadge estado={estadoVisible(r)} />
                       {tienePagoAprobado(r) && <StatusBadge estado="abono_pagado" />}
                       {esDePrueba(r) && <StatusBadge estado="prueba" />}
                     </div>
                   </td>
                   <td>
-                    <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', alignItems: 'center' }}>
-                      {r.estado !== 'cancelada' && r.estado !== 'expirada' && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'flex-end', alignItems: 'center' }}>
+                      {/* Sin selector si no hay a dónde ir: cancelada, vencida o ya realizada. */}
+                      {!estaRealizada(r) && opcionesEstado('reserva', r.estado, contextoReserva(r)).length > 0 && (
                         <select
+                          aria-label={`Estado de la reserva de ${r.nombre}`}
                           className="admin-select"
                           style={{ fontSize: 12, padding: '5px 8px', width: 'auto' }}
                           value={r.estado}
                           disabled={changing === r.id}
                           onChange={e => handleSelectChange(r, e.target.value as EstadoReserva)}
                         >
-                          {!ELEGIBLES.includes(r.estado) && (
-                            <option value={r.estado} disabled>{ETIQUETA[r.estado]}</option>
-                          )}
-                          {ELEGIBLES.map(e => <option key={e} value={e}>{ETIQUETA[e]}</option>)}
+                          <option value={r.estado} disabled>{ETIQUETA_ESTADO[r.estado]}</option>
+                          {/* Lo bloqueado sale desactivado; el motivo está en el detalle. */}
+                          {opcionesEstado('reserva', r.estado, contextoReserva(r)).map(o => (
+                            <option key={o.destino} value={o.destino} disabled={!!o.bloqueo}>
+                              {ETIQUETA_ESTADO[o.destino]}{o.bloqueo ? ' (no disponible)' : ''}
+                            </option>
+                          ))}
                         </select>
                       )}
+                      {changing === r.id && (
+                        <span style={{ fontSize: 12, color: 'var(--admin-text-muted)', whiteSpace: 'nowrap' }}>
+                          <Cargando texto="Guardando…" />
+                        </span>
+                      )}
                       <button className="btn-secondary btn-sm" onClick={() => setSelected(r)}>Detalle</button>
+                      <button
+                        className="btn-ghost btn-sm"
+                        style={{ display: 'flex', alignItems: 'center', gap: 5 }}
+                        onClick={() => pedirEliminar(r)}
+                      >
+                        <TrashIcon /> Eliminar
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -301,13 +369,48 @@ export default function ReservasPage() {
       {selected && (
         <ReservaDrawer
           reserva={selected}
-          experienciaNombre={selected.experiencia?.nombre ?? selected.experienciaId}
+          experienciaNombre={nombreExperiencia(selected)}
           onClose={() => setSelected(null)}
           onUpdated={handleUpdated}
         />
       )}
 
       {/* Modal de cancelación desde la tabla */}
+      {reservaAEliminar && (
+        <ConfirmModal
+          title={`¿Eliminar la reserva de ${reservaAEliminar.nombre}?`}
+          message="Esta acción es permanente y no se puede deshacer. No se le avisa al cliente: si la reserva sigue en pie, cancélala en vez de eliminarla, así le llega el correo. Las reservas con pagos no se eliminan."
+          onConfirm={confirmarEliminar}
+          onCancel={() => setReservaAEliminar(null)}
+        />
+      )}
+
+      {bloqueo && (
+        <AvisoModal
+          title={bloqueo.titulo}
+          bloqueo={bloqueo.detalle}
+          verLabel="Ver detalle"
+          onVer={id => { setBloqueo(null); setSelected(reservas.find(r => r.id === id) ?? null) }}
+          onClose={() => setBloqueo(null)}
+        />
+      )}
+
+      {confirmarAbono && (
+        <ConfirmModal
+          title="¿Confirmar sin el pago en línea?"
+          message={`¿Recibiste el abono de ${confirmarAbono.nombre} por fuera de la pasarela (transferencia, Nequi…)? Al confirmar, el cliente recibe el correo de confirmación.`}
+          confirmLabel="Sí, confirmar"
+          busyLabel="Confirmando…"
+          danger={false}
+          onConfirm={async () => {
+            const r = confirmarAbono
+            setConfirmarAbono(null)
+            await cambiarEstadoInline(r.id, 'confirmada')
+          }}
+          onCancel={() => setConfirmarAbono(null)}
+        />
+      )}
+
       {cancelModal && (
         <div
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200 }}

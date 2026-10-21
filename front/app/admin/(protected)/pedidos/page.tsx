@@ -1,11 +1,13 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react'
 import type { AdminPedido, EstadoPedido } from '@/lib/admin/types'
-import { getPedidos } from '@/lib/admin/api'
+import { getPedidos, getPedido, deletePedido, getBloqueoBorrado, type BloqueoBorrado } from '@/lib/admin/api'
 import StatusBadge from '@/components/admin/StatusBadge'
 import PedidoDrawer from '@/components/admin/PedidoDrawer'
+import ConfirmModal, { AvisoModal, TrashIcon } from '@/components/admin/ConfirmModal'
 import { formatPrecio } from '@/lib/format'
 import { esDePrueba, requiereRevision } from '@/lib/admin/pagos'
+import { tomarVerDeLaUrl } from '@/lib/admin/ver-en-url'
 
 const FILTROS = ['todos', 'pendientes', 'pagados', 'enviados', 'entregados', 'cancelados', 'revisar'] as const
 type Filtro = typeof FILTROS[number]
@@ -20,9 +22,27 @@ export default function PedidosPage() {
   const [loading, setLoading] = useState(true)
   const [filtro, setFiltro] = useState<Filtro>('todos')
   const [selected, setSelected] = useState<AdminPedido | null>(null)
+  const [pedidoAEliminar, setPedidoAEliminar] = useState<AdminPedido | null>(null)
+  const [bloqueo, setBloqueo] = useState<{ titulo: string; detalle: BloqueoBorrado } | null>(null)
+
+  // Primero se pregunta si algo lo impide, para no pedir confirmación de un
+  // borrado que no va a pasar. Si la consulta falla, se sigue a la confirmación:
+  // el DELETE vuelve a comprobarlo y el modal muestra el motivo.
+  async function pedirEliminar(p: AdminPedido) {
+    const detalle = await getBloqueoBorrado('pedidos', p.id).catch(() => null)
+    if (detalle) setBloqueo({ titulo: `No se puede eliminar el pedido #${p.id.slice(-6).toUpperCase()}`, detalle })
+    else setPedidoAEliminar(p)
+  }
 
   useEffect(() => {
-    getPedidos().then(data => { setPedidos(data); setLoading(false) })
+    getPedidos().then(async data => {
+      setPedidos(data)
+      setLoading(false)
+      const ver = tomarVerDeLaUrl()
+      if (!ver) return
+      const pedido = data.find(p => p.id === ver) ?? await getPedido(ver).catch(() => null)
+      if (pedido) setSelected(pedido)
+    })
   }, [])
 
   const lista = useMemo(() => {
@@ -33,7 +53,16 @@ export default function PedidosPage() {
 
   function handleUpdated(updated: AdminPedido) {
     setPedidos(prev => prev.map(p => p.id === updated.id ? updated : p))
-    setSelected(updated)
+    // Solo si sigue abierto: un «Deshacer» pulsado con el detalle cerrado no lo reabre.
+    setSelected(prev => prev?.id === updated.id ? updated : prev)
+  }
+
+  async function confirmarEliminar() {
+    if (!pedidoAEliminar) return
+    // Si el backend lo rechaza (tiene pagos), lanza y el modal muestra el motivo.
+    await deletePedido(pedidoAEliminar.id)
+    setPedidos(prev => prev.filter(p => p.id !== pedidoAEliminar.id))
+    setPedidoAEliminar(null)
   }
 
   return (
@@ -103,7 +132,16 @@ export default function PedidosPage() {
                     </div>
                   </td>
                   <td style={{ textAlign: 'right' }}>
-                    <button className="btn-secondary btn-sm" onClick={() => setSelected(p)}>Ver detalle</button>
+                    <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                      <button className="btn-secondary btn-sm" onClick={() => setSelected(p)}>Ver detalle</button>
+                      <button
+                        className="btn-ghost btn-sm"
+                        style={{ display: 'flex', alignItems: 'center', gap: 5 }}
+                        onClick={() => pedirEliminar(p)}
+                      >
+                        <TrashIcon /> Eliminar
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -114,6 +152,25 @@ export default function PedidosPage() {
 
       {selected && (
         <PedidoDrawer pedido={selected} onClose={() => setSelected(null)} onUpdated={handleUpdated} />
+      )}
+
+      {pedidoAEliminar && (
+        <ConfirmModal
+          title={`¿Eliminar el pedido #${pedidoAEliminar.id.slice(-6).toUpperCase()}?`}
+          message="Esta acción es permanente y no se puede deshacer. Si no se ha enviado, sus unidades vuelven al inventario. Los pedidos con pagos no se eliminan: cámbialos a cancelado."
+          onConfirm={confirmarEliminar}
+          onCancel={() => setPedidoAEliminar(null)}
+        />
+      )}
+
+      {bloqueo && (
+        <AvisoModal
+          title={bloqueo.titulo}
+          bloqueo={bloqueo.detalle}
+          verLabel="Ver detalle"
+          onVer={id => { setBloqueo(null); setSelected(pedidos.find(p => p.id === id) ?? null) }}
+          onClose={() => setBloqueo(null)}
+        />
       )}
     </>
   )

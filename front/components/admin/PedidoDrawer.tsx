@@ -4,19 +4,15 @@ import type { AdminPedido, EstadoPedido } from '@/lib/admin/types'
 import StatusBadge from './StatusBadge'
 import PagosLista from './PagosLista'
 import AvisoRevision from './AvisoRevision'
-import { updateEstadoPedido } from '@/lib/admin/api'
+import ConfirmModal from './ConfirmModal'
+import { updateEstadoPedido, getPedido, ErrorConMotivo } from '@/lib/admin/api'
+import { useAvisar, Cargando } from './Avisos'
+import { BloqueosEstado } from './BloqueosEstado'
 import { esDePrueba } from '@/lib/admin/pagos'
 import { formatPrecio } from '@/lib/format'
-
-/**
- * Los que se eligen a mano. `pagado` es para un pago que llegó por fuera
- * (transferencia). Los de la pasarela —esperando pago, vencido, revisar— no
- * se eligen: los pone el cobro en línea.
- */
-const ESTADOS: EstadoPedido[] = ['pendiente', 'pagado', 'enviado', 'entregado', 'cancelado']
-
-/** Ya devolvieron sus unidades: el backend no deja sacarlos de ahí. */
-const FINALES: EstadoPedido[] = ['cancelado', 'expirado']
+import {
+  opcionesEstado, contextoPedido, confirmacionPedido, sePuedeDeshacer, ETIQUETA_ESTADO,
+} from '@/lib/admin/transiciones'
 
 export default function PedidoDrawer({
   pedido, onClose, onUpdated,
@@ -25,18 +21,44 @@ export default function PedidoDrawer({
   onClose: () => void
   onUpdated: (p: AdminPedido) => void
 }) {
-  const [estado, setEstado] = useState<EstadoPedido>(pedido.estado)
+  // '' = todavía no eligió: el select arranca en «Cambiar a…», no en el estado actual.
+  const [estado, setEstado] = useState<EstadoPedido | ''>('')
   const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
+  const [confirmar, setConfirmar] = useState<ReturnType<typeof confirmacionPedido>>(null)
+  const avisar = useAvisar()
+  const codigo = `#${pedido.id.slice(-6).toUpperCase()}`
 
-  async function aplicar() {
-    if (estado === pedido.estado) return
+  // Solo lo que el backend va a aceptar (lib/admin/transiciones). Lo bloqueado
+  // por la situación del momento se muestra desactivado, con su motivo.
+  const opciones = opcionesEstado('pedido', pedido.estado, contextoPedido(pedido))
+  const avances = opciones.filter(o => o.tipo === 'avance')
+  const correcciones = opciones.filter(o => o.tipo === 'correccion')
+
+  function aplicar() {
+    if (!estado) return
+    const pregunta = confirmacionPedido(pedido.estado, estado)
+    if (pregunta) setConfirmar(pregunta)
+    else cambiar(estado, pedido.estado)
+  }
+
+  async function cambiar(destino: EstadoPedido, desde: EstadoPedido) {
     setSaving(true)
-    setError('')
     try {
-      onUpdated(await updateEstadoPedido(pedido.id, estado))
-    } catch {
-      setError('No se pudo cambiar el estado. Recarga la página e intenta de nuevo.')
+      onUpdated(await updateEstadoPedido(pedido.id, destino))
+      setEstado('')
+      // «Deshacer» solo si el regreso es una corrección de la tabla: un
+      // cancelado ya devolvió el stock y no tiene vuelta.
+      avisar('exito', `Pedido ${codigo}: ahora ${ETIQUETA_ESTADO[destino]}`,
+        sePuedeDeshacer('pedido', desde, destino)
+          ? { etiqueta: 'Deshacer', alPulsar: () => cambiar(desde, destino) }
+          : undefined)
+    } catch (err) {
+      // Lo más común: la pasarela lo cambió mientras el panel estaba abierto.
+      // Se trae el estado real para que lo que se ve deje de estar viejo.
+      avisar('error', err instanceof ErrorConMotivo
+        ? `Pedido ${codigo}: ${err.message}. Se actualizó con su estado actual.`
+        : `No se pudo cambiar el estado del pedido ${codigo}. Recarga la página e intenta de nuevo.`)
+      getPedido(pedido.id).then(onUpdated).catch(() => {})
     } finally {
       setSaving(false)
     }
@@ -75,7 +97,7 @@ export default function PedidoDrawer({
           {pedido.items.map(item => (
             <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--admin-border-row)' }}>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700 }}>{item.producto.nombre}</div>
+                <div style={{ fontSize: 14, fontWeight: 700 }}>{item.producto?.nombre ?? item.nombre}</div>
                 <div style={{ fontSize: 12, color: 'var(--admin-text-muted)' }}>× {item.cantidad}</div>
               </div>
               <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-amber)' }}>
@@ -94,36 +116,54 @@ export default function PedidoDrawer({
           <PagosLista pagos={pedido.pagos} />
         </div>
 
-        {!FINALES.includes(pedido.estado) && (
+        {/* Cancelado y vencido no tienen a dónde ir: sin pie. */}
+        {opciones.length > 0 && (
           <div className="admin-drawer-footer" style={{ flexWrap: 'wrap' }}>
-            {error && <div role="alert" style={{ width: '100%', fontSize: 13, color: 'var(--status-revision-txt)' }}>{error}</div>}
+            <BloqueosEstado opciones={opciones} />
             <select
               className="admin-select"
+              aria-label="Nuevo estado del pedido"
               value={estado}
-              onChange={e => setEstado(e.target.value as EstadoPedido)}
+              onChange={e => setEstado(e.target.value as EstadoPedido | '')}
+              disabled={saving}
               style={{ flex: 1, minWidth: 0, minHeight: 44 }}
             >
-              {/* El estado actual, aunque no se pueda elegir a mano: sin él, el
-                  select mostraría «Pendiente» para un pedido que espera pago. */}
-              {!ESTADOS.includes(pedido.estado) && (
-                <option value={pedido.estado} disabled>{ETIQUETAS[pedido.estado]}</option>
+              <option value="" disabled>Cambiar a…</option>
+              {avances.map(o => (
+                <option key={o.destino} value={o.destino} disabled={!!o.bloqueo}>
+                  {ETIQUETA_ESTADO[o.destino]}{o.bloqueo ? ' (no disponible)' : ''}
+                </option>
+              ))}
+              {correcciones.length > 0 && (
+                <optgroup label="Corrección">
+                  {correcciones.map(o => (
+                    <option key={o.destino} value={o.destino}>↩ Volver a {ETIQUETA_ESTADO[o.destino]}</option>
+                  ))}
+                </optgroup>
               )}
-              {ESTADOS.map(e => <option key={e} value={e}>{ETIQUETAS[e]}</option>)}
             </select>
-            <button className="btn-primary" onClick={aplicar} disabled={saving || estado === pedido.estado} style={{ minHeight: 44 }}>
-              {saving ? '…' : 'Aplicar'}
+            <button className="btn-primary" onClick={aplicar} disabled={saving || !estado} style={{ minHeight: 44 }} aria-busy={saving}>
+              {saving ? <Cargando texto="Aplicando…" /> : 'Aplicar'}
             </button>
           </div>
         )}
       </div>
+
+      {confirmar && estado && (
+        <ConfirmModal
+          title={confirmar.titulo}
+          message={confirmar.mensaje}
+          confirmLabel={confirmar.boton}
+          busyLabel="Aplicando…"
+          danger={estado === 'cancelado'}
+          cancelLabel="Volver"
+          sobrePanel
+          onConfirm={async () => { setConfirmar(null); await cambiar(estado, pedido.estado) }}
+          onCancel={() => setConfirmar(null)}
+        />
+      )}
     </div>
   )
-}
-
-const ETIQUETAS: Record<EstadoPedido, string> = {
-  pendiente: 'Pendiente', pagado: 'Pagado', enviado: 'Enviado', entregado: 'Entregado',
-  cancelado: 'Cancelado', pendiente_pago: 'Esperando pago', expirado: 'Vencido',
-  requiere_revision: 'Revisar',
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
