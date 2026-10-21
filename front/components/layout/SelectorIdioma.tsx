@@ -33,26 +33,38 @@ export default function SelectorIdioma() {
   // es lo único que hay que repensar: el botón único deja de tener sentido y
   // toca volver a un desplegable.
   const otro = IDIOMAS.find(i => i !== actual) ?? actual
-  const slugActual = typeof params?.slug === 'string' ? params.slug : null
 
   /**
    * El destino, en la forma que next-intl necesita para cada caso.
    *
-   * Para una ruta sin parámetros basta la cadena. Para una de detalle NO sirve
-   * la ruta ya resuelta: next-intl la coteja contra la plantilla declarada en
-   * routing.ts —/experiencias/[slug]— y revienta con «Insufficient params
-   * provided for localized pathname» porque no sabe qué poner en [slug]. Hay
-   * que darle la plantilla y el parámetro por separado.
+   * Para una ruta sin parámetros basta la cadena. Para una con parámetros NO
+   * sirve la ruta ya resuelta: next-intl la coteja contra la plantilla
+   * declarada en routing.ts —/experiencias/[slug], /mi-pedido/[token]— y
+   * revienta con «Insufficient params provided for localized pathname» porque
+   * no sabe qué poner en el hueco. Hay que darle la plantilla y los parámetros
+   * por separado. Vale para cualquier parámetro, no solo `slug`: el primero
+   * que no lo era (`token`, en «mi pedido») tumbaba la página entera.
    */
   const destino = () => {
-    if (!slugActual) return pathname
+    const dinamicos = Object.entries(params ?? {})
+      .filter((e): e is [string, string] => e[0] !== 'locale' && typeof e[1] === 'string')
+    if (dinamicos.length === 0) return pathname
 
-    const plantilla = pathname.replace(slugActual, '[slug]')
+    // Segmento a segmento, para no tocar un trozo de otro tramo que por
+    // casualidad contenga el mismo texto.
+    const plantilla = pathname
+      .split('/')
+      .map(tramo => {
+        const nombre = dinamicos.find(([, valor]) => valor === tramo)?.[0]
+        return nombre ? `[${nombre}]` : tramo
+      })
+      .join('/')
+    const valores = Object.fromEntries(dinamicos)
     // Si esta ficha no tiene slug traducido se reutiliza el actual: la ruta
     // sigue resolviendo porque el backend busca el slug en los dos idiomas, y
     // la propia ficha redirige luego a la canónica.
-    const slug = slugs?.[otro] ?? slugActual
-    return { pathname: plantilla, params: { slug } }
+    if (valores.slug) valores.slug = slugs?.[otro] ?? valores.slug
+    return { pathname: plantilla, params: valores }
   }
 
   return (
