@@ -17,6 +17,11 @@ describe('rutas que reenvía el puente del panel', () => {
     expect(rutaPermitida('PATCH', 'aves/abc123')).toBe(true)
     expect(rutaPermitida('PATCH', 'aves/orden')).toBe(true)
     expect(rutaPermitida('DELETE', 'aves/abc123')).toBe(true)
+    expect(rutaPermitida('GET', 'productos/abc123/bloqueo-borrado')).toBe(true)
+    expect(rutaPermitida('GET', 'experiencias/abc123/bloqueo-borrado')).toBe(true)
+    expect(rutaPermitida('GET', 'pedidos/abc123/bloqueo-borrado')).toBe(true)
+    expect(rutaPermitida('GET', 'reservas/abc123/bloqueo-borrado')).toBe(true)
+    expect(rutaPermitida('GET', 'aves/abc123/bloqueo-borrado')).toBe(false)
   })
 
   it('no reenvía rutas que no están en la lista', () => {

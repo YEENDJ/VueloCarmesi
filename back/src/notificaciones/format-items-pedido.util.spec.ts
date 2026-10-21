@@ -1,8 +1,8 @@
 import { tablaItemsHtml, lineasItemsTexto, ItemPedido } from './format-items-pedido.util'
 
 const items: ItemPedido[] = [
-  { cantidad: 2, precio: 20000, producto: { nombre: 'Café Premium 500g' } },
-  { cantidad: 1, precio: 15000, producto: { nombre: 'Miel Orgánica 250g' } },
+  { cantidad: 2, precio: 20000, nombre: 'Café Premium 500g', producto: { nombre: 'Café Premium 500g' } },
+  { cantidad: 1, precio: 15000, nombre: 'Miel Orgánica 250g', producto: { nombre: 'Miel Orgánica 250g' } },
 ]
 
 describe('tablaItemsHtml', () => {
@@ -28,7 +28,7 @@ describe('tablaItemsHtml', () => {
 
   it('escapa el nombre del producto en ambas variantes', () => {
     const itemsConHtml: ItemPedido[] = [
-      { cantidad: 1, precio: 1000, producto: { nombre: '<script>alert(1)</script>' } },
+      { cantidad: 1, precio: 1000, nombre: '<script>alert(1)</script>', producto: { nombre: '<script>alert(1)</script>' } },
     ]
     expect(tablaItemsHtml(itemsConHtml, 'cliente')).not.toContain('<script>')
     expect(tablaItemsHtml(itemsConHtml, 'admin')).not.toContain('<script>')

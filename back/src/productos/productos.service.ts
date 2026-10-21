@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common'
+import type { Prisma } from '@prisma/client'
+import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { SincronizadorTraduccion } from '../traduccion/sincronizador.service'
 import { aplicarTraduccion } from '../traduccion/aplicar-traduccion'
@@ -6,6 +7,8 @@ import { IDIOMA_ORIGEN, TEXTO_PRODUCTO, LISTA_PRODUCTO } from '../traduccion/cam
 import { HistorialSlugs } from '../slugs/historial-slugs.service'
 import { capitalizarNombre } from '../common/nombre'
 import { portadaDe } from '../common/portada'
+import { PEDIDO_EN_CURSO, bloqueo } from '../common/borrado-con-historial'
+import { codigoPedido } from '../pedidos/consulta.util'
 import { CreateProductoDto } from './dto/create-producto.dto'
 import { UpdateProductoDto } from './dto/update-producto.dto'
 
@@ -102,8 +105,39 @@ export class ProductosService {
     return actualizado
   }
 
+  /**
+   * Los pedidos ya cerrados se quedan con la copia del nombre e imagen; los que
+   * faltan por despachar bloquean el borrado. Ver common/borrado-con-historial.
+   */
   async remove(id: string) {
     await this.findById(id)
-    return this.prisma.producto.delete({ where: { id } })
+    return this.prisma.$transaction(async (tx) => {
+      // Bloquea la fila: un pedido que entra mientras tanto espera a que esto
+      // termine, y entonces ya no encuentra el producto. Sin esto podía quedar
+      // un pedido nuevo, por despachar, apuntando a nada.
+      await tx.$queryRaw`SELECT id FROM "Producto" WHERE id = ${id} FOR UPDATE`
+      const b = await this.bloqueo(id, tx)
+      if (b) throw new ConflictException(b.motivo)
+      return tx.producto.delete({ where: { id } })
+    })
+  }
+
+  /** Lo que el panel pregunta antes de abrir la confirmación: nulo si se puede borrar. */
+  async bloqueoBorrado(id: string) {
+    await this.findById(id)
+    return (await this.bloqueo(id)) ?? { motivo: null }
+  }
+
+  private async bloqueo(id: string, db: Prisma.TransactionClient = this.prisma) {
+    const enCurso = await db.pedido.findMany({
+      where: { estado: { in: PEDIDO_EN_CURSO }, items: { some: { productoId: id } } },
+      select: { id: true, estado: true },
+      orderBy: { createdAt: 'asc' },
+    })
+    return bloqueo(
+      'pedidos sin despachar',
+      'Despáchalos o cancélalos y vuelve a intentarlo',
+      enCurso.map(p => ({ id: p.id, etiqueta: codigoPedido(p.id), estado: p.estado })),
+    )
   }
 }

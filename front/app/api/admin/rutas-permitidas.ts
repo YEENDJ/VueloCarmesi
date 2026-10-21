@@ -18,6 +18,8 @@ const PERMITIDAS: Record<Metodo, RegExp[]> = {
     /^pedidos$/, new RegExp(`^pedidos/${ID}$`),
     /^solicitudes-grupo$/,
     /^contacto$/,
+    // Si algo impide borrarlo: el panel lo pregunta antes de pedir confirmación.
+    new RegExp(`^(productos|experiencias|pedidos|reservas)/${ID}/bloqueo-borrado$`),
   ],
   POST: [/^experiencias$/, /^productos$/, /^aves$/],
   PATCH: [

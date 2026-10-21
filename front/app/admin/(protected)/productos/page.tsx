@@ -1,10 +1,10 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react'
 import type { AdminProducto } from '@/lib/admin/types'
-import { getProductosAdmin, updateProducto, deleteProducto } from '@/lib/admin/api'
+import { getProductosAdmin, updateProducto, deleteProducto, getBloqueoBorrado, type BloqueoBorrado } from '@/lib/admin/api'
 import { revalidateProductos } from '@/app/actions/revalidate'
 import ProductoFormModal from '@/components/admin/ProductoFormModal'
-import ConfirmModal, { TrashIcon } from '@/components/admin/ConfirmModal'
+import ConfirmModal, { AvisoModal, TrashIcon } from '@/components/admin/ConfirmModal'
 import { formatPrecio } from '@/lib/format'
 
 export default function ProductosPage() {
@@ -20,6 +20,16 @@ export default function ProductosPage() {
   const [savingStock, setSavingStock] = useState<string | null>(null)
   const [modal, setModal] = useState<AdminProducto | null | 'new'>()
   const [productoAEliminar, setProductoAEliminar] = useState<AdminProducto | null>(null)
+  const [bloqueo, setBloqueo] = useState<{ titulo: string; detalle: BloqueoBorrado } | null>(null)
+
+  // Primero se pregunta si algo lo impide, para no pedir confirmación de un
+  // borrado que no va a pasar. Si la consulta falla, se sigue a la confirmación:
+  // el DELETE vuelve a comprobarlo y el modal muestra el motivo.
+  async function pedirEliminar(p: AdminProducto) {
+    const detalle = await getBloqueoBorrado('productos', p.id).catch(() => null)
+    if (detalle) setBloqueo({ titulo: `No se puede eliminar "${p.nombre}"`, detalle })
+    else setProductoAEliminar(p)
+  }
 
   useEffect(() => {
     getProductosAdmin().then(data => { setProductos(data); setLoading(false) })
@@ -146,7 +156,7 @@ export default function ProductosPage() {
                         <button
                           className="btn-ghost btn-sm"
                           style={{ display: 'flex', alignItems: 'center', gap: 5 }}
-                          onClick={() => setProductoAEliminar(p)}
+                          onClick={() => pedirEliminar(p)}
                         >
                           <TrashIcon /> Eliminar
                         </button>
@@ -179,9 +189,19 @@ export default function ProductosPage() {
       {productoAEliminar && (
         <ConfirmModal
           title={`¿Eliminar "${productoAEliminar.nombre}"?`}
-          message="Esta acción es permanente y no se puede deshacer."
+          message="Esta acción es permanente y no se puede deshacer. Los pedidos ya despachados o cancelados se conservan en el historial."
           onConfirm={confirmarEliminar}
           onCancel={() => setProductoAEliminar(null)}
+        />
+      )}
+
+      {bloqueo && (
+        <AvisoModal
+          title={bloqueo.titulo}
+          bloqueo={bloqueo.detalle}
+          verLabel="Ver pedido"
+          hrefDe={id => `/admin/pedidos?ver=${id}`}
+          onClose={() => setBloqueo(null)}
         />
       )}
     </>

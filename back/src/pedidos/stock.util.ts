@@ -1,7 +1,8 @@
 import type { Prisma } from '@prisma/client'
 
 type Tx = Prisma.TransactionClient
-type Item = { productoId: string; cantidad: number }
+// `productoId` nulo: el producto se eliminó y no hay inventario al que volver.
+type Item = { productoId: string | null; cantidad: number }
 
 /**
  * Devuelve al inventario las unidades de un pedido, una sola vez.
@@ -20,6 +21,7 @@ export async function devolverStock(tx: Tx, pedidoId: string, items: Item[]): Pr
   })
   if (count === 0) return false
   for (const item of items) {
+    if (!item.productoId) continue
     await tx.producto.update({
       where: { id: item.productoId },
       data: { stock: { increment: item.cantidad } },
@@ -39,6 +41,8 @@ export async function devolverStock(tx: Tx, pedidoId: string, items: Item[]): Pr
  */
 export async function reapartarStock(tx: Tx, pedidoId: string, items: Item[]): Promise<void> {
   for (const item of items) {
+    // Un producto eliminado ya no tiene unidades que apartar.
+    if (!item.productoId) throw new StockInsuficienteError(null)
     const { count } = await tx.producto.updateMany({
       where: { id: item.productoId, stock: { gte: item.cantidad } },
       data: { stock: { decrement: item.cantidad } },
@@ -49,7 +53,7 @@ export async function reapartarStock(tx: Tx, pedidoId: string, items: Item[]): P
 }
 
 export class StockInsuficienteError extends Error {
-  constructor(readonly productoId: string) {
-    super(`Stock insuficiente para '${productoId}'`)
+  constructor(readonly productoId: string | null) {
+    super(productoId ? `Stock insuficiente para '${productoId}'` : 'El producto se eliminó')
   }
 }

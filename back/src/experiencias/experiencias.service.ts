@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import type { Prisma } from '@prisma/client'
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { SincronizadorTraduccion } from '../traduccion/sincronizador.service'
 import { aplicarTraduccion } from '../traduccion/aplicar-traduccion'
@@ -6,6 +7,8 @@ import { IDIOMA_ORIGEN, TEXTO_EXPERIENCIA, LISTA_EXPERIENCIA } from '../traducci
 import { HistorialSlugs } from '../slugs/historial-slugs.service'
 import { capitalizarNombre } from '../common/nombre'
 import { portadaDe } from '../common/portada'
+import { RESERVA_SIN_RESOLVER, bloqueo } from '../common/borrado-con-historial'
+import { hoyBogota } from '../reservas/fecha-reserva.util'
 import { CreateExperienciaDto } from './dto/create-experiencia.dto'
 import { UpdateExperienciaDto } from './dto/update-experiencia.dto'
 
@@ -124,8 +127,48 @@ export class ExperienciasService {
     return actualizada
   }
 
+  /**
+   * Las reservas ya resueltas se quedan con la copia del nombre; las que están
+   * por confirmar o por atender bloquean el borrado. Ver common/borrado-con-historial.
+   */
   async remove(id: string) {
     await this.findById(id)
-    return this.prisma.experiencia.delete({ where: { id } })
+    return this.prisma.$transaction(async (tx) => {
+      // Igual que en productos: una reserva que entra mientras tanto espera.
+      await tx.$queryRaw`SELECT id FROM "Experiencia" WHERE id = ${id} FOR UPDATE`
+      const b = await this.bloqueo(id, tx)
+      if (b) throw new ConflictException(b.motivo)
+      return tx.experiencia.delete({ where: { id } })
+    })
+  }
+
+  /** Lo que el panel pregunta antes de abrir la confirmación: nulo si se puede borrar. */
+  async bloqueoBorrado(id: string) {
+    await this.findById(id)
+    return (await this.bloqueo(id)) ?? { motivo: null }
+  }
+
+  private async bloqueo(id: string, db: Prisma.TransactionClient = this.prisma) {
+    const enCurso = await db.reserva.findMany({
+        where: {
+          experienciaId: id,
+          OR: [
+            { estado: { in: RESERVA_SIN_RESOLVER } },
+            // La fecha se guarda como medianoche UTC del día elegido.
+            { estado: 'confirmada', fecha: { gte: new Date(hoyBogota()) } },
+          ],
+        },
+        select: { id: true, nombre: true, fecha: true, estado: true },
+        orderBy: { fecha: 'asc' },
+      })
+    return bloqueo(
+      'reservas en curso',
+      'Cancélalas o espera a que pase su fecha. Si solo quieres sacarla del sitio, archívala',
+      enCurso.map(r => ({
+        id: r.id,
+        etiqueta: `${r.nombre}, ${r.fecha.toISOString().slice(0, 10)}`,
+        estado: r.estado,
+      })),
+    )
   }
 }

@@ -16,6 +16,7 @@ export class ExperienciasController {
   @Get()              findAll(@Query('destacadas') destacadas?: string, @Query('idioma') idioma?: string) { return this.service.findAll(destacadas === 'true', idiomaValido(idioma)) }
   @Get('slug/:slug')  findBySlug(@Param('slug') slug: string, @Query('idioma') idioma?: string)           { return this.service.findBySlug(slug, idiomaValido(idioma)) }
   @Get(':id')         findOne(@Param('id') id: string)                                 { return this.service.findById(id) }
+  @UseGuards(AdminGuard) @Get(':id/bloqueo-borrado') bloqueoBorrado(@Param('id') id: string)                      { return this.service.bloqueoBorrado(id) }
   @UseGuards(AdminGuard) @Post()             create(@Body() dto: CreateExperienciaDto)                        { return this.service.create(dto) }
   @UseGuards(AdminGuard) @Patch(':id')       update(@Param('id') id: string, @Body() dto: UpdateExperienciaDto) { return this.service.update(id, dto) }
   @UseGuards(AdminGuard) @Delete(':id')      remove(@Param('id') id: string)                                  { return this.service.remove(id) }

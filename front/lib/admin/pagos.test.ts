@@ -4,7 +4,7 @@ import type { AdminPago } from './types'
 
 const pago = (modo: string, estado = 'aprobado'): AdminPago => ({
   id: 'p', referencia: 'VC-P-1', monto: 1000, estado, metodo: 'pse', motivo: null,
-  modo, proveedor: 'wompi', createdAt: '2026-10-01T00:00:00Z',
+  modo, proveedor: 'wompi', proveedorTxId: null, createdAt: '2026-10-01T00:00:00Z',
 })
 
 describe('esDePrueba', () => {
