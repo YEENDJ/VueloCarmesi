@@ -8,6 +8,7 @@ import Button from '@/components/ui/Button'
 import QuantitySelector from '@/components/ui/QuantitySelector'
 import SugerenciasCarrito from '@/components/shop/SugerenciasCarrito'
 import PagoSeguro from '@/components/shop/PagoSeguro'
+import UltimoPedido from '@/components/shop/UltimoPedido'
 
 export default function CarritoPage() {
   const idioma = useLocale()
@@ -54,6 +55,7 @@ export default function CarritoPage() {
         <h1 style={{ marginBottom: '0.5rem', color: 'var(--color-brown)', fontSize: 'var(--fs-h1)' }}>{t('vacio')}</h1>
         <p style={{ marginBottom: '1.5rem', opacity: 0.7 }}>{t('vacioTexto')}</p>
         <Button href="/tienda">{t('verTienda')}</Button>
+        <UltimoPedido />
       </section>
     )
   }

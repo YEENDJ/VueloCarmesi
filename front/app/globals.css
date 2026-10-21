@@ -7575,3 +7575,568 @@ html:has(.mini-carrito[open]) {
   /* La barra queda llena y quieta: sigue diciendo «en curso» sin moverse. */
   .pago-barra::before { animation: none; width: 100%; opacity: .35; }
 }
+
+/* ── Última compra bajo el carrito vacío (components/shop/UltimoPedido.tsx) ──
+   Una tarjeta con el código y «Ver cómo va», y debajo la consulta con código y
+   correo. En pantalla chica el enlace baja bajo el código. */
+.ultimo-pedido {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+}
+.ultimo-pedido-tarjeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-cream);
+  border: 1px solid var(--color-amber);
+  border-radius: 12px;
+}
+.ultimo-pedido-codigo {
+  min-width: 0;
+  font-weight: 700;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.ultimo-pedido-tarjeta .checkout-editar { align-self: center; }
+.ultimo-pedido-buscar {
+  margin: 0;
+  text-align: center;
+  font-size: 0.9375rem;
+  color: var(--color-brown);
+}
+.ultimo-pedido-buscar a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+  color: var(--color-crimson);
+}
+
+/* ══ «Mi pedido»: estado y consulta (components/shop/EstadoPedido.tsx y
+   ConsultaPedido.tsx) ══════════════════════════════════════════════════════
+   Mismo idioma que el carrito y el checkout: tarjetas crema claro con sombra
+   cálida, iconos en disco y los colores de estado del sitio (tokens.css).
+   Base para móvil: una columna. Desde 960px, el estado, el avance y los
+   productos a la izquierda, y el resumen y la ayuda a la derecha. */
+
+.pedido-cabecera { margin-bottom: clamp(1.25rem, 3vw, 2rem); }
+.pedido-antetitulo {
+  margin: 0;
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-crimson);
+}
+.pedido-titulo {
+  margin: 0.35rem 0 0;
+  color: var(--color-brown);
+  font-size: clamp(1.6rem, 5vw, 2.25rem);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.pedido-fecha {
+  margin: 0.5rem 0 0;
+  font-size: var(--fs-caption);
+  color: rgba(135, 43, 19, 0.7);
+}
+
+/* El disco de los iconos: 44px, el área táctil de referencia. */
+.pedido-disco {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(253, 195, 0, 0.25);
+  color: var(--color-brown);
+}
+.pedido-disco--grande { width: 64px; height: 64px; }
+
+.pedido-tarjeta {
+  min-width: 0;
+  background: #fff6e4;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(135, 43, 19, 0.1);
+  padding: clamp(18px, 4vw, 28px);
+  color: var(--color-brown);
+}
+.pedido-tarjeta-titulo {
+  margin: 0 0 1rem;
+  font-size: var(--fs-h3);
+  color: var(--color-brown);
+}
+
+/* ── Portada: el pedido, su estado al frente y el avance, en un bloque ──
+   El tono (borde de arriba, resplandor de la esquina y recuadro del estado)
+   dice de un vistazo si espera, avanzó o cerró. En móvil todo va apilado;
+   desde 860px el título y el estado comparten fila. */
+.pedido-portada {
+  --tono-fondo: var(--status-pendiente-bg);
+  --tono: var(--status-pendiente-txt);
+  min-width: 0;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(20px, 4.5vw, 40px);
+  background:
+    radial-gradient(120% 140% at 100% 0%, var(--tono-fondo) 0%, transparent 55%),
+    #fff6e4;
+  border: 1px solid rgba(135, 43, 19, 0.12);
+  border-top: 5px solid var(--tono);
+  border-radius: 16px;
+  box-shadow: 0 10px 32px rgba(135, 43, 19, 0.12);
+  color: var(--color-brown);
+}
+.pedido-tono--avance   { --tono-fondo: var(--status-confirmada-bg); --tono: var(--status-confirmada-txt); }
+.pedido-tono--camino   { --tono-fondo: var(--status-enviado-bg);    --tono: var(--status-enviado-txt); }
+.pedido-tono--listo    { --tono-fondo: var(--status-entregado-bg);  --tono: var(--status-entregado-txt); }
+.pedido-tono--revision { --tono-fondo: var(--status-revision-bg);   --tono: var(--status-revision-txt); }
+.pedido-tono--cerrado  { --tono-fondo: var(--status-cancelada-bg);  --tono: var(--status-cancelada-txt); }
+
+.pedido-portada-fila {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.25rem, 3vw, 2rem);
+  align-items: center;
+}
+@media (min-width: 860px) {
+  .pedido-portada-fila { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+}
+.pedido-portada .pedido-cabecera { margin-bottom: 0; min-width: 0; }
+
+/* El estado real, al frente del título: recuadro claro con la marca del tono. */
+.pedido-estado {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  min-width: 0;
+  padding: clamp(16px, 3vw, 22px);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(135, 43, 19, 0.1);
+  border-radius: 14px;
+  box-shadow: inset 4px 0 0 var(--tono);
+}
+.pedido-estado .pedido-disco { background: var(--tono-fondo); color: var(--tono); }
+.pedido-estado-cuerpo { flex: 1; min-width: 0; }
+.pedido-estado-titulo {
+  margin: 0;
+  font-size: clamp(1.25rem, 3.5vw, 1.6rem);
+  line-height: 1.2;
+  color: var(--color-brown);
+}
+.pedido-estado-texto {
+  margin: 0.4rem 0 0;
+  font-size: var(--fs-body);
+  line-height: 1.5;
+  color: rgba(135, 43, 19, 0.85);
+}
+
+/* El avance, debajo y separado por una línea fina: parte de la portada. */
+.pedido-portada-avance {
+  margin-top: clamp(1.5rem, 4vw, 2.25rem);
+  padding-top: clamp(1.25rem, 3.5vw, 2rem);
+  border-top: 1px dashed rgba(135, 43, 19, 0.22);
+}
+.pedido-portada-avance-titulo {
+  margin: 0 0 1.25rem;
+  font-family: var(--font-body);
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(135, 43, 19, 0.7);
+}
+
+/* ── Detalle: productos y resumen lado a lado, y el cierre a todo el ancho ──
+   En móvil una columna: resumen, productos y cierre. Desde 960px productos y
+   resumen comparten fila, cada uno con su altura, y el cierre ocupa la fila
+   de abajo entera. */
+.pedido-rejilla {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "resumen" "productos" "cierre";
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+  align-items: start;
+}
+.pedido-resumen { grid-area: resumen; }
+.pedido-productos { grid-area: productos; }
+.pedido-cierre { grid-area: cierre; }
+
+@media (min-width: 960px) {
+  .pedido-rejilla {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    grid-template-areas: "productos resumen" "cierre cierre";
+  }
+}
+
+/* Cierre: la ayuda y, al lado, las salidas. Desde 720px en fila, separadas
+   por una línea; antes, una debajo de la otra. */
+.pedido-cierre {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: center;
+}
+.pedido-salidas {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+@media (min-width: 720px) {
+  .pedido-cierre { grid-template-columns: minmax(0, 1fr) minmax(0, 17rem); gap: 2rem; }
+  .pedido-salidas {
+    align-items: center;
+    padding-left: 2rem;
+    border-left: 1px solid rgba(135, 43, 19, 0.15);
+  }
+}
+
+/* ── Resumen ── */
+.pedido-datos { margin: 0; display: flex; flex-direction: column; }
+.pedido-dato {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  min-height: 44px;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(135, 43, 19, 0.12);
+}
+.pedido-dato dt { font-size: var(--fs-caption); color: rgba(135, 43, 19, 0.7); }
+.pedido-dato dd { margin: 0; min-width: 0; font-weight: 700; overflow-wrap: anywhere; }
+.pedido-dato--total { border-bottom: 0; padding-top: 0.75rem; }
+.pedido-dato--sin-borde { border-bottom: 0; }
+.pedido-dato--total dd { font-size: clamp(1.3rem, 4vw, 1.5rem); color: var(--color-amber); }
+.pedido-dato-codigo { display: inline-flex; align-items: center; gap: 0.25rem; letter-spacing: 0.04em; }
+.pedido-copiar {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--color-crimson);
+  cursor: pointer;
+}
+.pedido-copiar:hover { background: rgba(213, 19, 18, 0.08); }
+.pedido-copiar:focus-visible { outline: 2px solid var(--color-brown); outline-offset: 2px; }
+
+/* ── Avance: vertical en móvil, horizontal desde 640px ── */
+.pedido-pasos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.pedido-paso {
+  position: relative;
+  display: flex;
+  gap: 0.875rem;
+  padding-bottom: 1.25rem;
+}
+.pedido-paso:last-child { padding-bottom: 0; }
+/* La línea que une un paso con el siguiente; se pinta si ya se pasó. */
+.pedido-paso:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 21px;
+  top: 48px;
+  bottom: 4px;
+  width: 2px;
+  border-radius: 2px;
+  background: rgba(135, 43, 19, 0.15);
+}
+.pedido-paso--hecho:not(:last-child)::after { background: var(--color-crimson); }
+.pedido-paso-disco {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 2px solid rgba(135, 43, 19, 0.2);
+  color: rgba(135, 43, 19, 0.45);
+}
+.pedido-paso--hecho .pedido-paso-disco { background: var(--color-crimson); border-color: var(--color-crimson); color: #fff; }
+.pedido-paso--actual .pedido-paso-disco {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-brown);
+  box-shadow: 0 0 0 5px rgba(253, 195, 0, 0.3);
+}
+.pedido-paso-texto { min-width: 0; display: flex; flex-direction: column; gap: 2px; padding-top: 0.6rem; }
+.pedido-paso-rotulo { font-weight: 700; color: var(--color-brown); }
+.pedido-paso--pendiente .pedido-paso-rotulo { color: rgba(135, 43, 19, 0.55); }
+.pedido-paso-detalle { font-size: var(--fs-caption); color: rgba(135, 43, 19, 0.65); }
+/* Cuándo llegó a ese paso: cifra, así que en negrita y sin partir la hora. */
+.pedido-paso-fecha {
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  color: var(--color-brown);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 640px) {
+  .pedido-pasos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; }
+  .pedido-paso { flex-direction: column; align-items: center; text-align: center; padding-bottom: 0; }
+  .pedido-paso:not(:last-child)::after {
+    left: calc(50% + 28px);
+    right: calc(-50% + 28px);
+    top: 21px;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+  }
+  .pedido-paso-texto { padding-top: 0; }
+}
+
+/* ── Productos ── */
+.pedido-items {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  border-bottom: 1px solid rgba(135, 43, 19, 0.15);
+}
+.pedido-item { display: flex; align-items: center; gap: 0.875rem; }
+.pedido-item-media {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+.pedido-item-media img { width: 100%; height: 100%; max-width: 100%; object-fit: cover; display: block; }
+.pedido-item-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.pedido-item-nombre {
+  font-weight: 700;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+a.pedido-item-nombre {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: 44px;
+  text-decoration: underline;
+  text-decoration-color: rgba(135, 43, 19, 0.3);
+  text-underline-offset: 3px;
+}
+a.pedido-item-nombre:hover { color: var(--color-crimson); text-decoration-color: currentColor; }
+.pedido-item-detalle { font-size: var(--fs-caption); color: rgba(135, 43, 19, 0.65); }
+.pedido-item-total { flex: none; font-weight: 700; }
+.pedido-items-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-top: 1rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+/* ── Ayuda ── */
+.pedido-ayuda { min-width: 0; display: flex; gap: 0.875rem; align-items: flex-start; }
+.pedido-ayuda .pedido-disco { background: rgba(37, 211, 102, 0.15); color: #128c4a; }
+.pedido-ayuda-cuerpo { flex: 1; min-width: 0; }
+.pedido-ayuda-cuerpo .pedido-tarjeta-titulo { margin-bottom: 0.35rem; }
+.pedido-ayuda-cuerpo p { margin: 0 0 0.875rem; line-height: 1.5; font-size: var(--fs-caption); }
+.pedido-ayuda-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 1.1rem;
+  border: 2px solid var(--color-crimson);
+  border-radius: 8px;
+  font-weight: 700;
+  color: var(--color-crimson);
+  text-decoration: none;
+  text-align: center;
+}
+.pedido-ayuda-boton:hover { background: var(--color-crimson); color: #fff; }
+.pedido-ayuda-boton:focus-visible { outline: 2px solid var(--color-brown); outline-offset: 2px; }
+
+/* ── No encontrado / sin conexión ── */
+.pedido-vacio {
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 40px);
+  text-align: center;
+  background: #fff6e4;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(135, 43, 19, 0.1);
+  color: var(--color-brown);
+}
+.pedido-vacio .pedido-disco { margin-bottom: 1rem; background: rgba(135, 43, 19, 0.1); }
+.pedido-vacio-titulo { margin: 0; font-size: clamp(1.4rem, 4.5vw, 1.9rem); line-height: 1.2; color: var(--color-brown); }
+.pedido-vacio-texto { margin: 0.75rem auto 0; max-width: 40ch; line-height: 1.5; }
+.pedido-acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 1.5rem; }
+
+/* ── Esqueleto de carga ── */
+.pedido-esqueleto { display: flex; flex-direction: column; gap: 1.25rem; }
+.pedido-hueso {
+  display: block;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(135, 43, 19, 0.08) 25%, rgba(135, 43, 19, 0.14) 50%, rgba(135, 43, 19, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: pedido-hueso-brillo 1.4s ease-in-out infinite;
+}
+.pedido-hueso--tarjeta { width: 100%; border-radius: 12px; }
+@keyframes pedido-hueso-brillo { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* ── Consulta con código y correo ── */
+.pedido-consulta {
+  max-width: 1040px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .pedido-consulta { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+.pedido-consulta-intro { min-width: 0; color: var(--color-brown); }
+.pedido-consulta-intro > .pedido-disco { margin-bottom: 1rem; }
+.pedido-consulta-texto { margin: 0.75rem 0 0; font-size: var(--fs-lead); line-height: 1.5; }
+.pedido-pistas-titulo { margin: clamp(1.5rem, 4vw, 2rem) 0 0.75rem; font-size: var(--fs-h3); color: var(--color-brown); }
+.pedido-pistas { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.pedido-pistas li { display: flex; align-items: center; gap: 0.875rem; }
+.pedido-pistas li > span:last-child { min-width: 0; line-height: 1.45; }
+.pedido-consulta-columna { min-width: 0; display: flex; flex-direction: column; gap: 1rem; }
+.pedido-consulta-ayuda { margin: 0; font-size: var(--fs-caption); line-height: 1.5; color: var(--color-brown); }
+.pedido-consulta-ayuda a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+  color: var(--color-crimson);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pedido-hueso { animation: none; }
+}
+
+/* ══ Aviso antes de ir a pagar la reserva (components/booking/ModalPago.tsx) ══
+   En móvil sale desde abajo, a todo el ancho y con las acciones al alcance
+   del pulgar; desde 600px es un diálogo centrado. */
+.modal-pago-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(60, 20, 8, 0.55);
+}
+.modal-pago {
+  width: 100%;
+  max-height: 92dvh;
+  overflow-y: auto;
+  padding: 1.5rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
+  background: #fff6e4;
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -10px 40px rgba(60, 20, 8, 0.25);
+  color: var(--color-brown);
+  font-family: var(--font-body);
+  animation: modal-pago-sube 0.22s ease-out;
+}
+@media (min-width: 600px) {
+  .modal-pago-fondo { align-items: center; padding: 1.5rem; }
+  .modal-pago {
+    max-width: 30rem;
+    padding: 2rem;
+    border-radius: 18px;
+    box-shadow: 0 20px 60px rgba(60, 20, 8, 0.3);
+  }
+}
+@keyframes modal-pago-sube { from { transform: translateY(24px); opacity: 0; } }
+
+.modal-pago-icono {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(253, 195, 0, 0.3);
+  color: var(--color-brown);
+}
+.modal-pago-titulo {
+  margin: 0.875rem 0 0;
+  font-size: clamp(1.3rem, 4.5vw, 1.6rem);
+  line-height: 1.2;
+  color: var(--color-brown);
+}
+.modal-pago-texto { margin: 0.5rem 0 0; line-height: 1.5; font-size: var(--fs-body); }
+
+.modal-pago-cifras { margin: 1.25rem 0 0; display: flex; flex-direction: column; }
+.modal-pago-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(135, 43, 19, 0.12);
+}
+.modal-pago-fila dt { min-width: 0; flex: 1 1 12rem; }
+.modal-pago-fila dd { margin: 0; font-weight: 700; white-space: nowrap; }
+.modal-pago-fila--ahora {
+  margin-bottom: 0.25rem;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--color-crimson);
+  border-radius: 12px;
+  background: rgba(213, 19, 18, 0.05);
+}
+.modal-pago-fila--ahora dt { font-weight: 700; }
+.modal-pago-fila--ahora dd { font-size: clamp(1.3rem, 4.5vw, 1.5rem); color: var(--color-crimson); }
+.modal-pago-fila--total { border-bottom: 0; font-size: var(--fs-caption); }
+.modal-pago-nota { display: block; font-size: var(--fs-caption); opacity: 0.75; }
+
+.modal-pago-acciones {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.625rem;
+}
+@media (min-width: 600px) {
+  .modal-pago-acciones { flex-direction: row; justify-content: flex-end; }
+}
+.modal-pago-cancelar,
+.modal-pago-continuar {
+  min-height: 48px;
+  padding: 0 1.25rem;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.modal-pago-cancelar { border: 2px solid rgba(135, 43, 19, 0.35); background: transparent; color: var(--color-brown); }
+.modal-pago-cancelar:hover { border-color: var(--color-brown); }
+.modal-pago-continuar { border: 0; background: var(--color-crimson); color: var(--color-cream); }
+.modal-pago-continuar:hover { background: #b30f0e; }
+.modal-pago-cancelar:focus-visible,
+.modal-pago-continuar:focus-visible { outline: 3px solid var(--color-gold); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-pago { animation: none; }
+}

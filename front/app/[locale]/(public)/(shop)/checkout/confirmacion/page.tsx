@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useLastOrder, setLastOrder } from '@/lib/cart/store'
+import { useLastOrder } from '@/lib/cart/store'
 import { formatPrecio } from '@/lib/format'
 import Button from '@/components/ui/Button'
 
@@ -10,6 +10,7 @@ export default function ConfirmacionPage() {
   const idioma = useLocale()
 
   const t = useTranslations('tienda.checkout')
+  const tm = useTranslations('miPedido')
 
   const router = useRouter()
   const lastOrder = useLastOrder()
@@ -60,7 +61,18 @@ export default function ConfirmacionPage() {
         </div>
       </div>
 
-      <Button onClick={() => { setLastOrder(null); router.push('/tienda') }}>{t('volverTienda')}</Button>
+      {/* El último pedido ya no se borra al salir: es lo que deja al carrito
+          vacío ofrecer «Ver cómo va» (UltimoPedido). */}
+      <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+        {lastOrder.token && (
+          <Button href={{ pathname: '/mi-pedido/[token]', params: { token: lastOrder.token } }} style={{ minHeight: 44 }}>
+            {tm('verMiPedido')}
+          </Button>
+        )}
+        <Button href="/tienda" variant={lastOrder.token ? 'outline' : 'primary'} style={{ minHeight: 44 }}>
+          {t('volverTienda')}
+        </Button>
+      </div>
     </section>
   )
 }
