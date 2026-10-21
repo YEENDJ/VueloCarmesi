@@ -1467,7 +1467,10 @@
       "noEncontradoTexto": "The link may be incomplete. If you paid, message us on WhatsApp with your email and we’ll look it up.",
       "errorRed": "We couldn’t check your payment. Check your connection and try again.",
       "volverInicio": "Back to home",
-      "volverTienda": "Back to the shop"
+      "volverTienda": "Back to the shop",
+      "sinTerminarTitulo": "Your payment isn’t finished",
+      "sinTerminarTexto": "You opened the payment page but didn’t complete it, and you weren’t charged. You can pay now.",
+      "pagarAhora": "Pay now"
     }
   },
   "miPedido": {
@@ -1561,7 +1564,8 @@
     "ayudaTitulo": "Need help?",
     "ayudaTexto": "Message us on WhatsApp and mention your code {codigo}: we’ll reply with an up-to-date status.",
     "ayudaBoton": "Message us on WhatsApp",
-    "consultarOtro": "Look up another order"
+    "consultarOtro": "Look up another order",
+    "pagoEnCurso": "Your bank is processing a payment for this order. We’ll email you as soon as it responds: there’s no need to pay again."
   },
   "miReserva": {
     "placeholderCodigo": "VC-AB12CD",
@@ -1654,6 +1658,7 @@
     "saldo": "Balance on the day of the activity",
     "ayudaTexto": "Message us on WhatsApp and mention your code {codigo}: we’ll reply with an up-to-date status.",
     "consultarOtro": "Look up another booking",
-    "verExperiencias": "See experiences"
+    "verExperiencias": "See experiences",
+    "pagoEnCurso": "Your bank is processing the deposit payment. We’ll email you as soon as it responds: there’s no need to pay again."
   }
 }

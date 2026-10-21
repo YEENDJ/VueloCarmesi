@@ -36,4 +36,15 @@ describe('vista pública de una reserva', () => {
     expect(v.abonoPagado).toBe(true)
     expect(v.referenciaPago).toBe('R1')
   })
+
+  it('pago en curso solo si el banco tiene la transacción y no ha respondido', () => {
+    const esperando = { ...base, estado: 'pendiente_pago' }
+    const pago = { referencia: 'R1', estado: 'pendiente', createdAt: new Date() }
+    expect(vistaPublicaReserva({ ...esperando, pagos: [{ ...pago, proveedorTxId: 'tx-1' }] }).pagoEnCurso).toBe(true)
+    // Abrió la pasarela y la cerró: el banco nunca la tuvo, puede pagar de nuevo.
+    expect(vistaPublicaReserva({ ...esperando, pagos: [{ ...pago, proveedorTxId: null }] }).pagoEnCurso).toBe(false)
+    // Pasado el tope de 24 h ya no bloquea.
+    const viejo = { ...pago, proveedorTxId: 'tx-1', createdAt: new Date(Date.now() - 25 * 3_600_000) }
+    expect(vistaPublicaReserva({ ...esperando, pagos: [viejo] }).pagoEnCurso).toBe(false)
+  })
 })

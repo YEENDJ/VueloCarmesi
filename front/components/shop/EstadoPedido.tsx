@@ -141,8 +141,13 @@ export default function EstadoPedido({ token }: { token: string }) {
             <div className="pedido-estado-cuerpo">
               <h2 className="pedido-estado-titulo">{t(`estados.${pedido.estado}.titulo`)}</h2>
               <p className="pedido-estado-texto">{estadoTexto}</p>
-              {/* Esperando pago y aún a tiempo: abre un intento nuevo y va a la pasarela. */}
-              {esperaPago && pedido.referenciaPago && (
+              {/* Esperando pago y aún a tiempo: abre un intento nuevo y va a la
+                  pasarela. Si el banco ya tiene uno en curso, se espera: otro
+                  intento podría terminar en un cobro doble. */}
+              {esperaPago && pedido.pagoEnCurso && (
+                <p className="pedido-estado-texto" style={{ marginTop: '0.75rem', fontWeight: 700 }}>{t('pagoEnCurso')}</p>
+              )}
+              {esperaPago && !pedido.pagoEnCurso && pedido.referenciaPago && (
                 <BotonPagar referencia={pedido.referenciaPago} tipo="pedido">{t('irAPagar')}</BotonPagar>
               )}
             </div>

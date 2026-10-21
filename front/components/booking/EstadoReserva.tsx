@@ -152,8 +152,13 @@ export default function EstadoReserva({ token }: { token: string }) {
             <div className="pedido-estado-cuerpo">
               <h2 className="pedido-estado-titulo">{t(`estados.${estado}.titulo`)}</h2>
               <p className="pedido-estado-texto">{estadoTexto}</p>
-              {/* Esperando el abono y aún a tiempo: abre un intento nuevo y va a la pasarela. */}
-              {esperaPago && reserva.referenciaPago && (
+              {/* Esperando el abono y aún a tiempo: abre un intento nuevo y va a
+                  la pasarela. Si el banco ya tiene uno en curso, se espera: otro
+                  intento podría terminar en un cobro doble. */}
+              {esperaPago && reserva.pagoEnCurso && (
+                <p className="pedido-estado-texto" style={{ marginTop: '0.75rem', fontWeight: 700 }}>{t('pagoEnCurso')}</p>
+              )}
+              {esperaPago && !reserva.pagoEnCurso && reserva.referenciaPago && (
                 <BotonPagar referencia={reserva.referenciaPago} tipo="reserva">{t('irAPagar')}</BotonPagar>
               )}
             </div>
