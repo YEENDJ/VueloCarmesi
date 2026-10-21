@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { Check, CircleAlert, Clock, SearchX, ShieldCheck, TimerOff, WifiOff } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import VerMiReserva from '@/components/booking/VerMiReserva'
 import { clearCart, useLastOrder } from '@/lib/cart/store'
 import { formatPrecio } from '@/lib/format'
 import {
@@ -46,6 +47,7 @@ export default function ResultadoPago({
 }) {
   const t = useTranslations('pagos.resultado')
   const tc = useTranslations('tienda.checkout')
+  const tm = useTranslations('miPedido')
   const idioma = useLocale()
   const ultimoPedido = useLastOrder()
 
@@ -269,6 +271,21 @@ export default function ResultadoPago({
             esPedido
               ? <Button href="/carrito" style={{ minHeight: 44 }}>{t('irCarrito')}</Button>
               : <Button href="/experiencias" style={{ minHeight: 44 }}>{t('irExperiencias')}</Button>
+          )}
+          {/* Con la llave de este pedido: desde ahí puede volver a ver cómo va
+              cuando quiera, y es el mismo enlace que le llega por correo. */}
+          {/* La reserva de este pago, si es la que guardó este navegador. */}
+          {!esPedido && estado?.codigo && (pantalla === 'aprobado' || pantalla === 'pendiente') && (
+            <VerMiReserva codigo={estado.codigo} variant={pantalla === 'aprobado' ? 'primary' : 'outline'} />
+          )}
+          {resumen?.token && (pantalla === 'aprobado' || pantalla === 'pendiente') && (
+            <Button
+              href={{ pathname: '/mi-pedido/[token]', params: { token: resumen.token } }}
+              variant={pantalla === 'aprobado' ? 'primary' : 'outline'}
+              style={{ minHeight: 44 }}
+            >
+              {tm('verMiPedido')}
+            </Button>
           )}
           {pantalla !== 'cargando' && pantalla !== 'pendiente' && (
             <Button href={esPedido ? '/tienda' : '/'} variant="outline" style={{ minHeight: 44 }}>

@@ -22,6 +22,26 @@ function checked(r: Response) {
   return r.json()
 }
 
+/** Lo que impide un borrado: un resumen y los pedidos o reservas a resolver, con su id para abrirlos. */
+export interface BloqueoBorrado {
+  resumen: string
+  pendientes: { id: string; etiqueta: string; estado: string }[]
+  /** Cuántos más hay además de los listados. */
+  restantes: number
+}
+
+/**
+ * Lo que impide borrar un producto, experiencia o pedido, o nulo si se puede.
+ * El panel lo pregunta antes de abrir la confirmación; el DELETE vuelve a
+ * comprobarlo de todos modos.
+ */
+export function getBloqueoBorrado(recurso: 'productos' | 'experiencias' | 'pedidos' | 'reservas', id: string): Promise<BloqueoBorrado | null> {
+  return fetch(`${ADMIN}/${recurso}/${id}/bloqueo-borrado`, { cache: 'no-store' })
+    .then(checked)
+    .then((d: { motivo: string | null } & Partial<BloqueoBorrado>) =>
+      d.motivo ? { resumen: d.resumen ?? d.motivo, pendientes: d.pendientes ?? [], restantes: d.restantes ?? 0 } : null)
+}
+
 // ── Reservas ───────────────────────────────────────────────
 export function getReservas(): Promise<AdminReserva[]> {
   return fetch(`${ADMIN}/reservas`).then(checked)
@@ -29,12 +49,16 @@ export function getReservas(): Promise<AdminReserva[]> {
 export function getReserva(id: string): Promise<AdminReserva> {
   return fetch(`${ADMIN}/reservas/${id}`).then(checked)
 }
+/** Rechaza con el motivo si tiene pagos registrados: el panel lo muestra en la alerta. */
+export function deleteReserva(id: string): Promise<void> {
+  return fetch(`${ADMIN}/reservas/${id}`, { method: 'DELETE' }).then(conMotivo).then(() => undefined)
+}
 export function updateEstadoReserva(id: string, estado: EstadoReserva, motivo?: string): Promise<AdminReserva> {
   return fetch(`${ADMIN}/reservas/${id}/estado`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ estado, ...(motivo ? { motivo } : {}) }),
-  }).then(checked)
+  }).then(conMotivo)
 }
 
 // ── Experiencias ───────────────────────────────────────────
@@ -55,8 +79,9 @@ export function updateExperiencia(id: string, data: Partial<AdminExperiencia>): 
     body: JSON.stringify(data),
   }).then(checked)
 }
+/** Rechaza con el motivo si tiene reservas en curso: el panel lo muestra en la alerta. */
 export function deleteExperiencia(id: string): Promise<void> {
-  return fetch(`${ADMIN}/experiencias/${id}`, { method: 'DELETE' }).then(() => undefined)
+  return fetch(`${ADMIN}/experiencias/${id}`, { method: 'DELETE' }).then(conMotivo).then(() => undefined)
 }
 
 // ── Productos ──────────────────────────────────────────────
@@ -77,8 +102,9 @@ export function updateProducto(id: string, data: Partial<AdminProducto>): Promis
     body: JSON.stringify(data),
   }).then(checked)
 }
+/** Rechaza con el motivo si tiene pedidos sin despachar: el panel lo muestra en la alerta. */
 export function deleteProducto(id: string): Promise<void> {
-  return fetch(`${ADMIN}/productos/${id}`, { method: 'DELETE' }).then(() => undefined)
+  return fetch(`${ADMIN}/productos/${id}`, { method: 'DELETE' }).then(conMotivo).then(() => undefined)
 }
 
 // ── Aves ───────────────────────────────────────────────────
@@ -86,6 +112,9 @@ export function deleteProducto(id: string): Promise<void> {
 export function getAvesAdmin(): Promise<AdminAve[]> {
   return fetch(`${BASE}/aves`, { cache: 'no-store' }).then(checked)
 }
+/** Un error con un motivo escrito por el backend, listo para mostrarse tal cual en el panel. */
+export class ErrorConMotivo extends Error {}
+
 /** A diferencia de `checked`, devuelve el motivo del backend: «ya hay una especie con ese nombre». */
 async function conMotivo(r: Response) {
   if (r.ok) return r.json()
@@ -93,7 +122,7 @@ async function conMotivo(r: Response) {
     (d: { message?: string | string[] }) => (Array.isArray(d.message) ? d.message.join('. ') : d.message),
     () => undefined,
   )
-  throw new Error(motivo || `API error ${r.status}`)
+  throw motivo ? new ErrorConMotivo(motivo) : new Error(`API error ${r.status}`)
 }
 export function createAve(data: Partial<AdminAve>): Promise<AdminAve> {
   return fetch(`${ADMIN}/aves`, {
@@ -127,12 +156,16 @@ export function getPedidos(): Promise<AdminPedido[]> {
 export function getPedido(id: string): Promise<AdminPedido> {
   return fetch(`${ADMIN}/pedidos/${id}`).then(checked)
 }
+/** Rechaza con el motivo si tiene pagos registrados: el panel lo muestra en la alerta. */
+export function deletePedido(id: string): Promise<void> {
+  return fetch(`${ADMIN}/pedidos/${id}`, { method: 'DELETE' }).then(conMotivo).then(() => undefined)
+}
 export function updateEstadoPedido(id: string, estado: EstadoPedido): Promise<AdminPedido> {
   return fetch(`${ADMIN}/pedidos/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ estado }),
-  }).then(checked)
+  }).then(conMotivo)
 }
 
 // ── Uploads ────────────────────────────────────────────────
@@ -215,7 +248,7 @@ export function updateEstadoSolicitud(id: string, estado: EstadoSolicitud): Prom
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ estado }),
-  }).then(checked)
+  }).then(conMotivo)
 }
 export function deleteSolicitudGrupo(id: string): Promise<void> {
   return fetch(`${ADMIN}/solicitudes-grupo/${id}`, { method: 'DELETE' })
@@ -232,7 +265,7 @@ export function updateEstadoContacto(id: string, estado: EstadoContacto): Promis
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ estado }),
-  }).then(checked)
+  }).then(conMotivo)
 }
 export function deleteContacto(id: string): Promise<void> {
   return fetch(`${ADMIN}/contacto/${id}`, { method: 'DELETE' })

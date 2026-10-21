@@ -15,7 +15,8 @@ export type EstadoPedido =
 
 export interface ItemPedidoPublico {
   nombre: string
-  slug: string
+  /** Nulo si el producto ya no está en la tienda. */
+  slug: string | null
   imagen: string | null
   cantidad: number
   precio: number
@@ -28,6 +29,11 @@ export interface PedidoPublico {
   creadoEn: string
   /** Hasta cuándo se puede pagar. Solo en `pendiente_pago`. */
   venceEn: string | null
+  /**
+   * Cuándo llegó a cada paso del avance. Nulo el que no ha llegado, o el de un
+   * pedido anterior a que se guardaran (enviado y entregado no tienen registro).
+   */
+  fechas?: { recibido: string; pagado: string | null; enviado: string | null; entregado: string | null }
   /** El último intento de pago, para mandar a su página de resultado. */
   referenciaPago: string | null
   items: ItemPedidoPublico[]
@@ -40,7 +46,8 @@ export class ErrorConsulta extends Error {
   }
 }
 
-async function pedir<T>(ruta: string, init?: RequestInit): Promise<T> {
+/** También la usa lib/reservas-consulta.ts: mismas reglas de error para «mi reserva». */
+export async function pedir<T>(ruta: string, init?: RequestInit): Promise<T> {
   let res: Response
   try {
     res = await fetch(`${API}${ruta}`, {

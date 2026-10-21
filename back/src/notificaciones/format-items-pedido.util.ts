@@ -3,8 +3,12 @@ import { escapeHtml } from './escape-html.util'
 export type ItemPedido = {
   cantidad: number
   precio: number
-  producto: { nombre: string }
+  /** Copia del nombre al comprar: es lo que queda si el producto se eliminó. */
+  nombre: string
+  producto: { nombre: string } | null
 }
+
+const nombreDe = (item: ItemPedido) => item.producto?.nombre ?? item.nombre
 
 /**
  * Formato de moneda del proyecto: `$160.000`. Uno solo, en todas partes.
@@ -21,7 +25,7 @@ export function formatPrecio(n: number): string {
 }
 
 function filaItemHtml(item: ItemPedido, variant: 'cliente' | 'admin'): string {
-  const nombre = escapeHtml(item.producto.nombre)
+  const nombre = escapeHtml(nombreDe(item))
   const subtotal = item.precio * item.cantidad
   const borderColor = variant === 'cliente' ? '#F0D6A8' : '#eee'
   const textColor = variant === 'cliente' ? 'color:#5C3317;' : ''
@@ -65,7 +69,7 @@ export function lineasItemsTexto(items: ItemPedido[]): string {
   return items
     .map(item => {
       const subtotal = item.precio * item.cantidad
-      return `${item.producto.nombre} × ${item.cantidad} — ${formatPrecio(item.precio)} c/u — ${formatPrecio(subtotal)}`
+      return `${nombreDe(item)} × ${item.cantidad} — ${formatPrecio(item.precio)} c/u — ${formatPrecio(subtotal)}`
     })
     .join('\n')
 }

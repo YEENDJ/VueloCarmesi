@@ -56,6 +56,12 @@ export const routing = defineRouting({
     // estas dos rutas copiadas en back/src/pagos/pagos.service.ts (RETORNO):
     // si cambian aquí, cambian allá.
     '/reservar/resultado': { es: '/reservar/resultado', en: '/book/result' },
+    // «Mi reserva»: el estado de una reserva sin cuenta. El backend arma el
+    // enlace del correo con /mi-reserva/[token] (SEGUIMIENTO en
+    // back/src/notificaciones/notificaciones.service.ts): si cambia aquí,
+    // cambia allá.
+    '/mi-reserva': { es: '/mi-reserva', en: '/my-booking' },
+    '/mi-reserva/[token]': { es: '/mi-reserva/[token]', en: '/my-booking/[token]' },
 
     // Tienda
     '/tienda': { es: '/tienda', en: '/shop' },
@@ -65,7 +71,7 @@ export const routing = defineRouting({
     '/checkout/confirmacion': { es: '/checkout/confirmacion', en: '/checkout/confirmation' },
     '/checkout/resultado': { es: '/checkout/resultado', en: '/checkout/result' },
     // «Mi pedido»: el estado de una compra sin cuenta. El backend arma el
-    // enlace del correo con /mi-pedido/[token] (botonVerPedido en
+    // enlace del correo con /mi-pedido/[token] (SEGUIMIENTO en
     // back/src/notificaciones/notificaciones.service.ts): si cambia aquí,
     // cambia allá.
     '/mi-pedido': { es: '/mi-pedido', en: '/my-order' },

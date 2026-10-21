@@ -23,12 +23,16 @@ export interface AdminPago {
   /** `prueba` = sandbox: no es dinero real y no cuenta en las cifras. */
   modo: 'prueba' | 'produccion' | string
   proveedor: string
+  /** Id en la pasarela. Si existe y sigue `pendiente`, el banco tiene el pago en curso. */
+  proveedorTxId: string | null
   createdAt: string
 }
 
 export interface AdminReserva {
   id: string
-  experienciaId: string
+  /** Nulo si la experiencia se eliminó; queda `experienciaNombre`. */
+  experienciaId: string | null
+  experienciaNombre: string
   fecha: string
   cantidadPersonas: number
   nombre: string
@@ -37,7 +41,7 @@ export interface AdminReserva {
   notas?: string
   estado: EstadoReserva
   createdAt: string
-  experiencia?: { id: string; nombre: string }
+  experiencia?: { id: string; nombre: string } | null
   /** Congelados al crearla. Nulos en las reservas de antes de la pasarela. */
   total?: number | null
   porcentajeAbono?: number | null
@@ -87,7 +91,10 @@ export interface ItemPedido {
   id: string
   cantidad: number
   precio: number
-  producto: { id: string; nombre: string; imagen: string }
+  /** Copia al comprar: es lo que se muestra si el producto se eliminó. */
+  nombre: string
+  imagen: string
+  producto: { id: string; nombre: string; imagen: string } | null
 }
 
 export interface AdminPedido {

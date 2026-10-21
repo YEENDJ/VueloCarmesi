@@ -19,6 +19,7 @@ export class PedidosController {
   @LimiteFormularios() @HttpCode(200) @Post('consulta') consultar(@Body() dto: ConsultarPedidoDto)                    { return this.service.consultar(dto) }
 
   @UseGuards(AdminGuard) @Get()         findAll()                                                        { return this.service.findAll() }
+  @UseGuards(AdminGuard) @Get(':id/bloqueo-borrado') bloqueoBorrado(@Param('id') id: string)      { return this.service.bloqueoBorrado(id) }
   @UseGuards(AdminGuard) @Get(':id')    findOne(@Param('id') id: string)                                 { return this.service.findById(id) }
   @UseGuards(AdminGuard) @Patch(':id')  update(@Param('id') id: string, @Body() dto: UpdatePedidoDto)   { return this.service.update(id, dto) }
   @UseGuards(AdminGuard) @Delete(':id') remove(@Param('id') id: string)                                 { return this.service.remove(id) }

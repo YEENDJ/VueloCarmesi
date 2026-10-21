@@ -10,8 +10,12 @@ import { PagosService } from '../pagos/pagos.service'
 import { VencimientoService } from '../pagos/vencimiento.service'
 import { venceEnDesde } from '../pagos/config'
 import { devolverStock } from './stock.util'
+import { fechasAlPasarA } from './fechas-estado'
 import { ConsultarPedidoDto } from './dto/consultar-pedido.dto'
-import { generarTokenConsulta, normalizarCodigo, vistaPublica } from './consulta.util'
+import { generarTokenConsulta, normalizarCodigo, vistaPublica, codigoPedido } from './consulta.util'
+import type { Bloqueo } from '../common/borrado-con-historial'
+import { motivoRechazoCambio } from '../common/transiciones-estado'
+import { tienePagoEnCurso } from '../pagos/estados'
 
 /** Lo que necesita la vista pública: productos y pagos, sin nada del cliente. */
 const CONSULTA_INCLUDE = {
@@ -170,6 +174,8 @@ export class PedidosService {
           items: {
             create: items.map((item) => ({
               productoId: item.productoId,
+              nombre: porId.get(item.productoId)!.nombre,
+              imagen: porId.get(item.productoId)!.imagen,
               cantidad: item.cantidad,
               precio: porId.get(item.productoId)!.precio,
             })),
@@ -194,15 +200,15 @@ export class PedidosService {
     const actual = await this.findById(id)
     if (actual.estado === dto.estado) return actual
 
-    // Un pedido cancelado o expirado ya devolvió sus unidades al inventario.
-    // Sacarlo de ahí obligaría a volver a apartarlas, y puede que ya no estén:
-    // se hace un pedido nuevo, igual que una reserva cancelada no se reabre.
-    // (Un expirado solo vuelve solo, si llega su pago: ver PagosService.)
-    if (actual.estado === 'cancelado' || actual.estado === 'expirado') {
-      throw new BadRequestException(
-        `No se puede cambiar el estado de "${actual.estado}" a "${dto.estado}"`,
-      )
-    }
+    // El orden permitido vive en common/transiciones-estado. Entre otras cosas:
+    // un cancelado o expirado ya devolvió sus unidades y no se reabre (un
+    // expirado solo vuelve solo, si llega su pago: ver PagosService), y con un
+    // pago en curso en el banco no se marca pagado ni se cancela a mano.
+    const motivo = motivoRechazoCambio('pedido', actual.estado, dto.estado, {
+      pagoEnCurso: tienePagoEnCurso(actual.pagos, new Date()),
+      fechaPasada: false,
+    })
+    if (motivo) throw new BadRequestException(motivo)
 
     return this.prisma.$transaction(async (tx) => {
       // Al crear el pedido se descontó el stock; si no se va a vender, vuelve.
@@ -214,24 +220,48 @@ export class PedidosService {
       }
       return tx.pedido.update({
         where: { id },
-        data: { estado: dto.estado },
+        // La hora de cada paso, para el avance de «mi pedido».
+        data: { estado: dto.estado, ...fechasAlPasarA(dto.estado, actual) },
         include: { items: { include: { producto: true } }, pagos: PAGOS_PANEL },
       })
     })
   }
 
   async remove(id: string) {
-    await this.findById(id)
+    const pedido = await this.findById(id)
     // Un cobro no se borra con su pedido: es lo que responde un reclamo o un
     // contracargo. La base ya lo impide (RESTRICT); esto es para que el panel
     // reciba un motivo y no un 500.
+    const b = await this.bloqueo(id)
+    if (b) throw new ConflictException(b.motivo)
+    // Sus líneas no tienen sentido sin él y la base no deja borrarlo con ellas.
+    return this.prisma.$transaction(async (tx) => {
+      // Lo que no salió de la finca vuelve a la tienda, como al cancelarlo.
+      // Lo enviado o entregado ya no está en bodega.
+      if (pedido.estado !== 'enviado' && pedido.estado !== 'entregado') {
+        await devolverStock(tx, id, pedido.items)
+      }
+      await tx.itemPedido.deleteMany({ where: { pedidoId: id } })
+      return tx.pedido.delete({ where: { id } })
+    })
+  }
+
+  /** Lo que el panel pregunta antes de abrir la confirmación: nulo si se puede borrar. */
+  async bloqueoBorrado(id: string) {
+    await this.findById(id)
+    return (await this.bloqueo(id)) ?? { motivo: null }
+  }
+
+  /** Mismo formato que productos y experiencias; aquí el único que bloquea es el propio pedido. */
+  private async bloqueo(id: string): Promise<Bloqueo | null> {
     const pagos = await this.prisma.pago.count({ where: { pedidoId: id } })
-    if (pagos > 0) {
-      throw new ConflictException(
-        'Tiene pagos registrados y no se puede eliminar. Cámbiale el estado a cancelado',
-      )
+    if (pagos === 0) return null
+    return {
+      motivo: 'Tiene pagos registrados y no se puede eliminar. Cámbiale el estado a cancelado',
+      resumen: 'Tiene pagos registrados: el cobro es lo que responde un reclamo o un contracargo. Cámbiale el estado a cancelado.',
+      pendientes: [{ id, etiqueta: codigoPedido(id), estado: `${pagos} ${pagos === 1 ? 'pago' : 'pagos'}` }],
+      restantes: 0,
     }
-    return this.prisma.pedido.delete({ where: { id } })
   }
 }
 

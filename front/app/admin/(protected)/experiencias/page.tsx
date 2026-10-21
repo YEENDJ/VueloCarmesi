@@ -1,11 +1,11 @@
 'use client'
 import { useState, useEffect } from 'react'
 import type { AdminExperiencia } from '@/lib/admin/types'
-import { getExperienciasAdmin, updateExperiencia, deleteExperiencia } from '@/lib/admin/api'
+import { getExperienciasAdmin, updateExperiencia, deleteExperiencia, getBloqueoBorrado, type BloqueoBorrado } from '@/lib/admin/api'
 import { revalidateExperiencias } from '@/app/actions/revalidate'
 import Toggle from '@/components/admin/Toggle'
 import ExperienciaFormModal from '@/components/admin/ExperienciaFormModal'
-import ConfirmModal, { TrashIcon } from '@/components/admin/ConfirmModal'
+import ConfirmModal, { AvisoModal, TrashIcon } from '@/components/admin/ConfirmModal'
 import { formatPrecio } from '@/lib/format'
 
 export default function ExperienciasPage() {
@@ -14,6 +14,16 @@ export default function ExperienciasPage() {
   const [modal, setModal] = useState<AdminExperiencia | null | 'new'>()
   const [togglingId, setTogglingId] = useState<string | null>(null)
   const [experienciaAEliminar, setExperienciaAEliminar] = useState<AdminExperiencia | null>(null)
+  const [bloqueo, setBloqueo] = useState<{ titulo: string; detalle: BloqueoBorrado } | null>(null)
+
+  // Primero se pregunta si algo lo impide, para no pedir confirmación de un
+  // borrado que no va a pasar. Si la consulta falla, se sigue a la confirmación:
+  // el DELETE vuelve a comprobarlo y el modal muestra el motivo.
+  async function pedirEliminar(exp: AdminExperiencia) {
+    const detalle = await getBloqueoBorrado('experiencias', exp.id).catch(() => null)
+    if (detalle) setBloqueo({ titulo: `No se puede eliminar "${exp.nombre}"`, detalle })
+    else setExperienciaAEliminar(exp)
+  }
 
   useEffect(() => {
     getExperienciasAdmin().then(data => { setExperiencias(data); setLoading(false) })
@@ -111,7 +121,7 @@ export default function ExperienciasPage() {
                       <button
                         className="btn-ghost btn-sm"
                         style={{ display: 'flex', alignItems: 'center', gap: 5 }}
-                        onClick={() => setExperienciaAEliminar(exp)}
+                        onClick={() => pedirEliminar(exp)}
                       >
                         <TrashIcon /> Eliminar
                       </button>
@@ -135,7 +145,7 @@ export default function ExperienciasPage() {
                       <button
                         className="btn-ghost btn-sm"
                         style={{ display: 'flex', alignItems: 'center', gap: 5 }}
-                        onClick={() => setExperienciaAEliminar(exp)}
+                        onClick={() => pedirEliminar(exp)}
                       >
                         <TrashIcon /> Eliminar
                       </button>
@@ -159,9 +169,19 @@ export default function ExperienciasPage() {
       {experienciaAEliminar && (
         <ConfirmModal
           title={`¿Eliminar "${experienciaAEliminar.nombre}"?`}
-          message="Esta acción es permanente y no se puede deshacer. La experiencia no se podrá recuperar."
+          message="Esta acción es permanente y no se puede deshacer. Las reservas ya atendidas o canceladas se conservan en el historial."
           onConfirm={eliminar}
           onCancel={() => setExperienciaAEliminar(null)}
+        />
+      )}
+
+      {bloqueo && (
+        <AvisoModal
+          title={bloqueo.titulo}
+          bloqueo={bloqueo.detalle}
+          verLabel="Ver reserva"
+          hrefDe={id => `/admin/reservas?ver=${id}`}
+          onClose={() => setBloqueo(null)}
         />
       )}
     </>

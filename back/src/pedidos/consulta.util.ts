@@ -37,7 +37,13 @@ type PedidoConDetalle = {
   total: number
   venceEn: Date | null
   createdAt: Date
-  items: { cantidad: number; precio: number; producto: { nombre: string; imagen: string; slug: string } }[]
+  pagadoEn: Date | null
+  enviadoEn: Date | null
+  entregadoEn: Date | null
+  items: {
+    cantidad: number; precio: number; nombre: string; imagen: string
+    producto: { nombre: string; imagen: string; slug: string } | null
+  }[]
   pagos: { referencia: string; estado: string; createdAt: Date }[]
 }
 
@@ -56,11 +62,19 @@ export function vistaPublica(pedido: PedidoConDetalle) {
     total: pedido.total,
     creadoEn: pedido.createdAt,
     venceEn: pedido.estado === 'pendiente_pago' ? pedido.venceEn : null,
+    // Cuándo llegó a cada paso del avance. Nulo el que no ha llegado o no tiene registro.
+    fechas: {
+      recibido: pedido.createdAt,
+      pagado: pedido.pagadoEn,
+      enviado: pedido.enviadoEn,
+      entregado: pedido.entregadoEn,
+    },
     referenciaPago: ultimoPago?.referencia ?? null,
     items: pedido.items.map(i => ({
-      nombre: i.producto.nombre,
-      slug: i.producto.slug,
-      imagen: i.producto.imagen || null,
+      // Sin producto (se eliminó) queda la copia del pedido y no hay ficha a la que enlazar.
+      nombre: i.producto?.nombre ?? i.nombre,
+      slug: i.producto?.slug ?? null,
+      imagen: (i.producto?.imagen ?? i.imagen) || null,
       cantidad: i.cantidad,
       precio: i.precio,
     })),

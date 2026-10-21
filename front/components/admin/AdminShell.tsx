@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Sidebar from './Sidebar'
 import AdminHeader from './AdminHeader'
+import { AvisosProvider } from './Avisos'
 
 /**
  * Cáscara del panel. Existe como client component porque el sidebar y el
@@ -47,7 +48,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           menuAbierto={menuAbierto}
           onToggleMenu={() => setMenuAbierto(v => !v)}
         />
-        <div className="admin-content">{children}</div>
+        <div className="admin-content"><AvisosProvider>{children}</AvisosProvider></div>
       </div>
     </div>
   )

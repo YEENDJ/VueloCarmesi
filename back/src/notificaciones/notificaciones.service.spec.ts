@@ -28,8 +28,8 @@ const pedido = {
   codigoPostal: '050001',
   total: 55000,
   items: [
-    { cantidad: 2, precio: 20000, producto: { nombre: 'Café Premium 500g' } },
-    { cantidad: 1, precio: 15000, producto: { nombre: 'Miel Orgánica 250g' } },
+    { cantidad: 2, precio: 20000, nombre: 'Café Premium 500g', producto: { nombre: 'Café Premium 500g' } },
+    { cantidad: 1, precio: 15000, nombre: 'Miel Orgánica 250g', producto: { nombre: 'Miel Orgánica 250g' } },
   ],
 }
 
@@ -58,6 +58,20 @@ describe('NotificacionesService.enviarConfirmacionPedido', () => {
     expect(varsCliente.itemsTable).toContain('Miel Orgánica 250g')
     expect(varsCliente.itemsTable).toContain('$40.000')
     expect(varsCliente.itemsTable).toContain('$55.000')
+  })
+
+  it('trae el botón «Valida el estado de tu pedido» con el enlace directo al detalle', async () => {
+    await service.enviarConfirmacionPedido({ ...pedido, tokenConsulta: 'tok-123_abc' })
+
+    const { botonPedido } = mockEmail.templateConfirmacionPedido.mock.calls[0][0]
+    expect(botonPedido).toContain('Valida el estado de tu pedido')
+    // Con el token en la ruta abre el pedido sin pedir código ni correo.
+    expect(botonPedido).toContain('/mi-pedido/tok-123_abc')
+  })
+
+  it('sin token (pedido viejo) no hay botón', async () => {
+    await service.enviarConfirmacionPedido(pedido)
+    expect(mockEmail.templateConfirmacionPedido.mock.calls[0][0].botonPedido).toBe('')
   })
 
   it('incluye la tabla de detalle de items en las filas del email admin, sin fila de total duplicada', async () => {

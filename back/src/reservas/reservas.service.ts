@@ -5,21 +5,28 @@ import { PrismaService } from '../prisma.service'
 import { NotificacionesService } from '../notificaciones/notificaciones.service'
 import { CreateReservaDto } from './dto/create-reserva.dto'
 import { UpdateEstadoReservaDto } from './dto/update-estado-reserva.dto'
-import { fechaReservaValida, MESES_HORIZONTE_MAXIMO } from './fecha-reserva.util'
+import { fechaReservaValida, hoyBogota, MESES_HORIZONTE_MAXIMO } from './fecha-reserva.util'
+import { motivoRechazoCambio } from '../common/transiciones-estado'
+import { tienePagoEnCurso } from '../pagos/estados'
+import type { Bloqueo } from '../common/borrado-con-historial'
+import { generarTokenConsulta, normalizarCodigo } from '../pedidos/consulta.util'
+import { vistaPublicaReserva } from './consulta.util'
+import { ConsultarReservaDto } from './dto/consultar-reserva.dto'
 import { PagosService } from '../pagos/pagos.service'
 import { PAGOS_PANEL } from '../pagos/panel'
 import { venceEnDesde } from '../pagos/config'
 import { calcularAbono, CLAVE_ABONO, leerPorcentajeAbono } from '../pagos/abono'
 
+
+/** Lo que necesita la vista pública: la ficha (o su copia) y los intentos de pago. */
+const CONSULTA_INCLUDE = {
+  experiencia: { select: { nombre: true, slug: true, imagen: true } },
+  pagos: { select: { referencia: true, estado: true, createdAt: true } },
+} as const
+
 @Injectable()
 export class ReservasService {
   private readonly logger = new Logger(ReservasService.name)
-
-  private static readonly TRANSICIONES_INVALIDAS: Partial<Record<string, string[]>> = {
-    cancelada: ['confirmada', 'pendiente'],
-    // Venció sin pago. Solo vuelve sola, si ese pago llega (PagosService).
-    expirada: ['confirmada', 'pendiente', 'cancelada'],
-  }
 
   constructor(
     private prisma: PrismaService,
@@ -32,6 +39,38 @@ export class ReservasService {
       include: { experiencia: { select: { id: true, nombre: true } }, pagos: PAGOS_PANEL },
       orderBy: { createdAt: 'desc' },
     })
+  }
+
+  /** La página «mi reserva» por su token. 404 si no existe: no dice nada más. */
+  async porToken(token: string) {
+    const reserva = await this.prisma.reserva.findUnique({ where: { tokenConsulta: token }, include: CONSULTA_INCLUDE })
+    if (!reserva) throw new NotFoundException()
+    return vistaPublicaReserva(reserva)
+  }
+
+  /**
+   * «Consultar mi reserva» con código y correo. Los dos tienen que coincidir,
+   * por la misma razón que en pedidos: con solo el código se podrían recorrer
+   * reservas ajenas. Una reserva anterior a los tokens recibe el suyo aquí.
+   */
+  async consultar(dto: ConsultarReservaDto): Promise<{ token: string }> {
+    const codigo = normalizarCodigo(dto.codigo)
+    if (!codigo) throw new NotFoundException()
+
+    const reserva = await this.prisma.reserva.findFirst({
+      where: {
+        ...('id' in codigo ? { id: codigo.id } : { id: { endsWith: codigo.sufijo } }),
+        email: { equals: dto.email.trim(), mode: 'insensitive' },
+      },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, tokenConsulta: true },
+    })
+    if (!reserva) throw new NotFoundException()
+    if (reserva.tokenConsulta) return { token: reserva.tokenConsulta }
+
+    const token = generarTokenConsulta()
+    await this.prisma.reserva.update({ where: { id: reserva.id }, data: { tokenConsulta: token } })
+    return { token }
   }
 
   async findById(id: string) {
@@ -62,7 +101,7 @@ export class ReservasService {
 
     const experiencia = await this.prisma.experiencia.findUnique({
       where: { id: rest.experienciaId },
-      select: { capacidad: true, archivada: true, precio: true },
+      select: { nombre: true, capacidad: true, archivada: true, precio: true },
     })
     // Una archivada ya no se ofrece: aceptarle una reserva es venderle a
     // alguien una salida que la finca dejó de hacer.
@@ -85,6 +124,10 @@ export class ReservasService {
     const reserva = await this.prisma.reserva.create({
       data: {
         ...rest,
+        // Copia para el historial: queda aunque la experiencia se elimine.
+        experienciaNombre: experiencia.nombre,
+        // Va en el enlace del correo y vuelve en la respuesta, para «mi reserva».
+        tokenConsulta: generarTokenConsulta(),
         fecha: new Date(fecha),
         total,
         ...(cobro
@@ -133,20 +176,30 @@ export class ReservasService {
   async cambiarEstado(id: string, dto: UpdateEstadoReservaDto) {
     const reserva = await this.prisma.reserva.findUnique({
       where: { id },
-      include: { experiencia: { select: { id: true, nombre: true } } },
+      include: {
+        experiencia: { select: { id: true, nombre: true } },
+        pagos: { select: { estado: true, proveedorTxId: true, createdAt: true } },
+      },
     })
     if (!reserva) throw new NotFoundException()
-
-    const invalidos = ReservasService.TRANSICIONES_INVALIDAS[reserva.estado] ?? []
-    if (invalidos.includes(dto.estado)) {
-      throw new BadRequestException(
-        `No se puede cambiar el estado de "${reserva.estado}" a "${dto.estado}"`
-      )
+    if (reserva.estado === dto.estado) {
+      throw new BadRequestException(`La reserva ya está en ese estado`)
     }
+
+    // El orden permitido vive en common/transiciones-estado: una cancelada o
+    // vencida no se reabre, una confirmada no vuelve a pendiente (el cliente ya
+    // tiene el correo) y una cuya fecha pasó ya se realizó.
+    const motivo = motivoRechazoCambio('reserva', reserva.estado, dto.estado, {
+      pagoEnCurso: tienePagoEnCurso(reserva.pagos, new Date()),
+      // La fecha se guarda como medianoche UTC del día elegido.
+      fechaPasada: reserva.fecha < new Date(hoyBogota()),
+    })
+    if (motivo) throw new BadRequestException(motivo)
 
     const updated = await this.prisma.reserva.update({
       where: { id },
-      data: { estado: dto.estado },
+      // La hora de la confirmación, para el avance de «mi reserva».
+      data: { estado: dto.estado, ...(dto.estado === 'confirmada' ? { confirmadaEn: new Date() } : {}) },
       include: { experiencia: { select: { id: true, nombre: true } }, pagos: PAGOS_PANEL },
     })
 
@@ -164,16 +217,33 @@ export class ReservasService {
   }
 
   async remove(id: string) {
-    await this.findById(id)
+    const reserva = await this.findById(id)
     // Un cobro no se borra con su reserva: es lo que responde un reclamo o un
     // contracargo. La base ya lo impide (RESTRICT); esto es para que el panel
     // reciba un motivo y no un 500.
-    const pagos = await this.prisma.pago.count({ where: { reservaId: id } })
-    if (pagos > 0) {
-      throw new ConflictException(
-        'Tiene pagos registrados y no se puede eliminar. Cámbiale el estado a cancelado',
-      )
-    }
+    const b = await this.bloqueo(reserva)
+    if (b) throw new ConflictException(b.motivo)
     return this.prisma.reserva.delete({ where: { id } })
+  }
+
+  /** Lo que el panel pregunta antes de abrir la confirmación: nulo si se puede borrar. */
+  async bloqueoBorrado(id: string) {
+    return (await this.bloqueo(await this.findById(id))) ?? { motivo: null }
+  }
+
+  /** Mismo formato que productos, experiencias y pedidos; aquí la que bloquea es la propia reserva. */
+  private async bloqueo(reserva: { id: string; nombre: string; fecha: Date }): Promise<Bloqueo | null> {
+    const pagos = await this.prisma.pago.count({ where: { reservaId: reserva.id } })
+    if (pagos === 0) return null
+    return {
+      motivo: 'Tiene pagos registrados y no se puede eliminar. Cámbiale el estado a cancelado',
+      resumen: 'Tiene pagos registrados: el cobro es lo que responde un reclamo o un contracargo. Cámbiale el estado a cancelado.',
+      pendientes: [{
+        id: reserva.id,
+        etiqueta: `${reserva.nombre}, ${reserva.fecha.toISOString().slice(0, 10)}`,
+        estado: `${pagos} ${pagos === 1 ? 'pago' : 'pagos'}`,
+      }],
+      restantes: 0,
+    }
   }
 }

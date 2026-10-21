@@ -97,7 +97,7 @@ export default function Footer() {
                 las alcance sin depender de una sola ruta; a los visitantes que
                 ya están dentro los recogen los avisos de /contacto,
                 /experiencias y el formulario de reserva. */}
-            {([['experiencias', '/experiencias'], ['grupos', '/grupos'], ['aviturismo', '/aviturismo'], ['tienda', '/tienda'], ['nosotros', '/sobre-nosotros'], ['contacto', '/contacto'], ['politicas', '/politicas']] as const).map(([clave, href]) => (
+            {([['experiencias', '/experiencias'], ['grupos', '/grupos'], ['aviturismo', '/aviturismo'], ['tienda', '/tienda'], ['nosotros', '/sobre-nosotros'], ['contacto', '/contacto'], ['miPedido', '/mi-pedido'], ['miReserva', '/mi-reserva'], ['politicas', '/politicas']] as const).map(([clave, href]) => (
               <li key={href} style={{ minWidth: 0 }}>
                 <Link href={href} style={{ fontWeight: 700, fontSize: '14px', color: 'rgba(255, 234, 202, 0.85)', textDecoration: 'none' }}>
                   {tNav(clave)}

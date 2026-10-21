@@ -59,8 +59,10 @@ describe('AdminGuard', () => {
  */
 describe('rutas protegidas', () => {
   const PUBLICAS: Record<string, string[]> = {
-    ReservasController: ['create'],
-    PedidosController: ['create'],
+    // «mi reserva» y «mi pedido»: por token, o consultando con código y correo.
+    // La vista pública no lleva datos del cliente.
+    ReservasController: ['create', 'porToken', 'consultar'],
+    PedidosController: ['create', 'porToken', 'consultar'],
     ExperienciasController: ['findAll', 'findBySlug', 'findOne'],
     ProductosController: ['findAll', 'findBySlug', 'findOne'],
     SolicitudesGrupoController: ['create'],

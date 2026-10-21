@@ -48,8 +48,12 @@ model Experiencia {
 
 model Reserva {
   id               String      @id @default(cuid())
-  experienciaId    String
-  experiencia      Experiencia @relation(fields: [experienciaId], references: [id])
+  /// Nulo si la experiencia se eliminó: la reserva queda en el historial con
+  /// `experienciaNombre`. El borrado solo se permite sin reservas en curso.
+  experienciaId    String?
+  experiencia      Experiencia? @relation(fields: [experienciaId], references: [id], onDelete: SetNull)
+  /// Nombre de la experiencia al reservar. Es lo que se muestra si ya no existe.
+  experienciaNombre String     @default("")
   fecha            DateTime
   cantidadPersonas Int
   nombre           String
@@ -73,6 +77,13 @@ model Reserva {
   montoAbono       Int?
   /// Hasta cuándo se sostiene sin un pago aprobado. Nulo si no espera pago.
   venceEn          DateTime?
+  /// Llave de la página pública «mi reserva», igual que Pedido.tokenConsulta:
+  /// va en el enlace del correo. Nula en las anteriores; se crea al consultarlas.
+  tokenConsulta    String?     @unique
+  /// Cuándo llegó a cada paso del avance de «mi reserva». «Recibida» es
+  /// `createdAt` y «Realizada» es la fecha de la experiencia.
+  abonoPagadoEn    DateTime?
+  confirmadaEn     DateTime?
 
   createdAt        DateTime    @default(now())
   pagos            Pago[]
@@ -131,6 +142,11 @@ model Pedido {
   /// consultar con código y correo. Larga y aleatoria, no se puede adivinar.
   /// Nula en los pedidos anteriores: se crea la primera vez que se consultan.
   tokenConsulta String?     @unique
+  /// Cuándo llegó a cada paso del avance, para «mi pedido» (pedidos/fechas-estado.ts).
+  /// Nulos si nunca llegó, o en pedidos anteriores sin ese registro. «Recibido» es `createdAt`.
+  pagadoEn     DateTime?
+  enviadoEn    DateTime?
+  entregadoEn  DateTime?
   createdAt    DateTime     @default(now())
   items        ItemPedido[]
   pagos        Pago[]
@@ -142,8 +158,13 @@ model ItemPedido {
   id         String   @id @default(cuid())
   pedidoId   String
   pedido     Pedido   @relation(fields: [pedidoId], references: [id])
-  productoId String
-  producto   Producto @relation(fields: [productoId], references: [id])
+  /// Nulo si el producto se eliminó: la línea queda en el historial con la
+  /// copia de abajo. El borrado solo se permite sin pedidos por despachar.
+  productoId String?
+  producto   Producto? @relation(fields: [productoId], references: [id], onDelete: SetNull)
+  /// Copia del producto al comprar, para que el pedido se siga leyendo sin él.
+  nombre     String   @default("")
+  imagen     String   @default("")
   cantidad   Int
   /// Precio unitario en pesos enteros, copiado al crear el pedido.
   precio     Int

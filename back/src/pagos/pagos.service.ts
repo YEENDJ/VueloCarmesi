@@ -345,18 +345,18 @@ export class PagosService {
   }
 
   private async aprobarPedido(
-    tx: Tx, pedido: { id: string; estado: string; items: { productoId: string; cantidad: number }[] },
+    tx: Tx, pedido: { id: string; estado: string; items: { productoId: string | null; cantidad: number }[] },
     intentarReapartar: boolean,
   ): Promise<Efecto> {
     if (pedido.estado === 'pendiente_pago') {
-      await tx.pedido.update({ where: { id: pedido.id }, data: { estado: 'pagado' } })
+      await tx.pedido.update({ where: { id: pedido.id }, data: { estado: 'pagado', pagadoEn: new Date() } })
       return { tipo: 'pagado' }
     }
     // Caso 5: pagó después de que el pedido venció y soltó el stock.
     if (pedido.estado === 'expirado') {
       if (intentarReapartar) {
         await reapartarStock(tx, pedido.id, pedido.items)
-        await tx.pedido.update({ where: { id: pedido.id }, data: { estado: 'pagado' } })
+        await tx.pedido.update({ where: { id: pedido.id }, data: { estado: 'pagado', pagadoEn: new Date() } })
         return { tipo: 'pagado' }
       }
       await tx.pedido.update({ where: { id: pedido.id }, data: { estado: 'requiere_revision' } })
@@ -381,7 +381,7 @@ export class PagosService {
     // Una expirada también vuelve: sin cupo por fecha no hay nada que se le
     // haya podido dar a otro mientras tanto.
     if (reserva.estado === 'pendiente_pago' || reserva.estado === 'expirada') {
-      await tx.reserva.update({ where: { id: reserva.id }, data: { estado: 'pendiente' } })
+      await tx.reserva.update({ where: { id: reserva.id }, data: { estado: 'pendiente', abonoPagadoEn: new Date() } })
       return { tipo: 'pagado' }
     }
     if (reserva.estado === 'cancelada') {

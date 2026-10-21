@@ -4,9 +4,13 @@ import type { AdminReserva, EstadoReserva } from '@/lib/admin/types'
 import StatusBadge from './StatusBadge'
 import PagosLista from './PagosLista'
 import AvisoRevision from './AvisoRevision'
-import { updateEstadoReserva } from '@/lib/admin/api'
+import ConfirmModal from './ConfirmModal'
+import { updateEstadoReserva, getReserva, ErrorConMotivo } from '@/lib/admin/api'
+import { useAvisar, Cargando } from './Avisos'
+import { BloqueosEstado } from './BloqueosEstado'
 import { esDePrueba, tienePagoAprobado } from '@/lib/admin/pagos'
 import { formatPrecio } from '@/lib/format'
+import { opcionesEstado, contextoReserva, estadoVisible, estaRealizada } from '@/lib/admin/transiciones'
 
 export default function ReservaDrawer({
   reserva,
@@ -19,17 +23,42 @@ export default function ReservaDrawer({
   onUpdated: (r: AdminReserva) => void
   experienciaNombre: string
 }) {
-  const [saving, setSaving] = useState(false)
+  // A qué estado se está pasando: el botón de esa acción es el que muestra la carga.
+  const [saving, setSaving] = useState<EstadoReserva | null>(null)
+  const avisar = useAvisar()
   const [showCancelModal, setShowCancelModal] = useState(false)
+  const [confirmarAbono, setConfirmarAbono] = useState(false)
   const [motivo, setMotivo] = useState('')
 
+  // Solo lo que el backend va a aceptar (lib/admin/transiciones); lo bloqueado
+  // por la situación del momento sale desactivado y con su motivo.
+  const opciones = opcionesEstado('reserva', reserva.estado, contextoReserva(reserva))
+  const confirmar = opciones.find(o => o.destino === 'confirmada')
+  const cancelar = opciones.find(o => o.destino === 'cancelada')
+  const realizada = estaRealizada(reserva)
+
+  function pedirConfirmar() {
+    // Esperando pago y confirmada a mano = pagó el abono por fuera. Se pregunta.
+    if (reserva.estado === 'pendiente_pago') setConfirmarAbono(true)
+    else cambiarEstado('confirmada')
+  }
+
   async function cambiarEstado(estado: EstadoReserva, motivoTexto?: string) {
-    setSaving(true)
+    setSaving(estado)
     try {
       const updated = await updateEstadoReserva(reserva.id, estado, motivoTexto)
       onUpdated(updated)
+      avisar('exito', estado === 'cancelada'
+        ? `Reserva de ${reserva.nombre} cancelada`
+        : `Reserva de ${reserva.nombre} confirmada`)
+    } catch (err) {
+      // Lo más común: la pasarela la cambió mientras el panel estaba abierto.
+      avisar('error', err instanceof ErrorConMotivo
+        ? `Reserva de ${reserva.nombre}: ${err.message}. Se actualizó con su estado actual.`
+        : `No se pudo cambiar la reserva de ${reserva.nombre}. Recarga la página e intenta de nuevo.`)
+      getReserva(reserva.id).then(onUpdated).catch(() => {})
     } finally {
-      setSaving(false)
+      setSaving(null)
     }
   }
 
@@ -52,7 +81,7 @@ export default function ReservaDrawer({
               {reserva.nombre}
             </div>
             <div style={{ marginTop: 6, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              <StatusBadge estado={reserva.estado} />
+              <StatusBadge estado={estadoVisible(reserva)} />
               {tienePagoAprobado(reserva) && <StatusBadge estado="abono_pagado" />}
               {esDePrueba(reserva) && <StatusBadge estado="prueba" />}
             </div>
@@ -98,37 +127,65 @@ export default function ReservaDrawer({
         </div>
 
         {/* Footer */}
-        {/* Cancelada y vencida no se reabren: el backend lo rechaza. */}
-        {reserva.estado !== 'cancelada' && reserva.estado !== 'expirada' && (
+        {realizada ? (
+          // Ya pasó: no hay nada que hacerle, y cancelarla sería un error.
           <div className="admin-drawer-footer">
-            {reserva.estado !== 'confirmada' && (
+            <p role="note" style={{ margin: 0, fontSize: 13, color: 'var(--admin-text-muted)' }}>
+              Ya se realizó el {new Date(reserva.fecha).toLocaleDateString('es-CO', { day: 'numeric', month: 'long', timeZone: 'UTC' })}: no se puede cancelar ni cambiar.
+            </p>
+          </div>
+        ) : (confirmar || cancelar) && (
+          <div className="admin-drawer-footer" style={{ flexWrap: 'wrap' }}>
+            <BloqueosEstado opciones={opciones} />
+            {confirmar && (
               <button
                 className="btn-primary"
-                disabled={saving}
-                onClick={() => cambiarEstado('confirmada')}
+                disabled={saving !== null || !!confirmar.bloqueo}
+                aria-busy={saving === 'confirmada'}
+                onClick={pedirConfirmar}
               >
-                {saving ? '…' : 'Confirmar'}
+                {saving === 'confirmada' ? <Cargando texto="Confirmando…" /> : 'Confirmar'}
               </button>
             )}
-            <button
-              className="btn-ghost"
-              disabled={saving}
-              onClick={() => setShowCancelModal(true)}
-            >
-              Cancelar reserva
-            </button>
+            {cancelar && (
+              <button
+                className="btn-ghost"
+                disabled={saving !== null || !!cancelar.bloqueo}
+                aria-busy={saving === 'cancelada'}
+                onClick={() => setShowCancelModal(true)}
+              >
+                {saving === 'cancelada' ? <Cargando texto="Cancelando…" /> : 'Cancelar reserva'}
+              </button>
+            )}
           </div>
         )}
       </div>
 
+      {confirmarAbono && (
+        <ConfirmModal
+          title="¿Confirmar sin el pago en línea?"
+          message="¿Recibiste el abono por fuera de la pasarela (transferencia, Nequi…)? Al confirmar, el cliente recibe el correo de confirmación."
+          confirmLabel="Sí, confirmar"
+          busyLabel="Confirmando…"
+          danger={false}
+          cancelLabel="Volver"
+          sobrePanel
+          onConfirm={async () => { setConfirmarAbono(false); await cambiarEstado('confirmada') }}
+          onCancel={() => setConfirmarAbono(false)}
+        />
+      )}
+
       {/* Modal de cancelación */}
       {showCancelModal && (
         <div
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200 }}
-          onClick={() => setShowCancelModal(false)}
+          className="admin-modal-overlay admin-modal-overlay--panel"
+          onClick={e => { e.stopPropagation(); setShowCancelModal(false) }}
         >
+          <div className="admin-modal-carril">
           <div
-            style={{ background: '#fff', borderRadius: 12, padding: 28, width: 400, maxWidth: '90vw', boxShadow: '0 8px 32px rgba(0,0,0,.2)' }}
+            role="dialog"
+            aria-modal="true"
+            style={{ background: '#fff', borderRadius: 12, padding: 28, width: 400, maxWidth: '100%', boxShadow: '0 8px 32px rgba(0,0,0,.2)' }}
             onClick={e => e.stopPropagation()}
           >
             <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--admin-text)', marginBottom: 8 }}>
@@ -149,10 +206,11 @@ export default function ReservaDrawer({
             />
             <div style={{ display: 'flex', gap: 10, marginTop: 20, justifyContent: 'flex-end' }}>
               <button className="btn-secondary" onClick={() => setShowCancelModal(false)}>Volver</button>
-              <button className="btn-ghost" onClick={confirmarCancelacion} disabled={saving}>
-                {saving ? '…' : 'Confirmar cancelación'}
+              <button className="btn-ghost" onClick={confirmarCancelacion} disabled={saving !== null}>
+                Confirmar cancelación
               </button>
             </div>
+          </div>
           </div>
         </div>
       )}
