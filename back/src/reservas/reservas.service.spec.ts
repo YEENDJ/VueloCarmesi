@@ -40,11 +40,13 @@ const reservaBase = {
   nombre: 'Ana García',
   email: 'ana@test.com',
   telefono: '3001234567',
-  fecha: new Date('2026-08-15'),
+  // Siempre por venir: una reserva con fecha pasada ya se realizó y no cambia.
+  fecha: new Date(sumarDias(hoyBogota(), 10)),
   cantidadPersonas: 2,
   experienciaId: 'exp1',
   experiencia: { id: 'exp1', nombre: 'Agroturismo' },
   notas: null,
+  pagos: [] as { estado: string; proveedorTxId: string | null; createdAt: Date }[],
   createdAt: new Date(),
 }
 
@@ -91,7 +93,8 @@ describe('ReservasService.cambiarEstado', () => {
 
     expect(mockPrisma.reserva.update).toHaveBeenCalledWith({
       where: { id: '1' },
-      data: { estado: 'confirmada' },
+      // Con la hora de la confirmación, para el avance de «mi reserva».
+      data: { estado: 'confirmada', confirmadaEn: expect.any(Date) },
       include: { experiencia: { select: { id: true, nombre: true } }, pagos: PAGOS_PANEL },
     })
     expect(result.estado).toBe('confirmada')
@@ -117,15 +120,38 @@ describe('ReservasService.cambiarEstado', () => {
     expect(mockNotificaciones.enviarReservaConfirmadaCliente).not.toHaveBeenCalled()
   })
 
-  it('no llama ninguna notificación al cambiar a pendiente', async () => {
+  it('una confirmada no vuelve a pendiente: el cliente ya tiene el correo', async () => {
     mockPrisma.reserva.findUnique.mockResolvedValue({ ...reservaBase, estado: 'confirmada' })
-    mockPrisma.reserva.update.mockResolvedValue({ ...reservaBase, estado: 'pendiente' })
+    await expect(service.cambiarEstado('1', { estado: 'pendiente' }))
+      .rejects.toThrow('La reserva está «Confirmada» y no puede pasar a «Pendiente»')
+    expect(mockPrisma.reserva.update).not.toHaveBeenCalled()
+  })
 
-    await service.cambiarEstado('1', { estado: 'pendiente' })
+  it('una confirmada cuya fecha pasó ya se realizó: no se cancela', async () => {
+    mockPrisma.reserva.findUnique.mockResolvedValue({
+      ...reservaBase, estado: 'confirmada', fecha: new Date(sumarDias(hoyBogota(), -1)),
+    })
+    await expect(service.cambiarEstado('1', { estado: 'cancelada' })).rejects.toThrow('ya se realizó')
+    expect(mockPrisma.reserva.update).not.toHaveBeenCalled()
+  })
 
-    await new Promise(r => setImmediate(r))
-    expect(mockNotificaciones.enviarReservaConfirmadaCliente).not.toHaveBeenCalled()
-    expect(mockNotificaciones.enviarReservaCanceladaCliente).not.toHaveBeenCalled()
+  it('no se confirma a mano con un abono en curso en el banco', async () => {
+    mockPrisma.reserva.findUnique.mockResolvedValue({
+      ...reservaBase, estado: 'pendiente_pago',
+      pagos: [{ estado: 'pendiente', proveedorTxId: 'tx1', createdAt: new Date() }],
+    })
+    await expect(service.cambiarEstado('1', { estado: 'confirmada' })).rejects.toThrow('pago en curso')
+  })
+
+  it('sí se confirma a mano si el abono se pagó por fuera y no hay nada en curso', async () => {
+    mockPrisma.reserva.findUnique.mockResolvedValue({
+      ...reservaBase, estado: 'pendiente_pago',
+      // Abrió la pasarela y la cerró: el banco nunca tuvo la transacción.
+      pagos: [{ estado: 'pendiente', proveedorTxId: null, createdAt: new Date() }],
+    })
+    mockPrisma.reserva.update.mockResolvedValue({ ...reservaBase, estado: 'confirmada' })
+    await service.cambiarEstado('1', { estado: 'confirmada' })
+    expect(mockPrisma.reserva.update).toHaveBeenCalled()
   })
 })
 
@@ -271,5 +297,18 @@ describe('ReservasService.remove', () => {
     await expect(service.remove('1')).rejects.toThrow(ConflictException)
     expect(mockPrisma.pago.count).toHaveBeenCalledWith({ where: { reservaId: '1' } })
     expect(mockPrisma.reserva.delete).not.toHaveBeenCalled()
+  })
+
+  it('la consulta previa del panel da el motivo y la reserva, sin borrar nada', async () => {
+    mockPrisma.pago.count.mockResolvedValue(2)
+    const b = await service.bloqueoBorrado('1')
+    expect(b).toMatchObject({ pendientes: [{ id: '1', estado: '2 pagos' }], restantes: 0 })
+    expect(b.motivo).toContain('Tiene pagos registrados')
+    expect(mockPrisma.reserva.delete).not.toHaveBeenCalled()
+  })
+
+  it('la consulta previa da nulo si se puede borrar', async () => {
+    mockPrisma.pago.count.mockResolvedValue(0)
+    expect(await service.bloqueoBorrado('1')).toEqual({ motivo: null })
   })
 })

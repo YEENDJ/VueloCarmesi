@@ -11,15 +11,40 @@ import { codigoPedido } from '../pedidos/consulta.util'
 const ADMIN_URL = process.env.FRONTEND_URL ?? 'http://localhost:3000'
 
 /**
- * «Ver mi pedido»: el enlace a la página pública del pedido. Sin cuenta, es
- * la forma de volver a ver cómo va la compra desde cualquier dispositivo.
- * La ruta es la de front/lib/i18n/routing.ts (/mi-pedido/[token]): si cambia
- * allá, cambia aquí. Sin token (un pedido viejo) no hay botón.
+ * «Valida el estado de tu pedido / reserva»: el enlace a su página pública.
+ * Lleva el token, así que abre directo el detalle y el estado, sin pedir
+ * código ni correo. Sin cuenta, es la forma de volver a ver cómo va desde
+ * cualquier dispositivo.
+ *
+ * Debajo va el mismo enlace escrito: hay correos que no pintan el botón, y
+ * sin él el cliente se quedaba sin forma de entrar.
+ *
+ * Las rutas son las de front/lib/i18n/routing.ts (/mi-pedido/[token] y
+ * /mi-reserva/[token]): si cambian allá, cambian aquí. Sin token (uno viejo)
+ * no hay botón.
  */
-function botonVerPedido(token?: string | null): string {
+const SEGUIMIENTO = {
+  pedido: {
+    ruta: '/mi-pedido',
+    texto: 'Sigue en todo momento cómo va tu compra: pagado, enviado y entregado.',
+    boton: 'Valida el estado de tu pedido',
+  },
+  reserva: {
+    ruta: '/mi-reserva',
+    texto: 'Sigue en todo momento cómo va tu reserva: abono, confirmación y el día de la experiencia.',
+    boton: 'Valida el estado de tu reserva',
+  },
+} as const
+
+function botonSeguimiento(tipo: keyof typeof SEGUIMIENTO, token?: string | null): string {
   if (!token) return ''
-  const url = `${ADMIN_URL}/mi-pedido/${encodeURIComponent(token)}`
-  return `<p style="margin:28px 0 0;text-align:center"><a href="${url}" style="display:inline-block;background:#D51312;color:#fff;font-family:Arial,sans-serif;font-weight:bold;font-size:15px;text-decoration:none;padding:14px 28px;border-radius:8px">Ver mi pedido</a></p>`
+  const { ruta, texto, boton } = SEGUIMIENTO[tipo]
+  const url = `${ADMIN_URL}${ruta}/${encodeURIComponent(token)}`
+  return `<div style="margin:28px 0 0;padding:20px;text-align:center;background:#FFF6E4;border-radius:10px">`
+    + `<p style="margin:0 0 14px;color:#5C3317;font-family:Arial,sans-serif;font-size:14px">${texto}</p>`
+    + `<a href="${url}" style="display:inline-block;background:#D51312;color:#fff;font-family:Arial,sans-serif;font-weight:bold;font-size:15px;text-decoration:none;padding:14px 28px;border-radius:8px">${boton}</a>`
+    + `<p style="margin:14px 0 0;color:#872B13;font-family:Arial,sans-serif;font-size:12px;line-height:1.5">¿No ves el botón? Abre este enlace:<br><a href="${url}" style="color:#D51312;word-break:break-all">${url}</a></p>`
+    + `</div>`
 }
 
 /**
@@ -140,10 +165,12 @@ export class NotificacionesService {
   async enviarConfirmacionReserva(reserva: {
     id: string; nombre: string; email: string; telefono: string
     experiencia?: { nombre: string } | null
+    experienciaNombre?: string
     fecha: Date; cantidadPersonas: number
     total?: number | null; porcentajeAbono?: number | null
+    tokenConsulta?: string | null
   }, pago?: PagoRecibido): Promise<void> {
-    const expNombre = reserva.experiencia?.nombre ?? 'Experiencia'
+    const expNombre = reserva.experiencia?.nombre || reserva.experienciaNombre || 'Experiencia'
     const fechaStr = fechaEnLetras(reserva.fecha)
     // Todo lo que escribió el visitante va escapado antes de entrar al HTML.
     // Sin esto, un nombre como `<a href="…">Paga aquí</a>` salía como enlace en
@@ -182,6 +209,9 @@ export class NotificacionesService {
         `Confirmación de tu reserva — Vuelo Carmesí`,
         this.email.templateConfirmacionReserva({
           nombre,
+          // Con él se consulta la reserva en «mi reserva» si se pierde el enlace.
+          codigo: codigoCorto(reserva.id),
+          botonReserva: botonSeguimiento('reserva', reserva.tokenConsulta),
           experiencia,
           fecha: fechaStr,
           cantidadPersonas: String(reserva.cantidadPersonas),
@@ -277,7 +307,7 @@ export class NotificacionesService {
           // «Consultar mi pedido». Antes iba el id completo, que no se parecía
           // a nada de lo que el cliente veía en la página.
           codigo: codigoPedido(pedido.id),
-          botonPedido: botonVerPedido(pedido.tokenConsulta),
+          botonPedido: botonSeguimiento('pedido', pedido.tokenConsulta),
           direccion: direccionCompleta,
           itemsTable: itemsTableCliente,
           notaPago,
@@ -477,9 +507,11 @@ export class NotificacionesService {
   async enviarReservaConfirmadaCliente(reserva: {
     id: string; nombre: string; email: string
     experiencia?: { nombre: string } | null
+    experienciaNombre?: string
     fecha: Date; cantidadPersonas: number; estado: string
+    tokenConsulta?: string | null
   }): Promise<void> {
-    const expNombre = reserva.experiencia?.nombre ?? 'Experiencia'
+    const expNombre = reserva.experiencia?.nombre || reserva.experienciaNombre || 'Experiencia'
     const fechaStr = fechaEnLetras(reserva.fecha)
 
     const instruccionesRow = await this.prisma.siteConfig.findUnique({ where: { key: 'instrucciones_confirmacion' } })
@@ -491,6 +523,8 @@ export class NotificacionesService {
 
     const html = this.email.templateReservaConfirmada({
       nombre: escapeHtml(reserva.nombre),
+      codigo: codigoCorto(reserva.id),
+      botonReserva: botonSeguimiento('reserva', reserva.tokenConsulta),
       experiencia: escapeHtml(expNombre),
       fecha: escapeHtml(fechaStr),
       cantidadPersonas: String(reserva.cantidadPersonas),
@@ -503,9 +537,10 @@ export class NotificacionesService {
   async enviarReservaCanceladaCliente(reserva: {
     id: string; nombre: string; email: string
     experiencia?: { nombre: string } | null
+    experienciaNombre?: string
     fecha: Date; estado: string
   }, motivo?: string): Promise<void> {
-    const expNombre = reserva.experiencia?.nombre ?? 'Experiencia'
+    const expNombre = reserva.experiencia?.nombre || reserva.experienciaNombre || 'Experiencia'
     const fechaStr = fechaEnLetras(reserva.fecha)
 
     const motivoHtml = motivo

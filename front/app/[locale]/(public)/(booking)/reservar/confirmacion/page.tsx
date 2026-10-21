@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Button from '@/components/ui/Button'
+import VerMiReserva from '@/components/booking/VerMiReserva'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 /**
@@ -23,7 +24,7 @@ export default async function ConfirmacionPage({
   const t = await getTranslations('reserva')
 
   return (
-    <div style={{ backgroundColor: 'var(--color-cream)', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: 'var(--color-cream)', minHeight: '100dvh' }}>
       <div
         style={{
           maxWidth: '600px',
@@ -132,10 +133,12 @@ export default async function ConfirmacionPage({
             flexWrap: 'wrap',
           }}
         >
+          {/* La reserva recién hecha, si este navegador guardó su llave. */}
+          <VerMiReserva />
           <Button href="/" variant="outline">
             {t('volverInicio')}
           </Button>
-          <Button href="/tienda" variant="primary">
+          <Button href="/tienda" variant="outline">
             {t('verTienda')}
           </Button>
         </div>

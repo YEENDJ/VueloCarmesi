@@ -10,6 +10,7 @@
     <div style="padding:32px 40px">
       <p style="color:#5C3317;font-size:16px;margin:0 0 24px">Hola <strong>{{nombre}}</strong>, tu reserva ha sido <strong>confirmada</strong>. Te esperamos con gusto.</p>
       <table style="width:100%;border-collapse:collapse">
+        <tr><td style="padding:10px 0;border-bottom:1px solid #F0D6A8;color:#872B13;font-weight:bold;width:40%">N° de reserva</td><td style="padding:10px 0;border-bottom:1px solid #F0D6A8;color:#5C3317;font-family:monospace">{{codigo}}</td></tr>
         <tr><td style="padding:10px 0;border-bottom:1px solid #F0D6A8;color:#872B13;font-weight:bold;width:40%">Experiencia</td><td style="padding:10px 0;border-bottom:1px solid #F0D6A8;color:#5C3317">{{experiencia}}</td></tr>
         <tr><td style="padding:10px 0;border-bottom:1px solid #F0D6A8;color:#872B13;font-weight:bold">Fecha</td><td style="padding:10px 0;border-bottom:1px solid #F0D6A8;color:#5C3317">{{fecha}}</td></tr>
         <tr><td style="padding:10px 0;color:#872B13;font-weight:bold">Personas</td><td style="padding:10px 0;color:#5C3317">{{cantidadPersonas}}</td></tr>
@@ -18,7 +19,8 @@
         <div style="color:#872B13;font-weight:bold;font-size:13px;margin-bottom:8px">📋 Antes de llegar</div>
         <div style="color:#5C3317;font-size:14px;line-height:1.7">{{instrucciones}}</div>
       </div>
-      <p style="color:#5C3317;font-size:14px;margin:0">¿Tienes alguna duda? Contáctanos: <strong>{{contacto}}</strong></p>
+      {{botonReserva}}
+      <p style="color:#5C3317;font-size:14px;margin:24px 0 0">¿Tienes alguna duda? Contáctanos: <strong>{{contacto}}</strong></p>
     </div>
     <div style="background:#F0D6A8;padding:20px 40px;font-size:12px;color:#872B13;text-align:center">Vuelo Carmesí · Finca agroecológica · Colombia</div>
   </div>

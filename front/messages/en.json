@@ -12,7 +12,8 @@
     "abrirMenu": "Open menu",
     "cerrarMenu": "Close menu",
     "cambiarIdioma": "Change language",
-    "miPedido": "My order"
+    "miPedido": "My order",
+    "miReserva": "My booking"
   },
   "miga": {
     "aria": "Breadcrumb",
@@ -179,7 +180,16 @@
       "nota": "We hold your spot for 30 minutes while you pay.",
       "lateral": "When you book, you pay {porcentaje}% of the total online; the rest on the day of the activity.",
       "errorAbrir": "Your booking is on hold, but we couldn’t open the payment page. Please try again in a moment.",
-      "desglose": "{precio} × {n, plural, one {# person} other {# people}}"
+      "desglose": "{precio} × {n, plural, one {# person} other {# people}}",
+      "modal": {
+        "titulo": "You’re going to the payment page",
+        "texto": "We’ll take you to the secure payment gateway to pay your booking deposit. You pay the rest on the day of the activity.",
+        "ahora": "You pay now ({porcentaje} %)",
+        "pendiente": "Remaining ({porcentaje} %)",
+        "pendienteNota": "You pay it on the day of the activity, at the farm.",
+        "continuar": "Continue to payment",
+        "cancelar": "Cancel"
+      }
     },
     "grupoDatos": "Your details",
     "grupoVisita": "Your visit"
@@ -1415,7 +1425,9 @@
     "tienda": "Hi! I'm looking at the Vuelo Carmesí shop and I have a question about the products.",
     "pagoEnCurso": "Hi! I have a payment pending with my bank (order {codigo}, reference {referencia}) and I'd like to know its status or place a new order.",
     "miPedido": "Hi! I’d like to know how my order from the Vuelo Carmesí shop is going.",
-    "pedido": "Hi! I have a question about my order {codigo}."
+    "pedido": "Hi! I have a question about my order {codigo}.",
+    "miReserva": "Hi! I’d like to know the status of my booking at Vuelo Carmesí.",
+    "reserva": "Hi! I have a question about my booking {codigo}."
   },
   "escnna": {
     "aviso": "The sexual exploitation and abuse of children and adolescents are crimes in Colombia, punishable under criminal and administrative law (Law 679 of 2001 and Law 1336 of 2009). <politica>Our policy</politica>."
@@ -1460,7 +1472,7 @@
   },
   "miPedido": {
     "consultaTitulo": "Look up your order",
-    "consultaTexto": "Enter your order code and the email you used to buy. The code is in the confirmation email and starts with VC-.",
+    "consultaTexto": "Enter your order code and the email you used to buy.",
     "codigo": "Order code",
     "placeholderCodigo": "VC-AB12CD",
     "email": "Email used for the order",
@@ -1493,7 +1505,6 @@
       "enviado": "Shipped",
       "entregado": "Delivered"
     },
-    "ayuda": "Something not right? <whatsapp>Message us on WhatsApp</whatsapp> and mention your code {codigo}.",
     "estados": {
       "pendiente": {
         "titulo": "Order received",
@@ -1528,6 +1539,121 @@
         "texto": "We received your payment and are reviewing the order. We’ll contact you soon."
       }
     },
-    "verMiPedido": "View my order"
+    "verMiPedido": "View my order",
+    "antetitulo": "Order tracking",
+    "pistaTitulo": "Where is the code?",
+    "pistaCorreo": "In the confirmation email we sent you when you ordered.",
+    "pistaCodigo": "It starts with VC- followed by six letters or numbers, like VC-AB12CD.",
+    "resumen": "Summary",
+    "resumenCodigo": "Code",
+    "resumenFecha": "Order date",
+    "resumenProductos": "Items",
+    "unidades": "{n, plural, one {# item} other {# items}}",
+    "copiar": "Copy code",
+    "copiado": "Code copied",
+    "pasoHecho": "completed",
+    "pasosDetalle": {
+      "recibido": "We registered your order",
+      "pagado": "Payment confirmed",
+      "enviado": "On its way to your address",
+      "entregado": "You received it"
+    },
+    "ayudaTitulo": "Need help?",
+    "ayudaTexto": "Message us on WhatsApp and mention your code {codigo}: we’ll reply with an up-to-date status.",
+    "ayudaBoton": "Message us on WhatsApp",
+    "consultarOtro": "Look up another order"
+  },
+  "miReserva": {
+    "placeholderCodigo": "VC-AB12CD",
+    "placeholderEmail": "you@email.com",
+    "errorEmail": "Enter a valid email",
+    "consultando": "Searching…",
+    "demasiados": "You made a lot of lookups in a row. Wait a minute and try again.",
+    "errorRed": "We couldn’t look it up right now. Please try again in a moment.",
+    "ayudaWhatsapp": "Don’t have the email at hand? <whatsapp>Message us on WhatsApp</whatsapp>.",
+    "buscarOtro": "Look up with code and email",
+    "reintentar": "Try again",
+    "pasoActual": "current step",
+    "pasoHecho": "completed",
+    "pistaTitulo": "Where is the code?",
+    "pistaCodigo": "It starts with VC- followed by six letters or numbers, like VC-AB12CD.",
+    "ayudaTitulo": "Need help?",
+    "ayudaBoton": "Message us on WhatsApp",
+    "copiar": "Copy code",
+    "copiado": "Code copied",
+    "resumen": "Summary",
+    "resumenCodigo": "Code",
+    "total": "Total",
+    "cantidadPorPrecio": "{q} × {precio}",
+    "antetitulo": "Booking tracking",
+    "consultaTitulo": "Look up your booking",
+    "consultaTexto": "Enter your booking code and the email you used to book.",
+    "codigo": "Booking code",
+    "email": "Booking email",
+    "errorCodigo": "Enter the booking code",
+    "consultar": "View my booking",
+    "noEncontrado": "We couldn’t find a booking with that code and email. Check they match the ones in your booking email.",
+    "pistaCorreo": "In the email we sent you when you booked.",
+    "titulo": "Booking {codigo}",
+    "hecho": "Made on {fecha}",
+    "cargando": "Loading your booking…",
+    "noEncontradoTitulo": "We couldn’t find this booking",
+    "noEncontradoTexto": "The link may be incomplete. You can look it up with the code and your email.",
+    "irAPagar": "Pay the deposit",
+    "progreso": "Booking progress",
+    "pasos": {
+      "recibida": "Received",
+      "abono": "Deposit paid",
+      "confirmada": "Confirmed",
+      "realizada": "Completed"
+    },
+    "pasosDetalle": {
+      "recibida": "We registered your booking",
+      "abono": "We received your deposit",
+      "confirmada": "We’ll be expecting you at the farm",
+      "realizada": "You enjoyed the experience"
+    },
+    "estados": {
+      "pendiente": {
+        "titulo": "Booking received",
+        "texto": "We’ll confirm your booking and arrival details by email as soon as possible."
+      },
+      "pendiente_pago": {
+        "titulo": "Waiting for the deposit",
+        "texto": "Your spot is held until {hora}. If it isn’t paid in time, it’s released."
+      },
+      "confirmada": {
+        "titulo": "Booking confirmed",
+        "texto": "We’ll be expecting you on {fecha}. Check your email for directions."
+      },
+      "realizada": {
+        "titulo": "Experience completed",
+        "texto": "Thanks for visiting us. We hope to see you again!"
+      },
+      "cancelada": {
+        "titulo": "Booking cancelled",
+        "texto": "This booking was cancelled. If you have questions, message us."
+      },
+      "expirada": {
+        "titulo": "Expired without payment",
+        "texto": "The time to pay the deposit ran out and the spot was released. You were not charged."
+      },
+      "requiere_revision": {
+        "titulo": "Under review",
+        "texto": "We received your payment and are reviewing the booking. We’ll contact you soon."
+      }
+    },
+    "experiencia": "Your experience",
+    "fechaExperiencia": "Date",
+    "personasRotulo": "People",
+    "personas": "{n, plural, one {# person} other {# people}}",
+    "resumenFecha": "Booking date",
+    "abono": "Deposit ({porcentaje} %)",
+    "abonoPagado": "Paid",
+    "abonoPendiente": "Unpaid",
+    "saldo": "Balance on the day of the activity",
+    "ayudaTexto": "Message us on WhatsApp and mention your code {codigo}: we’ll reply with an up-to-date status.",
+    "consultarOtro": "Look up another booking",
+    "verExperiencias": "See experiences"
   }
 }
