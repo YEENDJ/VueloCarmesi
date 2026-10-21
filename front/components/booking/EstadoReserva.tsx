@@ -9,6 +9,7 @@ import type { LucideIcon } from 'lucide-react'
 import { Link } from '@/lib/i18n/navigation'
 import Button from '@/components/ui/Button'
 import { CopiarCodigo, Esqueleto } from '@/components/shop/SeguimientoPartes'
+import BotonPagar from '@/components/pagos/BotonPagar'
 import { formatPrecio } from '@/lib/format'
 import { whatsappCon } from '@/lib/contacto'
 import { ErrorConsulta, obtenerReserva, type ReservaPublica } from '@/lib/reservas-consulta'
@@ -151,15 +152,9 @@ export default function EstadoReserva({ token }: { token: string }) {
             <div className="pedido-estado-cuerpo">
               <h2 className="pedido-estado-titulo">{t(`estados.${estado}.titulo`)}</h2>
               <p className="pedido-estado-texto">{estadoTexto}</p>
-              {/* Esperando el abono y aún a tiempo: la página de resultado sabe
-                  mostrar un pago en curso con el banco o reintentar uno rechazado. */}
+              {/* Esperando el abono y aún a tiempo: abre un intento nuevo y va a la pasarela. */}
               {esperaPago && reserva.referenciaPago && (
-                <Button
-                  href={{ pathname: '/reservar/resultado', query: { ref: reserva.referenciaPago } }}
-                  style={{ minHeight: 48, marginTop: '1rem' }}
-                >
-                  {t('irAPagar')}
-                </Button>
+                <BotonPagar referencia={reserva.referenciaPago} tipo="reserva">{t('irAPagar')}</BotonPagar>
               )}
             </div>
           </div>
