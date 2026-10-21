@@ -598,6 +598,182 @@ describe('Pagos: reservas', () => {
   })
 })
 
+/**
+ * Los mismos casos del spec que arriba se prueban con pedidos, ahora con una
+ * reserva. El servicio es uno solo, pero la reserva sigue otro camino al
+ * aprobarse (queda pendiente de confirmar, no «pagada») y no tiene stock: si un
+ * día esos caminos se separan, esto lo nota.
+ */
+describe('Pagos: reservas, caso por caso', () => {
+  it('caso 1 · antes de su plazo no vence', async () => {
+    const e = montar()
+    e.reserva()
+    await e.vencimiento.vencerPendientes(new Date(T0.getTime() + 29 * MIN))
+    expect(e.prisma.t.reserva[0].estado).toBe('pendiente_pago')
+  })
+
+  it('caso 2 · rechazado: sigue esperando el abono y no se confirma', async () => {
+    const e = montar()
+    e.reserva()
+    const { referencia } = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    await e.webhook(referencia, 'rechazado', 60000, { motivo: 'Fondos insuficientes' })
+
+    expect(e.pagoDe(referencia)).toMatchObject({ estado: 'rechazado', motivo: 'Fondos insuficientes' })
+    expect(e.prisma.t.reserva[0].estado).toBe('pendiente_pago')
+    expect(e.notificaciones.enviarConfirmacionReserva).not.toHaveBeenCalled()
+  })
+
+  it('caso 3 · reintenta con otra referencia y esa sí se aprueba', async () => {
+    const e = montar()
+    e.reserva()
+    const primero = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    await e.webhook(primero.referencia, 'rechazado', 60000)
+    const segundo = await e.pagos.crearIntento({ reservaId: 'res1' }, new Date(T0.getTime() + 5 * MIN))
+    await e.webhook(segundo.referencia, 'aprobado', 60000)
+
+    expect(segundo.referencia).not.toBe(primero.referencia)
+    expect(e.prisma.t.reserva[0].estado).toBe('pendiente')
+    expect(e.notificaciones.enviarConfirmacionReserva).toHaveBeenCalledTimes(1)
+  })
+
+  it('caso 4 · abono en curso con el banco: no vence y no abre otro intento', async () => {
+    const e = montar()
+    e.reserva()
+    const { referencia } = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    await e.webhook(referencia, 'pendiente', 60000, { metodo: 'pse' })
+
+    await e.vencimiento.vencerPendientes(new Date(T0.getTime() + 2 * HORA))
+    expect(e.prisma.t.reserva[0].estado).toBe('pendiente_pago')
+    await expect(e.pagos.crearIntento({ reservaId: 'res1' }, new Date(T0.getTime() + 10 * MIN)))
+      .rejects.toThrow(ConflictException)
+  })
+
+  it('caso 4 · pasado el tope de 24 horas, vence igual', async () => {
+    const e = montar()
+    e.reserva()
+    const { referencia } = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    await e.webhook(referencia, 'pendiente', 60000)
+
+    await e.vencimiento.vencerPendientes(new Date(T0.getTime() + 25 * HORA))
+    expect(e.prisma.t.reserva[0].estado).toBe('expirada')
+  })
+
+  it('caso 6 · el webhook no llega: la conciliación lo encuentra', async () => {
+    const e = montar()
+    e.reserva()
+    const { referencia } = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    e.proveedor.simular(referencia, 'aprobado', 60000)
+
+    expect(await e.vencimiento.conciliar(new Date(T0.getTime() + 15 * MIN))).toBe(1)
+    expect(e.prisma.t.reserva[0].estado).toBe('pendiente')
+  })
+
+  it('caso 7 · el mismo webhook dos veces confirma una sola vez', async () => {
+    const e = montar()
+    e.reserva()
+    const { referencia } = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    await e.webhook(referencia, 'aprobado', 60000)
+    await e.webhook(referencia, 'aprobado', 60000)
+
+    expect(e.notificaciones.enviarConfirmacionReserva).toHaveBeenCalledTimes(1)
+  })
+
+  it('caso 7 · un rechazo que llega tarde no deshace el abono', async () => {
+    const e = montar()
+    e.reserva()
+    const { referencia } = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    await e.webhook(referencia, 'aprobado', 60000)
+    await e.webhook(referencia, 'rechazado', 60000)
+
+    expect(e.pagoDe(referencia).estado).toBe('aprobado')
+    expect(e.prisma.t.reserva[0].estado).toBe('pendiente')
+  })
+
+  it('caso 8 · anulación después de aprobado: a revisión, sin decirle que su pago llegó', async () => {
+    const e = montar()
+    e.reserva()
+    const { referencia } = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    await e.webhook(referencia, 'aprobado', 60000)
+    await e.webhook(referencia, 'anulado', 60000)
+
+    expect(e.prisma.t.reserva[0].estado).toBe('requiere_revision')
+    expect(e.notificaciones.alertarPago).toHaveBeenCalledWith(
+      expect.objectContaining({ requiereRevision: true, tipo: 'reserva' }),
+    )
+    expect(e.notificaciones.enviarPagoEnRevisionCliente).not.toHaveBeenCalled()
+  })
+
+  it('caso 10 · reintento en la pasarela con la misma referencia: la aprobación cuenta', async () => {
+    const e = montar()
+    e.reserva()
+    const { referencia } = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    await e.webhook(referencia, 'rechazado', 60000, { proveedorTxId: 'tx-1' })
+    await e.webhook(referencia, 'aprobado', 60000, { proveedorTxId: 'tx-2' })
+
+    expect(e.pagoDe(referencia)).toMatchObject({ estado: 'aprobado', proveedorTxId: 'tx-2' })
+    expect(e.prisma.t.reserva[0].estado).toBe('pendiente')
+  })
+
+  it('un monto distinto al abono: a revisión, y al cliente se le dice que su pago llegó', async () => {
+    const e = montar()
+    e.reserva()
+    const { referencia } = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    await e.webhook(referencia, 'aprobado', 1000)
+
+    expect(e.prisma.t.reserva[0].estado).toBe('requiere_revision')
+    expect(e.notificaciones.enviarConfirmacionReserva).not.toHaveBeenCalled()
+    expect(e.notificaciones.enviarPagoEnRevisionCliente).toHaveBeenCalledWith(
+      expect.objectContaining({ tipo: 'reserva', id: 'res1', monto: 1000 }),
+    )
+  })
+
+  it('dos abonos aprobados: el segundo avisa de cobro doble', async () => {
+    const e = montar()
+    e.reserva()
+    const a = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    const b = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    await e.webhook(a.referencia, 'aprobado', 60000)
+    await e.webhook(b.referencia, 'aprobado', 60000)
+
+    expect(e.prisma.t.reserva[0].estado).toBe('pendiente')
+    expect(e.notificaciones.alertarPago).toHaveBeenCalledWith(
+      expect.objectContaining({ tipo: 'reserva', motivo: expect.stringContaining('Cobro doble') }),
+    )
+  })
+
+  it('el abono de una reserva cancelada en el panel pide revisión', async () => {
+    const e = montar()
+    e.reserva()
+    const { referencia } = await e.pagos.crearIntento({ reservaId: 'res1' }, T0)
+    e.prisma.t.reserva[0].estado = 'cancelada'
+    await e.webhook(referencia, 'aprobado', 60000)
+
+    expect(e.prisma.t.reserva[0].estado).toBe('requiere_revision')
+  })
+
+  it('rechazado a tiempo: le escribe con el enlace de reintento de reservas', async () => {
+    const e = montar()
+    const venceEn = new Date(Date.now() + 30 * MIN)
+    e.reserva({ venceEn })
+    const { referencia } = await e.pagos.crearIntento({ reservaId: 'res1' })
+    await e.webhook(referencia, 'rechazado', 60000)
+
+    expect(e.notificaciones.enviarPagoRechazado).toHaveBeenCalledWith({
+      tipo: 'reserva', nombre: 'Luis', email: 'luis@x.co', referencia, monto: 60000, venceEn,
+    })
+  })
+
+  it('no abre intentos sobre una reserva ya vencida o ya confirmada', async () => {
+    const e = montar()
+    e.reserva()
+    await expect(e.pagos.crearIntento({ reservaId: 'res1' }, new Date(T0.getTime() + 31 * MIN)))
+      .rejects.toThrow(ConflictException)
+
+    e.prisma.t.reserva[0].estado = 'confirmada'
+    await expect(e.pagos.crearIntento({ reservaId: 'res1' }, T0)).rejects.toThrow(ConflictException)
+  })
+})
+
 describe('Pagos: avisos al cliente', () => {
   // El aviso de rechazo mira la hora real (llega por webhook, sin reloj
   // inyectado), así que aquí el plazo se fija contra Date.now() y no contra T0.
