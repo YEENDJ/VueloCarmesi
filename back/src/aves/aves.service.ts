@@ -115,8 +115,8 @@ export class AvesService {
 }
 
 /**
- * Una residente sin foto dejaría un marco vacío en la rejilla. Las migratorias
- * van sin foto por regla (ver el modelo), así que a ellas no se les pide.
+ * Una residente sin foto dejaría un marco vacío en la rejilla. En las
+ * migratorias la foto es opcional (ver el modelo), así que a ellas no se les pide.
  */
 function exigirFotoSiResidente(tipo: string, imagen?: string) {
   if (tipo === 'residente' && !imagen?.trim()) {

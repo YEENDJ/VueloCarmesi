@@ -5500,6 +5500,27 @@ html:has(.mini-carrito[open]) {
   opacity: 0.6;
   font-size: clamp(0.78rem, 2vw, 0.83rem);
 }
+.avi-pill-nombres {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+/* Migratoria con foto: miniatura cuadrada a la izquierda y los nombres al lado.
+   La foto es opcional; sin ella la ficha queda como siempre, solo texto. */
+.avi-pill--foto {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+.avi-pill-foto {
+  flex: 0 0 auto;
+  width: clamp(56px, 14vw, 72px);
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(135, 43, 19, 0.06);
+}
 /* .avi-pill declara display:flex, que le gana al [hidden] del navegador: sin
    esto la paginación de migratorias no ocultaba nada. */
 .avi-pill[hidden] {

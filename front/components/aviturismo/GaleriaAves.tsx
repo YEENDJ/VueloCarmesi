@@ -17,7 +17,8 @@ const MIGRATORIAS_POR_PAGINA = 12
 
 /**
  * Las especies de /aviturismo: la rejilla de residentes con foto y, debajo, la
- * sección de migratorias en fichas de texto. Cada grupo pagina por su cuenta.
+ * sección de migratorias en fichas (con miniatura si tienen foto). Cada grupo
+ * pagina por su cuenta.
  *
  * Todas las especies van en el HTML y las de otras páginas solo se ocultan con
  * `hidden`. No es descuido: el nombre científico y el inglés de cada una son
@@ -75,13 +76,22 @@ export default function GaleriaAves({ residentes, migratorias }: { residentes: A
             porPagina={MIGRATORIAS_POR_PAGINA}
             className="avi-pills"
             etiqueta={t('migratoriasCard.paginacionAria')}
-            renderItem={({ id, cientifico, ingles, local }, oculta) => (
-              <li key={id} className="avi-pill" hidden={oculta}>
-                <b>
-                  <i>{cientifico}</i>
-                </b>
-                <span className="avi-pill-ingles">{ingles}</span>
-                <span className="avi-pill-local">{local}</span>
+            renderItem={({ id, cientifico, ingles, local, imagen, alt, foco }, oculta) => (
+              // La foto es opcional: con ella va en miniatura junto a los
+              // nombres; sin ella la ficha queda solo con texto.
+              <li key={id} className={`avi-pill${imagen ? ' avi-pill--foto' : ''}`} hidden={oculta}>
+                {imagen && (
+                  <span className="avi-pill-foto">
+                    <FotoAve src={imagen} alt={alt} foco={foco} miniatura />
+                  </span>
+                )}
+                <span className="avi-pill-nombres">
+                  <b>
+                    <i>{cientifico}</i>
+                  </b>
+                  <span className="avi-pill-ingles">{ingles}</span>
+                  <span className="avi-pill-local">{local}</span>
+                </span>
               </li>
             )}
           />
@@ -200,23 +210,25 @@ function Paginacion({ id, pagina, total, etiqueta, onIr }: {
  * por next/image; las que sube el panel están en Cloudinary y van en <img>,
  * igual que en las tarjetas de experiencia (ver ExperienciaCard).
  *
- * Las medidas son nominales: el marco 4:5 ya reserva el hueco y la foto lo
- * llena con object-fit, así que el ratio real del archivo no se ve en ningún lado.
+ * Las medidas son nominales: el marco (4:5 en la rejilla, cuadrado en la
+ * miniatura de una migratoria) ya reserva el hueco y la foto lo llena con
+ * object-fit, así que el ratio real del archivo no se ve en ningún lado.
  */
-function FotoAve({ src, alt, foco }: { src: string; alt: string; foco: string }) {
+function FotoAve({ src, alt, foco, miniatura = false }: { src: string; alt: string; foco: string; miniatura?: boolean }) {
   const estilo = { width: '100%', height: '100%', objectFit: 'cover', objectPosition: foco } as const
+  const [ancho, alto] = miniatura ? [160, 160] : [800, 1000]
   if (src.startsWith('/')) {
     return (
       <Image
         src={src}
         alt={alt}
-        width={800}
-        height={1000}
-        sizes="(min-width: 1100px) 260px, (min-width: 600px) 30vw, 72vw"
+        width={ancho}
+        height={alto}
+        sizes={miniatura ? '72px' : '(min-width: 1100px) 260px, (min-width: 600px) 30vw, 72vw'}
         style={estilo}
       />
     )
   }
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt={alt} width={800} height={1000} loading="lazy" decoding="async" style={estilo} />
+  return <img src={src} alt={alt} width={ancho} height={alto} loading="lazy" decoding="async" style={estilo} />
 }

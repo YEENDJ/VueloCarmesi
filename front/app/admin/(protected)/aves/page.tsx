@@ -10,7 +10,7 @@ type Tipo = AdminAve['tipo']
 
 const GRUPOS: { tipo: Tipo; titulo: string; ayuda: string }[] = [
   { tipo: 'residente', titulo: 'Residentes', ayuda: 'La rejilla de fotos de /aviturismo, en este orden.' },
-  { tipo: 'migratoria', titulo: 'Migratorias', ayuda: 'Las fichas de texto, sin foto.' },
+  { tipo: 'migratoria', titulo: 'Migratorias', ayuda: 'Las fichas de migratorias. La foto es opcional: sale en miniatura junto a los nombres.' },
 ]
 
 export default function AvesPage() {
@@ -103,7 +103,7 @@ export default function AvesPage() {
                   <thead>
                     <tr>
                       <th style={{ width: 96 }}>Orden</th>
-                      {tipo === 'residente' && <th style={{ width: 64 }}>Foto</th>}
+                      <th style={{ width: 64 }}>Foto</th>
                       <th>Especie</th>
                       <th style={{ textAlign: 'right' }}>Acciones</th>
                     </tr>
@@ -127,10 +127,11 @@ export default function AvesPage() {
                             >↓</button>
                           </div>
                         </td>
-                        {tipo === 'residente' && (
-                          <td>
-                            {/* Miniatura con el mismo encuadre que la tarjeta pública. */}
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <td>
+                          {/* Miniatura con el mismo encuadre que la tarjeta pública.
+                              Una migratoria sin foto deja la celda con un guion. */}
+                          {a.imagen ? (
+                            // eslint-disable-next-line @next/next/no-img-element
                             <img
                               src={a.imagen} alt="" loading="lazy" decoding="async"
                               style={{
@@ -138,14 +139,16 @@ export default function AvesPage() {
                                 borderRadius: 6, display: 'block', background: 'var(--admin-bg)',
                               }}
                             />
-                          </td>
-                        )}
+                          ) : (
+                            <span aria-label="Sin foto" style={{ color: 'var(--admin-text-muted)' }}>—</span>
+                          )}
+                        </td>
                         <td style={{ minWidth: 0 }}>
                           <div style={{ fontWeight: 700 }}>{a.local}</div>
                           <div style={{ fontSize: 12, color: 'var(--admin-text-muted)' }}>
                             <i>{a.cientifico}</i> · {a.ingles}
                           </div>
-                          {tipo === 'residente' && !a.altEn && (
+                          {a.imagen && !a.altEn && (
                             <div style={{ fontSize: 12, color: '#B45309', marginTop: 2 }}>
                               ⚠️ Sin descripción en inglés: ábrela y guarda para traducirla
                             </div>

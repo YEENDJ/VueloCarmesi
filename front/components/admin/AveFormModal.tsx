@@ -50,7 +50,8 @@ export default function AveFormModal({
     setForm(prev => ({ ...prev, [k]: v }))
   }
 
-  const conFoto = form.tipo === 'residente'
+  // Las residentes llevan foto siempre; en las migratorias es opcional.
+  const fotoObligatoria = form.tipo === 'residente'
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -58,20 +59,20 @@ export default function AveFormModal({
       setError('Los tres nombres son obligatorios')
       return
     }
-    if (conFoto && !form.imagen) {
+    if (fotoObligatoria && !form.imagen) {
       setError('Las especies residentes necesitan foto')
       return
     }
-    if (conFoto && !form.alt.trim()) {
+    if (form.imagen && !form.alt.trim()) {
       setError('Describe la foto: es lo que oye quien navega con lector de pantalla y lo que lee Google')
       return
     }
     setSaving(true)
     setError('')
     try {
-      // Una migratoria no lleva foto (ver el modelo): si se cambió de tipo, se
-      // limpia para que no quede una foto huérfana que nadie ve.
-      const data = conFoto ? form : { ...form, imagen: '', foco: '50% 50%', alt: '', altEn: '' }
+      // Sin foto no hay nada que describir ni encuadrar: se limpia para que no
+      // quede una descripción de una foto que ya se quitó.
+      const data = form.imagen ? form : { ...form, foco: '50% 50%', alt: '', altEn: '' }
       const saved = isEdit ? await updateAve(ave!.id, data) : await createAve(data)
       setSaving(false)
       onSaved(saved)
@@ -125,28 +126,30 @@ export default function AveFormModal({
                     style={{ minHeight: 44 }}
                     onClick={() => set('tipo', t)}
                   >
-                    {t === 'residente' ? 'Residente · con foto' : 'Migratoria · sin foto'}
+                    {t === 'residente' ? 'Residente · con foto' : 'Migratoria · foto opcional'}
                   </button>
                 ))}
               </div>
               <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginTop: 6 }}>
-                {conFoto
+                {fotoObligatoria
                   ? 'Va en la rejilla de fotos. Usa solo fotos tomadas en la finca: es lo que prueba el avistamiento.'
-                  : 'Va en las fichas de texto de migratorias. No lleva foto porque no hay archivo propio.'}
+                  : 'Va en las fichas de migratorias. Si tienes una foto tomada en la finca, súbela y sale en miniatura junto a los nombres; si no, la ficha queda solo con texto.'}
               </div>
             </FormRow>
 
-            {conFoto && (
-              <>
-                <ImageUploader value={form.imagen} onChange={url => set('imagen', url)} label="Foto *" />
+            <ImageUploader
+              value={form.imagen}
+              onChange={url => set('imagen', url)}
+              label={fotoObligatoria ? 'Foto *' : 'Foto (opcional)'}
+            />
 
-                {form.imagen && (
-                  <SelectorEncuadre
-                    imagen={form.imagen}
-                    foco={form.foco}
-                    onChange={foco => set('foco', foco)}
-                  />
-                )}
+            {form.imagen && (
+              <>
+                <SelectorEncuadre
+                  imagen={form.imagen}
+                  foco={form.foco}
+                  onChange={foco => set('foco', foco)}
+                />
 
                 <FormRow label="Descripción de la foto *" ayuda="Qué se ve, en una frase">
                   <input
@@ -275,10 +278,18 @@ function VistaPrevia({ form }: { form: FormData }) {
           </div>
         </div>
       ) : (
-        <div className="avi-pill">
-          <b><i>{relleno(form.cientifico, 'Nombre científico')}</i></b>
-          <span className="avi-pill-ingles">{relleno(form.ingles, 'English name')}</span>
-          <span className="avi-pill-local">{relleno(form.local, 'Nombre local')}</span>
+        <div className={`avi-pill${form.imagen ? ' avi-pill--foto' : ''}`}>
+          {form.imagen && (
+            <span className="avi-pill-foto">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={form.imagen} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: form.foco }} />
+            </span>
+          )}
+          <span className="avi-pill-nombres">
+            <b><i>{relleno(form.cientifico, 'Nombre científico')}</i></b>
+            <span className="avi-pill-ingles">{relleno(form.ingles, 'English name')}</span>
+            <span className="avi-pill-local">{relleno(form.local, 'Nombre local')}</span>
+          </span>
         </div>
       )}
 

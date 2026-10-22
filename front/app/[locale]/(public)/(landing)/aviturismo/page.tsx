@@ -124,8 +124,8 @@ const RESUMEN: { Icono: LucideIcon; clave: string }[] = [
  * nota de inmediato—: lo que vende acá es la fiabilidad, se ven todo el año.
  * Las 180 completas están en eBird, que es donde se verifican.
  *
- * Las migratorias van sin foto por la misma regla: están registradas en el
- * hotspot pero no hay archivo propio, y una foto prestada la rompería.
+ * Las migratorias pueden llevar foto con la misma regla: solo si se tomó en la
+ * finca. Sin archivo propio van como ficha de texto; una foto prestada la rompería.
  */
 
 /**
