@@ -11,6 +11,7 @@ import { BloqueosEstado } from './BloqueosEstado'
 import { esDePrueba, tienePagoAprobado } from '@/lib/admin/pagos'
 import { formatPrecio } from '@/lib/format'
 import { opcionesEstado, contextoReserva, estadoVisible, estaRealizada } from '@/lib/admin/transiciones'
+import { codigoCorto } from '@/lib/admin/codigo'
 
 export default function ReservaDrawer({
   reserva,
@@ -75,7 +76,7 @@ export default function ReservaDrawer({
         <div className="admin-drawer-header">
           <div>
             <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', color: 'var(--color-gold)', marginBottom: 4 }}>
-              Detalle de Reserva
+              Reserva {codigoCorto(reserva.id)}
             </div>
             <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-cream)' }}>
               {reserva.nombre}

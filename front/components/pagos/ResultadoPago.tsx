@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
-import { Check, CircleAlert, Clock, SearchX, ShieldCheck, TimerOff, WifiOff } from 'lucide-react'
+import { Check, CircleAlert, Clock, CreditCard, SearchX, ShieldCheck, TimerOff, WifiOff } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import VerMiReserva from '@/components/booking/VerMiReserva'
@@ -17,10 +17,16 @@ const INTERVALO_MS = 3000
 /** Cuánto se espera en la página antes de decir «te escribimos al correo». */
 const ESPERA_MAXIMA_MS = 2 * 60_000
 
-type Pantalla = VistaResultado | 'cargando' | 'noEncontrado' | 'errorRed'
+/**
+ * `sinTerminar`: el intento sigue pendiente pero la pasarela no tiene
+ * transacción (`enCurso: false`). Abrió la página de pago y la cerró sin
+ * pagar: no hay banco al que esperar, y se le ofrece pagar.
+ */
+type Pantalla = VistaResultado | 'sinTerminar' | 'cargando' | 'noEncontrado' | 'errorRed'
 
 const ICONO: Record<Pantalla, { Icono: LucideIcon; fondo: string; trazo: string }> = {
   cargando: { Icono: Clock, fondo: 'rgba(253,195,0,.25)', trazo: 'var(--color-brown)' },
+  sinTerminar: { Icono: CreditCard, fondo: 'rgba(253,195,0,.25)', trazo: 'var(--color-brown)' },
   pendiente: { Icono: Clock, fondo: 'rgba(253,195,0,.25)', trazo: 'var(--color-brown)' },
   aprobado: { Icono: Check, fondo: 'var(--color-gold)', trazo: 'var(--color-brown)' },
   revision: { Icono: ShieldCheck, fondo: 'var(--color-gold)', trazo: 'var(--color-brown)' },
@@ -71,7 +77,9 @@ export default function ResultadoPago({
         if (!vigente) return
         const vista = vistaDe(e)
         setEstado(e)
-        setPantalla(vista)
+        // Solo con `enCurso: false` explícito: un backend anterior al campo no
+        // lo manda, y ahí se sigue esperando como antes.
+        setPantalla(vista === 'pendiente' && e.enCurso === false ? 'sinTerminar' : vista)
         // El carrito se vacía aquí y no al crear el pedido: si el pago fallaba,
         // el cliente volvía y tenía que armar la compra otra vez.
         if (vista === 'aprobado' || vista === 'revision') {
@@ -89,8 +97,10 @@ export default function ResultadoPago({
 
   // Mientras el banco no responde se sigue preguntando, con tope: pasados dos
   // minutos se le dice que llega un correo, en vez de dejarlo mirando un reloj.
+  // Sin terminar también se sigue preguntando: si la pasarela quedó abierta en
+  // otra pestaña y paga ahí, la pantalla cambia sola y el botón de pagar se va.
   useEffect(() => {
-    if (pantalla !== 'pendiente' || esperaLarga) return
+    if ((pantalla !== 'pendiente' && pantalla !== 'sinTerminar') || esperaLarga) return
     const id = setInterval(() => {
       if (inicioEspera.current === 0) inicioEspera.current = Date.now()
       if (Date.now() - inicioEspera.current > ESPERA_MAXIMA_MS) setEsperaLarga(true)
@@ -138,6 +148,7 @@ export default function ResultadoPago({
   const textos: Record<Pantalla, { titulo: string; cuerpo: string }> = {
     cargando: { titulo: t('cargando'), cuerpo: '' },
     pendiente: { titulo: t('pendienteTitulo'), cuerpo: esperaLarga ? t('pendienteLargo') : t('pendienteTexto') },
+    sinTerminar: { titulo: t('sinTerminarTitulo'), cuerpo: t('sinTerminarTexto') },
     aprobado: esPedido
       ? { titulo: t('aprobadoPedidoTitulo'), cuerpo: t('aprobadoPedidoTexto') }
       : { titulo: t('aprobadoReservaTitulo'), cuerpo: t('aprobadoReservaTexto', { monto: formatPrecio(estado?.monto ?? 0, idioma) }) },
@@ -214,7 +225,7 @@ export default function ResultadoPago({
           </p>
         )}
 
-        {pantalla === 'rechazado' && hora && (
+        {(pantalla === 'rechazado' || pantalla === 'sinTerminar') && hora && (
           <p style={{ fontWeight: 700, color: 'var(--color-brown)', margin: '16px auto 0' }}>
             {t('apartadoHasta', { hora })}
           </p>
@@ -250,9 +261,9 @@ export default function ResultadoPago({
         )}
 
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '32px' }}>
-          {pantalla === 'rechazado' && (
+          {(pantalla === 'rechazado' || pantalla === 'sinTerminar') && (
             <Button onClick={reintentar} disabled={reintentando} style={{ minHeight: 44 }}>
-              {reintentando ? t('reintentando') : t('reintentar')}
+              {reintentando ? t('reintentando') : pantalla === 'sinTerminar' ? t('pagarAhora') : t('reintentar')}
             </Button>
           )}
           {/* Mientras está pendiente el botón está siempre: si el sondeo se

@@ -5500,6 +5500,11 @@ html:has(.mini-carrito[open]) {
   opacity: 0.6;
   font-size: clamp(0.78rem, 2vw, 0.83rem);
 }
+/* Migratorias con foto: la misma rejilla de tarjetas que las residentes, y
+   debajo las fichas de texto de las que no tienen foto. */
+.avi-migratorias-fotos {
+  margin: clamp(14px, 3vw, 20px) 0 clamp(18px, 3.5vw, 26px);
+}
 /* .avi-pill declara display:flex, que le gana al [hidden] del navegador: sin
    esto la paginación de migratorias no ocultaba nada. */
 .avi-pill[hidden] {

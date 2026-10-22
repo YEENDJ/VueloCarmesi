@@ -29,6 +29,8 @@ export interface ReservaPublica {
   creadoEn: string
   /** Hasta cuándo se puede pagar el abono. Solo en `pendiente_pago`. */
   venceEn: string | null
+  /** El banco tiene un pago del abono en curso: no se ofrece pagar de nuevo. */
+  pagoEnCurso?: boolean
   referenciaPago: string | null
   /** Cuándo llegó a cada paso. Nulo el que no ha llegado o no tiene registro. */
   fechas: { recibida: string; abono: string | null; confirmada: string | null }

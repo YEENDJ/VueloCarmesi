@@ -293,11 +293,11 @@ model Ave {
   local      String
   /// residente | migratoria
   ///
-  /// Las residentes van en la rejilla con foto. Las migratorias en fichas de
-  /// texto: la regla de la página es que solo se publica foto tomada en la
-  /// finca, y de las migratorias no hay.
+  /// Las residentes van en la rejilla y siempre con foto. Las migratorias van en
+  /// fichas, con foto opcional en miniatura: la regla de la página es que solo
+  /// se publica foto tomada en la finca, y no de todas las migratorias la hay.
   tipo       String   @default("residente")
-  /// URL de Cloudinary o ruta local (/images/aves/…). Vacía en las migratorias.
+  /// URL de Cloudinary o ruta local (/images/aves/…). Vacía en las migratorias sin foto.
   imagen     String   @default("")
   /// object-position CSS, «X% Y%». El marco de la tarjeta es 4:5 y casi todas
   /// las fotos son 4:3: esto dice dónde cae el ave para que el recorte no la corte.

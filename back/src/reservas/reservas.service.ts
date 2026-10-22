@@ -21,7 +21,7 @@ import { calcularAbono, CLAVE_ABONO, leerPorcentajeAbono } from '../pagos/abono'
 /** Lo que necesita la vista pública: la ficha (o su copia) y los intentos de pago. */
 const CONSULTA_INCLUDE = {
   experiencia: { select: { nombre: true, slug: true, imagen: true } },
-  pagos: { select: { referencia: true, estado: true, createdAt: true } },
+  pagos: { select: { referencia: true, estado: true, createdAt: true, proveedorTxId: true } },
 } as const
 
 @Injectable()

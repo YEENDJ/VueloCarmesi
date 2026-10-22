@@ -17,7 +17,8 @@ const MIGRATORIAS_POR_PAGINA = 12
 
 /**
  * Las especies de /aviturismo: la rejilla de residentes con foto y, debajo, la
- * sección de migratorias en fichas de texto. Cada grupo pagina por su cuenta.
+ * sección de migratorias: las que tienen foto en la misma rejilla de tarjetas y
+ * las demás en fichas de texto. Cada lista pagina por su cuenta.
  *
  * Todas las especies van en el HTML y las de otras páginas solo se ocultan con
  * `hidden`. No es descuido: el nombre científico y el inglés de cada una son
@@ -27,6 +28,8 @@ const MIGRATORIAS_POR_PAGINA = 12
  */
 export default function GaleriaAves({ residentes, migratorias }: { residentes: Ave[]; migratorias: Ave[] }) {
   const t = useTranslations('aviturismo')
+  const migratoriasConFoto = migratorias.filter(a => a.imagen)
+  const migratoriasSinFoto = migratorias.filter(a => !a.imagen)
 
   return (
     <>
@@ -36,22 +39,7 @@ export default function GaleriaAves({ residentes, migratorias }: { residentes: A
           porPagina={RESIDENTES_POR_PAGINA}
           className="avi-especies"
           etiqueta={t('residentes.paginacionAria')}
-          renderItem={({ id, cientifico, ingles, local, imagen, alt, foco }, oculta) => (
-            <li key={id} className="avi-especie" hidden={oculta}>
-              <div className="avi-especie-foto">
-                <FotoAve src={imagen} alt={alt} foco={foco} />
-              </div>
-              {/* El científico manda y el inglés va justo debajo: son los dos
-                  nombres por los que llega buscando este visitante. */}
-              <div className="avi-especie-nombres">
-                <b className="avi-especie-cientifico">
-                  <i>{cientifico}</i>
-                </b>
-                <span className="avi-especie-ingles">{ingles}</span>
-                <span className="avi-especie-local">{local}</span>
-              </div>
-            </li>
-          )}
+          renderItem={(ave, oculta) => <TarjetaAve key={ave.id} ave={ave} oculta={oculta} />}
         />
       )}
 
@@ -70,24 +58,60 @@ export default function GaleriaAves({ residentes, migratorias }: { residentes: A
           </div>
           <p className="avi-card-texto">{t('migratoriasCard.texto')}</p>
 
-          <ListaPaginada
-            items={migratorias}
-            porPagina={MIGRATORIAS_POR_PAGINA}
-            className="avi-pills"
-            etiqueta={t('migratoriasCard.paginacionAria')}
-            renderItem={({ id, cientifico, ingles, local }, oculta) => (
-              <li key={id} className="avi-pill" hidden={oculta}>
-                <b>
-                  <i>{cientifico}</i>
-                </b>
-                <span className="avi-pill-ingles">{ingles}</span>
-                <span className="avi-pill-local">{local}</span>
-              </li>
-            )}
-          />
+          {/* La foto es opcional en las migratorias. Las que la tienen van con
+              la misma tarjeta que las residentes; las demás, en fichas de texto. */}
+          {migratoriasConFoto.length > 0 && (
+            <div className="avi-migratorias-fotos">
+              <ListaPaginada
+                items={migratoriasConFoto}
+                porPagina={RESIDENTES_POR_PAGINA}
+                className="avi-especies"
+                etiqueta={t('migratoriasCard.paginacionFotosAria')}
+                renderItem={(ave, oculta) => <TarjetaAve key={ave.id} ave={ave} oculta={oculta} />}
+              />
+            </div>
+          )}
+
+          {migratoriasSinFoto.length > 0 && (
+            <ListaPaginada
+              items={migratoriasSinFoto}
+              porPagina={MIGRATORIAS_POR_PAGINA}
+              className="avi-pills"
+              etiqueta={t('migratoriasCard.paginacionAria')}
+              renderItem={({ id, cientifico, ingles, local }, oculta) => (
+                <li key={id} className="avi-pill" hidden={oculta}>
+                  <b>
+                    <i>{cientifico}</i>
+                  </b>
+                  <span className="avi-pill-ingles">{ingles}</span>
+                  <span className="avi-pill-local">{local}</span>
+                </li>
+              )}
+            />
+          )}
         </section>
       )}
     </>
+  )
+}
+
+/** La tarjeta con foto: la de las residentes y la de una migratoria que tenga foto. */
+function TarjetaAve({ ave: { cientifico, ingles, local, imagen, alt, foco }, oculta }: { ave: Ave; oculta: boolean }) {
+  return (
+    <li className="avi-especie" hidden={oculta}>
+      <div className="avi-especie-foto">
+        <FotoAve src={imagen} alt={alt} foco={foco} />
+      </div>
+      {/* El científico manda y el inglés va justo debajo: son los dos
+          nombres por los que llega buscando este visitante. */}
+      <div className="avi-especie-nombres">
+        <b className="avi-especie-cientifico">
+          <i>{cientifico}</i>
+        </b>
+        <span className="avi-especie-ingles">{ingles}</span>
+        <span className="avi-especie-local">{local}</span>
+      </div>
+    </li>
   )
 }
 

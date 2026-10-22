@@ -1,4 +1,4 @@
-import { codigoPedido } from '../pedidos/consulta.util'
+import { codigoPedido, pagoEnCursoDe } from '../pedidos/consulta.util'
 import { hoyBogota } from './fecha-reserva.util'
 
 /**
@@ -21,7 +21,7 @@ type ReservaConDetalle = {
   confirmadaEn: Date | null
   experienciaNombre: string
   experiencia: { nombre: string; slug: string; imagen: string } | null
-  pagos: { referencia: string; estado: string; createdAt: Date }[]
+  pagos: { referencia: string; estado: string; createdAt: Date; proveedorTxId?: string | null }[]
 }
 
 /**
@@ -50,6 +50,7 @@ export function vistaPublicaReserva(r: ReservaConDetalle) {
     abonoPagado: r.abonoPagadoEn != null || r.pagos.some(p => p.estado === 'aprobado'),
     creadoEn: r.createdAt,
     venceEn: r.estado === 'pendiente_pago' ? r.venceEn : null,
+    pagoEnCurso: pagoEnCursoDe(r.estado, r.pagos),
     referenciaPago: ultimoPago?.referencia ?? null,
     // Cuándo llegó a cada paso. Nulo el que no ha llegado o no tiene registro.
     fechas: {

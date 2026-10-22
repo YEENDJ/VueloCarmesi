@@ -11,6 +11,7 @@ import Button from '@/components/ui/Button'
 import { formatPrecio } from '@/lib/format'
 import { whatsappCon } from '@/lib/contacto'
 import { CopiarCodigo, Esqueleto } from './SeguimientoPartes'
+import BotonPagar from '@/components/pagos/BotonPagar'
 import { ErrorConsulta, obtenerPedido, type EstadoPedido as Estado, type PedidoPublico } from '@/lib/pedidos'
 
 /** Los pasos del avance, con su icono. Cancelado y expirado no tienen avance que mostrar. */
@@ -140,15 +141,14 @@ export default function EstadoPedido({ token }: { token: string }) {
             <div className="pedido-estado-cuerpo">
               <h2 className="pedido-estado-titulo">{t(`estados.${pedido.estado}.titulo`)}</h2>
               <p className="pedido-estado-texto">{estadoTexto}</p>
-              {/* Esperando pago y aún a tiempo: la página de resultado ya sabe
-                  mostrar un pago en curso con el banco o reintentar uno rechazado. */}
-              {esperaPago && pedido.referenciaPago && (
-                <Button
-                  href={{ pathname: '/checkout/resultado', query: { ref: pedido.referenciaPago } }}
-                  style={{ minHeight: 48, marginTop: '1rem' }}
-                >
-                  {t('irAPagar')}
-                </Button>
+              {/* Esperando pago y aún a tiempo: abre un intento nuevo y va a la
+                  pasarela. Si el banco ya tiene uno en curso, se espera: otro
+                  intento podría terminar en un cobro doble. */}
+              {esperaPago && pedido.pagoEnCurso && (
+                <p className="pedido-estado-texto" style={{ marginTop: '0.75rem', fontWeight: 700 }}>{t('pagoEnCurso')}</p>
+              )}
+              {esperaPago && !pedido.pagoEnCurso && pedido.referenciaPago && (
+                <BotonPagar referencia={pedido.referenciaPago} tipo="pedido">{t('irAPagar')}</BotonPagar>
               )}
             </div>
           </div>

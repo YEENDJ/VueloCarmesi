@@ -8,6 +8,7 @@ import ConfirmModal from './ConfirmModal'
 import { updateEstadoPedido, getPedido, ErrorConMotivo } from '@/lib/admin/api'
 import { useAvisar, Cargando } from './Avisos'
 import { BloqueosEstado } from './BloqueosEstado'
+import { codigoCorto } from '@/lib/admin/codigo'
 import { esDePrueba } from '@/lib/admin/pagos'
 import { formatPrecio } from '@/lib/format'
 import {
@@ -26,7 +27,7 @@ export default function PedidoDrawer({
   const [saving, setSaving] = useState(false)
   const [confirmar, setConfirmar] = useState<ReturnType<typeof confirmacionPedido>>(null)
   const avisar = useAvisar()
-  const codigo = `#${pedido.id.slice(-6).toUpperCase()}`
+  const codigo = codigoCorto(pedido.id)
 
   // Solo lo que el backend va a aceptar (lib/admin/transiciones). Lo bloqueado
   // por la situación del momento se muestra desactivado, con su motivo.
@@ -70,7 +71,7 @@ export default function PedidoDrawer({
         <div className="admin-drawer-header">
           <div>
             <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', color: 'var(--color-gold)', marginBottom: 4 }}>
-              Pedido #{pedido.id.slice(-6).toUpperCase()}
+              Pedido {codigo}
             </div>
             <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--color-cream)' }}>{pedido.nombre}</div>
             <div style={{ marginTop: 6, display: 'flex', flexWrap: 'wrap', gap: 6 }}>

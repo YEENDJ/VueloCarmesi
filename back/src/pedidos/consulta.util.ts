@@ -1,4 +1,5 @@
 import { randomBytes } from 'crypto'
+import { tienePagoEnCurso } from '../pagos/estados'
 
 /**
  * La página pública «mi pedido»: lo que el cliente sin cuenta puede ver de su
@@ -44,7 +45,20 @@ type PedidoConDetalle = {
     cantidad: number; precio: number; nombre: string; imagen: string
     producto: { nombre: string; imagen: string; slug: string } | null
   }[]
-  pagos: { referencia: string; estado: string; createdAt: Date }[]
+  pagos: { referencia: string; estado: string; createdAt: Date; proveedorTxId?: string | null }[]
+}
+
+/**
+ * Si el banco tiene un pago de esto en curso (PSE o Nequi sin respuesta). La
+ * página pública no ofrece «Pagar» mientras tanto: el backend rechazaría el
+ * intento nuevo para no cobrar dos veces (pagos/estados.ts). También la usa
+ * «mi reserva».
+ */
+export function pagoEnCursoDe(
+  estado: string, pagos: { estado: string; createdAt: Date; proveedorTxId?: string | null }[], ahora = new Date(),
+): boolean {
+  return estado === 'pendiente_pago'
+    && tienePagoEnCurso(pagos.map(p => ({ ...p, proveedorTxId: p.proveedorTxId ?? null })), ahora)
 }
 
 /**
@@ -62,6 +76,7 @@ export function vistaPublica(pedido: PedidoConDetalle) {
     total: pedido.total,
     creadoEn: pedido.createdAt,
     venceEn: pedido.estado === 'pendiente_pago' ? pedido.venceEn : null,
+    pagoEnCurso: pagoEnCursoDe(pedido.estado, pedido.pagos),
     // Cuándo llegó a cada paso del avance. Nulo el que no ha llegado o no tiene registro.
     fechas: {
       recibido: pedido.createdAt,

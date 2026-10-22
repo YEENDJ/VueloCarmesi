@@ -8,6 +8,7 @@ import ConfirmModal, { AvisoModal, TrashIcon } from '@/components/admin/ConfirmM
 import { formatPrecio } from '@/lib/format'
 import { esDePrueba, requiereRevision } from '@/lib/admin/pagos'
 import { tomarVerDeLaUrl } from '@/lib/admin/ver-en-url'
+import { codigoCorto } from '@/lib/admin/codigo'
 
 const FILTROS = ['todos', 'pendientes', 'pagados', 'enviados', 'entregados', 'cancelados', 'revisar'] as const
 type Filtro = typeof FILTROS[number]
@@ -30,7 +31,7 @@ export default function PedidosPage() {
   // el DELETE vuelve a comprobarlo y el modal muestra el motivo.
   async function pedirEliminar(p: AdminPedido) {
     const detalle = await getBloqueoBorrado('pedidos', p.id).catch(() => null)
-    if (detalle) setBloqueo({ titulo: `No se puede eliminar el pedido #${p.id.slice(-6).toUpperCase()}`, detalle })
+    if (detalle) setBloqueo({ titulo: `No se puede eliminar el pedido ${codigoCorto(p.id)}`, detalle })
     else setPedidoAEliminar(p)
   }
 
@@ -112,7 +113,7 @@ export default function PedidosPage() {
               {lista.map(p => (
                 <tr key={p.id}>
                   <td style={{ fontFamily: 'monospace', fontSize: 12, color: 'var(--admin-text-muted)' }}>
-                    #{p.id.slice(-6).toUpperCase()}
+                    {codigoCorto(p.id)}
                   </td>
                   <td style={{ whiteSpace: 'nowrap' }}>
                     {new Date(p.createdAt).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}
@@ -156,7 +157,7 @@ export default function PedidosPage() {
 
       {pedidoAEliminar && (
         <ConfirmModal
-          title={`¿Eliminar el pedido #${pedidoAEliminar.id.slice(-6).toUpperCase()}?`}
+          title={`¿Eliminar el pedido ${codigoCorto(pedidoAEliminar.id)}?`}
           message="Esta acción es permanente y no se puede deshacer. Si no se ha enviado, sus unidades vuelven al inventario. Los pedidos con pagos no se eliminan: cámbialos a cancelado."
           onConfirm={confirmarEliminar}
           onCancel={() => setPedidoAEliminar(null)}

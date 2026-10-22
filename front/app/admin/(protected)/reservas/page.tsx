@@ -13,6 +13,7 @@ import {
 } from '@/lib/admin/transiciones'
 import { esDePrueba, requiereRevision, tienePagoAprobado } from '@/lib/admin/pagos'
 import { tomarVerDeLaUrl } from '@/lib/admin/ver-en-url'
+import { codigoCorto } from '@/lib/admin/codigo'
 import { useAvisar, Cargando } from '@/components/admin/Avisos'
 
 const FILTROS = ['todas', 'pendientes', 'confirmadas', 'realizadas', 'canceladas', 'revisar'] as const
@@ -53,7 +54,7 @@ export default function ReservasPage() {
   // el DELETE vuelve a comprobarlo y el modal muestra el motivo.
   async function pedirEliminar(r: AdminReserva) {
     const detalle = await getBloqueoBorrado('reservas', r.id).catch(() => null)
-    if (detalle) setBloqueo({ titulo: `No se puede eliminar la reserva de ${r.nombre}`, detalle })
+    if (detalle) setBloqueo({ titulo: `No se puede eliminar la reserva ${codigoCorto(r.id)} de ${r.nombre}`, detalle })
     else setReservaAEliminar(r)
   }
 
@@ -296,6 +297,7 @@ export default function ReservasPage() {
           <table className="admin-table">
             <thead>
               <tr>
+                <th>Código</th>
                 <th>Fecha</th>
                 <th>Visitante</th>
                 <th>Experiencia</th>
@@ -307,6 +309,10 @@ export default function ReservasPage() {
             <tbody>
               {lista.map(r => (
                 <tr key={r.id}>
+                  {/* El que el cliente ve en sus correos y en «mi reserva». */}
+                  <td style={{ fontFamily: 'monospace', fontSize: 12, color: 'var(--admin-text-muted)', whiteSpace: 'nowrap' }}>
+                    {codigoCorto(r.id)}
+                  </td>
                   <td style={{ whiteSpace: 'nowrap' }}>
                     {new Date(r.fecha).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}
                   </td>
@@ -378,7 +384,7 @@ export default function ReservasPage() {
       {/* Modal de cancelación desde la tabla */}
       {reservaAEliminar && (
         <ConfirmModal
-          title={`¿Eliminar la reserva de ${reservaAEliminar.nombre}?`}
+          title={`¿Eliminar la reserva ${codigoCorto(reservaAEliminar.id)} de ${reservaAEliminar.nombre}?`}
           message="Esta acción es permanente y no se puede deshacer. No se le avisa al cliente: si la reserva sigue en pie, cancélala en vez de eliminarla, así le llega el correo. Las reservas con pagos no se eliminan."
           onConfirm={confirmarEliminar}
           onCancel={() => setReservaAEliminar(null)}

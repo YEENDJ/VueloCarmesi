@@ -30,6 +30,11 @@ export interface PedidoPublico {
   /** Hasta cuándo se puede pagar. Solo en `pendiente_pago`. */
   venceEn: string | null
   /**
+   * El banco tiene un pago en curso (PSE o Nequi sin respuesta): no se ofrece
+   * pagar de nuevo. Opcional: un backend anterior a este campo no lo manda.
+   */
+  pagoEnCurso?: boolean
+  /**
    * Cuándo llegó a cada paso del avance. Nulo el que no ha llegado, o el de un
    * pedido anterior a que se guardaran (enviado y entregado no tienen registro).
    */

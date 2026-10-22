@@ -239,7 +239,8 @@
     "migratoriasCard": {
       "titulo": "Migratorias boreales · octubre a abril",
       "texto": "Bajan del hemisferio norte a pasar el invierno y se suman a la lista durante esos siete meses. Es la razón por la que la fecha de la visita no da igual.",
-      "paginacionAria": "Páginas de especies migratorias"
+      "paginacionAria": "Páginas de especies migratorias",
+      "paginacionFotosAria": "Páginas de migratorias con foto"
     },
     "cuando": {
       "titulo": "Cuándo venir",
@@ -1467,7 +1468,10 @@
       "noEncontradoTexto": "Puede que el enlace esté incompleto. Si pagaste, escríbenos por WhatsApp con tu correo y lo buscamos.",
       "errorRed": "No pudimos consultar tu pago. Revisa tu conexión y vuelve a intentarlo.",
       "volverInicio": "Volver al inicio",
-      "volverTienda": "Volver a la tienda"
+      "volverTienda": "Volver a la tienda",
+      "sinTerminarTitulo": "Falta terminar tu pago",
+      "sinTerminarTexto": "Abriste la página de pago pero no se completó, y no se te cobró nada. Puedes pagar ahora.",
+      "pagarAhora": "Pagar ahora"
     }
   },
   "miPedido": {
@@ -1561,7 +1565,8 @@
     "ayudaTitulo": "¿Necesitas ayuda?",
     "ayudaTexto": "Escríbenos por WhatsApp y cita tu código {codigo}: te respondemos con el estado al día.",
     "ayudaBoton": "Escribir por WhatsApp",
-    "consultarOtro": "Consultar otro pedido"
+    "consultarOtro": "Consultar otro pedido",
+    "pagoEnCurso": "Tu banco está procesando un pago de este pedido. Te escribimos al correo en cuanto responda: no hace falta pagar de nuevo."
   },
   "miReserva": {
     "placeholderCodigo": "VC-AB12CD",
@@ -1654,6 +1659,7 @@
     "saldo": "Saldo el día de la actividad",
     "ayudaTexto": "Escríbenos por WhatsApp y cita tu código {codigo}: te respondemos con el estado al día.",
     "consultarOtro": "Consultar otra reserva",
-    "verExperiencias": "Ver experiencias"
+    "verExperiencias": "Ver experiencias",
+    "pagoEnCurso": "Tu banco está procesando el pago del abono. Te escribimos al correo en cuanto responda: no hace falta pagar de nuevo."
   }
 }

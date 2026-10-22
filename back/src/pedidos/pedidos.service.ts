@@ -20,7 +20,7 @@ import { tienePagoEnCurso } from '../pagos/estados'
 /** Lo que necesita la vista pública: productos y pagos, sin nada del cliente. */
 const CONSULTA_INCLUDE = {
   items: { include: { producto: { select: { nombre: true, imagen: true, slug: true } } } },
-  pagos: { select: { referencia: true, estado: true, createdAt: true } },
+  pagos: { select: { referencia: true, estado: true, createdAt: true, proveedorTxId: true } },
 } as const
 
 @Injectable()
