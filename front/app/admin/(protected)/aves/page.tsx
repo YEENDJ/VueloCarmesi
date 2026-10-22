@@ -10,7 +10,7 @@ type Tipo = AdminAve['tipo']
 
 const GRUPOS: { tipo: Tipo; titulo: string; ayuda: string }[] = [
   { tipo: 'residente', titulo: 'Residentes', ayuda: 'La rejilla de fotos de /aviturismo, en este orden.' },
-  { tipo: 'migratoria', titulo: 'Migratorias', ayuda: 'Las fichas de migratorias. La foto es opcional: sale en miniatura junto a los nombres.' },
+  { tipo: 'migratoria', titulo: 'Migratorias', ayuda: 'La foto es opcional: con foto salen en tarjeta como las residentes, sin foto en fichas de texto.' },
 ]
 
 export default function AvesPage() {

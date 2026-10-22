@@ -133,7 +133,7 @@ export default function AveFormModal({
               <div style={{ fontSize: 12, color: 'var(--admin-text-muted)', marginTop: 6 }}>
                 {fotoObligatoria
                   ? 'Va en la rejilla de fotos. Usa solo fotos tomadas en la finca: es lo que prueba el avistamiento.'
-                  : 'Va en las fichas de migratorias. Si tienes una foto tomada en la finca, súbela y sale en miniatura junto a los nombres; si no, la ficha queda solo con texto.'}
+                  : 'Va en la sección de migratorias. Si tienes una foto tomada en la finca, súbela y sale con tarjeta, igual que las residentes; si no, queda como ficha de texto.'}
               </div>
             </FormRow>
 
@@ -256,7 +256,9 @@ function VistaPrevia({ form }: { form: FormData }) {
     <aside className="ave-form-previa" aria-label="Vista previa">
       <div className="admin-field-label">Vista previa</div>
 
-      {form.tipo === 'residente' ? (
+      {/* Con foto, residente o migratoria, va la tarjeta de la rejilla; una
+          migratoria sin foto, la ficha de texto. Igual que en GaleriaAves. */}
+      {form.tipo === 'residente' || form.imagen ? (
         <div className="avi-especie ave-form-tarjeta">
           <div className="avi-especie-foto">
             {form.imagen ? (
@@ -278,18 +280,10 @@ function VistaPrevia({ form }: { form: FormData }) {
           </div>
         </div>
       ) : (
-        <div className={`avi-pill${form.imagen ? ' avi-pill--foto' : ''}`}>
-          {form.imagen && (
-            <span className="avi-pill-foto">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={form.imagen} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: form.foco }} />
-            </span>
-          )}
-          <span className="avi-pill-nombres">
-            <b><i>{relleno(form.cientifico, 'Nombre científico')}</i></b>
-            <span className="avi-pill-ingles">{relleno(form.ingles, 'English name')}</span>
-            <span className="avi-pill-local">{relleno(form.local, 'Nombre local')}</span>
-          </span>
+        <div className="avi-pill">
+          <b><i>{relleno(form.cientifico, 'Nombre científico')}</i></b>
+          <span className="avi-pill-ingles">{relleno(form.ingles, 'English name')}</span>
+          <span className="avi-pill-local">{relleno(form.local, 'Nombre local')}</span>
         </div>
       )}
 

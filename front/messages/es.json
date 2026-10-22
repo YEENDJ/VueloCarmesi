@@ -239,7 +239,8 @@
     "migratoriasCard": {
       "titulo": "Migratorias boreales · octubre a abril",
       "texto": "Bajan del hemisferio norte a pasar el invierno y se suman a la lista durante esos siete meses. Es la razón por la que la fecha de la visita no da igual.",
-      "paginacionAria": "Páginas de especies migratorias"
+      "paginacionAria": "Páginas de especies migratorias",
+      "paginacionFotosAria": "Páginas de migratorias con foto"
     },
     "cuando": {
       "titulo": "Cuándo venir",

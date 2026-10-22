@@ -239,7 +239,8 @@
     "migratoriasCard": {
       "titulo": "Boreal migrants · October to April",
       "texto": "They come down from the northern hemisphere to winter here and join the list for those seven months. That is why the date of your visit matters.",
-      "paginacionAria": "Migrant species pages"
+      "paginacionAria": "Migrant species pages",
+      "paginacionFotosAria": "Migrant species with photos, pages"
     },
     "cuando": {
       "titulo": "When to come",
