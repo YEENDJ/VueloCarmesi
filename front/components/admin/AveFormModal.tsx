@@ -288,6 +288,9 @@ function SelectorEncuadre({ imagen, foco, onChange }: {
       </div>
       <div
         className="encuadre"
+        // La proporción real fija el tamaño del cuadro en CSS: ver .encuadre en admin.css.
+        data-proporcion={proporcion ?? undefined}
+        style={proporcion ? ({ '--proporcion': proporcion } as React.CSSProperties) : undefined}
         onPointerDown={empezar}
         onPointerMove={mover}
         onPointerUp={soltar}

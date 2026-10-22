@@ -467,25 +467,46 @@
    La foto entera y, encima, el recuadro 4:5 de la tarjeta. Lo de fuera se
    oscurece con la sombra del propio recuadro: el contenedor recorta lo que
    sobra, así que la sombra cubre justo la foto y nada más. */
+/* La foto se ve entera sin hacer scroll: cabe en el ancho del formulario y,
+   como mucho, en algo más de la mitad del alto de la pantalla. Una vertical
+   queda angosta y una apaisada a todo lo ancho.
+
+   El tamaño sale de la proporción real del archivo (--proporcion, ancho/alto,
+   la pone SelectorEncuadre al cargar la foto): el ancho es el menor entre el
+   disponible, 520px y el que corresponde al alto máximo. Así el contenedor
+   mide exactamente lo que la foto, y las cuentas del recuadro (en % de él)
+   son % de la foto. Por eso el filete es una sombra y no un borde, que
+   sumaría al tamaño medido. */
 .encuadre {
+  --alto-max: min(55dvh, 440px);
   position: relative;
-  width: 100%;
-  max-width: 520px;
+  width: min(100%, 520px);
   border-radius: 8px;
   overflow: hidden;
   line-height: 0;
-  border: 1px solid var(--admin-border);
+  box-shadow: 0 0 0 1px var(--admin-border);
   cursor: grab;
   touch-action: none;
   user-select: none;
 }
+.encuadre[data-proporcion] {
+  width: min(100%, 520px, calc(var(--alto-max) * var(--proporcion)));
+  aspect-ratio: var(--proporcion);
+}
 .encuadre:active { cursor: grabbing; }
 .encuadre:focus-visible { outline: 3px solid var(--color-crimson); outline-offset: 2px; }
 .encuadre img {
+  display: block;
   width: 100%;
   height: auto;
-  display: block;
+  /* Mientras no se conoce la proporción, que tampoco se dispare de alto. */
+  max-height: var(--alto-max);
+  object-fit: contain;
   pointer-events: none;
+}
+.encuadre[data-proporcion] img {
+  height: 100%;
+  max-height: none;
 }
 .encuadre-marco {
   position: absolute;
