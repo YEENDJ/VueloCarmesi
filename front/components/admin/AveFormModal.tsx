@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { AdminAve } from '@/lib/admin/types'
 import { createAve, updateAve } from '@/lib/admin/api'
 import ImageUploader from './ImageUploader'
@@ -182,51 +182,142 @@ export default function AveFormModal({
   )
 }
 
+/** El marco de la tarjeta pública (.avi-especie, aspect-ratio 4 / 5). */
+const MARCO = 4 / 5
+
 /**
- * Elegir el encuadre tocando el ave sobre la foto entera.
+ * Elegir el encuadre como en la foto de perfil de una red social: la foto
+ * entera, con el recuadro 4:5 de la tarjeta encima y lo que queda fuera
+ * oscurecido. Se arrastra el recuadro (o se toca donde se quiere centrar) y lo
+ * que se ve dentro es exactamente lo que va a salir.
  *
- * La tarjeta pública es 4:5 y casi todas las fotos son 4:3, así que el recorte
- * se come los lados. El porcentaje del clic va directo a `object-position`, que
- * es como lo pinta la página, y la vista previa lo refleja al instante: no hay
- * que adivinar números.
+ * Por qué es exacto: la tarjeta pinta la foto con `object-fit: cover`, que la
+ * escala hasta cubrir el marco por el lado justo; sobra por un solo eje, y
+ * `object-position: p%` corre el recorte a p · (lo que sobra). El recuadro hace
+ * la misma cuenta al revés, así que se guarda el mismo «X% Y%» de siempre y las
+ * aves ya encuadradas no cambian.
+ *
+ * Solo se mueve sobre el eje que sobra: en una foto apaisada, de lado a lado;
+ * en una vertical, de arriba abajo. No hay zoom, porque `object-position` no lo
+ * tiene y la tarjeta no podría reproducirlo.
  */
 function SelectorEncuadre({ imagen, foco, onChange }: {
   imagen: string
   foco: string
   onChange: (foco: string) => void
 }) {
-  const [x, y] = foco.split(' ').map(v => parseFloat(v) || 50)
+  const [px, py] = foco.split(' ').map(v => { const n = parseFloat(v); return Number.isFinite(n) ? n : 50 })
+  // Proporción real del archivo, ancho / alto. Nula hasta que carga la imagen.
+  const [proporcion, setProporcion] = useState<number | null>(null)
+  const arrastre = useRef<{ x: number; y: number; px: number; py: number } | null>(null)
 
-  function elegir(e: React.MouseEvent<HTMLDivElement>) {
-    const r = e.currentTarget.getBoundingClientRect()
-    const px = Math.round(Math.min(100, Math.max(0, ((e.clientX - r.left) / r.width) * 100)))
-    const py = Math.round(Math.min(100, Math.max(0, ((e.clientY - r.top) / r.height) * 100)))
-    onChange(`${px}% ${py}%`)
+  // Tamaño del recuadro respecto a la foto mostrada, y cuánto puede correrse.
+  const apaisada = proporcion !== null && proporcion > MARCO
+  const anchoMarco = proporcion === null ? 1 : apaisada ? MARCO / proporcion : 1
+  const altoMarco = proporcion === null ? 1 : apaisada ? 1 : proporcion / MARCO
+  const holguraX = 1 - anchoMarco
+  const holguraY = 1 - altoMarco
+  const recorte = (n: number) => Math.round(Math.min(100, Math.max(0, n)))
+  /** Guarda la posición y la devuelve ya acotada a 0–100. */
+  const fijar = (x: number, y: number): [number, number] => {
+    const nueva: [number, number] = [recorte(x), recorte(y)]
+    onChange(`${nueva[0]}% ${nueva[1]}%`)
+    return nueva
   }
+
+  /** Centra el recuadro donde se tocó, hasta donde lo dejan los bordes. */
+  function centrarEn(e: React.PointerEvent<HTMLDivElement>): [number, number] {
+    const r = e.currentTarget.getBoundingClientRect()
+    const cx = (e.clientX - r.left) / r.width
+    const cy = (e.clientY - r.top) / r.height
+    return fijar(
+      holguraX > 0 ? ((cx - anchoMarco / 2) / holguraX) * 100 : 50,
+      holguraY > 0 ? ((cy - altoMarco / 2) / holguraY) * 100 : 50,
+    )
+  }
+
+  function empezar(e: React.PointerEvent<HTMLDivElement>) {
+    e.preventDefault()
+    e.currentTarget.setPointerCapture(e.pointerId)
+    // Tocar fuera del recuadro lo trae ahí; tocar dentro solo lo agarra. El
+    // arrastre sigue desde donde quedó, no desde la posición de antes del toque.
+    const [x, y] = (e.target as HTMLElement).dataset.marco ? [px, py] : centrarEn(e)
+    arrastre.current = { x: e.clientX, y: e.clientY, px: x, py: y }
+  }
+
+  function mover(e: React.PointerEvent<HTMLDivElement>) {
+    const a = arrastre.current
+    if (!a) return
+    const r = e.currentTarget.getBoundingClientRect()
+    // Lo que se arrastró, en fracción de la foto, pasado a % de la holgura.
+    const dx = (e.clientX - a.x) / r.width
+    const dy = (e.clientY - a.y) / r.height
+    fijar(
+      holguraX > 0 ? a.px + (dx / holguraX) * 100 : 50,
+      holguraY > 0 ? a.py + (dy / holguraY) * 100 : 50,
+    )
+  }
+
+  function soltar() {
+    arrastre.current = null
+  }
+
+  // Con el teclado: flechas de 2 en 2, con Mayúsculas de 10 en 10.
+  function teclas(e: React.KeyboardEvent<HTMLDivElement>) {
+    const paso = e.shiftKey ? 10 : 2
+    const d: Record<string, [number, number]> = {
+      ArrowLeft: [-paso, 0], ArrowRight: [paso, 0], ArrowUp: [0, -paso], ArrowDown: [0, paso],
+    }
+    if (!d[e.key]) return
+    e.preventDefault()
+    fijar(px + d[e.key][0], py + d[e.key][1])
+  }
+
+  const sinHolgura = proporcion !== null && holguraX <= 0.001 && holguraY <= 0.001
 
   return (
     <div style={{ minWidth: 0 }}>
       <div className="admin-field-label">
         Encuadre
-        <span style={{ fontWeight: 400, color: 'var(--admin-text-muted)' }}> · Toca el ave en la foto y mira la vista previa</span>
+        <span style={{ fontWeight: 400, color: 'var(--admin-text-muted)' }}>
+          {' · '}
+          {sinHolgura
+            ? 'La foto ya tiene la forma de la tarjeta: sale entera'
+            : `Arrastra el recuadro ${apaisada ? 'de lado a lado' : 'hacia arriba o abajo'}; lo que queda dentro es lo que se ve`}
+        </span>
       </div>
       <div
-        onClick={elegir}
-        role="presentation"
-        style={{
-          position: 'relative', width: '100%', maxWidth: 520,
-          cursor: 'crosshair', borderRadius: 8, overflow: 'hidden', lineHeight: 0,
-          border: '1px solid var(--admin-border)',
-        }}
+        className="encuadre"
+        onPointerDown={empezar}
+        onPointerMove={mover}
+        onPointerUp={soltar}
+        onPointerCancel={soltar}
+        onKeyDown={teclas}
+        tabIndex={0}
+        role="group"
+        aria-label={`Encuadre de la foto, posición ${px}% ${py}%. Usa las flechas para mover el recuadro`}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={imagen} alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
-        <span aria-hidden="true" style={{
-          position: 'absolute', left: `${x}%`, top: `${y}%`, width: 22, height: 22,
-          transform: 'translate(-50%, -50%)', borderRadius: '50%',
-          border: '2px solid #fff', boxShadow: '0 0 0 2px var(--color-crimson), 0 2px 6px rgba(0,0,0,.4)',
-          pointerEvents: 'none',
-        }} />
+        <img
+          src={imagen} alt="" draggable={false}
+          onLoad={e => {
+            const { naturalWidth: w, naturalHeight: h } = e.currentTarget
+            if (w && h) setProporcion(w / h)
+          }}
+        />
+        {proporcion !== null && (
+          <div
+            className="encuadre-marco"
+            data-marco="1"
+            aria-hidden="true"
+            style={{
+              left: `${(px / 100) * holguraX * 100}%`,
+              top: `${(py / 100) * holguraY * 100}%`,
+              width: `${anchoMarco * 100}%`,
+              height: `${altoMarco * 100}%`,
+            }}
+          />
+        )}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8, fontSize: 12, color: 'var(--admin-text-muted)' }}>
         <span>Posición: {foco}</span>

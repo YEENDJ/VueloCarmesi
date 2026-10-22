@@ -463,6 +463,41 @@
   }
 }
 
+/* ── Encuadre de la foto de un ave (AveFormModal → SelectorEncuadre) ──
+   La foto entera y, encima, el recuadro 4:5 de la tarjeta. Lo de fuera se
+   oscurece con la sombra del propio recuadro: el contenedor recorta lo que
+   sobra, así que la sombra cubre justo la foto y nada más. */
+.encuadre {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 8px;
+  overflow: hidden;
+  line-height: 0;
+  border: 1px solid var(--admin-border);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.encuadre:active { cursor: grabbing; }
+.encuadre:focus-visible { outline: 3px solid var(--color-crimson); outline-offset: 2px; }
+.encuadre img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+}
+.encuadre-marco {
+  position: absolute;
+  box-sizing: border-box;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, .55);
+  /* Tercios, como en la cámara: ayudan a dejar el ave en un punto fuerte. */
+  background-image:
+    linear-gradient(to right, transparent calc(33.33% - .5px), rgba(255,255,255,.45) calc(33.33% - .5px), rgba(255,255,255,.45) calc(33.33% + .5px), transparent calc(33.33% + .5px), transparent calc(66.66% - .5px), rgba(255,255,255,.45) calc(66.66% - .5px), rgba(255,255,255,.45) calc(66.66% + .5px), transparent calc(66.66% + .5px)),
+    linear-gradient(to bottom, transparent calc(33.33% - .5px), rgba(255,255,255,.45) calc(33.33% - .5px), rgba(255,255,255,.45) calc(33.33% + .5px), transparent calc(33.33% + .5px), transparent calc(66.66% - .5px), rgba(255,255,255,.45) calc(66.66% - .5px), rgba(255,255,255,.45) calc(66.66% + .5px), transparent calc(66.66% + .5px));
+}
+
 /* ── Avisos y carga ─────────────────────────────────────────
    Los avisos de «estado cambiado» (components/admin/Avisos.tsx). En el
    celular ocupan el ancho de abajo; desde 640px van a la esquina. */
