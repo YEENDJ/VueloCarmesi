@@ -11,16 +11,18 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   constructor() {
     const pool = new Pool({
       connectionString: process.env.DATABASE_URL,
-      max: 10,
-      // Neon suspende el compute tras unos minutos sin actividad: soltamos las
-      // conexiones ociosas antes para no reutilizar sockets ya muertos
+      // el pooler de Supabase free admite pocas conexiones a la vez y las
+      // comparte con los scripts locales y el respaldo: no acapararlas
+      max: 5,
+      // soltamos las conexiones ociosas pronto para no reutilizar sockets que
+      // el pooler (o Neon, si se cambia a la reserva) ya cerró
       idleTimeoutMillis: 20_000,
-      // el arranque en frío de Neon tarda ~1-3 s, damos margen antes de fallar
+      // margen para el arranque en frío de Neon (~1-3 s) si se usa la reserva
       connectionTimeoutMillis: 15_000,
       keepAlive: true,
     })
-    // sin este listener, un error en un cliente ocioso (p. ej. cuando Neon corta
-    // la conexión al suspenderse) tumba el proceso de Node entero
+    // sin este listener, un error en un cliente ocioso (p. ej. cuando la base
+    // corta la conexión) tumba el proceso de Node entero
     pool.on('error', (err) => {
       PrismaService.logger.warn(`Conexión de Postgres perdida: ${err.message}`)
     })
@@ -38,7 +40,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     await this.pool.end()
   }
 
-  // el primer intento puede caer mientras Neon despierta: reintentamos con espera
+  // el primer intento puede caer mientras la base despierta: reintentamos con espera
   private async connectWithRetry(intentos = 3, esperaMs = 2_000) {
     for (let intento = 1; intento <= intentos; intento++) {
       try {

@@ -22,10 +22,11 @@ async function pedirUnaVez(url: string): Promise<Producto[] | null> {
 }
 
 /**
- * Con reintentos: la primera consulta tras un rato quieto suele fallar. La
- * base (Neon) se suspende sin actividad y al despertar la primera petición
- * puede dar 500; en producción, además, Render tarda en arrancar. Con un solo
- * intento la sección quedaba oculta hasta recargar la página.
+ * Con reintentos: la primera consulta tras un rato quieto suele fallar. Render
+ * duerme el backend sin tráfico y tarda en arrancar; y si producción pasa a la
+ * base de reserva (Neon), esa se suspende sin actividad y al despertar la
+ * primera petición puede dar 500. Con un solo intento la sección quedaba
+ * oculta hasta recargar la página.
  * Esperas de 1, 2 y 4 s: cubren el despertar sin martillar al backend.
  */
 const ESPERAS_MS = [1_000, 2_000, 4_000]

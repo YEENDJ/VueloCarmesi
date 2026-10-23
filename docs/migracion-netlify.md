@@ -13,7 +13,7 @@
 - Si se decide migrar con calma, es el mismo plan a una hora de poco tráfico.
 
 Lo que no depende de Vercel y sigue funcionando durante una pausa: backend
-(Render), base (Neon), imágenes del panel (Cloudinary), correo (Resend), DNS y
+(Render), base (Supabase), imágenes del panel (Cloudinary), correo (Resend), DNS y
 buzones (Cloudflare). Los pagos de Wompi quedan registrados porque el webhook
 va al backend, pero el cliente vuelve del pago a una página caída. Tampoco
 funcionan el panel (`/admin` vive en el front) ni el cron de pagos.

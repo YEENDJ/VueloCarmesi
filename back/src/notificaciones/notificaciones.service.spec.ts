@@ -104,7 +104,7 @@ describe('NotificacionesService.enviarConfirmacionPedido', () => {
   })
 
   it('manda Telegram aunque no se pueda leer el correo del admin', async () => {
-    mockPrisma.siteConfig.findUnique.mockRejectedValueOnce(new Error('Neon caído'))
+    mockPrisma.siteConfig.findUnique.mockRejectedValueOnce(new Error('base caída'))
 
     await service.enviarConfirmacionPedido(pedido)
 
@@ -250,7 +250,7 @@ describe('NotificacionesService.enviarNuevaSolicitudGrupo', () => {
   })
 
   it('manda Telegram aunque falle la consulta de nombres y el acuse', async () => {
-    prisma.experiencia.findMany.mockRejectedValueOnce(new Error('Neon caído'))
+    prisma.experiencia.findMany.mockRejectedValueOnce(new Error('base caída'))
     email.send.mockRejectedValueOnce(new Error('Gmail: rebote'))
 
     await service.enviarNuevaSolicitudGrupo(solicitud)

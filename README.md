@@ -11,7 +11,7 @@ Portal web completo para **Vuelo Carmesí** — experiencias agroecológicas con
 |------|-----------|
 | Frontend | Next.js 16 · App Router · TypeScript |
 | Backend | NestJS 11 · Prisma 7 · TypeScript · REST API |
-| Base de datos | PostgreSQL (Neon) |
+| Base de datos | PostgreSQL (Supabase; reserva en Neon) |
 | Idiomas | next-intl · español (raíz) e inglés (`/en`) |
 | Monorepo | npm workspaces |
 
@@ -215,12 +215,18 @@ nuevo y contenido de la base en español, porque el backend viejo ignora
 |---|---|---|---|
 | Front | **Vercel** | https://www.vuelocarmesi.com | Automático al mergear a `main` |
 | Backend | **Render** | https://vuelocarmesi.onrender.com | Al mergear a `main` (verificar en Events si falló) |
-| Base de datos | **Neon** (Postgres) | — | No se despliega |
+| Base de datos | **Supabase** (Postgres, Oregon) | — | No se despliega |
+| Reserva y respaldos | **Neon** + **Backblaze B2** | — | Workflow `respaldo-bd.yml`, cada 6 h |
 
-> ⚠️ **Hay UNA sola base de datos.** No existe entorno de pruebas separado: lo
+> ⚠️ **Hay UNA sola base de trabajo.** No existe entorno de pruebas separado: lo
 > que corras en local contra `DATABASE_URL` toca producción. Por eso las
 > migraciones van siempre con `prisma migrate deploy`, nunca con `migrate dev`,
 > que puede ofrecer resetear.
+>
+> Neon **no** es un entorno de pruebas: es una copia de producción que el
+> workflow pisa cada 6 h, lista para cambiar a ella si Supabase cae. Cómo
+> cambiar, cómo recuperar un respaldo y por qué está armado así:
+> [`docs/base-de-datos.md`](docs/base-de-datos.md).
 
 ### Variables de entorno
 

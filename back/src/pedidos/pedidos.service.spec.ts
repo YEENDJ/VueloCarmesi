@@ -90,7 +90,7 @@ describe('PedidosService.create', () => {
   })
 
   it('vende igual si el vencimiento previo falla', async () => {
-    mockVencimiento.vencerPendientes.mockRejectedValueOnce(new Error('Neon dormido'))
+    mockVencimiento.vencerPendientes.mockRejectedValueOnce(new Error('base dormida'))
     await expect(service.create({ ...DATOS, items: [{ productoId: 'p1', cantidad: 1 }] })).resolves.toBeDefined()
   })
 

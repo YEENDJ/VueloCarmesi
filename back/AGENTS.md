@@ -39,7 +39,8 @@ Español de Colombia, en tuteo. Teléfonos con `+57`.
 ## Dónde corre esto
 
 El backend está en **Render** (`vuelocarmesi.onrender.com`), el front en
-**Vercel**, y la base es **Neon**. Detalle y variables en el README de la raíz.
+**Vercel**, y la base es **Supabase**, con una reserva en **Neon** que se pisa
+cada 6 h. Detalle en el README de la raíz y en `docs/base-de-datos.md`.
 
 Tres cosas que muerden:
 

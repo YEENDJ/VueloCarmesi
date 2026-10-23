@@ -116,6 +116,9 @@ abrir nunca.
 
 ## Día de la migración (Neon → Supabase)
 
+**Hecha el 23 de octubre de 2026.** Queda como referencia y para volver de
+Neon a Supabase después de una emergencia (sección A).
+
 A una hora de poco tráfico. Unos 30 minutos.
 
 Los pasos 2 a 4 necesitan Postgres 17 y bash. Si no están instalados, con
@@ -144,6 +147,14 @@ docker run --rm -it -v "$PWD":/repo -w /repo postgres:17 bash
    Tiene que decir *Database schema is up to date*.
 5. **Render:** cambiar `DATABASE_URL` a la de Supabase → se redespliega solo.
    Esperar a que el deploy quede *Live*.
+
+   **Borrar el valor entero antes de pegar.** La URL de Supabase termina en
+   `/postgres` y la de Neon en `/neondb?sslmode=require&channel_binding=require`:
+   el 23-oct-2026 quedó pegado `…/postgressslmode=require&channel_binding=require`,
+   Postgres lo tomó como nombre de base y, al desplegar, Prisma **creó una base
+   nueva vacía** con ese nombre. El sitio respondió 200 con listas vacías, sin
+   ningún error. Si tras el cambio no aparecen experiencias ni productos, mirar
+   eso primero.
 6. Comprobar en el sitio:
    - [ ] `/experiencias` y `/tienda` cargan
    - [ ] El panel entra y guarda un cambio
