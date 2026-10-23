@@ -33,10 +33,10 @@ permissions:
 jobs:
   respaldo:
     if: vars.RESPALDO_ACTIVO == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Instalar cliente de Postgres 17
         run: |
@@ -52,8 +52,8 @@ jobs:
           PROD_DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
         run: bash scripts/bd/respaldar.sh "$PROD_DATABASE_URL" respaldo.sql
 
-      # La llave de B2 es de solo escritura: con ella no se pueden leer ni
-      # borrar los respaldos, aunque se filtre.
+      # La llave de B2 no puede leer los respaldos, aunque se filtre. (El tipo
+      # Write Only de Backblaze sí incluye borrar: ver docs/base-de-datos.md.)
       - name: Guardar copia cifrada en B2
         env:
           RESPALDO_CLAVE: ${{ secrets.RESPALDO_CLAVE }}
@@ -72,9 +72,22 @@ jobs:
           nombre="vuelocarmesi-$(date -u +%Y-%m-%d-%H%M).sql.gpg"
           gpg --batch --yes --quiet --pinentry-mode loopback --passphrase-fd 0 \
             --symmetric --cipher-algo AES256 -o "$nombre" respaldo.sql <<< "$RESPALDO_CLAVE"
-          aws s3 cp "$nombre" "s3://$B2_BUCKET/$nombre" \
-            --endpoint-url "https://$host" --only-show-errors
-          echo "Guardado en B2: $nombre"
+          # Un secret mal copiado (espacios, otro nombre) subía «bien» sin que
+          # el archivo apareciera en el bucket: se comprueba antes de subir.
+          if [ "$B2_BUCKET" != "vuelocarmesi-respaldos" ]; then
+            echo "B2_BUCKET no es vuelocarmesi-respaldos (largo ${#B2_BUCKET})." >&2
+            exit 1
+          fi
+          case "$host" in
+            s3.*.backblazeb2.com) ;;
+            *) echo "B2_ENDPOINT no tiene la forma https://s3.<región>.backblazeb2.com" >&2; exit 1 ;;
+          esac
+          # put-object devuelve el id que B2 le dio al archivo: queda en el log
+          # como prueba de que llegó (no es secreto).
+          id_archivo="$(aws s3api put-object --bucket "$B2_BUCKET" --key "$nombre" \
+            --body "$nombre" --endpoint-url "https://$host" \
+            --query VersionId --output text)"
+          echo "Guardado en B2: $nombre (id $id_archivo)"
 
       - name: Actualizar la reserva (Neon)
         if: vars.RESERVA_ACTIVA == 'true'
