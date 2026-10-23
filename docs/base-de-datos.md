@@ -72,9 +72,14 @@ plan gratis. B2 da 10 GB sin tarjeta; los respaldos ocupan ~10 MB.)
 3. Anotar el **Endpoint** que muestra el bucket (`s3.<región>.backblazeb2.com`).
 4. *Application Keys → Add a New Application Key*: acceso **solo a ese bucket**,
    tipo **Write Only**. Anotar el *keyID* y la *applicationKey* (solo se
-   muestra una vez). Con una llave de solo escritura, si el secret se filtra no
-   se pueden leer ni borrar los respaldos. Para descargarlos se entra a la web
-   de Backblaze con la cuenta.
+   muestra una vez). Con ella no se pueden **leer** los respaldos, pero ojo: el
+   tipo *Write Only* de Backblaze incluye `deleteFiles`, así que quien la tenga
+   **sí puede borrarlos**. Para descargarlos se entra a la web de Backblaze con
+   la cuenta.
+5. `B2_BUCKET` en GitHub tiene que ser exactamente el nombre del bucket. El
+   23-oct-2026 quedó otro valor y la subida terminaba sin error pero el
+   archivo no aparecía; desde entonces el workflow compara el nombre y falla
+   si no coincide.
 
 ### 3. Clave de cifrado
 
