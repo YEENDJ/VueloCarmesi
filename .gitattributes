@@ -1,0 +1,4 @@
+# Los scripts de la base se corren con bash, también desde Windows dentro de
+# Docker: con finales de línea CRLF, bash falla en la primera línea.
+*.sh text eol=lf
+scripts/bd/*.sql text eol=lf
