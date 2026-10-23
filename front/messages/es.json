@@ -463,7 +463,7 @@
     "metaDescripcion": "Escríbenos por WhatsApp, teléfono o correo. Finca Vuelo Carmesí, vereda Brisas del Tonoa, Cubarral (Meta): reservas, visitas de grupo y cómo llegar.",
     "h1": "Contacto y cómo llegar a Vuelo Carmesí, Cubarral (Meta)",
     "escribenos": "Escríbenos un mensaje",
-    "gracias": "¡Gracias! Te respondemos lo antes posible. Revisa tu correo.",
+    "gracias": "Recibimos tu mensaje y te respondemos lo antes posible. Revisa tu correo: te enviamos una confirmación.",
     "error": "Hubo un error al enviar. Inténtalo de nuevo o escríbenos directamente a {email}.",
     "nombre": "Nombre",
     "email": "Email",
@@ -484,8 +484,13 @@
     "errorEmail": "El correo no es válido.",
     "errorTelefono": "El teléfono debe tener entre 7 y 15 dígitos.",
     "errorMensaje": "Escribe tu mensaje (hasta {max} caracteres).",
-    "radicado": "Número de radicado: <b>{numero}</b>",
-    "radicadoTexto": "Recibido el {fecha}, hora de Colombia. Guárdalo: si tu mensaje es una petición, queja o reclamo, con él le haces seguimiento respondiendo al correo de confirmación que te enviamos."
+    "radicadoTexto": "Recibido el {fecha}, hora de Colombia. Guárdalo: si tu mensaje es una petición, queja o reclamo, con él le haces seguimiento respondiendo al correo de confirmación que te enviamos.",
+    "graciasTitulo": "¡Gracias, {nombre}!",
+    "radicadoEtiqueta": "Número de radicado",
+    "copiar": "Copiar",
+    "copiado": "Copiado",
+    "graciasWhatsapp": "¿Es urgente? Escríbenos por WhatsApp",
+    "otroMensaje": "Enviar otro mensaje"
   },
   "grupos": {
     "meta": {
