@@ -1,0 +1,90 @@
+# Respaldo de la base de producción, cada 6 horas.
+#
+# 1. Copia producción (Supabase) con pg_dump.
+# 2. Guarda la copia cifrada en Backblaze B2: historia de 30 días.
+# 3. Reemplaza la base de reserva (Neon) por esa copia, para poder cambiar a
+#    ella en minutos si producción cae.
+#
+# De paso mantiene despierta a Supabase: el plan free pausa el proyecto tras 7
+# días sin conexiones.
+#
+# ⚠ El repo es público y sus logs también: nada aquí imprime URLs ni datos.
+#
+# Interruptores (Settings → Secrets and variables → Actions → Variables):
+#   RESPALDO_ACTIVO = true   enciende todo el workflow
+#   RESERVA_ACTIVA  = true   enciende el paso 3. APAGARLO ANTES de usar Neon
+#                            como producción, o el siguiente respaldo la pisa.
+#
+# Guía completa: docs/base-de-datos.md
+name: Respaldo de la base
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: respaldo-bd
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  respaldo:
+    if: vars.RESPALDO_ACTIVO == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar cliente de Postgres 17
+        run: |
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y > /dev/null
+          sudo apt-get install -y -qq postgresql-client-17 > /dev/null
+          pg_dump --version
+
+      - name: Copiar producción
+        env:
+          PROD_DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+        run: bash scripts/bd/respaldar.sh "$PROD_DATABASE_URL" respaldo.sql
+
+      # La llave de B2 es de solo escritura: con ella no se pueden leer ni
+      # borrar los respaldos, aunque se filtre.
+      - name: Guardar copia cifrada en B2
+        env:
+          RESPALDO_CLAVE: ${{ secrets.RESPALDO_CLAVE }}
+          B2_ENDPOINT: ${{ secrets.B2_ENDPOINT }}
+          B2_BUCKET: ${{ secrets.B2_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.B2_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_APPLICATION_KEY }}
+          # las sumas de verificación nuevas de la CLI no las aceptan todos los
+          # servicios compatibles con S3; solo se mandan si hacen falta
+          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+          AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+        run: |
+          # la región va dentro del endpoint: s3.<región>.backblazeb2.com
+          host="${B2_ENDPOINT#https://}"
+          export AWS_DEFAULT_REGION="$(echo "$host" | cut -d. -f2)"
+          nombre="vuelocarmesi-$(date -u +%Y-%m-%d-%H%M).sql.gpg"
+          gpg --batch --yes --quiet --pinentry-mode loopback --passphrase-fd 0 \
+            --symmetric --cipher-algo AES256 -o "$nombre" respaldo.sql <<< "$RESPALDO_CLAVE"
+          aws s3 cp "$nombre" "s3://$B2_BUCKET/$nombre" \
+            --endpoint-url "https://$host" --only-show-errors
+          echo "Guardado en B2: $nombre"
+
+      - name: Actualizar la reserva (Neon)
+        if: vars.RESERVA_ACTIVA == 'true'
+        env:
+          RESERVA_DATABASE_URL: ${{ secrets.RESERVA_DATABASE_URL }}
+        run: bash scripts/bd/restaurar.sh "$RESERVA_DATABASE_URL" respaldo.sql
+
+      - name: Verificar la reserva
+        if: vars.RESERVA_ACTIVA == 'true'
+        env:
+          RESERVA_DATABASE_URL: ${{ secrets.RESERVA_DATABASE_URL }}
+        run: bash scripts/bd/verificar.sh "$RESERVA_DATABASE_URL" respaldo.sql
+
+      - name: Borrar las copias del runner
+        if: always()
+        run: rm -f respaldo.sql ./*.sql.gpg
