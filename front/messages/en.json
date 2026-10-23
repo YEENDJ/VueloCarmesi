@@ -463,7 +463,7 @@
     "metaDescripcion": "Message us on WhatsApp, or reach us by phone or email. Vuelo Carmesí farm, Cubarral, Meta, Colombia: bookings, group visits and how to get here.",
     "h1": "Contact Vuelo Carmesí and how to get to the farm in Cubarral, Meta",
     "escribenos": "Send us a message",
-    "gracias": "Thank you! We will reply as soon as we can. Check your inbox.",
+    "gracias": "We received your message and will reply as soon as we can. Check your inbox: we sent you a confirmation.",
     "error": "Something went wrong sending your message. Please try again or write to us directly at {email}.",
     "nombre": "Name",
     "email": "Email",
@@ -484,8 +484,13 @@
     "errorEmail": "This email address is not valid.",
     "errorTelefono": "The phone number must have between 7 and 15 digits.",
     "errorMensaje": "Write your message (up to {max} characters).",
-    "radicado": "Reference number: <b>{numero}</b>",
-    "radicadoTexto": "Received on {fecha}, Colombia time. Keep it: if your message is a request, complaint or claim, you can follow it up by replying to the confirmation email we sent you."
+    "radicadoTexto": "Received on {fecha}, Colombia time. Keep it: if your message is a request, complaint or claim, you can follow it up by replying to the confirmation email we sent you.",
+    "graciasTitulo": "Thank you, {nombre}!",
+    "radicadoEtiqueta": "Reference number",
+    "copiar": "Copy",
+    "copiado": "Copied",
+    "graciasWhatsapp": "In a hurry? Message us on WhatsApp",
+    "otroMensaje": "Send another message"
   },
   "grupos": {
     "meta": {
@@ -951,7 +956,7 @@
       "canalNota": "The law requires you to go through this process with us before filing a complaint with the Superintendency of Industry and Commerce.",
       "conservacionTitulo": "How long we keep them, and where",
       "cs1": "We keep them for as long as our relationship with you lasts and, afterwards, for as long as the legal, accounting and tax obligations arising from your booking or order remain in force. Once there is no reason to keep them, they are deleted.",
-      "cs2": "The information lives in a database and on servers of infrastructure providers located in the United States: the site on Vercel, the server on Render and the database on Neon. Operational emails are sent through Google's email service and internal alerts reach the team through Telegram. By authorising the processing you also authorise that international transfer.",
+      "cs2": "The information lives in a database and on servers of infrastructure providers located in the United States: the site on Vercel, the server on Render and the database on Supabase, with backup copies on Neon and Backblaze. Operational emails are sent through Google's email service and internal alerts reach the team through Telegram. By authorising the processing you also authorise that international transfer.",
       "cs3": "Those providers act as processors: they handle the data on our behalf and for the purposes of this document. We do not sell your data, we do not share it for advertising purposes and we do not hand it to third parties, unless a competent authority requires it.",
       "cs4": "The panel where bookings, orders and enquiries are managed is password protected and used only by the team members who handle that work.",
       "menoresTitulo": "Data of children and adolescents",

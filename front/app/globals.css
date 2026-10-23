@@ -1647,6 +1647,180 @@ a.contacto-canal:hover {
   color: var(--color-orange);
 }
 
+/* ── Acuse de recibo ──
+   Mismo idioma que .grp-gracias en /grupos: recinto verde con el check en
+   disco, para que «enviado» se lea igual en todo el sitio. Recibe el foco al
+   aparecer; el contorno se quita porque el anuncio ya lo hace role="status". */
+.contacto-enviado {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: clamp(24px, 5vw, 36px) clamp(16px, 4vw, 28px);
+  background: rgba(46, 125, 50, 0.07);
+  border: 1px solid rgba(46, 125, 50, 0.22);
+  border-radius: 14px;
+  text-align: center;
+  scroll-margin-top: 96px;
+  animation: contacto-enviado 0.4s ease-out both;
+}
+.contacto-enviado:focus {
+  outline: none;
+}
+@keyframes contacto-enviado {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.contacto-enviado-icono {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #2e7d32;
+}
+.contacto-enviado-titulo {
+  min-width: 0;
+  max-width: 100%;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3.5vw, 1.6rem);
+  line-height: 1.2;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.contacto-enviado-texto {
+  min-width: 0;
+  max-width: 46ch;
+  font-size: clamp(0.92rem, 2.4vw, 1rem);
+  line-height: 1.7;
+  color: var(--color-brown);
+  opacity: 0.85;
+}
+
+/* El radicado en su propia ficha: es lo único de la pantalla que hay que
+   guardar, así que va aparte del agradecimiento y con botón para copiarlo. */
+.contacto-radicado {
+  width: 100%;
+  min-width: 0;
+  margin-top: 4px;
+  padding: clamp(14px, 3vw, 18px);
+  background: #fff6e4;
+  border: 1px dashed rgba(135, 43, 19, 0.3);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.contacto-radicado-etiqueta {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-amber);
+}
+.contacto-radicado-fila {
+  min-width: 0;
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+}
+.contacto-radicado-numero {
+  min-width: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: clamp(1.05rem, 3.2vw, 1.25rem);
+  letter-spacing: 0.04em;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+.contacto-radicado-copiar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid rgba(135, 43, 19, 0.25);
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-crimson);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.contacto-radicado-copiar:hover {
+  border-color: var(--color-crimson);
+  background: rgba(213, 19, 18, 0.06);
+}
+.contacto-radicado-texto {
+  min-width: 0;
+  max-width: 52ch;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--color-brown);
+  opacity: 0.75;
+}
+
+/* Dos salidas: el canal rápido si la consulta apremia, y volver al formulario
+   sin recargar. Apiladas en móvil; en fila cuando caben. */
+.contacto-enviado-acciones {
+  width: 100%;
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.contacto-enviado-whatsapp,
+.contacto-enviado-otro {
+  flex: 1 1 220px;
+  min-width: 0;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.3;
+  text-decoration: none;
+  cursor: pointer;
+}
+.contacto-enviado-whatsapp {
+  background: var(--color-crimson);
+  color: var(--color-cream);
+  border: none;
+}
+.contacto-enviado-whatsapp svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+.contacto-enviado-otro {
+  background: transparent;
+  color: var(--color-crimson);
+  border: 2px solid var(--color-crimson);
+}
+.contacto-enviado-whatsapp:hover,
+.contacto-enviado-otro:hover {
+  opacity: 0.88;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contacto-enviado { animation: none; }
+}
+
 @media (min-width: 900px) {
   .contacto-grid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 360px);

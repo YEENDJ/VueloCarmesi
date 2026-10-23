@@ -9,7 +9,7 @@
 import 'dotenv/config'
 import { PrismaService } from '../src/prisma.service'
 
-// Se reutiliza el servicio del proyecto: ya trae el adaptador de Neon, el pool
+// Se reutiliza el servicio del proyecto: ya trae el adaptador de Postgres, el pool
 // y los reintentos del arranque en frio. Un PrismaClient pelado no lee la URL
 // solo en Prisma 7.
 const prisma = new PrismaService()

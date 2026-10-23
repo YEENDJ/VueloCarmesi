@@ -43,8 +43,9 @@ export async function generateMetadata({
  *
  * El contenido no se inventó: se levantó de lo que los formularios realmente
  * piden —ver los campos en `prisma/schema.prisma` y en `lib/schemas/`— y de
- * dónde terminan esos datos —Vercel, Render, Neon, el correo de Google y
- * Telegram, según el README de la raíz—. Si cambia un formulario o cambia un
+ * dónde terminan esos datos —Vercel, Render, Supabase, las copias de respaldo
+ * en Neon y Backblaze, el correo de Google y Telegram, según el README de la
+ * raíz y docs/base-de-datos.md—. Si cambia un formulario o cambia un
  * proveedor, este texto queda desactualizado y hay que tocarlo: una política
  * que enumera datos que ya no se piden es tan incumplidora como no tenerla.
  *

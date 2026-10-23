@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
+import { Check, Copy } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   contactoSchema,
@@ -101,8 +102,45 @@ export default function ContactoContenido() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ContactoFormValues>({ resolver: zodResolver(contactoSchema) });
+
+  // El acuse saluda por el primer nombre: «¡Gracias, Laura!» confirma de un
+  // vistazo que el mensaje que llegó es el suyo.
+  const [nombre, setNombre] = useState("");
+  const [copiado, setCopiado] = useState(false);
+  const numero = recibido ? radicado(recibido.id, recibido.createdAt) : "";
+
+  // Al enviar, el formulario desaparece y con él el botón que tenía el foco.
+  // El foco pasa al acuse, que además lo trae a la vista: en móvil el
+  // formulario es largo y el acuse, más corto, quedaba por encima de la pantalla.
+  const enviadoRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (estado === "ok") enviadoRef.current?.focus();
+  }, [estado]);
+
+  useEffect(() => {
+    if (!copiado) return;
+    const id = setTimeout(() => setCopiado(false), 2000);
+    return () => clearTimeout(id);
+  }, [copiado]);
+
+  const copiar = async () => {
+    try {
+      await navigator.clipboard.writeText(numero);
+      setCopiado(true);
+    } catch {
+      // Sin permiso de portapapeles el número sigue a la vista para copiarlo a mano.
+    }
+  };
+
+  const otroMensaje = () => {
+    reset();
+    setRecibido(null);
+    setNombre("");
+    setEstado("idle");
+  };
 
   // Los errores del esquema son claves de `contacto`; se traducen aquí.
   const msg = (campo: keyof ContactoFormValues) => {
@@ -124,6 +162,7 @@ export default function ContactoContenido() {
       // agradece sin radicado en vez de mostrar un error que no es cierto.
       const cuerpo = await res.json().catch(() => null);
       if (cuerpo?.id && cuerpo?.createdAt) setRecibido(cuerpo);
+      setNombre(data.nombre.trim().split(/\s+/)[0]);
       setEstado("ok");
     } catch {
       setEstado("error");
@@ -149,19 +188,43 @@ export default function ContactoContenido() {
         <div className="contacto-formulario">
           <h2 className="contacto-subtitulo">{t("escribenos")}</h2>
           {estado === "ok" ? (
-            <div role="status" style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-              <p style={{ color: "var(--color-crimson)", fontSize: "1.1rem" }}>
-                {t("gracias")}
-              </p>
+            <div
+              className="contacto-enviado"
+              role="status"
+              tabIndex={-1}
+              ref={enviadoRef}
+            >
+              <span className="contacto-enviado-icono" aria-hidden="true">
+                <Check size={28} strokeWidth={2.4} color="var(--color-cream)" />
+              </span>
+              <h3 className="contacto-enviado-titulo">
+                {t("graciasTitulo", { nombre })}
+              </h3>
+              <p className="contacto-enviado-texto">{t("gracias")}</p>
+
               {recibido && (
-                <>
-                  <p style={{ color: "var(--color-brown)", overflowWrap: "anywhere" }}>
-                    {t.rich("radicado", {
-                      numero: radicado(recibido.id, recibido.createdAt),
-                      b: (texto) => <strong style={{ fontFamily: "monospace", fontSize: "1.05em" }}>{texto}</strong>,
-                    })}
-                  </p>
-                  <p style={{ color: "var(--color-brown)", fontSize: "0.95rem", lineHeight: 1.6 }}>
+                <div className="contacto-radicado">
+                  <span className="contacto-radicado-etiqueta">
+                    {t("radicadoEtiqueta")}
+                  </span>
+                  <div className="contacto-radicado-fila">
+                    <strong className="contacto-radicado-numero">{numero}</strong>
+                    <button
+                      type="button"
+                      className="contacto-radicado-copiar"
+                      onClick={copiar}
+                    >
+                      {copiado ? (
+                        <Check size={18} strokeWidth={2.4} aria-hidden="true" />
+                      ) : (
+                        <Copy size={18} aria-hidden="true" />
+                      )}
+                      <span aria-live="polite">
+                        {copiado ? t("copiado") : t("copiar")}
+                      </span>
+                    </button>
+                  </div>
+                  <p className="contacto-radicado-texto">
                     {t("radicadoTexto", {
                       fecha: format.dateTime(new Date(recibido.createdAt), {
                         dateStyle: "long",
@@ -170,8 +233,27 @@ export default function ContactoContenido() {
                       }),
                     })}
                   </p>
-                </>
+                </div>
               )}
+
+              <div className="contacto-enviado-acciones">
+                <a
+                  href={whatsappCon(tw("contacto"))}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contacto-enviado-whatsapp"
+                >
+                  <IconoWhatsapp />
+                  {t("graciasWhatsapp")}
+                </a>
+                <button
+                  type="button"
+                  className="contacto-enviado-otro"
+                  onClick={otroMensaje}
+                >
+                  {t("otroMensaje")}
+                </button>
+              </div>
             </div>
           ) : (
             <form
