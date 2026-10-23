@@ -72,9 +72,22 @@ jobs:
           nombre="vuelocarmesi-$(date -u +%Y-%m-%d-%H%M).sql.gpg"
           gpg --batch --yes --quiet --pinentry-mode loopback --passphrase-fd 0 \
             --symmetric --cipher-algo AES256 -o "$nombre" respaldo.sql <<< "$RESPALDO_CLAVE"
-          aws s3 cp "$nombre" "s3://$B2_BUCKET/$nombre" \
-            --endpoint-url "https://$host" --only-show-errors
-          echo "Guardado en B2: $nombre"
+          # Un secret mal copiado (espacios, otro nombre) subía «bien» sin que
+          # el archivo apareciera en el bucket: se comprueba antes de subir.
+          if [ "$B2_BUCKET" != "vuelocarmesi-respaldos" ]; then
+            echo "B2_BUCKET no es vuelocarmesi-respaldos (largo ${#B2_BUCKET})." >&2
+            exit 1
+          fi
+          case "$host" in
+            s3.*.backblazeb2.com) ;;
+            *) echo "B2_ENDPOINT no tiene la forma https://s3.<región>.backblazeb2.com" >&2; exit 1 ;;
+          esac
+          # put-object devuelve el id que B2 le dio al archivo: queda en el log
+          # como prueba de que llegó (no es secreto).
+          id_archivo="$(aws s3api put-object --bucket "$B2_BUCKET" --key "$nombre" \
+            --body "$nombre" --endpoint-url "https://$host" \
+            --query VersionId --output text)"
+          echo "Guardado en B2: $nombre (id $id_archivo)"
 
       - name: Actualizar la reserva (Neon)
         if: vars.RESERVA_ACTIVA == 'true'
