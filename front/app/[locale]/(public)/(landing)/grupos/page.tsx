@@ -79,11 +79,14 @@ export async function generateMetadata({
       type: 'website',
       locale: locale === 'en' ? 'en_US' : 'es_CO',
       siteName: 'Vuelo Carmesí',
+      // Copia 1200×630 solo para compartir: el original (1280×960, 305 KB)
+      // también lo usa «Nuestra historia» y pasaba del peso a partir del cual
+      // WhatsApp deja de mostrar la vista previa.
       images: [
         {
-          url: '/images/personas/grupo-mural.jpg',
-          width: 1152,
-          height: 864,
+          url: '/images/og/grupos.jpg',
+          width: 1200,
+          height: 630,
           alt: t('ogAlt'),
         },
       ],

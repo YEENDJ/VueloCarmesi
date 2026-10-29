@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { notFound } from 'next/navigation'
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { setRequestLocale, getTranslations } from 'next-intl/server'
+import { tarjetaOg } from '@/lib/og'
 import { routing, IDIOMAS } from '@/lib/i18n/routing'
 import { grafoDelSitio } from '@/lib/jsonld'
 import { SITIO } from '@/lib/sitio'
@@ -50,15 +51,8 @@ export async function generateMetadata({
       type: 'website',
       locale: locale === 'en' ? 'en_US' : 'es_CO',
       siteName: t('titulo'),
-      // La misma de la portada y del grafo; las medidas son las del archivo.
-      images: [
-        {
-          url: '/images/cacao/cacaotal-mazorcas-rojas.jpg',
-          width: 812,
-          height: 1280,
-          alt: t('ogAlt'),
-        },
-      ],
+      // La misma tarjeta de la portada (lib/og.ts).
+      images: [tarjetaOg(locale, t('ogAlt'))],
     },
     // Aquí NO van los `alternates`. Declarados en el layout valdrían lo mismo
     // para todas las páginas de debajo, y /en/experiences acabaría diciendo que

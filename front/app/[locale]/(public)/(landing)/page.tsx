@@ -9,6 +9,7 @@ import PruebaSocial from '@/components/secciones/PruebaSocial'
 import { getSiteConfig } from '@/lib/api/site-config'
 import { getExperienciasDestacadas } from '@/lib/api/experiencias'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { tarjetaOg } from '@/lib/og'
 import { alternatesDeIdioma } from '@/lib/i18n/alternates'
 import type { Metadata } from 'next'
 
@@ -56,18 +57,8 @@ export async function generateMetadata({
       type: 'website',
       locale: locale === 'en' ? 'en_US' : 'es_CO',
       siteName: 'Vuelo Carmesí',
-      // Las medidas son las reales del archivo. Es vertical porque no hay
-      // ninguna foto de cacao en horizontal en el repositorio: la tarjeta de
-      // WhatsApp y Facebook saldrá recortada hasta que se suba un recorte
-      // 1200×630 de esta misma imagen.
-      images: [
-        {
-          url: '/images/cacao/cacaotal-mazorcas-rojas.jpg',
-          width: 812,
-          height: 1280,
-          alt: t('ogAlt'),
-        },
-      ],
+      // Tarjeta armada para compartir, una por idioma (lib/og.ts).
+      images: [tarjetaOg(locale, t('ogAlt'))],
     },
   }
 }
