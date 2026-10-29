@@ -12,8 +12,8 @@ const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
  * exigen `x-admin-key`, una clave que solo tiene el servidor del front y que el
  * navegador nunca ve; el puente la pone después de validar la sesión firmada.
  *
- * Contra `BASE` quedan solo las lecturas públicas —experiencias y productos—,
- * las mismas que usa la web.
+ * Contra `BASE` quedan solo las lecturas públicas —productos—, las mismas que
+ * usa la web. Las experiencias no: el panel necesita ver también las archivadas.
  */
 const ADMIN = '/api/admin/backend'
 
@@ -62,8 +62,12 @@ export function updateEstadoReserva(id: string, estado: EstadoReserva, motivo?: 
 }
 
 // ── Experiencias ───────────────────────────────────────────
+/**
+ * Incluye las archivadas, que la lista pública ya no devuelve: sin ellas el
+ * panel no podría restaurarlas. Por eso va por el puente y no contra `BASE`.
+ */
 export function getExperienciasAdmin(): Promise<AdminExperiencia[]> {
-  return fetch(`${BASE}/experiencias`).then(checked)
+  return fetch(`${ADMIN}/experiencias/admin`, { cache: 'no-store' }).then(checked)
 }
 export function createExperiencia(data: Partial<AdminExperiencia>): Promise<AdminExperiencia> {
   return fetch(`${ADMIN}/experiencias`, {

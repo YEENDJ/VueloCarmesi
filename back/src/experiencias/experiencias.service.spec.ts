@@ -56,6 +56,7 @@ describe('ExperienciasService.findAll', () => {
     mockPrisma.experiencia.findMany.mockResolvedValue([])
     await service.findAll()
     expect(mockPrisma.experiencia.findMany).toHaveBeenCalledWith({
+      where: { archivada: false },
       orderBy: [{ destacada: 'desc' }, { createdAt: 'desc' }],
       // Las traducciones viajan con la consulta: sin el include, la lectura
       // en inglés no tendría con qué fundir y devolvería todo en español.
@@ -67,10 +68,17 @@ describe('ExperienciasService.findAll', () => {
     mockPrisma.experiencia.findMany.mockResolvedValue([])
     await service.findAll(true)
     expect(mockPrisma.experiencia.findMany).toHaveBeenCalledWith({
-      where: { destacada: true },
+      where: { archivada: false, destacada: true },
       orderBy: [{ destacada: 'desc' }, { createdAt: 'desc' }],
       include: { traducciones: true },
     })
+  })
+
+  // El panel es el único que las pide: sin ellas no podría restaurarlas.
+  it('incluye las archivadas solo si se piden', async () => {
+    mockPrisma.experiencia.findMany.mockResolvedValue([])
+    await service.findAll(false, undefined, true)
+    expect(mockPrisma.experiencia.findMany.mock.calls[0][0].where).toEqual({})
   })
 })
 
@@ -143,6 +151,20 @@ describe('ExperienciasService.findBySlug', () => {
     mockPrisma.experiencia.findUnique.mockResolvedValue(FICHA)
     await service.findBySlug('ruta-del-cacao')
     expect(mockSlugs.duenoAnterior).not.toHaveBeenCalled()
+  })
+
+  it('404 si la experiencia está archivada', async () => {
+    mockPrisma.experiencia.findUnique.mockResolvedValue({ ...FICHA, archivada: true })
+    await expect(service.findBySlug('ruta-del-cacao')).rejects.toBeInstanceOf(NotFoundException)
+  })
+
+  it('404 si el slug anterior es de una archivada', async () => {
+    mockPrisma.experiencia.findUnique.mockImplementation(({ where }: { where: { slug?: string; id?: string } }) =>
+      Promise.resolve(where.id === 'exp1' ? { ...FICHA, archivada: true } : null),
+    )
+    mockPrisma.experienciaTraduccion.findFirst.mockResolvedValue(null)
+    mockSlugs.duenoAnterior.mockResolvedValue('exp1')
+    await expect(service.findBySlug('experiencia-cacaotera')).rejects.toBeInstanceOf(NotFoundException)
   })
 
   it('404 si no es vigente ni anterior', async () => {

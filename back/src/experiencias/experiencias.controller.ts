@@ -14,6 +14,9 @@ export class ExperienciasController {
   // `idioma` decide en qué lengua vuelve la ficha. Ausente = español, que es
   // el original: el panel y cualquier cliente viejo siguen funcionando igual.
   @Get()              findAll(@Query('destacadas') destacadas?: string, @Query('idioma') idioma?: string) { return this.service.findAll(destacadas === 'true', idiomaValido(idioma)) }
+  // El panel lista también las archivadas para poder restaurarlas. Va antes de
+  // `:id`, que si no se tragaría «admin» como si fuera un id.
+  @UseGuards(AdminGuard) @Get('admin') findAllAdmin()                                 { return this.service.findAll(false, undefined, true) }
   @Get('slug/:slug')  findBySlug(@Param('slug') slug: string, @Query('idioma') idioma?: string)           { return this.service.findBySlug(slug, idiomaValido(idioma)) }
   @Get(':id')         findOne(@Param('id') id: string)                                 { return this.service.findById(id) }
   @UseGuards(AdminGuard) @Get(':id/bloqueo-borrado') bloqueoBorrado(@Param('id') id: string)                      { return this.service.bloqueoBorrado(id) }

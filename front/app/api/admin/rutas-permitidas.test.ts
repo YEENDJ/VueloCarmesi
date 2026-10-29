@@ -11,6 +11,7 @@ describe('rutas que reenvía el puente del panel', () => {
     expect(rutaPermitida('GET', 'solicitudes-grupo')).toBe(true)
     expect(rutaPermitida('PATCH', 'solicitudes-grupo/abc123/estado')).toBe(true)
     expect(rutaPermitida('GET', 'contacto')).toBe(true)
+    expect(rutaPermitida('GET', 'experiencias/admin')).toBe(true)
     expect(rutaPermitida('PATCH', 'contacto/abc123/estado')).toBe(true)
     expect(rutaPermitida('DELETE', 'contacto/abc123')).toBe(true)
     expect(rutaPermitida('POST', 'aves')).toBe(true)
