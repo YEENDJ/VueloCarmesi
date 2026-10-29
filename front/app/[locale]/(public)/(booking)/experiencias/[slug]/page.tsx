@@ -17,6 +17,7 @@ import { formatPrecio } from '@/lib/format'
 import { metaDescription, parrafosRelato } from '@/lib/seo'
 import { nodoExperiencia } from '@/lib/jsonld'
 import { SITIO } from '@/lib/sitio'
+import { portadaOg, tarjetaOg } from '@/lib/og'
 import type { Metadata } from 'next'
 import { jsonLdHtml } from '@/lib/json-ld-html'
 import AvisoEscnna from '@/components/legal/AvisoEscnna'
@@ -42,6 +43,7 @@ export async function generateMetadata(
 
   const descripcion = metaDescription(exp.descripcion, exp.descripcionLarga)
   const portada = exp.imagenes?.[0] ?? exp.imagen
+  const ts = await getTranslations({ locale, namespace: 'sitio' })
 
   return {
     // Sin la marca: el layout de idioma ya la añade con title.template
@@ -66,7 +68,11 @@ export async function generateMetadata(
       title: exp.nombre,
       description: descripcion,
       type: 'website',
-      ...(portada ? { images: [portada] } : {}),
+      // Este `openGraph` reemplaza entero el del layout: el nombre del sitio,
+      // el idioma y la imagen de respaldo hay que repetirlos aquí.
+      locale: locale === 'en' ? 'en_US' : 'es_CO',
+      siteName: ts('titulo'),
+      images: [portada ? portadaOg(portada, exp.nombre) : tarjetaOg(locale, ts('ogAlt'))],
     },
   }
 }

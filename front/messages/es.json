@@ -32,7 +32,7 @@
   "sitio": {
     "titulo": "Vuelo Carmesí",
     "descripcion": "Experiencias agroecológicas con sabor a cacao",
-    "ogAlt": "Cultivo de cacao de la finca con mazorcas rojas maduras en el árbol"
+    "ogAlt": "Vuelo Carmesí: experiencias agroecológicas con sabor a cacao en Cubarral, Meta. Un cacaotal con mazorcas rojas y un colibrí en una flor roja"
   },
   "noEncontrado": {
     "titulo": "Esta página no existe",
@@ -1176,13 +1176,23 @@
       "boton": "Ver experiencias"
     },
     "galeriaAlt": {
-      "mazorca": "MAZORCA EN EL ÁRBOL",
-      "fermentacion": "FERMENTACIÓN EN CAJONES",
-      "paisaje": "PAISAJE DE LA FINCA",
-      "cosecha": "COSECHA A MANO",
-      "taller": "TALLER DE CHOCOLATE",
-      "degustacion": "DEGUSTACIÓN GUIADA",
-      "vista": "FOTO · VISTA DE LA FINCA"
+      "mazorca": "Mazorca de cacao abierta en la mano, con los granos cubiertos de pulpa blanca",
+      "fermentacion": "María Umaña revisando el cacao en los cajones de fermentación",
+      "paisaje": "Árbol de cacao con mazorcas rojas en el bosque de la finca",
+      "cosecha": "Visitante cortando una mazorca de cacao con tijeras de podar",
+      "taller": "Visitante moliendo granos de cacao tostado en un molino manual",
+      "degustacion": "Tabletas de chocolate, granos y mazorcas de cacao sobre la mesa de la finca",
+      "cosechaEstudiantes": "Estudiante cosechando una mazorca de cacao mientras su grupo observa",
+      "secado": "Removiendo los granos de cacao en la marquesina de secado, en la época en que la finca se llamaba La Fortuna",
+      "secadoEquipo": "Yuri Enciso, María Umaña y Orlando Enciso mostrando granos de cacao seco en la marquesina",
+      "granosSecos": "Granos de cacao secos en la palma de la mano sobre la malla de secado",
+      "mascarilla": "Visitantes con mascarilla de cacao en el cultivo de la finca",
+      "recorrido": "Grupo de visitantes recorriendo el cacaotal",
+      "clase": "Grupo de estudiantes escuchando una explicación bajo los árboles de cacao",
+      "equipoCultivo": "Equipo de Vuelo Carmesí y visitantes en el cultivo de cacao",
+      "familia": "Una visitante y un niño mostrando mazorcas de cacao abiertas",
+      "grupoMural": "Grupo grande de visitantes frente al mural de aves de la finca",
+      "vista": "La casa de la finca Vuelo Carmesí con su mural de aves y el prado de entrada"
     },
     "comoLlegar": {
       "rotulo": "Cómo llegar · Desde Bogotá",
@@ -1269,6 +1279,9 @@
     "cofundador": "Cofundador",
     "cofundadora": "Cofundadora",
     "desarrollador": "Desarrollador Web",
+    "agropecuaria": "Licenciada en Producción Agropecuaria",
+    "agroforestal": "Tecnólogo en Gestión de Recursos Naturales",
+    "guiaAves": "Guía de aviturismo",
     "cristian": {
       "alt": "Cristian Enciso con binoculares durante una salida de avistamiento de aves",
       "b1": "Guía Profesional de Turismo con 14 años de experiencia en turismo de naturaleza y especializado en avistamiento de aves. Administrador Ambiental y especialista en Agroecología y Desarrollo Agroecoturístico.",
@@ -1293,6 +1306,25 @@
       "b2": "Hace parte del equipo operativo en los procesos de transformación artesanal del cacao, donde participa con dedicación y entusiasmo en las diferentes experiencias.",
       "b3": "Su forma particular de percibir y relacionarse con el mundo aporta una mirada única al proyecto y refleja el compromiso de Vuelo Carmesí con la inclusión, la empatía y el reconocimiento de las capacidades de cada persona.",
       "b4": "Su alegría, autenticidad y cercanía con los visitantes hacen de Yuri una integrante muy especial del equipo y de la historia de Vuelo Carmesí."
+    },
+    "damaris": {
+      "alt": "Damaris Escobar Castillo abriendo una mazorca de cacao con el uniforme de Vuelo Carmesí",
+      "b1": "Licenciada en Producción Agropecuaria. Nació y creció en el campo, donde aprendió desde muy pequeña a valorar la tierra, los animales y los conocimientos que se transmiten de generación en generación, además de la importancia de cuidar lo que brinda el territorio.",
+      "b2": "Su formación profesional nació de ese vínculo con el campo: se preparó para seguir aportando al sector agropecuario y sumar nuevas herramientas a lo aprendido en su vida, para contribuir a una agricultura más consciente, responsable y sostenible.",
+      "b3": "En Vuelo Carmesí aporta sus conocimientos en producción agropecuaria, comparte saberes del territorio y promueve prácticas de agricultura sostenible, siempre desde el respeto por la tierra, las personas y las formas tradicionales de trabajar el campo.",
+      "b4": "Para ella, hacer parte de Vuelo Carmesí es la oportunidad de seguir aprendiendo, compartir lo que sabe y ayudar a construir un modelo de producción que valore la vida rural, proteja los recursos naturales y abra un futuro sostenible para el campo."
+    },
+    "jonathan": {
+      "alt": "Jonathan Rincón cosechando una mazorca de cacao en el cultivo agroforestal",
+      "b1": "Tecnólogo en Gestión de Recursos Naturales y estudiante de Ingeniería Agroforestal. Su experiencia y su pasión están ligadas al campo, la conservación de los recursos naturales y el trabajo con productores.",
+      "b2": "En Vuelo Carmesí aporta sus conocimientos en producción sostenible y manejo agroforestal: acompaña los procesos en finca y busca prácticas que beneficien tanto al cultivo como al suelo, el agua y la biodiversidad.",
+      "b3": "Cree en un campo donde producir y cuidar la naturaleza puedan ir de la mano."
+    },
+    "daniel": {
+      "alt": "Daniel Ramírez con binoculares y cámara durante una salida de avistamiento de aves",
+      "b1": "Técnico en Sistemas y apasionado por el avistamiento de aves. Por ratos cambió la pantalla por los binoculares, porque entendió que cada ave que ve le cuenta una historia del territorio.",
+      "b2": "En Vuelo Carmesí guía la experiencia de pajarear en las fincas, monitorea las aves que llegan al cacao y registra con fotos y datos cómo el manejo agroforestal les está devolviendo hogar y alimento.",
+      "b3": "Sabe que contar aves es otra forma de cuidar el campo."
     },
     "yeison": {
       "alt": "",
@@ -1365,7 +1397,7 @@
     "meta": {
       "titulo": "Finca de cacao y visitas en Cubarral, Meta",
       "descripcion": "Finca agroecológica de cacao en Cubarral, Meta, a menos de dos horas de Villavicencio. Cosecha, fermentación y cata guiadas, aviturismo y visitas de grupo.",
-      "ogAlt": "Cultivo de cacao de la finca con mazorcas rojas maduras en el árbol"
+      "ogAlt": "Vuelo Carmesí: experiencias agroecológicas con sabor a cacao en Cubarral, Meta. Un cacaotal con mazorcas rojas y un colibrí en una flor roja"
     },
     "heroTitulo": "Experiencias agroecológicas\ncon sabor a cacao.",
     "heroSubtitulo": "Cosechamos, fermentamos y degustamos junto a ti. Conoce el cacao desde su raíz, en una finca llena de vida y tradición.",
@@ -1415,7 +1447,8 @@
     "fotoPendiente": "FOTO · {nombre}",
     "carrito": "Carrito de compras, {n} artículos",
     "seguirComprando": "← Seguir comprando",
-    "verFotoSimple": "Ver foto {n} de {total}"
+    "verFotoSimple": "Ver foto {n} de {total}",
+    "cerrarVisor": "Cerrar el visor de fotos"
   },
   "formularios": {
     "avisoDatos": "Al enviar autorizas el <datos>tratamiento de tus datos</datos>."

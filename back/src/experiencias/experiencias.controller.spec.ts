@@ -24,6 +24,16 @@ describe('ExperienciasController', () => {
     expect(await controller.findAll()).toEqual([])
   })
 
+  it('la lista pública nunca pide las archivadas', async () => {
+    await controller.findAll()
+    expect(mockService.findAll).toHaveBeenCalledWith(false, 'es')
+  })
+
+  it('la lista del panel sí incluye las archivadas', async () => {
+    await controller.findAllAdmin()
+    expect(mockService.findAll).toHaveBeenCalledWith(false, undefined, true)
+  })
+
   it('findBySlug delegates to service', async () => {
     const result = await controller.findBySlug('test')
     // Sin `?idioma=` se pide el español, que es el original.

@@ -23,9 +23,17 @@ export class ExperienciasService {
     private slugs: HistorialSlugs,
   ) {}
 
-  async findAll(soloDestacadas = false, idioma = IDIOMA_ORIGEN) {
+  /**
+   * El catálogo. La web pública nunca ve las archivadas: archivar es justo
+   * sacarla del sitio. Solo el panel, que tiene que poder restaurarlas, pide
+   * `incluirArchivadas`, y lo hace por una ruta con AdminGuard.
+   */
+  async findAll(soloDestacadas = false, idioma = IDIOMA_ORIGEN, incluirArchivadas = false) {
     const filas = await this.prisma.experiencia.findMany({
-      ...(soloDestacadas ? { where: { destacada: true } } : {}),
+      where: {
+        ...(incluirArchivadas ? {} : { archivada: false }),
+        ...(soloDestacadas ? { destacada: true } : {}),
+      },
       orderBy: [{ destacada: 'desc' }, { createdAt: 'desc' }],
       include: { traducciones: true },
     })
@@ -45,8 +53,18 @@ export class ExperienciasService {
    * antes de que el slug fuera fijo—, y la ficha vuelve con su slug de hoy. La
    * página compara ese slug con el de la URL y, como no coinciden, responde 308
    * a la buena: la URL vieja conserva su posicionamiento en vez de caer en 404.
+   *
+   * Una archivada responde 404 por cualquiera de sus slugs: si la ficha siguiera
+   * abierta, Google la mantendría indexada y el botón de reservar llevaría a un
+   * formulario que el backend rechaza. Al restaurarla vuelve en la misma URL.
    */
   async findBySlug(slug: string, idioma = IDIOMA_ORIGEN) {
+    const ficha = await this.buscarPorSlug(slug, idioma)
+    if (!ficha || ficha.archivada) throw new NotFoundException(`Experiencia '${slug}' no encontrada`)
+    return ficha
+  }
+
+  private async buscarPorSlug(slug: string, idioma: string) {
     const porOriginal = await this.prisma.experiencia.findUnique({
       where: { slug },
       include: { traducciones: true },
@@ -70,7 +88,7 @@ export class ExperienciasService {
       if (vigente) return aplicarTraduccion(vigente, idioma, CAMPOS_EXPERIENCIA)
     }
 
-    throw new NotFoundException(`Experiencia '${slug}' no encontrada`)
+    return null
   }
 
   async findById(id: string) {

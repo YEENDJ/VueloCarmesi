@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { alternatesDeIdioma } from '@/lib/i18n/alternates'
 import { SITIO } from '@/lib/sitio'
 import EquipoCarrusel from "@/components/secciones/EquipoCarrusel";
+import GaleriaFinca from "@/components/secciones/GaleriaFinca";
 import {
   CONTACTO,
   MAPA,
@@ -46,50 +47,12 @@ function ImgDark({ label, height = 420 }: { label: string; height?: number }) {
 }
 
 // Placeholder rayado claro (para fondos cream)
-function ImgLight({ label, height = 420 }: { label: string; height?: number }) {
-  return (
-    <div
-      style={{
-        height,
-        borderRadius: "12px",
-        background:
-          "repeating-linear-gradient(135deg, #F0D6A8 0 14px, #E9CB97 14px 28px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: "0 2px 8px rgba(135,43,19,.10)",
-        overflow: "hidden",
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "monospace",
-          fontSize: "11px",
-          letterSpacing: "1px",
-          color: "rgba(135,43,19,.35)",
-          textTransform: "uppercase",
-        }}
-      >
-        {label}
-      </span>
-    </div>
-  );
-}
 
 // Claves del catálogo; el icono no es idioma.
 const VALORES = [
   { icon: "🌱", clave: "agroecologia" },
   { icon: "🤝", clave: "comunidad" },
   { icon: "🌿", clave: "experiencia" },
-];
-
-const GALERIA = [
-  { clave: "mazorca", h: 280 },
-  { clave: "fermentacion", h: 340 },
-  { clave: "paisaje", h: 280 },
-  { clave: "cosecha", h: 320 },
-  { clave: "taller", h: 280 },
-  { clave: "degustacion", h: 320 },
 ];
 
 /**
@@ -194,7 +157,7 @@ export default async function SobreNosotrosPage({
       <section
         style={{
           backgroundColor: "var(--color-cream)",
-          padding: "clamp(64px, 8vw, 100px) 24px",
+          padding: "clamp(64px, 8vw, 100px) var(--contenido-margen)",
           overflowX: "clip",
         }}
       >
@@ -248,10 +211,10 @@ export default async function SobreNosotrosPage({
       <section
         style={{
           backgroundColor: "var(--color-brown)",
-          padding: "clamp(64px, 8vw, 100px) 24px",
+          padding: "clamp(64px, 8vw, 100px) var(--contenido-margen)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "calc(var(--contenido-ancho) - 2 * var(--contenido-margen))", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "56px" }}>
             <p
               style={{
@@ -337,11 +300,11 @@ export default async function SobreNosotrosPage({
       <section
         style={{
           backgroundColor: "var(--color-cream)",
-          padding: "clamp(64px, 8vw, 100px) 24px",
+          padding: "clamp(64px, 8vw, 100px) var(--contenido-margen)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div className="sobre-nosotros-grid">
+        <div style={{ maxWidth: "calc(var(--contenido-ancho) - 2 * var(--contenido-margen))", margin: "0 auto" }}>
+          <div className="sobre-nosotros-grid finca-hogar-grid">
             <div
               style={{
                 display: "flex",
@@ -409,22 +372,19 @@ export default async function SobreNosotrosPage({
                 ] as [string, string, Record<string, string>][]).map(([icon, clave, vars]) => (
                   <div
                     key={clave}
+                    className="finca-stat"
                     style={{
                       // Hijo de grid con texto: su min-width por defecto es el
                       // de su palabra más larga y a 420px —donde .finca-stats
                       // todavía es de dos columnas— eso basta para empujar la
                       // rejilla fuera de la tarjeta.
                       minWidth: 0,
-                      padding: "16px",
                       backgroundColor: "#FFF6E4",
                       borderRadius: "8px",
                       border: "1px solid rgba(135,43,19,.12)",
                     }}
                   >
-                    <div
-                      aria-hidden="true"
-                      style={{ fontSize: "1.4rem", marginBottom: "6px" }}
-                    >
+                    <div aria-hidden="true" className="finca-stat-icono">
                       {icon}
                     </div>
                     <p
@@ -453,7 +413,28 @@ export default async function SobreNosotrosPage({
                 ))}
               </div>
             </div>
-            <ImgLight label={t('galeriaAlt.vista')} height={460} />
+            <div
+              className="finca-hogar-foto"
+              style={{
+                borderRadius: "12px",
+                boxShadow: "0 2px 8px rgba(135,43,19,.10)",
+                overflow: "hidden",
+              }}
+            >
+              {/* El JPEG de `public/` tal cual, sin el optimizador del
+                  despliegue: recomprimido se notaba. En dos columnas toma el
+                  alto de la columna de texto (.finca-hogar-foto en
+                  globals.css); en una sola va completa. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/lugar/casa-mural-aves.jpg"
+                alt={t('galeriaAlt.vista')}
+                width={1280}
+                height={924}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -471,12 +452,12 @@ export default async function SobreNosotrosPage({
         id="dondeestamos"
         style={{
           backgroundColor: "#FFF6E4",
-          padding: "clamp(64px, 8vw, 100px) 24px",
+          padding: "clamp(64px, 8vw, 100px) var(--contenido-margen)",
           borderTop: "1px solid rgba(135,43,19,.10)",
           scrollMarginTop: "clamp(80px, 10vw, 100px)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "calc(var(--contenido-ancho) - 2 * var(--contenido-margen))", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "48px" }}>
             <h2
               style={{
@@ -541,10 +522,10 @@ export default async function SobreNosotrosPage({
       <section
         style={{
           backgroundColor: "var(--color-brown)",
-          padding: "clamp(64px, 8vw, 100px) 24px",
+          padding: "clamp(64px, 8vw, 100px) var(--contenido-margen)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "calc(var(--contenido-ancho) - 2 * var(--contenido-margen))", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "56px" }}>
             <p
               style={{
@@ -586,14 +567,14 @@ export default async function SobreNosotrosPage({
           unos 56 px en móvil y 67 en escritorio. */}
       <section
         id="equipo"
+        className="equipo-seccion"
         style={{
           backgroundColor: "var(--color-cream)",
-          padding: "clamp(64px, 8vw, 100px) 24px",
           scrollMarginTop: "clamp(80px, 10vw, 100px)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "56px" }}>
+        <div style={{ maxWidth: "calc(var(--contenido-ancho) - 2 * var(--contenido-margen))", margin: "0 auto" }}>
+          <div className="equipo-encabezado" style={{ textAlign: "center" }}>
             <p
               style={{
                 fontFamily: "var(--font-body)",
@@ -626,10 +607,10 @@ export default async function SobreNosotrosPage({
       <section
         style={{
           backgroundColor: "var(--color-cream)",
-          padding: "0 24px clamp(64px, 8vw, 100px)",
+          padding: "0 var(--contenido-margen) clamp(64px, 8vw, 100px)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "calc(var(--contenido-ancho) - 2 * var(--contenido-margen))", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "40px" }}>
             <h2
               style={{
@@ -641,35 +622,7 @@ export default async function SobreNosotrosPage({
               {ts('galeria')}
             </h2>
           </div>
-          <div className="galeria-sobre">
-            {GALERIA.map(({ clave, h }) => (
-              <div
-                key={clave}
-                style={{
-                  height: h,
-                  borderRadius: "8px",
-                  background:
-                    "repeating-linear-gradient(135deg, #F0D6A8 0 14px, #E9CB97 14px 28px)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  overflow: "hidden",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "monospace",
-                    fontSize: "10px",
-                    letterSpacing: "1px",
-                    color: "rgba(135,43,19,.35)",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {t(`galeriaAlt.${clave}`)}
-                </span>
-              </div>
-            ))}
-          </div>
+          <GaleriaFinca />
         </div>
       </section>
 
@@ -677,7 +630,7 @@ export default async function SobreNosotrosPage({
       <section
         style={{
           backgroundColor: "var(--color-crimson)",
-          padding: "clamp(64px, 8vw, 80px) 24px",
+          padding: "clamp(64px, 8vw, 80px) var(--contenido-margen)",
           textAlign: "center",
         }}
       >

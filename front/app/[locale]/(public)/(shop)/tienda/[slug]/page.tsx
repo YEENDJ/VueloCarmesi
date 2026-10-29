@@ -15,6 +15,7 @@ import { formatPrecio } from '@/lib/format'
 import { metaDescription } from '@/lib/seo'
 import { nodoProducto } from '@/lib/jsonld'
 import { SITIO } from '@/lib/sitio'
+import { portadaOg, tarjetaOg } from '@/lib/og'
 import type { Metadata } from 'next'
 import { CreditCard, ShieldCheck, Store } from 'lucide-react'
 import { jsonLdHtml } from '@/lib/json-ld-html'
@@ -38,6 +39,7 @@ export async function generateMetadata(
 
   const descripcion = metaDescription(producto.descripcion, producto.descripcionLarga)
   const portada = producto.imagenes?.[0] ?? producto.imagen
+  const ts = await getTranslations({ locale, namespace: 'sitio' })
 
   return {
     // Sin la marca: el layout de idioma ya la añade con title.template
@@ -59,7 +61,11 @@ export async function generateMetadata(
       title: producto.nombre,
       description: descripcion,
       type: 'website',
-      ...(portada ? { images: [portada] } : {}),
+      // Este `openGraph` reemplaza entero el del layout: el nombre del sitio,
+      // el idioma y la imagen de respaldo hay que repetirlos aquí.
+      locale: locale === 'en' ? 'en_US' : 'es_CO',
+      siteName: ts('titulo'),
+      images: [portada ? portadaOg(portada, producto.nombre) : tarjetaOg(locale, ts('ogAlt'))],
     },
   }
 }

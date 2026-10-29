@@ -1342,9 +1342,97 @@ footer :focus-visible {
 
 }
 
+/* Base de la sección: el relleno y el margen del encabezado viven aquí y no
+   en `style` para que el escritorio pueda compactarlos. */
+.equipo-seccion {
+  padding: clamp(64px, 8vw, 100px) var(--contenido-margen);
+}
+.equipo-encabezado {
+  margin-bottom: 56px;
+}
+
 @media (min-width: 1000px) {
   .equipo-slide {
     flex: 0 0 calc((100% - 48px) / 3);
+  }
+
+  /* Con tres tarjetas a la vista, la sección entera —título, tarjetas y
+     puntos— cabe en una pantalla de ~790 px de alto al 100 %. Sin esto pedía
+     ~960 px. */
+  .equipo-seccion {
+    padding-top: 56px;
+  }
+  .equipo-encabezado {
+    margin-bottom: 40px;
+  }
+  .equipo-slide-foto {
+    aspect-ratio: 3 / 2;
+  }
+  .equipo-slide-cuerpo {
+    padding: 20px;
+  }
+  .equipo-nombre {
+    margin-bottom: 4px;
+  }
+  /* Una línea siempre: las tarjetas se estiran al alto de la más alta —también
+     las que están fuera de la vista—, y un cargo largo partido en dos
+     («Tecnólogo en Gestión de Recursos Naturales») dejaba ese sobrante como
+     hueco entre la descripción y «Ver más» en todas. */
+  .equipo-cargo {
+    font-size: 12px;
+    letter-spacing: 0;
+    margin-bottom: 10px;
+  }
+  .equipo-slide-cuerpo {
+    padding-bottom: 14px;
+  }
+  .equipo-bio-corta {
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    margin-bottom: 4px;
+  }
+  .equipo-ver-mas {
+    font-size: 13px;
+  }
+  .equipo-controles {
+    margin-top: 20px;
+  }
+}
+
+/* Con mouse el enlace puede ser bajo; con el dedo se queda en 44 px. */
+@media (min-width: 1000px) and (hover: hover) and (pointer: fine) {
+  .equipo-ver-mas {
+    min-height: 28px;
+  }
+}
+
+/* Controles del carrusel con mouse: los 44 px de cada flecha y cada punto son
+   para el dedo, y con un puntero fino dejaban la fila más grande que las
+   tarjetas que mueve. Todo baja en la misma proporción (~0,75). En táctil
+   siguen en 44. */
+@media (hover: hover) and (pointer: fine) {
+  .equipo-controles {
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .equipo-flecha {
+    min-width: 34px;
+    min-height: 34px;
+    font-size: 15px;
+  }
+  .equipo-puntos {
+    gap: 2px;
+  }
+  .equipo-punto {
+    min-width: 18px;
+    min-height: 28px;
+  }
+  .equipo-punto-marca {
+    width: 6px;
+    height: 6px;
+  }
+  .equipo-punto-marca[data-activo='true'] {
+    width: 16px;
   }
 }
 
@@ -1358,10 +1446,73 @@ footer :focus-visible {
   }
 }
 
-.galeria-sobre {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+/* «La finca en imágenes»: filas justificadas (components/galeria/
+   FilasJustificadas). Esto es el acomodo antes del JavaScript —y el que queda
+   si no carga—: cada <li> parte de proporción × --alto-fila y crece en esa
+   proporción; el ::after con crecimiento enorme evita que la última fila se
+   estire. El JavaScript luego reparte las filas para que todas, incluida la
+   última, llenen el ancho. Ninguna foto se recorta. */
+.filas-justificadas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  --alto-fila: 11rem;
+}
+.filas-justificadas::after {
+  content: '';
+  flex-grow: 999999;
+}
+.filas-justificadas > li {
+  min-width: 0;
+}
+@media (min-width: 640px) {
+  .filas-justificadas { gap: 12px; --alto-fila: 13rem; }
+}
+@media (min-width: 1024px) {
+  .filas-justificadas { --alto-fila: 16rem; }
+}
+
+.galeria-sobre-foto {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+.galeria-sobre-foto img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.7s ease;
+}
+@media (hover: hover) {
+  .galeria-sobre-foto:hover img { transform: scale(1.03); }
+}
+.galeria-sobre-foto:focus-visible {
+  outline: 3px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+/* El <dialog> del visor solo pone la capa superior, el foco y Esc: el aspecto
+   es el de .ficha-lightbox, que va dentro. */
+.galeria-visor {
+  margin: 0;
+  padding: 0;
+  border: none;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  background: transparent;
+}
+.galeria-visor::backdrop {
+  background: transparent;
 }
 
 /* auto-fit y no «1fr 1fr» corregido a una columna en un max-width: la base era
@@ -1375,6 +1526,37 @@ footer :focus-visible {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
   gap: 16px;
+}
+
+/* «Nuestro hogar». La foto toma el alto de la columna de texto para que las
+   dos queden parejas: la rejilla estira la columna (stretch en vez del center
+   de .sobre-nosotros-grid) y la foto la llena con cover. En una sola columna
+   no hay con qué emparejarla y va completa, con su proporción. */
+.finca-hogar-grid {
+  align-items: stretch;
+}
+.finca-hogar-foto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@media (max-width: 767px) {
+  .finca-hogar-foto img { height: auto; }
+}
+
+/* Las cifras, compactas: el ícono a la izquierda de las dos líneas. */
+.finca-stat {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+}
+.finca-stat-icono {
+  grid-row: span 2;
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -3019,10 +3201,6 @@ html:has(.mini-carrito[open]) {
     grid-template-columns: 1fr;
   }
 
-  .galeria-sobre {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .form-row-2 {
     grid-template-columns: 1fr;
   }
@@ -3121,10 +3299,6 @@ html:has(.mini-carrito[open]) {
    MÓVIL MUY ANGOSTO — hasta 419px
    ═════════════════════════════════════════════════════════ */
 @media (max-width: 419px) {
-  .galeria-sobre {
-    grid-template-columns: 1fr;
-  }
-
   /* .finca-stats ya no necesita su parche aqui: su auto-fit cae solo a una
      columna cuando el contenedor no da para dos. */
 }
