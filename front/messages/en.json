@@ -1176,13 +1176,23 @@
       "boton": "See experiences"
     },
     "galeriaAlt": {
-      "mazorca": "CACAO POD ON THE TREE",
-      "fermentacion": "FERMENTATION IN WOODEN BOXES",
-      "paisaje": "FARM LANDSCAPE",
-      "cosecha": "HAND HARVESTING",
-      "taller": "CHOCOLATE WORKSHOP",
-      "degustacion": "GUIDED TASTING",
-      "vista": "PHOTO · VIEW OF THE FARM"
+      "mazorca": "An open cacao pod in a hand, its beans covered in white pulp",
+      "fermentacion": "María Umaña checking the cacao in the fermentation boxes",
+      "paisaje": "A cacao tree with red pods in the farm's forest",
+      "cosecha": "A visitor cutting a cacao pod with pruning shears",
+      "taller": "A visitor grinding roasted cacao beans in a hand mill",
+      "degustacion": "Chocolate bars, beans and cacao pods on the farm's table",
+      "cosechaEstudiantes": "A student harvesting a cacao pod while the group looks on",
+      "secado": "Turning cacao beans in the solar drying house, back when the farm was called La Fortuna",
+      "secadoEquipo": "Yuri Enciso, María Umaña and Orlando Enciso holding dried cacao beans in the drying house",
+      "granosSecos": "Dried cacao beans in the palm of a hand over the drying mesh",
+      "mascarilla": "Visitors wearing cacao face masks in the farm's cacao plot",
+      "recorrido": "A group of visitors touring the cacao plantation",
+      "clase": "A group of students listening to an explanation under the cacao trees",
+      "equipoCultivo": "The Vuelo Carmesí team and visitors in the cacao plot",
+      "familia": "A visitor and a child showing open cacao pods",
+      "grupoMural": "A large group of visitors in front of the farm's bird mural",
+      "vista": "The Vuelo Carmesí farmhouse with its bird mural and front lawn"
     },
     "comoLlegar": {
       "rotulo": "Getting here · From Bogotá",
@@ -1437,7 +1447,8 @@
     "fotoPendiente": "PHOTO · {nombre}",
     "carrito": "Shopping cart, {n} items",
     "seguirComprando": "← Continue shopping",
-    "verFotoSimple": "View photo {n} of {total}"
+    "verFotoSimple": "View photo {n} of {total}",
+    "cerrarVisor": "Close photo viewer"
   },
   "formularios": {
     "avisoDatos": "By submitting you authorise the <datos>processing of your data</datos>."

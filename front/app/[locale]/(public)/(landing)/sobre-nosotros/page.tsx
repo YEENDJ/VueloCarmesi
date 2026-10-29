@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { alternatesDeIdioma } from '@/lib/i18n/alternates'
 import { SITIO } from '@/lib/sitio'
 import EquipoCarrusel from "@/components/secciones/EquipoCarrusel";
+import GaleriaFinca from "@/components/secciones/GaleriaFinca";
 import {
   CONTACTO,
   MAPA,
@@ -46,50 +47,12 @@ function ImgDark({ label, height = 420 }: { label: string; height?: number }) {
 }
 
 // Placeholder rayado claro (para fondos cream)
-function ImgLight({ label, height = 420 }: { label: string; height?: number }) {
-  return (
-    <div
-      style={{
-        height,
-        borderRadius: "12px",
-        background:
-          "repeating-linear-gradient(135deg, #F0D6A8 0 14px, #E9CB97 14px 28px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: "0 2px 8px rgba(135,43,19,.10)",
-        overflow: "hidden",
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "monospace",
-          fontSize: "11px",
-          letterSpacing: "1px",
-          color: "rgba(135,43,19,.35)",
-          textTransform: "uppercase",
-        }}
-      >
-        {label}
-      </span>
-    </div>
-  );
-}
 
 // Claves del catálogo; el icono no es idioma.
 const VALORES = [
   { icon: "🌱", clave: "agroecologia" },
   { icon: "🤝", clave: "comunidad" },
   { icon: "🌿", clave: "experiencia" },
-];
-
-const GALERIA = [
-  { clave: "mazorca", h: 280 },
-  { clave: "fermentacion", h: 340 },
-  { clave: "paisaje", h: 280 },
-  { clave: "cosecha", h: 320 },
-  { clave: "taller", h: 280 },
-  { clave: "degustacion", h: 320 },
 ];
 
 /**
@@ -341,7 +304,7 @@ export default async function SobreNosotrosPage({
         }}
       >
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div className="sobre-nosotros-grid">
+          <div className="sobre-nosotros-grid finca-hogar-grid">
             <div
               style={{
                 display: "flex",
@@ -409,22 +372,19 @@ export default async function SobreNosotrosPage({
                 ] as [string, string, Record<string, string>][]).map(([icon, clave, vars]) => (
                   <div
                     key={clave}
+                    className="finca-stat"
                     style={{
                       // Hijo de grid con texto: su min-width por defecto es el
                       // de su palabra más larga y a 420px —donde .finca-stats
                       // todavía es de dos columnas— eso basta para empujar la
                       // rejilla fuera de la tarjeta.
                       minWidth: 0,
-                      padding: "16px",
                       backgroundColor: "#FFF6E4",
                       borderRadius: "8px",
                       border: "1px solid rgba(135,43,19,.12)",
                     }}
                   >
-                    <div
-                      aria-hidden="true"
-                      style={{ fontSize: "1.4rem", marginBottom: "6px" }}
-                    >
+                    <div aria-hidden="true" className="finca-stat-icono">
                       {icon}
                     </div>
                     <p
@@ -453,7 +413,28 @@ export default async function SobreNosotrosPage({
                 ))}
               </div>
             </div>
-            <ImgLight label={t('galeriaAlt.vista')} height={460} />
+            <div
+              className="finca-hogar-foto"
+              style={{
+                borderRadius: "12px",
+                boxShadow: "0 2px 8px rgba(135,43,19,.10)",
+                overflow: "hidden",
+              }}
+            >
+              {/* El JPEG de `public/` tal cual, sin el optimizador del
+                  despliegue: recomprimido se notaba. En dos columnas toma el
+                  alto de la columna de texto (.finca-hogar-foto en
+                  globals.css); en una sola va completa. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/lugar/casa-mural-aves.jpg"
+                alt={t('galeriaAlt.vista')}
+                width={1280}
+                height={924}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -641,35 +622,7 @@ export default async function SobreNosotrosPage({
               {ts('galeria')}
             </h2>
           </div>
-          <div className="galeria-sobre">
-            {GALERIA.map(({ clave, h }) => (
-              <div
-                key={clave}
-                style={{
-                  height: h,
-                  borderRadius: "8px",
-                  background:
-                    "repeating-linear-gradient(135deg, #F0D6A8 0 14px, #E9CB97 14px 28px)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  overflow: "hidden",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "monospace",
-                    fontSize: "10px",
-                    letterSpacing: "1px",
-                    color: "rgba(135,43,19,.35)",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {t(`galeriaAlt.${clave}`)}
-                </span>
-              </div>
-            ))}
-          </div>
+          <GaleriaFinca />
         </div>
       </section>
 

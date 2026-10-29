@@ -1176,13 +1176,23 @@
       "boton": "Ver experiencias"
     },
     "galeriaAlt": {
-      "mazorca": "MAZORCA EN EL ÁRBOL",
-      "fermentacion": "FERMENTACIÓN EN CAJONES",
-      "paisaje": "PAISAJE DE LA FINCA",
-      "cosecha": "COSECHA A MANO",
-      "taller": "TALLER DE CHOCOLATE",
-      "degustacion": "DEGUSTACIÓN GUIADA",
-      "vista": "FOTO · VISTA DE LA FINCA"
+      "mazorca": "Mazorca de cacao abierta en la mano, con los granos cubiertos de pulpa blanca",
+      "fermentacion": "María Umaña revisando el cacao en los cajones de fermentación",
+      "paisaje": "Árbol de cacao con mazorcas rojas en el bosque de la finca",
+      "cosecha": "Visitante cortando una mazorca de cacao con tijeras de podar",
+      "taller": "Visitante moliendo granos de cacao tostado en un molino manual",
+      "degustacion": "Tabletas de chocolate, granos y mazorcas de cacao sobre la mesa de la finca",
+      "cosechaEstudiantes": "Estudiante cosechando una mazorca de cacao mientras su grupo observa",
+      "secado": "Removiendo los granos de cacao en la marquesina de secado, en la época en que la finca se llamaba La Fortuna",
+      "secadoEquipo": "Yuri Enciso, María Umaña y Orlando Enciso mostrando granos de cacao seco en la marquesina",
+      "granosSecos": "Granos de cacao secos en la palma de la mano sobre la malla de secado",
+      "mascarilla": "Visitantes con mascarilla de cacao en el cultivo de la finca",
+      "recorrido": "Grupo de visitantes recorriendo el cacaotal",
+      "clase": "Grupo de estudiantes escuchando una explicación bajo los árboles de cacao",
+      "equipoCultivo": "Equipo de Vuelo Carmesí y visitantes en el cultivo de cacao",
+      "familia": "Una visitante y un niño mostrando mazorcas de cacao abiertas",
+      "grupoMural": "Grupo grande de visitantes frente al mural de aves de la finca",
+      "vista": "La casa de la finca Vuelo Carmesí con su mural de aves y el prado de entrada"
     },
     "comoLlegar": {
       "rotulo": "Cómo llegar · Desde Bogotá",
@@ -1437,7 +1447,8 @@
     "fotoPendiente": "FOTO · {nombre}",
     "carrito": "Carrito de compras, {n} artículos",
     "seguirComprando": "← Seguir comprando",
-    "verFotoSimple": "Ver foto {n} de {total}"
+    "verFotoSimple": "Ver foto {n} de {total}",
+    "cerrarVisor": "Cerrar el visor de fotos"
   },
   "formularios": {
     "avisoDatos": "Al enviar autorizas el <datos>tratamiento de tus datos</datos>."

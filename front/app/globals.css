@@ -1358,10 +1358,73 @@ footer :focus-visible {
   }
 }
 
-.galeria-sobre {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+/* «La finca en imágenes»: filas justificadas (components/galeria/
+   FilasJustificadas). Esto es el acomodo antes del JavaScript —y el que queda
+   si no carga—: cada <li> parte de proporción × --alto-fila y crece en esa
+   proporción; el ::after con crecimiento enorme evita que la última fila se
+   estire. El JavaScript luego reparte las filas para que todas, incluida la
+   última, llenen el ancho. Ninguna foto se recorta. */
+.filas-justificadas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  --alto-fila: 11rem;
+}
+.filas-justificadas::after {
+  content: '';
+  flex-grow: 999999;
+}
+.filas-justificadas > li {
+  min-width: 0;
+}
+@media (min-width: 640px) {
+  .filas-justificadas { gap: 12px; --alto-fila: 13rem; }
+}
+@media (min-width: 1024px) {
+  .filas-justificadas { --alto-fila: 16rem; }
+}
+
+.galeria-sobre-foto {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+.galeria-sobre-foto img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.7s ease;
+}
+@media (hover: hover) {
+  .galeria-sobre-foto:hover img { transform: scale(1.03); }
+}
+.galeria-sobre-foto:focus-visible {
+  outline: 3px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+/* El <dialog> del visor solo pone la capa superior, el foco y Esc: el aspecto
+   es el de .ficha-lightbox, que va dentro. */
+.galeria-visor {
+  margin: 0;
+  padding: 0;
+  border: none;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  background: transparent;
+}
+.galeria-visor::backdrop {
+  background: transparent;
 }
 
 /* auto-fit y no «1fr 1fr» corregido a una columna en un max-width: la base era
@@ -1375,6 +1438,37 @@ footer :focus-visible {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
   gap: 16px;
+}
+
+/* «Nuestro hogar». La foto toma el alto de la columna de texto para que las
+   dos queden parejas: la rejilla estira la columna (stretch en vez del center
+   de .sobre-nosotros-grid) y la foto la llena con cover. En una sola columna
+   no hay con qué emparejarla y va completa, con su proporción. */
+.finca-hogar-grid {
+  align-items: stretch;
+}
+.finca-hogar-foto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@media (max-width: 767px) {
+  .finca-hogar-foto img { height: auto; }
+}
+
+/* Las cifras, compactas: el ícono a la izquierda de las dos líneas. */
+.finca-stat {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+}
+.finca-stat-icono {
+  grid-row: span 2;
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -3019,10 +3113,6 @@ html:has(.mini-carrito[open]) {
     grid-template-columns: 1fr;
   }
 
-  .galeria-sobre {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .form-row-2 {
     grid-template-columns: 1fr;
   }
@@ -3121,10 +3211,6 @@ html:has(.mini-carrito[open]) {
    MÓVIL MUY ANGOSTO — hasta 419px
    ═════════════════════════════════════════════════════════ */
 @media (max-width: 419px) {
-  .galeria-sobre {
-    grid-template-columns: 1fr;
-  }
-
   /* .finca-stats ya no necesita su parche aqui: su auto-fit cae solo a una
      columna cuando el contenedor no da para dos. */
 }
