@@ -26,6 +26,12 @@ const EQUIPO: Miembro[] = [
     foto: '/images/personas/orlando-enciso-cacao.jpg', foco: 'center 35%', parrafos: 4 },
   { nombre: 'Yuri Enciso', clave: 'yuri', cargo: 'cofundadora',
     foto: '/images/personas/yuri-enciso-cacao.jpg', foco: 'center 30%', parrafos: 4 },
+  { nombre: 'Damaris Escobar Castillo', clave: 'damaris', cargo: 'agropecuaria',
+    foto: '/images/personas/damaris-escobar-cacao.jpg', foco: 'center 0%', parrafos: 4 },
+  { nombre: 'Jonathan Rincón', clave: 'jonathan', cargo: 'agroforestal',
+    foto: '/images/personas/jonathan-rincon-cacao.jpg', foco: 'center 30%', parrafos: 3 },
+  { nombre: 'Daniel Ramírez', clave: 'daniel', cargo: 'guiaAves',
+    foto: '/images/personas/daniel-ramirez-aves.jpg', foco: 'center 5%', parrafos: 3 },
   { nombre: 'Yeison Enciso', clave: 'yeison', cargo: 'desarrollador', parrafos: 2 },
 ]
 

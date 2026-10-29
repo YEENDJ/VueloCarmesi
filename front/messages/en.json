@@ -1269,6 +1269,9 @@
     "cofundador": "Co-founder",
     "cofundadora": "Co-founder",
     "desarrollador": "Web Developer",
+    "agropecuaria": "Agricultural Production Graduate",
+    "agroforestal": "Natural Resource Management Technologist",
+    "guiaAves": "Birdwatching Guide",
     "cristian": {
       "alt": "Cristian Enciso with binoculars during a birding outing",
       "b1": "Professional Tourism Guide with 14 years of experience in nature tourism, specialised in birdwatching. Environmental Manager and specialist in Agroecology and Agro-ecotourism Development.",
@@ -1293,6 +1296,25 @@
       "b2": "She is part of the operations team in the artisanal cacao transformation processes, taking part in the different experiences with dedication and enthusiasm.",
       "b3": "Her particular way of perceiving and relating to the world brings a unique perspective to the project and reflects Vuelo Carmesí's commitment to inclusion, empathy and recognising what each person brings.",
       "b4": "Her joy, authenticity and warmth with visitors make Yuri a very special member of the team and of the Vuelo Carmesí story."
+    },
+    "damaris": {
+      "alt": "Damaris Escobar Castillo opening a cacao pod in her Vuelo Carmesí uniform",
+      "b1": "Holds a degree in Agricultural Production. She was born and raised in the countryside, where from a very young age she learned to value the land, animals and the knowledge handed down from generation to generation, as well as the importance of caring for what the land provides.",
+      "b2": "Her professional training grew out of that bond with the countryside: she studied to keep contributing to agriculture and to add new tools to what life had taught her, helping build a more mindful, responsible and sustainable way of farming.",
+      "b3": "At Vuelo Carmesí she brings her expertise in agricultural production, shares local knowledge and promotes sustainable farming practices, always with respect for the land, for people and for the traditional ways of working the fields.",
+      "b4": "For her, being part of Vuelo Carmesí is a chance to keep learning, share what she knows and help build a way of producing that values rural life, protects natural resources and opens a sustainable future for the countryside."
+    },
+    "jonathan": {
+      "alt": "Jonathan Rincón harvesting a cacao pod in the agroforestry plot",
+      "b1": "Natural Resource Management technologist and Agroforestry Engineering student. His experience and passion are tied to the countryside, the conservation of natural resources and working with growers.",
+      "b2": "At Vuelo Carmesí he brings his expertise in sustainable production and agroforestry management: he supports the work on the farm and looks for practices that benefit the crop as well as the soil, the water and biodiversity.",
+      "b3": "He believes in a countryside where producing and caring for nature can go hand in hand."
+    },
+    "daniel": {
+      "alt": "Daniel Ramírez with binoculars and a camera during a birdwatching outing",
+      "b1": "Systems technician with a passion for birdwatching. Every now and then he traded the screen for binoculars, because he realised that every bird he sees tells him a story about the land.",
+      "b2": "At Vuelo Carmesí he leads the birding experience on the farms, monitors the birds that come to the cacao and records, with photos and data, how agroforestry management is giving them back food and shelter.",
+      "b3": "He knows that counting birds is another way of caring for the countryside."
     },
     "yeison": {
       "alt": "",
