@@ -157,7 +157,7 @@ export default async function SobreNosotrosPage({
       <section
         style={{
           backgroundColor: "var(--color-cream)",
-          padding: "clamp(64px, 8vw, 100px) 24px",
+          padding: "clamp(64px, 8vw, 100px) var(--contenido-margen)",
           overflowX: "clip",
         }}
       >
@@ -211,10 +211,10 @@ export default async function SobreNosotrosPage({
       <section
         style={{
           backgroundColor: "var(--color-brown)",
-          padding: "clamp(64px, 8vw, 100px) 24px",
+          padding: "clamp(64px, 8vw, 100px) var(--contenido-margen)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "calc(var(--contenido-ancho) - 2 * var(--contenido-margen))", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "56px" }}>
             <p
               style={{
@@ -300,10 +300,10 @@ export default async function SobreNosotrosPage({
       <section
         style={{
           backgroundColor: "var(--color-cream)",
-          padding: "clamp(64px, 8vw, 100px) 24px",
+          padding: "clamp(64px, 8vw, 100px) var(--contenido-margen)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "calc(var(--contenido-ancho) - 2 * var(--contenido-margen))", margin: "0 auto" }}>
           <div className="sobre-nosotros-grid finca-hogar-grid">
             <div
               style={{
@@ -452,12 +452,12 @@ export default async function SobreNosotrosPage({
         id="dondeestamos"
         style={{
           backgroundColor: "#FFF6E4",
-          padding: "clamp(64px, 8vw, 100px) 24px",
+          padding: "clamp(64px, 8vw, 100px) var(--contenido-margen)",
           borderTop: "1px solid rgba(135,43,19,.10)",
           scrollMarginTop: "clamp(80px, 10vw, 100px)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "calc(var(--contenido-ancho) - 2 * var(--contenido-margen))", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "48px" }}>
             <h2
               style={{
@@ -522,10 +522,10 @@ export default async function SobreNosotrosPage({
       <section
         style={{
           backgroundColor: "var(--color-brown)",
-          padding: "clamp(64px, 8vw, 100px) 24px",
+          padding: "clamp(64px, 8vw, 100px) var(--contenido-margen)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "calc(var(--contenido-ancho) - 2 * var(--contenido-margen))", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "56px" }}>
             <p
               style={{
@@ -567,14 +567,14 @@ export default async function SobreNosotrosPage({
           unos 56 px en móvil y 67 en escritorio. */}
       <section
         id="equipo"
+        className="equipo-seccion"
         style={{
           backgroundColor: "var(--color-cream)",
-          padding: "clamp(64px, 8vw, 100px) 24px",
           scrollMarginTop: "clamp(80px, 10vw, 100px)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "56px" }}>
+        <div style={{ maxWidth: "calc(var(--contenido-ancho) - 2 * var(--contenido-margen))", margin: "0 auto" }}>
+          <div className="equipo-encabezado" style={{ textAlign: "center" }}>
             <p
               style={{
                 fontFamily: "var(--font-body)",
@@ -607,10 +607,10 @@ export default async function SobreNosotrosPage({
       <section
         style={{
           backgroundColor: "var(--color-cream)",
-          padding: "0 24px clamp(64px, 8vw, 100px)",
+          padding: "0 var(--contenido-margen) clamp(64px, 8vw, 100px)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "calc(var(--contenido-ancho) - 2 * var(--contenido-margen))", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "40px" }}>
             <h2
               style={{
@@ -630,7 +630,7 @@ export default async function SobreNosotrosPage({
       <section
         style={{
           backgroundColor: "var(--color-crimson)",
-          padding: "clamp(64px, 8vw, 80px) 24px",
+          padding: "clamp(64px, 8vw, 80px) var(--contenido-margen)",
           textAlign: "center",
         }}
       >
