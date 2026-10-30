@@ -536,7 +536,8 @@
       "colegio": {
         "kicker": "School field trip",
         "titulo": "Schools",
-        "alt": "Large school group posing with the farm team in front of the bird mural",
+        "alt": "Students from Institución Educativa Los Centauros in Vistahermosa with the farm team in front of the bird mural",
+        "credito": "Institución Educativa Los Centauros · Vistahermosa",
         "punto1": "Environmental education in the field",
         "punto2": "Cacao, from the pod to the bar",
         "punto3": "Rural culture and local knowledge",
@@ -561,7 +562,8 @@
       "empresa": {
         "kicker": "Wellbeing and team building",
         "titulo": "Companies",
-        "alt": "Corporate group during their day at the farm",
+        "alt": "The Creativos 48 SAS team during their day at the farm",
+        "credito": "Creativos 48 SAS",
         "punto1": "Team building and staff wellbeing",
         "punto2": "Can be combined with birdwatching",
         "punto3": "Optional country lunch",
