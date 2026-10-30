@@ -106,9 +106,10 @@ const APARTADOS = [
  * lámina: ya tienen `/experiencias` y ahí el formulario de reserva les funciona.
  * Meterlas acá diluiría la página justo donde tiene que ser específica.
  *
- * `credito` solo lo lleva la de universidades: es un grupo real identificable
- * —Unillanos, Ingeniería Forestal— y frente a una facultad «ya trabajamos con
- * la Unillanos» pesa más que cualquier viñeta.
+ * Cada foto lleva su pie (`perfiles.<clave>.credito`): las tres son grupos
+ * reales e identificables —la I. E. Los Centauros, la Unillanos, Creativos
+ * 48— y frente a un rector, una facultad o un área de talento humano «ya
+ * trabajamos con ellos» pesa más que cualquier viñeta.
  */
 const PERFILES = [
   {
@@ -118,7 +119,6 @@ const PERFILES = [
     ancho: 1280,
     alto: 957,
     foco: 'center 40%',
-    credito: false,
   },
   {
     clave: 'universidad',
@@ -127,7 +127,6 @@ const PERFILES = [
     ancho: 1280,
     alto: 960,
     foco: 'center 45%',
-    credito: true,
   },
   {
     clave: 'empresa',
@@ -136,7 +135,6 @@ const PERFILES = [
     ancho: 1600,
     alto: 1200,
     foco: 'center center',
-    credito: false,
   },
 ] as const
 
@@ -335,7 +333,7 @@ export default async function GruposPage({
           <p className="grp-card-texto">{t('perfiles.texto')}</p>
 
           <div className="grp-perfiles">
-            {PERFILES.map(({ clave, Icono, foto, ancho, alto, foco, credito }) => (
+            {PERFILES.map(({ clave, Icono, foto, ancho, alto, foco }) => (
               <div key={clave} className="grp-perfil">
                 <div className="grp-perfil-foto">
                   {/* Medidas y no `fill`: `fill` pinta el <img> sin width/height.
@@ -348,9 +346,7 @@ export default async function GruposPage({
                     sizes="(min-width: 1100px) 340px, (min-width: 700px) 45vw, 90vw"
                     style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: foco }}
                   />
-                  {credito && (
-                    <span className="grp-perfil-credito">{t(`perfiles.${clave}.credito`)}</span>
-                  )}
+                  <span className="grp-perfil-credito">{t(`perfiles.${clave}.credito`)}</span>
                 </div>
                 <div className="grp-perfil-cuerpo">
                   <span className="grp-perfil-kicker">

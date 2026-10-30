@@ -25,7 +25,6 @@ const FOTOS = [
   { clave: 'clase', src: '/images/personas/clase-cacaotal.jpg', ancho: 2400, alto: 1106 },
   { clave: 'equipoCultivo', src: '/images/personas/equipo-cultivo.jpg', ancho: 901, alto: 769 },
   { clave: 'familia', src: '/images/personas/visitante-nino-mazorcas.jpg', ancho: 870, alto: 1279 },
-  { clave: 'grupoMural', src: '/images/personas/grupo-mural-aves.jpg', ancho: 1280, alto: 720 },
 ]
 
 /**

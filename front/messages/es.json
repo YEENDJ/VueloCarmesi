@@ -536,7 +536,8 @@
       "colegio": {
         "kicker": "Salida pedagógica",
         "titulo": "Colegios",
-        "alt": "Grupo escolar numeroso posando con el equipo de la finca frente al mural de aves",
+        "alt": "Estudiantes de la Institución Educativa Los Centauros de Vistahermosa con el equipo de la finca frente al mural de aves",
+        "credito": "Institución Educativa Los Centauros · Vistahermosa",
         "punto1": "Educación ambiental en terreno",
         "punto2": "El cacao, de la mazorca a la barra",
         "punto3": "Cultura campesina y saberes locales",
@@ -561,7 +562,8 @@
       "empresa": {
         "kicker": "Bienestar e integración",
         "titulo": "Empresas",
-        "alt": "Grupo corporativo durante su jornada en la finca",
+        "alt": "Equipo de Creativos 48 SAS durante su jornada en la finca",
+        "credito": "Creativos 48 SAS",
         "punto1": "Integración y bienestar de equipos",
         "punto2": "Combinable con avistamiento de aves",
         "punto3": "Almuerzo de campo opcional",
@@ -1191,7 +1193,6 @@
       "clase": "Grupo de estudiantes escuchando una explicación bajo los árboles de cacao",
       "equipoCultivo": "Equipo de Vuelo Carmesí y visitantes en el cultivo de cacao",
       "familia": "Una visitante y un niño mostrando mazorcas de cacao abiertas",
-      "grupoMural": "Grupo grande de visitantes frente al mural de aves de la finca",
       "vista": "La casa de la finca Vuelo Carmesí con su mural de aves y el prado de entrada"
     },
     "comoLlegar": {

@@ -1031,6 +1031,8 @@ footer :focus-visible {
 }
 
 .equipo-slide {
+  position: relative;
+  container-type: inline-size;
   flex: 0 0 100%;
   min-width: 0;
   display: flex;
@@ -1066,11 +1068,86 @@ footer :focus-visible {
   color: rgba(135, 43, 19, 0.35);
 }
 
+/* La foto ocupa lo que dejaron libre el nombre, el cargo y dos líneas de bio
+   al pasar sobre ella, así la tarjeta mide lo mismo que cuando iban debajo y
+   la foto gana alto. Se calcula con el ancho de la tarjeta (cqw, ver
+   container-type en .equipo-slide) y no con una proporción fija, para que el
+   alto coincida en cualquier ancho:
+     móvil/tablet: antes 4:3 (75cqw) + nombre 30 + cargo 34 + 2 líneas 48 ≈ 111 px
+     escritorio:   antes 3:2 (66,67cqw) + nombre 33 + cargo 28 + 1 línea 24 ≈ 85 px */
 .equipo-slide-foto {
   position: relative;
-  aspect-ratio: 4 / 3;
+  height: calc(75cqw + 111px);
   background-color: #f0d6a8;
   overflow: hidden;
+}
+
+/* Nombre y cargo sobre la foto. El degradado va de casi opaco abajo a nada
+   arriba: el texto se lee igual sobre el letrero rojo de Cristian que sobre el
+   follaje, y la cara queda limpia. */
+.equipo-slide-rotulo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 56px 20px 14px;
+  background: linear-gradient(to top, rgba(43, 12, 5, 0.88) 0%, rgba(43, 12, 5, 0.55) 45%, rgba(43, 12, 5, 0) 100%);
+  pointer-events: none;
+}
+.equipo-slide-nombre {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 24px);
+  color: var(--color-cream);
+  line-height: 1.2;
+  margin-bottom: 2px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+.equipo-slide-cargo {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--color-amber);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+.equipo-slide-foto img {
+  transition: transform 0.6s ease;
+}
+
+/* Toda la tarjeta abre la bio: el ::after del botón se estira sobre ella. */
+.equipo-ver-mas::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.equipo-slide:has(.equipo-ver-mas:focus-visible) {
+  outline: 3px solid var(--color-orange);
+  outline-offset: -3px;
+}
+.equipo-ver-mas:focus-visible {
+  outline: none;
+}
+.equipo-slide {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+@media (hover: hover) {
+  .equipo-slide:hover {
+    box-shadow: 0 8px 22px rgba(135, 43, 19, 0.16);
+  }
+  .equipo-slide:hover .equipo-slide-foto img {
+    transform: scale(1.03);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .equipo-slide,
+  .equipo-slide-foto img {
+    transition: none;
+  }
+  .equipo-slide:hover .equipo-slide-foto img {
+    transform: none;
+  }
 }
 
 .equipo-controles {
@@ -1150,14 +1227,6 @@ footer :focus-visible {
   padding: 24px;
 }
 
-.equipo-nombre {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.2vw, 24px);
-  color: var(--color-crimson);
-  line-height: 1.2;
-  margin-bottom: 6px;
-}
-
 .equipo-cargo {
   font-family: var(--font-body);
   font-weight: 700;
@@ -1178,8 +1247,8 @@ footer :focus-visible {
   line-height: 1.7;
   opacity: 0.85;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   margin-bottom: 16px;
@@ -1366,29 +1435,15 @@ footer :focus-visible {
     margin-bottom: 40px;
   }
   .equipo-slide-foto {
-    aspect-ratio: 3 / 2;
+    height: calc(66.667cqw + 85px);
   }
   .equipo-slide-cuerpo {
     padding: 20px;
-  }
-  .equipo-nombre {
-    margin-bottom: 4px;
-  }
-  /* Una línea siempre: las tarjetas se estiran al alto de la más alta —también
-     las que están fuera de la vista—, y un cargo largo partido en dos
-     («Tecnólogo en Gestión de Recursos Naturales») dejaba ese sobrante como
-     hueco entre la descripción y «Ver más» en todas. */
-  .equipo-cargo {
-    font-size: 12px;
-    letter-spacing: 0;
-    margin-bottom: 10px;
   }
   .equipo-slide-cuerpo {
     padding-bottom: 14px;
   }
   .equipo-bio-corta {
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
     margin-bottom: 4px;
   }
   .equipo-ver-mas {
