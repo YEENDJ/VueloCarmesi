@@ -31,7 +31,7 @@ const EQUIPO: Miembro[] = [
   { nombre: 'Jonathan Rincón', clave: 'jonathan', cargo: 'agroforestal',
     foto: '/images/personas/jonathan-rincon-cacao.jpg', foco: 'center 30%', parrafos: 3 },
   { nombre: 'Daniel Ramírez', clave: 'daniel', cargo: 'guiaAves',
-    foto: '/images/personas/daniel-ramirez-aves.jpg', foco: 'center 5%', parrafos: 3 },
+    foto: '/images/personas/daniel-ramirez-aves.jpg', foco: 'center 0%', parrafos: 3 },
   { nombre: 'Yeison Enciso', clave: 'yeison', cargo: 'desarrollador', parrafos: 2 },
 ]
 
@@ -140,11 +140,18 @@ export default function EquipoCarrusel() {
               ) : (
                 <span className="equipo-foto-pendiente">{tg('fotoPendiente', { nombre: m.nombre })}</span>
               )}
+              {/* Nombre y cargo sobre la foto, con un degradado debajo para que
+                  se lean en cualquier foto (globals.css, .equipo-slide-rotulo). */}
+              <div className="equipo-slide-rotulo">
+                <h3 className="equipo-slide-nombre">{m.nombre}</h3>
+                <p className="equipo-slide-cargo">{t(m.cargo)}</p>
+              </div>
             </div>
             <div className="equipo-slide-cuerpo">
-              <h3 className="equipo-nombre">{m.nombre}</h3>
-              <p className="equipo-cargo">{t(m.cargo)}</p>
               <p className="equipo-bio-corta">{t(`${m.clave}.b1`)}</p>
+              {/* El botón cubre la tarjeta entera con su ::after: toda la
+                  tarjeta abre la bio, y para el teclado y el lector de
+                  pantalla sigue siendo un solo control. */}
               <button
                 type="button"
                 className="equipo-ver-mas"
