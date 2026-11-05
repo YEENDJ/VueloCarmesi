@@ -24,7 +24,7 @@ export default function Diferenciales() {
   return (
     <section
       style={{
-        backgroundColor: '#FFF6E4',
+        backgroundColor: 'var(--color-cream)',
         paddingBlock: 'clamp(48px, 8vw, 80px)',
       }}
     >
@@ -37,7 +37,8 @@ export default function Diferenciales() {
               fontSize: '13px',
               letterSpacing: '3px',
               textTransform: 'uppercase',
-              color: 'var(--color-orange)',
+              // El naranja da 3,26:1 sobre este fondo; a 13px WCAG AA pide 4,5:1.
+              color: 'var(--color-brown)',
               marginBottom: '16px',
             }}
           >

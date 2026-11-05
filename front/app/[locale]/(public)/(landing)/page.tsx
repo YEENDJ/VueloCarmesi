@@ -90,10 +90,8 @@ export default async function HomePage({
         imagen={config.hero_image || undefined}
       />
 
-      <Diferenciales />
-
       {preview.length > 0 && (
-        <section style={{ paddingBlock: 'clamp(3rem, 8vw, 5rem)' }}>
+        <section style={{ backgroundColor: '#FFF6E4', paddingBlock: 'clamp(3rem, 8vw, 5rem)' }}>
           <div className="contenido">
           <h2 style={{ textAlign: 'center', fontSize: 'var(--fs-h2)', marginBottom: '3rem', color: 'var(--color-brown)' }}>
             {t('experiencias')}
@@ -114,6 +112,8 @@ export default async function HomePage({
           </div>
         </section>
       )}
+
+      <Diferenciales />
 
       <SobreNosotros imagen={config.about_image || undefined} />
 
