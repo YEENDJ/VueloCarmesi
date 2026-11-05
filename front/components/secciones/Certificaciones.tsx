@@ -26,7 +26,8 @@ export default function Certificaciones() {
               fontSize: '13px',
               letterSpacing: '3px',
               textTransform: 'uppercase',
-              color: 'var(--color-orange)',
+              // El naranja da 2,98:1 sobre crema; a 13px WCAG AA pide 4,5:1.
+              color: 'var(--color-brown)',
               marginBottom: '16px',
             }}
           >
@@ -48,7 +49,7 @@ export default function Certificaciones() {
               fontFamily: 'var(--font-body)',
               fontWeight: 700,
               fontSize: 'clamp(16px, 1.6vw, 18px)',
-              color: 'rgba(135,43,19,.7)',
+              color: 'rgba(135,43,19,.85)',
               lineHeight: 1.7,
               maxWidth: '560px',
               margin: '0 auto',
@@ -104,7 +105,7 @@ export default function Certificaciones() {
                   fontSize: '12px',
                   letterSpacing: '.5px',
                   textTransform: 'uppercase',
-                  color: 'var(--color-orange)',
+                  color: 'var(--color-brown)',
                   margin: '6px 0 12px',
                 }}
               >
@@ -128,7 +129,7 @@ export default function Certificaciones() {
                   fontWeight: 700,
                   fontSize: '13px',
                   lineHeight: 1.5,
-                  color: 'rgba(135,43,19,.7)',
+                  color: 'rgba(135,43,19,.85)',
                 }}
               >
                 {ta(`${cert.clave}.detalle`)}
