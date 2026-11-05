@@ -82,9 +82,9 @@ const AREA_ATENDIDA = [
 /**
  * Los perfiles que confirman que la cuenta es nuestra.
  *
- * Se descartan los vacíos: `google` está pendiente de que el negocio pase la
- * URL de su ficha, y un enlace inventado en `sameAs` es una afirmación falsa
- * sobre la identidad, no un campo incompleto.
+ * Se descartan los vacíos: un perfil sin URL se queda fuera, porque un enlace
+ * inventado en `sameAs` es una afirmación falsa sobre la identidad, no un campo
+ * incompleto.
  */
 const perfiles = () =>
   [REDES.instagram, REDES.facebook, REDES.tiktok, REDES.google].filter(Boolean)
@@ -135,6 +135,7 @@ export function grafoDelSitio({
         '@type': ['Organization', 'LocalBusiness'],
         '@id': ID_NEGOCIO,
         name: nombre,
+        alternateName: CONTACTO.nombresAlternos,
         description: descripcion,
         url: SITIO,
         logo: {

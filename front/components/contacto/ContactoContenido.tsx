@@ -17,6 +17,7 @@ import {
   IconoInstagram,
   IconoFacebook,
   IconoTiktok,
+  IconoGoogle,
 } from "@/components/ui/IconosRedes";
 import { CONTACTO, REDES, whatsappCon } from "@/lib/contacto";
 import AvisoGrupos from "@/components/grupos/AvisoGrupos";
@@ -41,6 +42,7 @@ const RED_LINKS = [
     icono: <IconoFacebook size={26} />,
   },
   { label: "TikTok", href: REDES.tiktok, icono: <IconoTiktok size={26} /> },
+  { label: "Google", href: REDES.google, icono: <IconoGoogle size={26} /> },
 ];
 
 /**
