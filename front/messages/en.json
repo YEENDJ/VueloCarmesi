@@ -104,8 +104,7 @@
     "texto": "We are an agroecological project devoted to growing and transforming cacao, where we champion practices that respect the land and turn every harvest into an experience that connects people to it. Every visit is a flight for the senses: the aroma of cacao mid-transformation, the sound of the farm at dawn, and the taste of chocolate made in the very place the cacao grows.",
     "cta": "Learn more",
     "fotoAlt": "Vuelo Carmesí agroecological farm",
-    "fotoPlaceholder": "PHOTO · AGROECOLOGICAL FARM",
-    "texto2": "Every visit is a flight for the senses: the smell of ripe cacao, the sound of the farm at dawn, and the taste of chocolate made exactly where the cacao grew."
+    "fotoPlaceholder": "PHOTO · AGROECOLOGICAL FARM"
   },
   "certificaciones": {
     "kicker": "Accreditations",
@@ -123,6 +122,7 @@
     "deslizaTira": "Swipe the strip and tap a photo to enlarge it",
     "tocaFoto": "Tap a photo to enlarge it",
     "masFotos": "{n, plural, one {# more} other {# more}}",
+    "tituloFicha": "{nombre} in Cubarral, Colombia",
     "laExperiencia": "The experience",
     "reservaTuCupo": "Book your place",
     "incluidoEnTuCupo": "Included in your booking",
@@ -309,7 +309,7 @@
       "whatsapp": "Message us on WhatsApp"
     },
     "meta": {
-      "titulo": "Birding in Cubarral, Meta · 180 species recorded",
+      "titulo": "Birding in Cubarral, Colombia: 180 species",
       "descripcion": "Birdwatching in the Llanos foothills: 180 species at a public eBird hotspot, between 600 and 850 m above sea level, among shade-grown cacao and wildlife corridors. Guided walks 5:30 to 8:00 a.m.",
       "ogAlt": "Chestnut-eared Aracari (Pteroglossus castanotis) perched on a branch at the farm"
     },
@@ -459,7 +459,7 @@
     "todos": "All"
   },
   "contacto": {
-    "metaTitulo": "Contact",
+    "metaTitulo": "Contact and directions to the farm in Cubarral",
     "metaDescripcion": "Message us on WhatsApp, or reach us by phone or email. Vuelo Carmesí farm, Cubarral, Meta, Colombia: bookings, group visits and how to get here.",
     "h1": "Contact Vuelo Carmesí and how to get to the farm in Cubarral, Meta",
     "escribenos": "Send us a message",
@@ -494,7 +494,7 @@
   },
   "grupos": {
     "meta": {
-      "titulo": "Group visits: schools, universities and companies",
+      "titulo": "School and corporate visits in Meta, Colombia",
       "descripcion": "School field trips and corporate days at a cacao farm in Cubarral, Meta. Large groups welcome, bus access, insurance included and institutional invoicing.",
       "ogAlt": "Large group of visitors with the Vuelo Carmesí team in front of the bird mural"
     },
@@ -1139,7 +1139,7 @@
     }
   },
   "nosotros": {
-    "metaTitulo": "About us",
+    "metaTitulo": "Our story: 40 years of cacao in Cubarral",
     "metaDescripcion": "The story of Vuelo Carmesí: 40 years of cacao in Cubarral, Meta, and the shift from a traditional crop to an agroecological farm open to visitors.",
     "metaOgAlt": "The team at Finca Agroturística Vuelo Carmesí in Cubarral, Meta",
     "secciones": {
@@ -1277,16 +1277,17 @@
     "verMas": "Read more",
     "anterior": "See previous team members",
     "siguiente": "See next team members",
-    "cofundador": "Co-founder",
-    "cofundadora": "Co-founder",
-    "desarrollador": "Web Developer",
-    "agropecuaria": "Agricultural Production Graduate",
-    "agroforestal": "Natural Resource Management Technologist",
+    "cofundadorGuiaAves": "Co-founder · Birdwatching Guide",
+    "cofundadoraLegal": "Co-founder · Legal Representative",
+    "cofundadorOperativo": "Co-founder · Operations Support",
+    "cofundadoraOperativo": "Co-founder · Operations Support",
+    "guiaCacao": "Cacao Growing Guide",
     "guiaAves": "Birdwatching Guide",
+    "guiaInterprete": "English-Speaking Guide",
     "cristian": {
       "alt": "Cristian Enciso with binoculars during a birding outing",
       "b1": "Professional Tourism Guide with 14 years of experience in nature tourism, specialised in birdwatching. Environmental Manager and specialist in Agroecology and Agro-ecotourism Development.",
-      "b2": "As operations and commercial coordinator, he leads the planning and delivery of the tourism experiences, as well as the commercial development of Vuelo Carmesí.",
+      "b2": "As sales and marketing manager, he leads the commercial development of Vuelo Carmesí and the planning of its tourism experiences.",
       "b3": "His experience in tourism, conservation and rural development shapes experiences that connect nature, cacao and country life with responsible, sustainable tourism."
     },
     "maria": {
@@ -1327,10 +1328,10 @@
       "b2": "At Vuelo Carmesí he leads the birding experience on the farms, monitors the birds that come to the cacao and records, with photos and data, how agroforestry management is giving them back food and shelter.",
       "b3": "He knows that counting birds is another way of caring for the countryside."
     },
-    "yeison": {
+    "gabriela": {
       "alt": "",
-      "b1": "He develops and maintains the Vuelo Carmesí website, handling its implementation, updates and technical evolution. He makes adjustments and improvements to the interface, structure and functionality of the site, as well as fixing bugs and keeping it running smoothly.",
-      "b2": "He is also responsible for adding new requirements and carrying out the updates needed to keep the site functional, stable and suited to the project's needs."
+      "b1": "Professional tourism guide who leads the chocolate tasting experience and supports the guided tours of the cacao plantation and the birdwatching activities.",
+      "b2": "Her experience as a bilingual guide strengthens the care and support given to international visitors, creating authentic experiences that connect them with nature, cacao culture and country life while promoting responsible, sustainable tourism."
     },
     "irAlGrupo": "Go to group {n}"
   },
@@ -1369,14 +1370,14 @@
       "etiqueta": "A new path",
       "titulo": "The experience that found its place",
       "t1": "Cristian, one of the founders, had worked in tourism since 2012, mainly in adventure tourism. After the pandemic, that experience found a new path: bringing tourism to the farm and turning the countryside, the cacao and the nature around us into a close, genuine, family experience.",
-      "alt": "Cristian and the team in the cacao grove"
+      "alt": ""
     },
     "idea": {
       "anyo": "The project",
       "etiqueta": "The idea takes shape",
       "titulo": "A simple idea is born",
       "t1": "That is how the idea came about: a tourism project that would show what the countryside has to offer, bring visitors closer to rural tradition, and tell the story of cacao from the crop through to its artisanal transformation.",
-      "alt": "The family behind the project"
+      "alt": "Cristian and the team in the cacao grove"
     },
     "apertura": {
       "anyo": "2021",
@@ -1391,7 +1392,7 @@
       "titulo": "A story open to the world",
       "t1": "Since then we have been building something that brings together cacao, agroecology, nature, rural culture and tourism, without losing sight of what gave rise to it all: the land and our family's work.",
       "t2": "Vuelo Carmesí was not born from the idea of creating a tourist experience. It was born from a story that already existed, and that we decided to open up to the world. Today we want everyone who visits to get to know that story, to walk it, to feel it, and to take a small piece of country life away with them.",
-      "alt": ""
+      "alt": "Birdwatchers at the farm"
     }
   },
   "portada": {
@@ -1402,12 +1403,12 @@
     },
     "heroTitulo": "Agroecological experiences\nwith the taste of cacao.",
     "heroSubtitulo": "We harvest, ferment and taste alongside you. Get to know cacao from its roots, on a farm full of life and tradition.",
-    "heroCta": "Book your experience",
+    "heroCta": "Choose your experience",
     "heroPlaceholder": "PHOTO · OPEN CACAO POD",
     "experiencias": "Our Experiences",
     "verTodas": "See all experiences",
     "ctaTitulo": "Ready to live the experience?",
-    "ctaBoton": "Book now"
+    "ctaBoton": "Choose your experience"
   },
   "avales": {
     "legal": "RNT No. 179868 · Composite trademark registered with SIC, Nice Class 39",

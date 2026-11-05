@@ -104,8 +104,7 @@
     "texto": "Somos un proyecto agroecológico dedicado al cultivo y transformación del cacao, donde promovemos prácticas responsables con el entorno y convertimos cada cosecha en una experiencia que conecta a las personas con la tierra. Cada visita es un vuelo a los sentidos: el aroma del cacao en proceso de transformación, el sonido de la finca al amanecer y el sabor de un chocolate elaborado en el mismo lugar donde nace el cacao.",
     "cta": "Conoce más",
     "fotoAlt": "Finca agroecológica Vuelo Carmesí",
-    "fotoPlaceholder": "FOTO · FINCA AGROECOLÓGICA",
-    "texto2": "Cada visita es un vuelo a los sentidos: el olor del cacao maduro, el sonido de la finca al amanecer y el sabor de un chocolate hecho exactamente donde nació el cacao."
+    "fotoPlaceholder": "FOTO · FINCA AGROECOLÓGICA"
   },
   "certificaciones": {
     "kicker": "Avales y certificaciones",
@@ -123,6 +122,7 @@
     "deslizaTira": "Desliza la tira y toca una foto para verla en grande",
     "tocaFoto": "Toca una foto para verla en grande",
     "masFotos": "{n, plural, one {# cosa más} other {# cosas más}}",
+    "tituloFicha": "{nombre} en Cubarral, Meta",
     "laExperiencia": "La experiencia",
     "reservaTuCupo": "Reserva tu cupo",
     "incluidoEnTuCupo": "Incluido en tu cupo",
@@ -309,7 +309,7 @@
       "whatsapp": "Escribir por WhatsApp"
     },
     "meta": {
-      "titulo": "Aviturismo en Cubarral, Meta · 180 especies registradas",
+      "titulo": "Aviturismo en Cubarral, Meta: 180 especies",
       "descripcion": "Birdwatching en el piedemonte llanero: 180 especies en un hotspot público de eBird, entre 600 y 850 m s. n. m., con cacao en sombrío y corredores biológicos. Salidas guiadas de 5:30 a 8:00 a. m.",
       "ogAlt": "Pichí de collar (Pteroglossus castanotis) posado en una rama en la finca"
     },
@@ -459,7 +459,7 @@
     "todos": "Todos"
   },
   "contacto": {
-    "metaTitulo": "Contacto",
+    "metaTitulo": "Contacto y cómo llegar a la finca en Cubarral",
     "metaDescripcion": "Escríbenos por WhatsApp, teléfono o correo. Finca Vuelo Carmesí, vereda Brisas del Tonoa, Cubarral (Meta): reservas, visitas de grupo y cómo llegar.",
     "h1": "Contacto y cómo llegar a Vuelo Carmesí, Cubarral (Meta)",
     "escribenos": "Escríbenos un mensaje",
@@ -494,7 +494,7 @@
   },
   "grupos": {
     "meta": {
-      "titulo": "Grupos: colegios, universidades y empresas",
+      "titulo": "Salidas pedagógicas y corporativas en el Meta",
       "descripcion": "Salidas pedagógicas y jornadas corporativas en finca de cacao en Cubarral, Meta. Capacidad para grupos grandes, entra bus, póliza incluida y facturación institucional.",
       "ogAlt": "Grupo numeroso de visitantes con el equipo de Vuelo Carmesí frente al mural de aves"
     },
@@ -1139,7 +1139,7 @@
     }
   },
   "nosotros": {
-    "metaTitulo": "Sobre nosotros",
+    "metaTitulo": "Nuestra historia: 40 años de cacao en Cubarral",
     "metaDescripcion": "La historia de Vuelo Carmesí: 40 años de cacao en Cubarral, Meta, y el paso de un cultivo tradicional a una finca agroecológica abierta a visitantes.",
     "metaOgAlt": "El equipo en la Finca Agroturística Vuelo Carmesí, en Cubarral (Meta)",
     "secciones": {
@@ -1277,16 +1277,17 @@
     "verMas": "Ver más",
     "anterior": "Ver equipo anterior",
     "siguiente": "Ver equipo siguiente",
-    "cofundador": "Cofundador",
-    "cofundadora": "Cofundadora",
-    "desarrollador": "Desarrollador Web",
-    "agropecuaria": "Licenciada en Producción Agropecuaria",
-    "agroforestal": "Tecnólogo en Gestión de Recursos Naturales",
+    "cofundadorGuiaAves": "Cofundador · Guía de aviturismo",
+    "cofundadoraLegal": "Cofundadora · Representante legal",
+    "cofundadorOperativo": "Cofundador · Apoyo operativo",
+    "cofundadoraOperativo": "Cofundadora · Apoyo operativo",
+    "guiaCacao": "Guía del cultivo de cacao",
     "guiaAves": "Guía de aviturismo",
+    "guiaInterprete": "Guía intérprete de inglés",
     "cristian": {
       "alt": "Cristian Enciso con binoculares durante una salida de avistamiento de aves",
       "b1": "Guía Profesional de Turismo con 14 años de experiencia en turismo de naturaleza y especializado en avistamiento de aves. Administrador Ambiental y especialista en Agroecología y Desarrollo Agroecoturístico.",
-      "b2": "Como coordinador operativo y comercial, lidera la planificación y articulación de las experiencias turísticas, así como el desarrollo comercial de Vuelo Carmesí.",
+      "b2": "Como gerente comercial y de marketing, lidera el desarrollo comercial de Vuelo Carmesí y la planificación de las experiencias turísticas.",
       "b3": "Su experiencia en turismo, conservación y desarrollo rural aporta a la construcción de experiencias que conectan la naturaleza, el cacao y la vida campesina con un turismo responsable y sostenible."
     },
     "maria": {
@@ -1327,10 +1328,10 @@
       "b2": "En Vuelo Carmesí guía la experiencia de pajarear en las fincas, monitorea las aves que llegan al cacao y registra con fotos y datos cómo el manejo agroforestal les está devolviendo hogar y alimento.",
       "b3": "Sabe que contar aves es otra forma de cuidar el campo."
     },
-    "yeison": {
+    "gabriela": {
       "alt": "",
-      "b1": "Desarrolla y mantiene el sitio web de Vuelo Carmesí, encargándose de su implementación, actualización y evolución técnica. Realiza ajustes y mejoras en la interfaz, estructura y funcionalidades del sitio, además de solucionar errores y mantenerlo en óptimas condiciones de funcionamiento.",
-      "b2": "También se encarga de incorporar nuevos requerimientos y realizar las actualizaciones necesarias para garantizar una experiencia web funcional, estable y adecuada a las necesidades del proyecto."
+      "b1": "Guía profesional de turismo, responsable de la experiencia de cata de chocolate y apoyo en las guianzas por el cultivo de cacao y las actividades de observación de aves.",
+      "b2": "Su experiencia como guía bilingüe fortalece la atención y el acompañamiento de turistas extranjeros, creando experiencias auténticas que conectan a los visitantes con la naturaleza, la cultura del cacao y la vida campesina, promoviendo un turismo responsable y sostenible."
     },
     "irAlGrupo": "Ir al grupo {n}"
   },
@@ -1369,14 +1370,14 @@
       "etiqueta": "Un nuevo camino",
       "titulo": "La experiencia que encontró su lugar",
       "t1": "Cristian, uno de los fundadores, ya tenía experiencia en turismo desde 2012, principalmente en el turismo de aventura. Después de la pandemia, esa experiencia encontró un nuevo camino: llevar el turismo a la finca y convertir el campo, el cacao y la naturaleza en una experiencia cercana, auténtica y familiar.",
-      "alt": "Cristian y el equipo en el cultivo de cacao"
+      "alt": ""
     },
     "idea": {
       "anyo": "El proyecto",
       "etiqueta": "La idea que tomó forma",
       "titulo": "Nace una idea sencilla",
       "t1": "Así nació la idea de crear un proyecto turístico que permitiera mostrar las bondades del campo, acercar a los visitantes a la tradición campesina y contar la historia del cacao desde su cultivo hasta su transformación artesanal.",
-      "alt": "La familia que dio origen al proyecto"
+      "alt": "Cristian y el equipo en el cultivo de cacao"
     },
     "apertura": {
       "anyo": "2021",
@@ -1391,7 +1392,7 @@
       "titulo": "Una historia abierta al mundo",
       "t1": "Desde entonces, hemos ido construyendo una propuesta que une cacao, agroecología, naturaleza, cultura campesina y turismo, sin dejar de lado aquello que nos dio origen: la tierra y el trabajo de nuestra familia.",
       "t2": "Vuelo Carmesí no nació de la idea de crear una experiencia turística. Nació de una historia que ya existía y que decidimos abrirle las puertas al mundo. Hoy queremos que cada persona que nos visita pueda conocer esa historia, caminarla, sentirla y llevarse consigo un pedacito de la vida del campo.",
-      "alt": ""
+      "alt": "Observadores de aves en la finca"
     }
   },
   "portada": {
@@ -1402,12 +1403,12 @@
     },
     "heroTitulo": "Experiencias agroecológicas\ncon sabor a cacao.",
     "heroSubtitulo": "Cosechamos, fermentamos y degustamos junto a ti. Conoce el cacao desde su raíz, en una finca llena de vida y tradición.",
-    "heroCta": "Reserva tu experiencia",
+    "heroCta": "Elige tu experiencia",
     "heroPlaceholder": "FOTO · MAZORCA ABIERTA",
     "experiencias": "Nuestras Experiencias",
     "verTodas": "Ver todas las experiencias",
     "ctaTitulo": "¿Listo para vivir la experiencia?",
-    "ctaBoton": "Reservar ahora"
+    "ctaBoton": "Elige tu experiencia"
   },
   "avales": {
     "legal": "RNT No. 179868 · Marca mixta registrada ante la SIC, clase 39 de Niza",

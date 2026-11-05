@@ -18,21 +18,21 @@ interface Miembro {
 
 // Los nombres propios no se traducen; todo lo demás sale del catálogo.
 const EQUIPO: Miembro[] = [
-  { nombre: 'Cristian Enciso', clave: 'cristian', cargo: 'cofundador',
+  { nombre: 'Cristian Enciso', clave: 'cristian', cargo: 'cofundadorGuiaAves',
     foto: '/images/personas/cristian-enciso-telescopio.jpg', foco: 'center 30%', parrafos: 3 },
-  { nombre: 'María Umaña', clave: 'maria', cargo: 'cofundadora',
+  { nombre: 'María Umaña', clave: 'maria', cargo: 'cofundadoraLegal',
     foto: '/images/personas/maria-umana.jpg', foco: 'center 28%', parrafos: 2 },
-  { nombre: 'Orlando Enciso', clave: 'orlando', cargo: 'cofundador',
+  { nombre: 'Orlando Enciso', clave: 'orlando', cargo: 'cofundadorOperativo',
     foto: '/images/personas/orlando-enciso-cacao.jpg', foco: 'center 35%', parrafos: 4 },
-  { nombre: 'Yuri Enciso', clave: 'yuri', cargo: 'cofundadora',
+  { nombre: 'Yuri Enciso', clave: 'yuri', cargo: 'cofundadoraOperativo',
     foto: '/images/personas/yuri-enciso-cacao.jpg', foco: 'center 30%', parrafos: 4 },
-  { nombre: 'Damaris Escobar Castillo', clave: 'damaris', cargo: 'agropecuaria',
+  { nombre: 'Damaris Escobar Castillo', clave: 'damaris', cargo: 'guiaCacao',
     foto: '/images/personas/damaris-escobar-cacao.jpg', foco: 'center 0%', parrafos: 4 },
-  { nombre: 'Jonathan Rincón', clave: 'jonathan', cargo: 'agroforestal',
+  { nombre: 'Jonathan Rincón', clave: 'jonathan', cargo: 'guiaCacao',
     foto: '/images/personas/jonathan-rincon-cacao.jpg', foco: 'center 30%', parrafos: 3 },
   { nombre: 'Daniel Ramírez', clave: 'daniel', cargo: 'guiaAves',
     foto: '/images/personas/daniel-ramirez-aves.jpg', foco: 'center 0%', parrafos: 3 },
-  { nombre: 'Yeison Enciso', clave: 'yeison', cargo: 'desarrollador', parrafos: 2 },
+  { nombre: 'Gabriela Romero', clave: 'gabriela', cargo: 'guiaInterprete', parrafos: 2 },
 ]
 
 const GAP = 24

@@ -103,27 +103,10 @@ export default function SobreNosotros({ imagen }: Props) {
                 fontSize: 'clamp(16px, 1.6vw, 18px)',
                 color: 'rgba(255,234,202,.85)',
                 lineHeight: 1.7,
-                marginBottom: '16px',
-              }}
-            >
-              {t('texto')}
-            </p>
-
-            <p
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontWeight: 700,
-                fontSize: 'clamp(16px, 1.6vw, 18px)',
-                color: 'rgba(255,234,202,.85)',
-                lineHeight: 1.7,
                 marginBottom: '32px',
               }}
             >
-              {/* OJO: este párrafo repite la idea con la que ya cierra
-                  t('texto') —«Cada visita es un vuelo a los sentidos…»—.
-                  Se migró tal cual para no cambiar el copy por cuenta
-                  propia, pero probablemente sobre uno de los dos. */}
-              {t('texto2')}
+              {t('texto')}
             </p>
 
             {/* CTA ghost */}
