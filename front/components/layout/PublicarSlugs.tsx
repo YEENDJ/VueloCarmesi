@@ -13,10 +13,15 @@ import { publicarSlugs } from '@/lib/i18n/slugs-store'
  *
  * Se limpia al desmontar para que el selector no siga ofreciendo el slug de una
  * ficha que el visitante ya abandonó.
+ *
+ * Sin `slugs` se publica un objeto vacío y no null: null significa «aún no se
+ * sabe» y el selector se quedaría sin enlace en esta ficha para siempre.
  */
+const SIN_SLUGS: Record<string, string> = {}
+
 export default function PublicarSlugs({ slugs }: { slugs?: Record<string, string> }) {
   useEffect(() => {
-    publicarSlugs(slugs ?? null)
+    publicarSlugs(slugs ?? SIN_SLUGS)
     return () => publicarSlugs(null)
   }, [slugs])
 

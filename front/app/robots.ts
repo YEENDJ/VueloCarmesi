@@ -21,6 +21,10 @@ import { SITIO } from '@/lib/sitio'
  * fuera puede entrar al índice igual, sin descripción. Por eso /admin lleva
  * además `robots: { index: false }` en su layout, y por eso conviene que
  * carrito y checkout lo lleven también.
+ *
+ * /reservar/ y /en/book/ no están en la lista a propósito: sus páginas llevan
+ * `robots: { index: false }`, y Google solo puede leer ese noindex si puede
+ * rastrearlas. Bloquearlas aquí dejaría sus URLs en el índice, sin descripción.
  */
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -34,12 +38,10 @@ export default function robots(): MetadataRoute.Robots {
         '/checkout',
         '/mi-pedido',
         '/mi-reserva',
-        '/reservar/',
         '/en/cart',
         '/en/checkout',
         '/en/my-order',
         '/en/my-booking',
-        '/en/book/',
       ],
     },
     sitemap: `${SITIO}/sitemap.xml`,

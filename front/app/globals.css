@@ -770,7 +770,10 @@ footer :focus-visible {
 }
 
 .btn-ghost-cream {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   padding: 8px 22px;
   border-radius: 8px;
   border: 1.5px solid var(--color-cream);
@@ -803,6 +806,13 @@ footer :focus-visible {
   /* Recorta el destello a la silueta del botón */
   overflow: hidden;
   transition: transform 200ms ease, box-shadow 200ms ease, filter 200ms ease;
+}
+
+/* 44px táctiles en la tarjeta de experiencia. Con line-height y no con
+   min-height: Button es inline-block y su padding va inline, así que un
+   min-height dejaría el texto arriba en vez de centrado. */
+.experiencias-grid .btn-card {
+  line-height: 24px;
 }
 
 .btn-card:hover,

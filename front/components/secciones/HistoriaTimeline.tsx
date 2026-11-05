@@ -10,6 +10,8 @@ interface Bloque {
   icono: string
   /** Cuántos párrafos tiene: t1, t2, … en el catálogo. */
   parrafos: number
+  /** Encuadre de la foto dentro del marco, si el centro le corta lo importante. */
+  posicion?: string
 }
 
 // La foto y el icono no son idioma; el resto sale del catálogo.
@@ -18,10 +20,12 @@ const HISTORIA: Bloque[] = [
   { clave: 'tecnificacion', imagen: '/images/cacao/cacaotal-mazorcas-rojas.jpg', icono: '🔧', parrafos: 1 },
   { clave: 'aprendizaje', imagen: '/images/aves/tangara-azul.jpg', icono: '🦜', parrafos: 1 },
   { clave: 'pausa', imagen: '/images/personas/recorrido-cacaotal-pandemia.jpg', icono: '🕰️', parrafos: 1 },
-  { clave: 'camino', imagen: '/images/personas/equipo-cacao.jpg', icono: '🥾', parrafos: 1 },
-  { clave: 'idea', imagen: '/images/personas/familia.jpg', icono: '💡', parrafos: 1 },
+  { clave: 'camino', imagen: '', icono: '🥾', parrafos: 1 },
+  { clave: 'idea', imagen: '/images/personas/equipo-cacao.jpg', icono: '💡', parrafos: 1 },
   { clave: 'apertura', imagen: '/images/personas/grupo-mural.jpg', icono: '🚪', parrafos: 1 },
-  { clave: 'hoy', imagen: '', icono: '❤️', parrafos: 2 },
+  // Subida respecto al centro para que el marco apaisado no le corte el título
+  // al letrero «Aves & Cacao» que hay detrás del grupo.
+  { clave: 'hoy', imagen: '/images/personas/observadores-aves-finca.jpg', icono: '❤️', parrafos: 2, posicion: 'center 30%' },
 ]
 
 function BloqueImagen({ bloque }: { bloque: Bloque }) {
@@ -53,7 +57,7 @@ function BloqueImagen({ bloque }: { bloque: Bloque }) {
           inset: 0,
           backgroundImage: `url(${bloque.imagen})`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: bloque.posicion ?? 'center',
         }}
       />
       <div

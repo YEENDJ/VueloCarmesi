@@ -28,11 +28,19 @@ export const ETIQUETA_IDIOMA: Record<Idioma, string> = {
  * busca: /birding y no /birdwatching-tourism, /book y no /reserve. La URL es
  * una señal de posicionamiento y el término del gremio gana al término del
  * diccionario.
+ *
+ * `alternateLinks: false` apaga la cabecera HTTP `Link` con hreflang que next-intl
+ * añade por su cuenta. El middleware solo conoce la plantilla de la ruta, no la
+ * base de datos: traduce /experiencias a /experiences pero repite el slug, así
+ * que en una ficha declaraba /en/experiences/experiencia-cacaotera, que redirige,
+ * y contradecía al HTML. El hreflang sale de alternatesDeIdioma() y del sitemap,
+ * que sí conocen el slug de cada idioma.
  */
 export const routing = defineRouting({
   locales: IDIOMAS,
   defaultLocale: IDIOMA_POR_DEFECTO,
   localePrefix: 'as-needed',
+  alternateLinks: false,
   pathnames: {
     '/': '/',
 

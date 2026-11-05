@@ -3,7 +3,7 @@ import { useTranslations } from 'next-intl'
 import { Link } from '@/lib/i18n/navigation'
 import TiraConfianza from '@/components/layout/TiraConfianza'
 import IconoWhatsapp from '@/components/ui/IconoWhatsapp'
-import { IconoInstagram, IconoFacebook, IconoTiktok } from '@/components/ui/IconosRedes'
+import { IconoInstagram, IconoFacebook, IconoTiktok, IconoGoogle } from '@/components/ui/IconosRedes'
 import { CONTACTO, REDES, whatsappCon } from '@/lib/contacto'
 
 // Crédito de desarrollo mostrado en la barra legal del footer
@@ -22,6 +22,7 @@ export default function Footer() {
     { label: 'Facebook', href: REDES.facebook, icon: <IconoFacebook /> },
     { label: 'WhatsApp', href: whatsappCon(tw('general')), icon: <IconoWhatsapp /> },
     { label: 'TikTok', href: REDES.tiktok, icon: <IconoTiktok /> },
+    { label: 'Google', href: REDES.google, icon: <IconoGoogle /> },
   ]
 
   return (

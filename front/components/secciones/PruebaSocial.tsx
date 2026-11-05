@@ -136,7 +136,8 @@ export default function PruebaSocial({ cifras }: Props) {
                   fontFamily: 'var(--font-body)',
                   fontWeight: 700,
                   fontSize: '13px',
-                  color: 'rgba(255,234,202,.55)',
+                  // Medido contra el fondo de la tarjeta, más claro que la sección.
+                  color: 'rgba(255,234,202,.85)',
                 }}
               >
                 {t(`${s.t}.detalle`)}
@@ -153,7 +154,7 @@ export default function PruebaSocial({ cifras }: Props) {
               fontSize: '13px',
               letterSpacing: '2px',
               textTransform: 'uppercase',
-              color: 'rgba(255,234,202,.5)',
+              color: 'rgba(255,234,202,.8)',
               marginBottom: '20px',
             }}
           >
@@ -174,7 +175,7 @@ export default function PruebaSocial({ cifras }: Props) {
                   fontFamily: 'var(--font-body)',
                   fontWeight: 700,
                   fontSize: '15px',
-                  color: 'rgba(255,234,202,.7)',
+                  color: 'rgba(255,234,202,.8)',
                   padding: '8px 18px',
                   border: '1px solid rgba(255,234,202,.12)',
                   borderRadius: '999px',

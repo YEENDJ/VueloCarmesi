@@ -43,7 +43,14 @@ export async function generateMetadata(
 
   const descripcion = metaDescription(exp.descripcion, exp.descripcionLarga)
   const portada = exp.imagenes?.[0] ?? exp.imagen
-  const ts = await getTranslations({ locale, namespace: 'sitio' })
+  const [ts, tr] = await Promise.all([
+    getTranslations({ locale, namespace: 'sitio' }),
+    getTranslations({ locale, namespace: 'reserva' }),
+  ])
+  // Solo el título del buscador lleva el lugar: todas las salidas son en
+  // Cubarral y el nombre solo («Birdwatching») compite con búsquedas genéricas.
+  // El H1, la miga y las tarjetas siguen mostrando el nombre tal cual.
+  const titulo = tr('tituloFicha', { nombre: exp.nombre })
 
   return {
     // Sin la marca: el layout de idioma ya la añade con title.template
@@ -51,7 +58,7 @@ export async function generateMetadata(
     // EXPERIENCE · Vuelo Carmesí · Vuelo Carmesí»— y los nombres de las
     // experiencias vienen en mayúsculas del panel, así que el título ya era
     // largo antes de repetirla.
-    title: exp.nombre,
+    title: titulo,
     description: descripcion,
     // El slug de cada idioma sale de exp.slugs, que trae el backend: sin él,
     // el alternativo inglés apuntaría al slug español y sería una URL que
@@ -65,7 +72,7 @@ export async function generateMetadata(
       locale,
     ),
     openGraph: {
-      title: exp.nombre,
+      title: titulo,
       description: descripcion,
       type: 'website',
       // Este `openGraph` reemplaza entero el del layout: el nombre del sitio,

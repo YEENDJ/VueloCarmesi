@@ -44,6 +44,13 @@ export const CONTACTO = {
   email: 'carmesivuelo@gmail.com',
   /** Para mostrar: agrupado como se lee un número colombiano */
   telefono: '+57 311 817 1907',
+  /**
+   * Otros nombres de la misma finca, para el `alternateName` del JSON-LD. El
+   * largo es el de la ficha de Google y el de los textos legales; La Fortuna es
+   * como se llamó antes, y declararlo evita que un perfil o una mención vieja se
+   * lean como otro negocio.
+   */
+  nombresAlternos: ['Finca Agroturística Vuelo Carmesí', 'Finca La Fortuna'],
   /** Para enlazar: sin espacios, como lo piden tel: y wa.me */
   telefonoE164: NUMERO_E164,
   whatsapp: `https://wa.me/${NUMERO_E164.replace(/\D/g, '')}`,
@@ -71,9 +78,19 @@ export const CONTACTO = {
  * Ojo si algun dia se actualiza: la URL de Maps trae dos pares de coordenadas y
  * el primero (3.7917639, -73.8412171) es el de la Emisora Brisas del Tonoa, no
  * el de la finca. El bueno es el del ultimo bloque `!3d...!4d...`, el que va
- * junto al identificador de «Finca la Fortuna».
+ * junto al identificador de la finca en Maps.
  */
-const COORDENADAS = '3.7537786,-73.8743938'
+const COORDENADAS = '3.7537803,-73.8743929'
+
+/**
+ * La ficha de la finca en Google Maps, de la que salen el mapa y las rutas.
+ *
+ * `PLACE_ID` identifica la misma ficha que `FICHA_GOOGLE` y que el mapa embebido
+ * (`0x8e3e6d7249387ab7:0xf1aba85f2c37f19b` en sus URL). Con el, «Como llegar»
+ * lleva al negocio por su nombre y no a un punto suelto del mapa.
+ */
+const FICHA_GOOGLE = 'https://maps.app.goo.gl/vjJWZWNDrpQqpqzN7'
+const PLACE_ID = 'ChIJt3o4SXJtPo4Rm_E3LF-oq_E'
 
 /**
  * Las mismas coordenadas como numeros.
@@ -84,31 +101,23 @@ const COORDENADAS = '3.7537786,-73.8743938'
  */
 const [LATITUD, LONGITUD] = COORDENADAS.split(',').map(Number)
 
-/**
- * Encuadre fijo del mapa embebido.
- *
- * `CENTRO` y `ZOOM` mandan sobre lo que Google elegiria por su cuenta: a este
- * nivel se ven a la vez la finca, Cubarral y el rio Ariari, que es el contexto
- * que necesita alguien que no conoce la zona. Con el zoom por defecto la vista
- * queda tan cerca que no se reconoce nada alrededor.
- *
- * Para cambiarlo: encuadra el mapa como lo quieras en Google Maps y copia la
- * URL; el tramo `@latitud,longitud,zoom` de esa direccion es exactamente
- * `CENTRO` y `ZOOM`. El pin (`COORDENADAS`) no se toca.
- */
-const CENTRO = '3.7714,-73.8672'
-const ZOOM = 13
-
 export const MAPA = {
   coordenadas: COORDENADAS,
   latitud: LATITUD,
   longitud: LONGITUD,
-  /** Mapa embebido: pin en la finca, encuadre fijo y rotulos en espanol */
-  embed: `https://www.google.com/maps?q=${COORDENADAS}&ll=${CENTRO}&z=${ZOOM}&hl=es&output=embed`,
+  /**
+   * Mapa embebido con la ficha de la finca. Es la URL de «Insertar un mapa» de
+   * Google Maps: para cambiar el encuadre se genera otra desde ahi.
+   */
+  embed:
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3981.2585874767856!2d-73.8743929!3d3.7537802999999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3e6d7249387ab7%3A0xf1aba85f2c37f19b!2sFinca%20Agroturistica%20Vuelo%20Carmesi!5e0!3m2!1ses!2sco!4v1793894380120!5m2!1ses!2sco',
   /** Abre la ficha del lugar */
-  enlace: `https://www.google.com/maps/search/?api=1&query=${COORDENADAS}`,
-  /** Arranca la navegacion desde donde este el visitante */
-  rutas: `https://www.google.com/maps/dir/?api=1&destination=${COORDENADAS}`,
+  enlace: FICHA_GOOGLE,
+  /**
+   * Arranca la navegacion desde donde este el visitante. Las coordenadas son el
+   * destino de respaldo si Google no reconoce el `PLACE_ID`.
+   */
+  rutas: `https://www.google.com/maps/dir/?api=1&destination=${COORDENADAS}&destination_place_id=${PLACE_ID}`,
 } as const
 
 /**
@@ -119,17 +128,15 @@ export const MAPA = {
  */
 export const REDES = {
   instagram: 'https://www.instagram.com/vuelo_carmesi',
-  facebook: 'https://www.facebook.com/fincalafortunacubarral/',
+  facebook: 'https://facebook.com/fincaagroturisticavuelocarmesi',
   tiktok: 'https://www.tiktok.com/@vuelo_carmesi',
   /**
    * Ficha de Google Business, la del panel de Google Maps.
    *
-   * Va vacia porque el negocio todavia no nos ha pasado la URL de su perfil, y
-   * en `sameAs` las vacias se descartan: es preferible un perfil de menos que
-   * inventarse un enlace, porque ahi `sameAs` es justo la afirmacion de «esta
-   * cuenta es nuestra». Cuando llegue se pega aqui —el enlace corto de
-   * «Compartir» en la ficha, del estilo https://maps.app.goo.gl/…— y entra sola
-   * en los datos estructurados sin tocar nada mas.
+   * Es la excepcion a lo de arriba: es el enlace corto de «Compartir» en Google
+   * Maps. Si algun dia deja de abrir la ficha, se copia otro desde ahi; el de
+   * «Compartir» en la busqueda de Google no sirve porque abre la busqueda.
+   * Alimenta `sameAs` y el icono de Google en el pie y en /contacto.
    */
-  google: '',
+  google: FICHA_GOOGLE,
 } as const

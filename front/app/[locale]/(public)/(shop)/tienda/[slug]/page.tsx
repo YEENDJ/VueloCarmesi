@@ -14,6 +14,7 @@ import { SLUGS_PRODUCTOS_LEGADOS, destinoLegado } from '@/lib/slugs-legados'
 import { formatPrecio } from '@/lib/format'
 import { metaDescription } from '@/lib/seo'
 import { nodoProducto } from '@/lib/jsonld'
+import { productosRelacionados } from '@/lib/productos-relacionados'
 import { SITIO } from '@/lib/sitio'
 import { portadaOg, tarjetaOg } from '@/lib/og'
 import type { Metadata } from 'next'
@@ -149,9 +150,7 @@ export default async function ProductoDetallePage({
     { etiqueta: t('disponibles'), valor: t('unidades', { n: producto.stock }) },
   ]
 
-  const relacionados = todos
-    .filter(p => p.categoria === producto.categoria && p.slug !== slug)
-    .slice(0, 4)
+  const relacionados = productosRelacionados(todos, producto)
 
   // El `@id` del producto se construye sobre la canónica —la misma que declara
   // generateMetadata—, no sobre la URL por la que se llegó: en la rama inglesa

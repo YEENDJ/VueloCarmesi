@@ -101,11 +101,22 @@ export default function ExperienciaCard({
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           flexWrap: 'wrap', gap: '0.75rem',
         }}>
-          <span style={{
-            fontWeight: 700, color: 'var(--color-crimson)', minWidth: 0,
-            fontSize: 'clamp(1rem, 2.5vw, 1.12rem)',
-          }}>
-            {formatPrecio(experiencia.precio, idioma)}
+          {/* «Por persona» pegado al precio: el total de la reserva es precio ×
+              personas, y sin aclararlo la cifra también se lee como el valor
+              de todo el grupo. */}
+          <span style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+            <span style={{
+              fontWeight: 700, color: 'var(--color-crimson)',
+              fontSize: 'clamp(1rem, 2.5vw, 1.12rem)',
+            }}>
+              {formatPrecio(experiencia.precio, idioma)}
+            </span>
+            <span style={{
+              fontWeight: 700, color: 'var(--color-brown)',
+              fontSize: '0.8rem', lineHeight: 1.3,
+            }}>
+              {t('porPersona')}
+            </span>
           </span>
           <Button href={ficha} variant="outline" className="btn-card" aria-label={t('verMasDe', { nombre: experiencia.nombre })}>{t('verMas')}</Button>
         </div>

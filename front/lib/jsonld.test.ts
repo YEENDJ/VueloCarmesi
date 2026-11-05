@@ -45,6 +45,17 @@ describe('grafoDelSitio', () => {
     expect(negocio.sameAs).not.toContain('')
   })
 
+  it('enlaza la ficha de Google como uno de sus perfiles', () => {
+    expect(REDES.google).toMatch(/^https:\/\//)
+    expect(negocio.sameAs).toContain(REDES.google)
+    expect(negocio.hasMap).toBe(REDES.google)
+  })
+
+  it('declara los otros nombres de la finca sin repetir el principal', () => {
+    expect(negocio.alternateName).toEqual(CONTACTO.nombresAlternos)
+    expect(negocio.alternateName).not.toContain(negocio.name)
+  })
+
   it('el sitio nombra a su editor por @id y no lo describe otra vez', () => {
     expect(sitio.publisher).toEqual({ '@id': ID_NEGOCIO })
   })
