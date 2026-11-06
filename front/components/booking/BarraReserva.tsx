@@ -16,7 +16,7 @@ interface Props {
  * bloque de cierre. Era `sticky` y al llegar al final dejaba de pegarse, subía
  * con la página y quedaba encima del cierre: dos precios y dos «Reservar
  * ahora» seguidos. Ahora se retira en cuanto asoma el cierre, que es el que
- * termina la ficha.
+ * termina la ficha, y tampoco vuelve sobre el footer.
  *
  * Los botones reales se marcan con `data-cta-reserva`; la barra no necesita
  * saber dónde están, sólo si alguno se ve.
@@ -27,7 +27,9 @@ export default function BarraReserva({ precio, duracion, slug }: Props) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const nodos = document.querySelectorAll('[data-cta-reserva]')
+    // El footer cuenta como un botón más: mirar solo el cierre no basta, porque
+    // un scroll rápido lo salta sin que llegue a cruzar la pantalla.
+    const nodos = document.querySelectorAll('[data-cta-reserva], footer')
     if (nodos.length === 0) return
     const enPantalla = new Set<Element>()
     const observador = new IntersectionObserver(
@@ -51,16 +53,14 @@ export default function BarraReserva({ precio, duracion, slug }: Props) {
   return (
     <div className="ficha-exp-barra">
       <div className="ficha-exp-barra-contenido">
-        <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '4px 8px', minWidth: 0 }}>
+        <div className="ficha-exp-barra-datos">
           <span className="ficha-exp-barra-precio">{formatPrecio(precio, idioma)}</span>
-          <span style={{ fontSize: '14px', fontWeight: 700, color: 'rgba(255,234,202,0.8)', minWidth: 0 }}>
-            {t('porPersonaDuracion', { duracion })}
-          </span>
+          <span className="ficha-exp-barra-nota">{t('porPersonaDuracion', { duracion })}</span>
         </div>
         <Button
           href={{ pathname: '/reservar/[slug]', params: { slug } }}
           style={{
-            flexShrink: 0, borderRadius: '8px', padding: '14px 24px',
+            flexShrink: 0, borderRadius: '8px', padding: '12px 16px',
             fontSize: '16px', minHeight: '44px', whiteSpace: 'nowrap',
           }}
         >

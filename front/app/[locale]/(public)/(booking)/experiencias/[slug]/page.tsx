@@ -1,11 +1,15 @@
 import { getExperienciaBySlug, getExperiencias } from '@/lib/api/experiencias'
 import Button from '@/components/ui/Button'
-import PortadaExperiencia from '@/components/booking/PortadaExperiencia'
+import GaleriaExperiencia from '@/components/booking/GaleriaExperiencia'
+import TarjetaReserva from '@/components/booking/TarjetaReserva'
+import ProgramaExperiencia from '@/components/booking/ProgramaExperiencia'
 import DatosPracticos from '@/components/booking/DatosPracticos'
 import ListaFicha from '@/components/booking/ListaFicha'
 import BarraReserva from '@/components/booking/BarraReserva'
 import AvisoAviturismo, { tieneAvistamiento } from '@/components/booking/AvisoAviturismo'
 import { getSiteConfig } from '@/lib/api/site-config'
+import { getConfigPagos } from '@/lib/api/pagos'
+import { separarPrograma } from '@/lib/programa'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import PublicarSlugs from '@/components/layout/PublicarSlugs'
@@ -27,6 +31,9 @@ import AvisoEscnna from '@/components/legal/AvisoEscnna'
 // durante una caída se guardaba como 404 permanente e ni revalidateTag lo tocaba.
 export const revalidate = 60
 export const dynamicParams = true
+
+/** Más largo que esto, la apertura se lee mejor en cuerpo que en letra grande. */
+const MAX_ENTRADILLA = 240
 
 /**
  * Hasta ahora ninguna ruta definía metadata propia, así que las cinco fichas
@@ -145,14 +152,17 @@ export default async function ExperienciaDetallePage({
     ? exp.imagenes
     : exp.imagen ? [exp.imagen] : []
   const descripcion = exp.descripcionLarga?.trim() || exp.descripcion
-  const incluye = exp.incluye ?? []
   const queTraer = exp.queTraer ?? []
   const noIncluye = exp.noIncluye ?? []
 
   // El punto de encuentro casi siempre es el mismo, así que vive en la
   // configuración del sitio y se escribe una vez. La experiencia solo lo trae
   // cuando sale de otro lado, y entonces manda el suyo.
-  const [config, t] = await Promise.all([getSiteConfig(locale), getTranslations('reserva')])
+  const [config, pagos, t] = await Promise.all([
+    getSiteConfig(locale),
+    getConfigPagos(),
+    getTranslations('reserva'),
+  ])
   const puntoEncuentro = exp.puntoEncuentro?.trim() || config.punto_encuentro || ''
 
   // La descripción corta solo hace de bajada cuando hay relato largo. Sin él
@@ -160,18 +170,10 @@ export default async function ExperienciaDetallePage({
   // seguidas: bajo el título y otra vez como entradilla en cursiva.
   const bajada = exp.descripcionLarga?.trim() ? exp.descripcion.trim() : ''
 
-  // El primer párrafo abre el relato en cursiva grande y el resto va en cuerpo.
-  // Un relato de un solo párrafo se muestra entero arriba y no lleva cuerpo
-  // debajo: ese caso también tiene que verse terminado.
-  const [entradilla, ...cuerpo] = parrafosRelato(descripcion)
-
-  // El cuerpo se reparte en dos bloques, no en dos columnas de texto: con
-  // columnas CSS el ojo tiene que subir al principio de la segunda columna al
-  // acabar la primera, y en un relato corto ese salto se nota. Dos tarjetas se
-  // leen una detrás de otra. Con un solo párrafo queda una sola tarjeta, que
-  // ocupa el ancho entero y se ve igual de deliberada.
-  const corte = Math.ceil(cuerpo.length / 2)
-  const bloques = cuerpo.length > 0 ? [cuerpo.slice(0, corte), cuerpo.slice(corte)] : []
+  // El programa paso a paso sale del mismo campo que el relato. Si el texto no
+  // sigue el formato, `pasos` llega vacío y todo se pinta como relato corrido.
+  const { apertura, pasos, despues } = separarPrograma(parrafosRelato(descripcion))
+  const [entradilla, ...cuerpo] = apertura
 
   // Ver la ficha de producto: el identificador sale de la canónica del idioma,
   // no de la URL por la que se entró. La oferta apunta a /reservar, que es
@@ -199,74 +201,72 @@ export default async function ExperienciaDetallePage({
       {/* No pinta nada: le da al selector de idioma el slug de esta ficha en
           cada lengua, para que cambiar de idioma no pierda la ficha. */}
       <PublicarSlugs slugs={exp.slugs} />
-      {/* En marco propio: la portada va a sangre y sin contenedor la miga se
-          pegaría al borde de la pantalla. */}
+      {/* En marco propio: sin contenedor la miga se pegaría al borde de la
+          pantalla. */}
       <div className="miga-marco">
         <MigaSuperior href="/experiencias" etiqueta={tNav('experiencias')} actual={exp.nombre} />
       </div>
-      <PortadaExperiencia
-        nombre={exp.nombre}
-        imagenes={imagenes}
-        duracion={exp.duracion}
-        capacidad={exp.capacidad}
-        precio={exp.precio}
-        slug={exp.slug}
-        bajada={bajada}
-        incluye={incluye}
-        avisoCancelacion={config.resumen_cancelacion || ''}
-        whatsapp={config.whatsapp || ''}
-      />
 
-      {entradilla && (
-        <section className="ficha-exp-relato">
-          <div className="ficha-exp-relato-grid">
-            {/* El rótulo no se pinta: colgado a la izquierda dejaba media
-                pantalla de banda vacía. Sigue en el documento porque sin él
-                la sección se queda sin nombre para lectores de pantalla y sin
-                encabezado en el esquema que lee Google. */}
-            <h2 className="solo-lectores">{t('laExperiencia')}</h2>
-            <div className="ficha-exp-relato-texto">
-              <p className="ficha-exp-entradilla">{entradilla}</p>
-              {/* El cuerpo va en dos columnas para que ocupar el ancho de la
-                  página no signifique líneas de 130 caracteres. La entradilla
-                  queda fuera: es la apertura y va a una sola medida. */}
-              {bloques.length > 0 && (
-                <div className="ficha-exp-cuerpo">
-                  {bloques.filter(b => b.length > 0).map((bloque, i) => (
-                    <div key={i} className="ficha-exp-bloque">
-                      {bloque.map((parrafo, j) => (
-                        <p key={j} className="ficha-exp-parrafo">{parrafo}</p>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* En escritorio, la lectura a la izquierda y la reserva fija a la derecha.
+          En móvil se apila, con la foto primero (ver globals.css). */}
+      <div className="ficha-exp-layout">
+        <header className="ficha-exp-cabecera">
+          <h1 className="ficha-exp-titulo">{exp.nombre}</h1>
+          {bajada && <p className="ficha-exp-bajada">{bajada}</p>}
+        </header>
 
-      {/* Cierra el relato y abre los datos. Sin él, el texto y la primera
-          tarjeta de "Antes de reservar" se tocan sin que nada diga que ahí
-          cambia lo que se está leyendo. */}
-      {entradilla && <hr className="ficha-exp-separador" />}
+        <GaleriaExperiencia nombre={exp.nombre} imagenes={imagenes} />
 
-      <DatosPracticos
-        horarios={exp.horarios}
-        puntoEncuentro={puntoEncuentro}
-        recomendaciones={exp.recomendaciones}
-      />
-
-      {/* Los tres bloques comparten forma y solo aparecen los que tienen datos.
-          Si únicamente hay "Incluye", ocupa la sección entera y se ve
-          deliberado, no incompleto. */}
-      {(incluye.length > 0 || queTraer.length > 0 || noIncluye.length > 0) && (
-        <div className="ficha-exp-listas">
-          <ListaFicha titulo={t('incluidoEnTuCupo')} items={incluye} variante="incluye" />
-          <ListaFicha titulo={t('queTraer')} items={queTraer} variante="traer" />
-          <ListaFicha titulo={t('noIncluye')} items={noIncluye} variante="noIncluye" />
+        <div className="ficha-exp-lateral">
+          <TarjetaReserva
+            nombre={exp.nombre}
+            duracion={exp.duracion}
+            capacidad={exp.capacidad}
+            precio={exp.precio}
+            slug={exp.slug}
+            incluye={exp.incluye ?? []}
+            porcentajeAbono={pagos.activo ? pagos.porcentajeAbono : null}
+            avisoCancelacion={config.resumen_cancelacion || ''}
+            whatsapp={config.whatsapp || ''}
+          />
         </div>
-      )}
+
+        <div className="ficha-exp-contenido">
+          {entradilla && (
+            <section>
+              {/* El rótulo no se pinta: la apertura va justo debajo de la galería
+                  y se explica sola. Sigue en el documento para lectores de
+                  pantalla y para el esquema que lee Google. */}
+              <h2 className="solo-lectores">{t('laExperiencia')}</h2>
+              <p className={entradilla.length > MAX_ENTRADILLA ? 'ficha-exp-parrafo' : 'ficha-exp-entradilla'}>
+                {entradilla}
+              </p>
+              {cuerpo.map((parrafo, i) => (
+                <p key={i} className="ficha-exp-parrafo">{parrafo}</p>
+              ))}
+            </section>
+          )}
+
+          <DatosPracticos
+            horarios={exp.horarios}
+            puntoEncuentro={puntoEncuentro}
+            recomendaciones={exp.recomendaciones}
+          />
+
+          <ProgramaExperiencia pasos={pasos} />
+
+          {despues.map((parrafo, i) => (
+            <p key={i} className="ficha-exp-parrafo">{parrafo}</p>
+          ))}
+
+          {(queTraer.length > 0 || noIncluye.length > 0) && (
+            <div className="ficha-exp-listas">
+              <ListaFicha titulo={t('queTraer')} items={queTraer} variante="traer" />
+              <ListaFicha titulo={t('noIncluye')} items={noIncluye} variante="noIncluye" />
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Sólo en las dos fichas que llevan avistamiento, y aquí abajo a
           propósito: el visitante ya leyó el relato, los horarios y lo que
@@ -305,9 +305,8 @@ export default async function ExperienciaDetallePage({
         <AvisoEscnna />
       </div>
 
-      {/* El precio sale dos veces y es a propósito: la tarjeta lo presenta en
-          el momento del antojo y la barra lo mantiene a mano durante el scroll.
-          En escritorio la barra no se pinta —igual que en la ficha de producto—. */}
+      {/* El equivalente móvil de la tarjeta fija: mantiene el precio a mano
+          durante el scroll. En escritorio no se pinta. */}
       <BarraReserva precio={exp.precio} duracion={exp.duracion} slug={exp.slug} />
     </div>
   )

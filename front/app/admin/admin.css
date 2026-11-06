@@ -216,6 +216,62 @@
   font-size: 14px; color: var(--color-brown); outline: none; cursor: pointer;
 }
 
+/* Editor del programa de una experiencia */
+.programa-editor {
+  display: grid; gap: 10px; min-width: 0;
+}
+.programa-editor-lista {
+  list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; min-width: 0;
+}
+.programa-editor-paso {
+  display: grid; gap: 8px; min-width: 0; padding: 12px;
+  border: 1.5px solid var(--admin-border); border-radius: 8px;
+}
+.programa-editor-cabecera {
+  display: flex; align-items: center; gap: 10px; min-width: 0;
+}
+.programa-editor-num {
+  flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--color-brown); color: var(--color-cream);
+  font-size: 13px; font-weight: 700;
+}
+.programa-editor-titulo {
+  flex: 1; min-width: 0;
+}
+.programa-editor-acciones {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 4px 12px; min-width: 0;
+}
+.programa-editor-check {
+  display: inline-flex; align-items: center; gap: 8px; min-width: 0; min-height: 44px;
+  font-size: 13px; cursor: pointer; color: var(--color-brown);
+}
+.programa-editor-check input {
+  flex-shrink: 0; width: 18px; height: 18px;
+}
+.programa-editor-botones {
+  display: flex; gap: 4px; margin-left: auto;
+}
+.programa-editor-boton {
+  width: 44px; height: 44px; padding: 0; display: flex; align-items: center;
+  justify-content: center; background: none; border: none; border-radius: 8px;
+  cursor: pointer; color: var(--color-brown);
+}
+.programa-editor-boton:hover:not(:disabled) {
+  background: rgba(135, 43, 19, 0.08);
+}
+.programa-editor-boton:disabled {
+  opacity: 0.35; cursor: not-allowed;
+}
+.programa-editor-boton--quitar {
+  color: var(--color-crimson);
+}
+.programa-editor-agregar {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  justify-self: start; min-height: 44px;
+}
+
 /* Overlay */
 .admin-overlay {
   position: fixed; inset: 0; background: rgba(92,29,13,.4); z-index: 100;

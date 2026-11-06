@@ -17,11 +17,11 @@ export default function Hero({ titulo, subtitulo, ctaTexto, ctaHref, imagen }: H
       <div className="contenido">
       {/* pre-line para que el salto de línea del título se vea. El eslogan de
           marca se lee en dos renglones —«Experiencias agroecológicas / con
-          sabor a cacao.»— y así va en el portafolio, con un <br> explícito.
-          Sin esto el navegador colapsa el salto en un espacio y el título
-          rompe donde caiga, que a según qué ancho parte el eslogan por la
-          mitad. El salto se respeta pero no se fuerza: `maxWidth` en ch sigue
-          partiendo los renglones largos si no caben. */}
+          sabor a cacao»— y el lugar va en un tercero —«en Cubarral, Meta.»—,
+          porque es lo que busca quien llega desde Google y así no parte el
+          eslogan. Sin esto el navegador colapsa el salto en un espacio y el
+          título rompe donde caiga. El salto se respeta pero no se fuerza:
+          `maxWidth` en ch sigue partiendo los renglones largos si no caben. */}
       <h1 style={{
         fontFamily: 'var(--font-display)',
         fontSize: 'clamp(32px, 5.5vw, 68px)',

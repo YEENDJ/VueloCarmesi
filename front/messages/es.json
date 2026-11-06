@@ -42,7 +42,7 @@
   },
   "experiencias": {
     "tituloListado": "Experiencias de cacao y aves en Cubarral, Meta",
-    "metaDescripcion": "Recorridos de cacao, avistamiento de aves y visitas de grupo en la finca agroecológica Vuelo Carmesí, en Cubarral (Meta). Duración, cupos y precio en pesos colombianos de cada experiencia."
+    "metaDescripcion": "Pasadías de cacao, avistamiento de aves y visitas de grupo en la finca Vuelo Carmesí, en Cubarral (Meta). Duración, cupos y precio de cada experiencia."
   },
   "diferenciales": {
     "kicker": "¿Por qué Vuelo Carmesí?",
@@ -119,9 +119,7 @@
     "verPolitica": "Ver política",
     "dudas": "¿Dudas antes de reservar?",
     "escribenosWhatsapp": "Escríbenos por WhatsApp",
-    "deslizaTira": "Desliza la tira y toca una foto para verla en grande",
-    "tocaFoto": "Toca una foto para verla en grande",
-    "masFotos": "{n, plural, one {# cosa más} other {# cosas más}}",
+    "programa": "Qué vas a hacer",
     "tituloFicha": "{nombre} en Cubarral, Meta",
     "laExperiencia": "La experiencia",
     "reservaTuCupo": "Reserva tu cupo",
@@ -167,10 +165,9 @@
       "opcional": "opcional"
     },
     "porPersonaDuracion": "por persona · {duracion}",
-    "cierreTexto": "No pierdas la oportunidad de vivir una experiencia agroecológica inolvidable. Desde {precio} por persona · {duracion}",
+    "cierreTexto": "No pierdas la oportunidad de vivir una experiencia agroecológica inolvidable. {precio} por persona · {duracion}",
     "hastaPersonas": "Hasta {n} personas",
     "cuando": "Cuándo",
-    "desde": "Desde",
     "pago": {
       "titulo": "Resumen del pago",
       "total": "Total ({n, plural, one {# persona} other {# personas}})",
@@ -310,7 +307,7 @@
     },
     "meta": {
       "titulo": "Aviturismo en Cubarral, Meta: 180 especies",
-      "descripcion": "Birdwatching en el piedemonte llanero: 180 especies en un hotspot público de eBird, entre 600 y 850 m s. n. m., con cacao en sombrío y corredores biológicos. Salidas guiadas de 5:30 a 8:00 a. m.",
+      "descripcion": "Avistamiento de aves en el piedemonte llanero: 180 especies en un hotspot público de eBird, cacao en sombrío y salidas guiadas de 4 horas.",
       "ogAlt": "Pichí de collar (Pteroglossus castanotis) posado en una rama en la finca"
     },
     "jsonld": {
@@ -319,7 +316,7 @@
   },
   "tienda": {
     "tituloListado": "Chocolate y cacao artesanal de Cubarral, Meta",
-    "metaDescripcion": "Chocolate y cacao artesanal de la finca Vuelo Carmesí, en Cubarral (Meta). Precios en pesos colombianos con IVA incluido y envíos a toda Colombia, cotizados según la ciudad de destino.",
+    "metaDescripcion": "Chocolate de mesa, chocolatinas, café y miel de la tienda de Vuelo Carmesí, en Cubarral, Meta. IVA incluido y envíos a toda Colombia, cotizados por ciudad.",
     "catalogoVacio": "Aún no hay productos disponibles. Vuelve pronto.",
     "sinFotografia": "Sin fotografía",
     "fotoAnterior": "Foto anterior",
@@ -495,7 +492,7 @@
   "grupos": {
     "meta": {
       "titulo": "Salidas pedagógicas y corporativas en el Meta",
-      "descripcion": "Salidas pedagógicas y jornadas corporativas en finca de cacao en Cubarral, Meta. Capacidad para grupos grandes, entra bus, póliza incluida y facturación institucional.",
+      "descripcion": "Salidas pedagógicas y jornadas corporativas en una finca de cacao en Cubarral, Meta. Grupos grandes, entra bus, póliza incluida y facturación institucional.",
       "ogAlt": "Grupo numeroso de visitantes con el equipo de Vuelo Carmesí frente al mural de aves"
     },
     "kicker": "Grupos e instituciones",
@@ -1144,7 +1141,7 @@
     "metaOgAlt": "El equipo en la Finca Agroturística Vuelo Carmesí, en Cubarral (Meta)",
     "secciones": {
       "origen": "El origen",
-      "historia": "Nuestra historia",
+      "historia": "Nuestra historia: 40 años de cacao en Cubarral, Meta",
       "historiaBajada": "Una historia que ya existía y que decidimos abrirle las puertas al mundo.",
       "guia": "Lo que nos guía",
       "mision": "Misión y valores",
@@ -1370,7 +1367,7 @@
       "etiqueta": "Un nuevo camino",
       "titulo": "La experiencia que encontró su lugar",
       "t1": "Cristian, uno de los fundadores, ya tenía experiencia en turismo desde 2012, principalmente en el turismo de aventura. Después de la pandemia, esa experiencia encontró un nuevo camino: llevar el turismo a la finca y convertir el campo, el cacao y la naturaleza en una experiencia cercana, auténtica y familiar.",
-      "alt": ""
+      "alt": "Un grupo reunido frente al mural de aves de la finca"
     },
     "idea": {
       "anyo": "El proyecto",
@@ -1401,7 +1398,7 @@
       "descripcion": "Finca agroecológica de cacao en Cubarral, Meta, a menos de dos horas de Villavicencio. Cosecha, fermentación y cata guiadas, aviturismo y visitas de grupo.",
       "ogAlt": "Vuelo Carmesí: experiencias agroecológicas con sabor a cacao en Cubarral, Meta. Un cacaotal con mazorcas rojas y un colibrí en una flor roja"
     },
-    "heroTitulo": "Experiencias agroecológicas\ncon sabor a cacao.",
+    "heroTitulo": "Experiencias agroecológicas\ncon sabor a cacao\nen Cubarral, Meta.",
     "heroSubtitulo": "Cosechamos, fermentamos y degustamos junto a ti. Conoce el cacao desde su raíz, en una finca llena de vida y tradición.",
     "heroCta": "Elige tu experiencia",
     "heroPlaceholder": "FOTO · MAZORCA ABIERTA",
