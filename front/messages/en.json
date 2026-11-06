@@ -42,7 +42,7 @@
   },
   "experiencias": {
     "tituloListado": "Cacao and bird tours in Cubarral, Colombia",
-    "metaDescripcion": "Cacao tours, birdwatching and group visits at the Vuelo Carmesí agroecological farm in Cubarral, Meta (Colombia). Duration, group size and price in Colombian pesos for each experience."
+    "metaDescripcion": "Cacao tours, birdwatching and group visits at the Vuelo Carmesí farm in Cubarral, Meta. Duration, group size and price in Colombian pesos for each one."
   },
   "diferenciales": {
     "kicker": "Why Vuelo Carmesí?",
@@ -119,9 +119,7 @@
     "verPolitica": "Read the policy",
     "dudas": "Questions before booking?",
     "escribenosWhatsapp": "Message us on WhatsApp",
-    "deslizaTira": "Swipe the strip and tap a photo to enlarge it",
-    "tocaFoto": "Tap a photo to enlarge it",
-    "masFotos": "{n, plural, one {# more} other {# more}}",
+    "programa": "What you'll do",
     "tituloFicha": "{nombre} in Cubarral, Colombia",
     "laExperiencia": "The experience",
     "reservaTuCupo": "Book your place",
@@ -167,10 +165,9 @@
       "opcional": "optional"
     },
     "porPersonaDuracion": "per person · {duracion}",
-    "cierreTexto": "Don't miss the chance to live an unforgettable agroecological experience. From {precio} per person · {duracion}",
+    "cierreTexto": "Don't miss the chance to live an unforgettable agroecological experience. {precio} per person · {duracion}",
     "hastaPersonas": "Up to {n} people",
     "cuando": "When",
-    "desde": "From",
     "pago": {
       "titulo": "Payment summary",
       "total": "Total ({n, plural, one {# person} other {# people}})",
@@ -310,7 +307,7 @@
     },
     "meta": {
       "titulo": "Birding in Cubarral, Colombia: 180 species",
-      "descripcion": "Birdwatching in the Llanos foothills: 180 species at a public eBird hotspot, between 600 and 850 m above sea level, among shade-grown cacao and wildlife corridors. Guided walks 5:30 to 8:00 a.m.",
+      "descripcion": "Birdwatching in the Llanos foothills: 180 species at a public eBird hotspot, shade-grown cacao and 4-hour guided walks.",
       "ogAlt": "Chestnut-eared Aracari (Pteroglossus castanotis) perched on a branch at the farm"
     },
     "jsonld": {
@@ -319,7 +316,7 @@
   },
   "tienda": {
     "tituloListado": "Craft chocolate and cacao from Cubarral, Colombia",
-    "metaDescripcion": "Artisanal chocolate and cacao from the Vuelo Carmesí farm in Cubarral, Meta. Prices in Colombian pesos with VAT included and shipping anywhere in Colombia, quoted by destination city.",
+    "metaDescripcion": "Table chocolate, chocolate bars, coffee and honey from the Vuelo Carmesí shop in Cubarral, Meta. VAT included; shipping across Colombia, quoted by city.",
     "catalogoVacio": "No products available yet. Check back soon.",
     "sinFotografia": "No photograph",
     "fotoAnterior": "Previous photo",
@@ -1144,7 +1141,7 @@
     "metaOgAlt": "The team at Finca Agroturística Vuelo Carmesí in Cubarral, Meta",
     "secciones": {
       "origen": "The origin",
-      "historia": "Our story",
+      "historia": "Our story: 40 years of cacao in Cubarral, Meta",
       "historiaBajada": "A story that already existed, and that we decided to open up to the world.",
       "guia": "What guides us",
       "mision": "Mission and values",
@@ -1370,7 +1367,7 @@
       "etiqueta": "A new path",
       "titulo": "The experience that found its place",
       "t1": "Cristian, one of the founders, had worked in tourism since 2012, mainly in adventure tourism. After the pandemic, that experience found a new path: bringing tourism to the farm and turning the countryside, the cacao and the nature around us into a close, genuine, family experience.",
-      "alt": ""
+      "alt": "A group gathered in front of the farm's bird mural"
     },
     "idea": {
       "anyo": "The project",
@@ -1401,7 +1398,7 @@
       "descripcion": "Harvest, ferment and taste cacao on a working agroecological farm in Cubarral, Meta. A day trip from Bogotá or Villavicencio, with birding and group visits.",
       "ogAlt": "Vuelo Carmesí: agroecological experiences with the taste of cacao in Cubarral, Meta. A cacao plantation with red pods and a hummingbird at a red flower"
     },
-    "heroTitulo": "Agroecological experiences\nwith the taste of cacao.",
+    "heroTitulo": "Agroecological experiences\nwith the taste of cacao\nin Cubarral, Meta.",
     "heroSubtitulo": "We harvest, ferment and taste alongside you. Get to know cacao from its roots, on a farm full of life and tradition.",
     "heroCta": "Choose your experience",
     "heroPlaceholder": "PHOTO · OPEN CACAO POD",
