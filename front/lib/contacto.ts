@@ -41,7 +41,7 @@ export function numeroWhatsapp(telefono: string): string {
 }
 
 export const CONTACTO = {
-  email: 'carmesivuelo@gmail.com',
+  email: 'gerencia@vuelocarmesi.com',
   /** Para mostrar: agrupado como se lee un número colombiano */
   telefono: '+57 311 817 1907',
   /**
