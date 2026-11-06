@@ -20,7 +20,9 @@ const HISTORIA: Bloque[] = [
   { clave: 'tecnificacion', imagen: '/images/cacao/cacaotal-mazorcas-rojas.jpg', icono: '🔧', parrafos: 1 },
   { clave: 'aprendizaje', imagen: '/images/aves/tangara-azul.jpg', icono: '🦜', parrafos: 1 },
   { clave: 'pausa', imagen: '/images/personas/recorrido-cacaotal-pandemia.jpg', icono: '🕰️', parrafos: 1 },
-  { clave: 'camino', imagen: '', icono: '🥾', parrafos: 1 },
+  // Subida respecto al centro para que el marco apaisado no le corte la cabeza
+  // a quien está en la fila de atrás.
+  { clave: 'camino', imagen: '/images/personas/grupo-mural-aves.jpg', icono: '🥾', parrafos: 1, posicion: 'center 20%' },
   { clave: 'idea', imagen: '/images/personas/equipo-cacao.jpg', icono: '💡', parrafos: 1 },
   { clave: 'apertura', imagen: '/images/personas/grupo-mural.jpg', icono: '🚪', parrafos: 1 },
   // Subida respecto al centro para que el marco apaisado no le corte el título
