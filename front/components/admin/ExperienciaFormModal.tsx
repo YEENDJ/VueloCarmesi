@@ -5,6 +5,8 @@ import { createExperiencia, updateExperiencia } from '@/lib/admin/api'
 import Toggle from './Toggle'
 import ImagesUploader from './ImagesUploader'
 import ListaEditable from './ListaEditable'
+import ProgramaEditor, { aPasoEditor, dePasosEditor, type PasoEditor } from './ProgramaEditor'
+import { componerRelato, problemaPrograma, relatoEditable } from '@/lib/programa'
 
 /** Donde Google recorta la meta description. Mismo tope que valida el backend. */
 const MAX_META = 160
@@ -12,7 +14,9 @@ const MAX_META = 160
 type FormData = {
   nombre: string
   descripcion: string
-  descripcionLarga: string
+  apertura: string
+  pasos: PasoEditor[]
+  despues: string
   precio: string; duracion: string; capacidad: string
   horarios: string; puntoEncuentro: string; recomendaciones: string
   destacada: boolean
@@ -23,10 +27,20 @@ type FormData = {
 }
 
 const EMPTY: FormData = {
-  nombre: '', descripcion: '', descripcionLarga: '',
+  nombre: '', descripcion: '', apertura: '', pasos: [], despues: '',
   precio: '', duracion: '', capacidad: '',
   horarios: '', puntoEncuentro: '', recomendaciones: '',
   destacada: false, imagenes: [], incluye: [], queTraer: [], noIncluye: [],
+}
+
+/** El texto que se guarda a partir de las tres partes del relato en el formulario. */
+const relatoDe = (f: Pick<FormData, 'apertura' | 'pasos' | 'despues'>) =>
+  componerRelato({ apertura: f.apertura, pasos: dePasosEditor(f.pasos), despues: f.despues })
+
+/** Abre el relato guardado en las tres partes que edita el formulario. */
+function partesDelRelato(texto: string): Pick<FormData, 'apertura' | 'pasos' | 'despues'> {
+  const { apertura, pasos, despues } = relatoEditable(texto)
+  return { apertura, pasos: pasos.map(aPasoEditor), despues }
 }
 
 /**
@@ -38,7 +52,7 @@ const EMPTY: FormData = {
 function loQueFalta(f: FormData): string[] {
   const falta: string[] = []
   if (!f.nombre.trim()) falta.push('el nombre')
-  if (!f.descripcionLarga.trim()) falta.push('la descripción larga')
+  if (!relatoDe(f)) falta.push('el relato')
   if (f.imagenes.length === 0) falta.push('al menos una foto')
   if (!f.precio) falta.push('el precio')
   if (!f.duracion.trim()) falta.push('la duración')
@@ -62,7 +76,7 @@ export default function ExperienciaFormModal({
       ? {
           nombre: experiencia.nombre,
           descripcion: experiencia.descripcion ?? '',
-          descripcionLarga: experiencia.descripcionLarga ?? '',
+          ...partesDelRelato(experiencia.descripcionLarga ?? ''),
           precio: String(experiencia.precio),
           duracion: experiencia.duracion,
           capacidad: String(experiencia.capacidad),
@@ -83,6 +97,8 @@ export default function ExperienciaFormModal({
   )
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  // Con qué texto abrió el relato, para reconocer si de verdad se tocó.
+  const [relatoInicial] = useState(() => relatoDe(form))
 
   function set<K extends keyof FormData>(k: K, v: FormData[K]) {
     setForm(prev => ({ ...prev, [k]: v }))
@@ -104,6 +120,18 @@ export default function ExperienciaFormModal({
       setError(`La descripción para buscadores no puede pasar de ${MAX_META} caracteres.`)
       return
     }
+    const problema = problemaPrograma(dePasosEditor(form.pasos))
+    if (problema) {
+      setError(problema)
+      return
+    }
+
+    // Abrir una ficha y cambiarle el precio no debe tocar su relato. Normalizar
+    // el texto contaría como un cambio y lo mandaría a traducir otra vez.
+    const relato = relatoDe(form)
+    const descripcionLarga = relato === relatoInicial && experiencia
+      ? experiencia.descripcionLarga ?? ''
+      : relato
 
     setSaving(true)
     setError('')
@@ -112,7 +140,7 @@ export default function ExperienciaFormModal({
       const data = {
         nombre: form.nombre,
         descripcion: form.descripcion,
-        descripcionLarga: form.descripcionLarga,
+        descripcionLarga,
         precio: Number(form.precio),
         duracion: form.duracion,
         capacidad: Number(form.capacidad),
@@ -177,7 +205,7 @@ export default function ExperienciaFormModal({
             </FormRow>
             <FormRow
               label="Descripción para buscadores"
-              ayuda="El texto que Google muestra bajo el título. Vacío = se toma del relato"
+              ayuda="Sale bajo el título de la ficha y en Google. Vacío = Google la toma del relato"
             >
               <textarea
                 className="admin-input" rows={2} style={{ resize: 'vertical' }}
@@ -195,16 +223,32 @@ export default function ExperienciaFormModal({
 
             <Seccion titulo="Relato" />
             <FormRow
-              label="Descripción larga *"
-              ayuda="El texto principal de la ficha. El primer párrafo va destacado"
+              label="Texto de apertura *"
+              ayuda="El primer párrafo va destacado. Deja una línea en blanco entre párrafos"
             >
               <textarea
-                className="admin-input" rows={9} style={{ resize: 'vertical' }}
-                value={form.descripcionLarga}
-                onChange={e => set('descripcionLarga', e.target.value)}
-                placeholder={'Una frase de apertura que enganche.\n\nY luego el detalle: qué se hace, cómo transcurre, qué se lleva el visitante. Deja una línea en blanco entre párrafos.'}
+                className="admin-input" rows={4} style={{ resize: 'vertical' }}
+                value={form.apertura}
+                onChange={e => set('apertura', e.target.value)}
+                placeholder="Una o dos frases para el visitante: qué va a vivir y por qué vale la pena."
               />
             </FormRow>
+            <FormRow
+              label="Qué vas a hacer"
+              ayuda="Lo que vive el visitante, paso a paso. Mínimo dos pasos, o déjalo vacío si no aplica"
+            >
+              <ProgramaEditor pasos={form.pasos} onChange={pasos => set('pasos', pasos)} />
+            </FormRow>
+            {(form.pasos.length > 0 || form.despues) && (
+              <FormRow label="Frase de cierre" ayuda="Opcional. Sale debajo de los pasos">
+                <textarea
+                  className="admin-input" rows={2} style={{ resize: 'vertical' }}
+                  value={form.despues}
+                  onChange={e => set('despues', e.target.value)}
+                  placeholder="Una última frase que deje las ganas de venir."
+                />
+              </FormRow>
+            )}
 
             <Seccion titulo="Fotos" />
             <ImagesUploader
