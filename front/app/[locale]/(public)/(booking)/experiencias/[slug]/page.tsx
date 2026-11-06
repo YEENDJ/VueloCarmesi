@@ -8,7 +8,6 @@ import ListaFicha from '@/components/booking/ListaFicha'
 import BarraReserva from '@/components/booking/BarraReserva'
 import AvisoAviturismo, { tieneAvistamiento } from '@/components/booking/AvisoAviturismo'
 import { getSiteConfig } from '@/lib/api/site-config'
-import { getConfigPagos } from '@/lib/api/pagos'
 import { separarPrograma } from '@/lib/programa'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -158,11 +157,7 @@ export default async function ExperienciaDetallePage({
   // El punto de encuentro casi siempre es el mismo, así que vive en la
   // configuración del sitio y se escribe una vez. La experiencia solo lo trae
   // cuando sale de otro lado, y entonces manda el suyo.
-  const [config, pagos, t] = await Promise.all([
-    getSiteConfig(locale),
-    getConfigPagos(),
-    getTranslations('reserva'),
-  ])
+  const [config, t] = await Promise.all([getSiteConfig(locale), getTranslations('reserva')])
   const puntoEncuentro = exp.puntoEncuentro?.trim() || config.punto_encuentro || ''
 
   // La descripción corta solo hace de bajada cuando hay relato largo. Sin él
@@ -225,7 +220,6 @@ export default async function ExperienciaDetallePage({
             precio={exp.precio}
             slug={exp.slug}
             incluye={exp.incluye ?? []}
-            porcentajeAbono={pagos.activo ? pagos.porcentajeAbono : null}
             avisoCancelacion={config.resumen_cancelacion || ''}
             whatsapp={config.whatsapp || ''}
           />

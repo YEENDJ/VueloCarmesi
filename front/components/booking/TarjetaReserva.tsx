@@ -14,8 +14,6 @@ interface Props {
   slug: string
   /** Lo que incluye el cupo. Vacío = no se muestra el bloque. */
   incluye?: string[]
-  /** Porcentaje que se paga al reservar. Null = el sitio no cobra en línea. */
-  porcentajeAbono?: number | null
   /** Resumen de la política, de Configuración. Vacío = no se muestra la línea. */
   avisoCancelacion?: string
   /** Teléfono de contacto, de Configuración. Vacío = no se muestra la línea. */
@@ -23,16 +21,20 @@ interface Props {
 }
 
 /**
- * Todo lo necesario para decidir, junto: cuánto cuesta, qué entra, cuánto se
- * paga hoy y qué pasa si hay que cancelar. En escritorio acompaña el scroll,
- * para que reservar quede siempre a un clic por largo que sea el relato.
+ * Todo lo necesario para decidir, junto: cuánto cuesta, qué entra y qué pasa si
+ * hay que cancelar. En escritorio acompaña el scroll, para que reservar quede
+ * siempre a un clic por largo que sea el relato.
+ *
+ * El abono no se muestra aquí a propósito: leerlo exige otra consulta cacheada
+ * en cada ficha, y el sitio ya estuvo cerca del límite de escrituras de Vercel.
+ * Se informa en /reservar, antes de pagar.
  *
  * «Incluye» sale completo y solo aquí. Antes asomaban tres junto al precio y la
  * lista entera volvía a salir miles de píxeles más abajo.
  */
 export default function TarjetaReserva({
   nombre, duracion, capacidad, precio, slug,
-  incluye = [], porcentajeAbono, avisoCancelacion, whatsapp,
+  incluye = [], avisoCancelacion, whatsapp,
 }: Props) {
   const idioma = useLocale()
   const t = useTranslations('reserva')
@@ -93,11 +95,7 @@ export default function TarjetaReserva({
           </Button>
         </div>
 
-        {/* Las dos dudas que aparecen justo al decidir: cuánto se paga hoy y si
-            se puede cancelar. Hasta ahora el abono solo se veía en /reservar. */}
-        {porcentajeAbono != null && (
-          <p className="ficha-exp-nota">{t('pago.lateral', { porcentaje: porcentajeAbono })}</p>
-        )}
+        {/* La duda que aparece justo al decidir: si se puede cancelar. */}
         {avisoCancelacion && (
           <p className="ficha-exp-nota">
             {avisoCancelacion}{' '}
